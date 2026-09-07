@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
             ComplaintCategorySeeder::class,
             LetterTemplateSeeder::class,
             SamplePublicServicesSeeder::class,
+            // PPKO Catur Cerdas Seeder
+            PojokSeeder::class,
         ]);
     }
 }

@@ -17,6 +17,7 @@ Route::get('/layanan', [PublicControllers\ServiceController::class, 'index'])->n
 Route::get('/pencarian', [PublicControllers\SearchController::class, 'index'])->name('public.search');
 Route::get('/api/search', [PublicControllers\SearchController::class, 'api'])->name('api.search');
 Route::get('/ppko-catur-cerdas', [PublicControllers\PpkoController::class, 'index'])->name('public.ppko');
+Route::get('/ppko/kurikulum/{kurikulum}/download', [PublicControllers\PpkoController::class, 'downloadKurikulum'])->name('public.ppko.kurikulum.download');
 Route::redirect('/ppko', '/ppko-catur-cerdas');
 
 // --- PANEL ADMIN (TERPROTEKSI MIDDLEWARE AUTH) ---
@@ -76,6 +77,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // ===== PHASE 1: PENGADUAN MASYARAKAT =====
     Route::resource('complaints', Admin\ComplaintController::class)->except(['create', 'store']);
+
+    // ===== PPK ORMAWA: KEGIATAN, POJOK & KURIKULUM =====
+    Route::resource('kegiatans', Admin\KegiatanController::class);
+    Route::post('/kegiatans/{kegiatan}/galeri', [Admin\GaleriFotoController::class, 'store'])->name('kegiatans.galeri.store');
+    Route::delete('/galeri-fotos/{foto}', [Admin\GaleriFotoController::class, 'destroy'])->name('galeri-fotos.destroy');
+    Route::resource('pojoks', Admin\PojokController::class)->only(['index', 'edit', 'update']);
+    Route::post('/pojoks/{pojok}/foto', [Admin\PojokController::class, 'updateFoto'])->name('pojoks.foto.update');
+    Route::post('/pojoks/{pojok}/kurikulum', [Admin\PojokController::class, 'storeKurikulum'])->name('pojoks.kurikulum.store');
+    Route::delete('/kurikulums/{kurikulum}', [Admin\PojokController::class, 'destroyKurikulum'])->name('kurikulums.destroy');
 });
 
 Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');

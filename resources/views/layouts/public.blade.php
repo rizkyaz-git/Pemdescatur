@@ -96,7 +96,7 @@
                 : 'text-white transition-colors duration-700 ease-in-out'">
         
         <!-- Header Background Layer (Constrained to 80px Top Bar) -->
-        <div class="absolute inset-x-0 top-0 h-20 pointer-events-none overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-20 pointer-events-none">
             @if($isHomePage)
                 <!-- 1. Top Gradient Layer (Fades out softly and slowly when scrolling down) -->
                 <div class="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/30 to-transparent transition-opacity duration-700 ease-in-out pointer-events-none"
@@ -104,7 +104,7 @@
                 </div>
 
                 <!-- 2. Scrolled Glassmorphism Layer (Fades in softly and smoothly when scrolled down) -->
-                <div class="absolute inset-0 bg-white/85 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-md shadow-slate-900/5 transition-opacity ease-in-out pointer-events-none"
+                <div class="absolute inset-0 bg-white/80 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.05)] transition-opacity ease-in-out pointer-events-none"
                      :class="mobileMenuOpen 
                          ? 'opacity-100 duration-200' 
                          : (isScrolled 
@@ -112,8 +112,9 @@
                              : 'opacity-0 duration-700 delay-100')">
                 </div>
             @else
-                <!-- Non-homepage static navbar background -->
-                <div class="absolute inset-0 bg-white/95 backdrop-blur-md border-b border-slate-200/60 shadow-xs pointer-events-none"></div>
+                <!-- Non-homepage glassmorphism navbar background with scroll shadow -->
+                <div class="absolute inset-0 bg-white/80 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 pointer-events-none transition-shadow duration-700 ease-in-out"
+                     :class="isScrolled ? 'shadow-[0_4px_20px_-2px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.05)]' : 'shadow-none'"></div>
             @endif
         </div>
 
