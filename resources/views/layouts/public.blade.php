@@ -92,18 +92,29 @@
     <!-- Main Navigation Header -->
     <header class="sticky top-0 z-[99999]"
             :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
-                ? 'text-[#20332A] transition-colors duration-200 ease-out' 
-                : 'text-white transition-colors duration-250 delay-100 ease-out'">
+                ? 'text-[#20332A] transition-colors duration-700 ease-in-out' 
+                : 'text-white transition-colors duration-700 ease-in-out'">
         
         <!-- Header Background Layer (Constrained to 80px Top Bar) -->
-        <div class="absolute inset-x-0 top-0 h-20 pointer-events-none"
-             :class="mobileMenuOpen 
-                 ? 'bg-white border-b border-slate-200/80 shadow-md transition-all duration-200 ease-out' 
-                 : ({{ $isHomePage ? 'true' : 'false' }} 
-                     ? (isScrolled 
-                         ? 'bg-white/85 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-md shadow-slate-900/5 transition-all duration-200' 
-                         : 'bg-gradient-to-b from-slate-950/60 via-slate-950/25 to-transparent border-b-0 border-transparent shadow-none transition-all duration-250 delay-100 ease-out')
-                     : 'bg-white/95 backdrop-blur-md border-b border-slate-200/60 shadow-xs transition-all duration-200')">
+        <div class="absolute inset-x-0 top-0 h-20 pointer-events-none overflow-hidden">
+            @if($isHomePage)
+                <!-- 1. Top Gradient Layer (Fades out softly and slowly when scrolling down) -->
+                <div class="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/30 to-transparent transition-opacity duration-700 ease-in-out pointer-events-none"
+                     :class="(isScrolled || mobileMenuOpen) ? 'opacity-0' : 'opacity-100'">
+                </div>
+
+                <!-- 2. Scrolled Glassmorphism Layer (Fades in softly and smoothly when scrolled down) -->
+                <div class="absolute inset-0 bg-white/85 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-md shadow-slate-900/5 transition-opacity ease-in-out pointer-events-none"
+                     :class="mobileMenuOpen 
+                         ? 'opacity-100 duration-200' 
+                         : (isScrolled 
+                             ? 'opacity-100 duration-700' 
+                             : 'opacity-0 duration-700 delay-100')">
+                </div>
+            @else
+                <!-- Non-homepage static navbar background -->
+                <div class="absolute inset-0 bg-white/95 backdrop-blur-md border-b border-slate-200/60 shadow-xs pointer-events-none"></div>
+            @endif
         </div>
 
         <div class="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -117,11 +128,11 @@
                         <img src="{{ asset('images/logo_catur.png') }}" alt="{{ $globalVillageName ?? 'Desa Catur' }}" class="h-10 sm:h-11 w-auto object-contain shrink-0">
                     @endif
                     <div>
-                        <span class="block font-serif text-base lg:text-lg xl:text-xl font-bold tracking-tight transition-colors duration-500 leading-tight"
+                        <span class="block font-serif text-base lg:text-lg xl:text-xl font-bold tracking-tight transition-colors duration-700 ease-in-out leading-tight"
                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29] group-hover:text-[#145C3B]' : 'text-white group-hover:text-white/90'">
                             {{ $globalVillageName ?? 'Pemerintah Desa Catur' }}
                         </span>
-                        <span class="block text-[10px] font-medium tracking-wider uppercase transition-colors duration-500"
+                        <span class="block text-[10px] font-medium tracking-wider uppercase transition-colors duration-700 ease-in-out"
                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#6C7B72]' : 'text-white/80'">
                             Sambi, Boyolali, Jawa Tengah
                         </span>
@@ -133,7 +144,7 @@
                     
                     <!-- Beranda -->
                     <a href="{{ route('home') }}" 
-                       class="h-9 sm:h-10 px-3.5 inline-flex items-center rounded-lg transition-all duration-300"
+                       class="h-9 sm:h-10 px-3.5 inline-flex items-center rounded-lg transition-all duration-700 ease-in-out"
                        :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) 
                            ? '{{ request()->routeIs('home') ? 'text-[#0A3D29] font-extrabold text-sm hover:bg-[#EAF1E8]' : 'text-[#20332A] font-semibold hover:bg-[#EAF1E8] hover:text-[#0A3D29]' }}' 
                            : '{{ request()->routeIs('home') ? 'text-white font-extrabold text-sm drop-shadow-md hover:bg-white/20' : 'text-white/90 font-semibold hover:bg-white/20 hover:text-white' }}'">
@@ -144,7 +155,7 @@
                     <div class="relative inline-block" @click.away="profileDropdown = false">
                         <button @click="profileDropdown = !profileDropdown; infoDropdown = false; layananDropdown = false; literasiDropdown = false" 
                                 type="button"
-                                class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1 rounded-lg transition-all duration-300 focus:outline-none"
+                                class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1 rounded-lg transition-all duration-700 ease-in-out focus:outline-none"
                                 :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) 
                                     ? '{{ (request()->routeIs('public.profile') || request()->routeIs('public.officials')) ? 'text-[#0A3D29] font-extrabold text-sm hover:bg-[#EAF1E8]' : 'text-[#20332A] font-semibold hover:bg-[#EAF1E8] hover:text-[#0A3D29]' }}' 
                                     : '{{ (request()->routeIs('public.profile') || request()->routeIs('public.officials')) ? 'text-white font-extrabold text-sm drop-shadow-md hover:bg-white/20' : 'text-white/90 font-semibold hover:bg-white/20 hover:text-white' }}'">
@@ -191,7 +202,7 @@
                     <div class="relative inline-block" @click.away="infoDropdown = false">
                         <button @click="infoDropdown = !infoDropdown; profileDropdown = false; layananDropdown = false; literasiDropdown = false" 
                                 type="button"
-                                class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1 rounded-lg transition-all duration-300 focus:outline-none"
+                                class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1 rounded-lg transition-all duration-700 ease-in-out focus:outline-none"
                                 :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) 
                                     ? '{{ (request()->routeIs('public.news*') || request()->routeIs('public.statistics') || request()->routeIs('public.gallery')) ? 'text-[#0A3D29] font-extrabold text-sm hover:bg-[#EAF1E8]' : 'text-[#20332A] font-semibold hover:bg-[#EAF1E8] hover:text-[#0A3D29]' }}' 
                                     : '{{ (request()->routeIs('public.news*') || request()->routeIs('public.statistics') || request()->routeIs('public.gallery')) ? 'text-white font-extrabold text-sm drop-shadow-md hover:bg-white/20' : 'text-white/90 font-semibold hover:bg-white/20 hover:text-white' }}'">
@@ -215,8 +226,8 @@
                              :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'bg-white/95 backdrop-blur-2xl border border-slate-200/90 text-[#20332A]' : 'bg-[#061C12]/95 backdrop-blur-2xl border border-white/20 text-white'">
                             
                             <a href="{{ route('public.news.index') }}" 
-                               class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
+                                class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
+                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
                                 <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
                                      :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
                                      fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"/></svg>
@@ -224,8 +235,8 @@
                             </a>
 
                             <a href="{{ route('public.statistics') }}" 
-                               class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
+                                class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
+                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
                                 <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
                                      :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
                                      fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
@@ -233,8 +244,8 @@
                             </a>
 
                             <a href="{{ route('public.gallery') }}" 
-                               class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
+                                class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
+                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
                                 <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
                                      :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
                                      fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -247,7 +258,7 @@
                     <div class="relative inline-block" @click.away="layananDropdown = false">
                         <button @click="layananDropdown = !layananDropdown; profileDropdown = false; infoDropdown = false; literasiDropdown = false" 
                                 type="button"
-                                class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1 rounded-lg transition-all duration-300 focus:outline-none"
+                                class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1 rounded-lg transition-all duration-700 ease-in-out focus:outline-none"
                                 :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) 
                                     ? '{{ (request()->routeIs('public.services.*') || request()->routeIs('warga.letter.*') || request()->routeIs('warga.complaint.*')) ? 'text-[#0A3D29] font-extrabold text-sm hover:bg-[#EAF1E8]' : 'text-[#20332A] font-semibold hover:bg-[#EAF1E8] hover:text-[#0A3D29]' }}' 
                                     : '{{ (request()->routeIs('public.services.*') || request()->routeIs('warga.letter.*') || request()->routeIs('warga.complaint.*')) ? 'text-white font-extrabold text-sm drop-shadow-md hover:bg-white/20' : 'text-white/90 font-semibold hover:bg-white/20 hover:text-white' }}'">
@@ -272,8 +283,8 @@
                             
                             <!-- 1. Pusat Layanan Desa -->
                             <a href="{{ route('public.services.index') }}" 
-                               class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
+                                class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
+                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
                                 <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
                                      :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
                                      fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0V5m0 6h4m-4 0H9"/></svg>
@@ -285,8 +296,8 @@
 
                             <!-- 2. Surat Online Mandiri -->
                             <a href="{{ route('warga.letter.index') }}" 
-                               class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
+                                class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
+                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
                                 <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
                                      :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
                                      fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
@@ -298,8 +309,8 @@
 
                             <!-- 3. Pengaduan & Aspirasi Warga -->
                             <a href="{{ route('warga.complaint.index') }}" 
-                               class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
+                                class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
+                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
                                 <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
                                      :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
                                      fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.684A1.76 1.76 0 013 12c0-.97.784-1.76 1.75-1.76l6.25 1.05M18 13l2.25 3.5"/></svg>
@@ -313,7 +324,7 @@
 
                     <!-- PPKO Catur Cerdas UMS Direct Link -->
                     <a href="{{ route('public.ppko') }}" 
-                       class="h-9 sm:h-10 px-3.5 inline-flex items-center rounded-lg transition-all duration-300"
+                       class="h-9 sm:h-10 px-3.5 inline-flex items-center rounded-lg transition-all duration-700 ease-in-out"
                        :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) 
                            ? '{{ request()->routeIs('public.ppko') ? 'text-[#0A3D29] font-extrabold text-sm hover:bg-[#EAF1E8]' : 'text-[#20332A] font-semibold hover:bg-[#EAF1E8] hover:text-[#0A3D29]' }}' 
                            : '{{ request()->routeIs('public.ppko') ? 'text-white font-extrabold text-sm drop-shadow-md hover:bg-white/20' : 'text-white/90 font-semibold hover:bg-white/20 hover:text-white' }}'">
@@ -324,10 +335,10 @@
                     <a href="{{ $globalLibraryUrl ?? 'https://desacaturbyl.perpustakaan.co.id/home.ks' }}" 
                        target="_blank" 
                        rel="noopener noreferrer" 
-                       class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1.5 rounded-lg transition-all duration-500 font-semibold"
+                       class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1.5 rounded-lg transition-all duration-700 ease-in-out font-semibold"
                        :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-[#EAF1E8] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-white/20 hover:text-white'">
                         <span>Perpustakaan</span>
-                        <svg class="w-3 h-3 transition-colors duration-500" :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#D9B85C]' : 'text-[#F5E8C7]'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        <svg class="w-3 h-3 transition-colors duration-700 ease-in-out" :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#D9B85C]' : 'text-[#F5E8C7]'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>
 
                 </nav>
@@ -347,13 +358,13 @@
                                        @keydown.escape="searchOpen = false"
                                        placeholder="Cari informasi..." 
                                        aria-label="Cari informasi di Desa Catur"
-                                       class="h-9 w-36 lg:w-44 xl:w-48 pl-8 pr-7 rounded-xl text-xs font-medium border transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-[#0A3D29] focus:bg-white focus:text-[#20332A]"
+                                       class="h-9 w-36 lg:w-44 xl:w-48 pl-8 pr-7 rounded-xl text-xs font-medium border transition-all duration-700 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#0A3D29] focus:bg-white focus:text-[#20332A]"
                                        :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) 
                                            ? 'bg-[#EAF1E8]/70 backdrop-blur-md text-[#20332A] placeholder-[#6C7B72] border border-[#DCE6DA]/80' 
                                            : 'bg-white/20 backdrop-blur-md text-white placeholder-white/70 border border-white/25 focus:placeholder-[#6C7B72]'">
                                 
                                 <!-- Search Icon (Left) -->
-                                <svg class="w-3.5 h-3.5 absolute left-3 pointer-events-none transition-colors duration-500" 
+                                <svg class="w-3.5 h-3.5 absolute left-3 pointer-events-none transition-colors duration-700 ease-in-out" 
                                      :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#6C7B72]' : 'text-white/80'" 
                                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -363,7 +374,7 @@
                                 <button type="button" 
                                         x-show="searchQuery.length > 0" 
                                         @click="searchQuery = ''; searchResults = []; searchOpen = false" 
-                                        class="absolute right-2 transition-colors duration-500 p-0.5 rounded-full"
+                                        class="absolute right-2 transition-colors duration-700 ease-in-out p-0.5 rounded-full"
                                         :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#6C7B72] hover:text-[#20332A]' : 'text-white/80 hover:text-white'">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                 </button>
@@ -454,16 +465,16 @@
                                 DC
                             </div>
                         @endif
-                        <span class="font-serif text-base font-bold"
+                        <span class="font-serif text-base font-bold transition-colors duration-700 ease-in-out"
                               :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
-                                  ? 'text-[#0A3D29] transition-colors duration-200 ease-out' 
-                                  : 'text-white transition-colors duration-250 delay-100 ease-out'">
+                                  ? 'text-[#0A3D29]' 
+                                  : 'text-white'">
                             {{ $globalVillageName ?? 'Pemerintah Desa Catur' }}
                         </span>
                     </a>
 
                     <button @click.stop="mobileMenuOpen = !mobileMenuOpen" type="button" 
-                            class="p-2 rounded-xl focus:outline-none flex items-center justify-center cursor-pointer transition-all duration-200"
+                            class="p-2 rounded-xl focus:outline-none flex items-center justify-center cursor-pointer transition-all duration-700 ease-in-out"
                             :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
                                 ? (mobileMenuOpen ? 'text-[#0A3D29] bg-slate-100 active:bg-slate-200' : 'text-[#20332A] active:bg-[#EAF1E8]') 
                                 : (mobileMenuOpen ? 'text-[#0A3D29] bg-white active:bg-white/80' : 'text-white active:bg-white/20')" 
@@ -491,11 +502,11 @@
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0"
              @click="mobileMenuOpen = false"
-             class="fixed inset-0 top-20 bg-black/40 backdrop-blur-xs z-40 lg:hidden"
+             class="fixed inset-0 top-20 bg-black/30 backdrop-blur-xs z-40 lg:hidden"
              aria-hidden="true">
         </div>
 
-        <!-- Mobile Drawer Navigation Overlay (Full-Width Clean List Rows with Subtle Darkening) -->
+        <!-- Mobile Drawer Navigation Overlay (Glassmorphism Frosted Glass Style) -->
         <div x-show="mobileMenuOpen" 
              x-cloak
              x-data="{ activeSection: null }"
@@ -507,20 +518,19 @@
              x-transition:leave-end="opacity-0 -translate-y-3"
              @click.away="mobileMenuOpen = false" 
              @click.stop
-             class="absolute top-full inset-x-0 z-50 lg:hidden bg-white border-b border-x border-slate-200/80 rounded-b-3xl text-[#20332A] shadow-2xl max-h-[calc(100dvh-5rem)] overflow-y-auto overflow-x-hidden divide-y divide-slate-100">
+             class="absolute top-full inset-x-0 z-50 lg:hidden bg-white/85 backdrop-blur-2xl backdrop-saturate-150 border-b border-x border-slate-200/80 rounded-b-3xl text-[#20332A] shadow-2xl shadow-slate-900/10 max-h-[calc(100dvh-5rem)] overflow-y-auto overflow-x-hidden divide-y divide-slate-200/50">
             
             <!-- 1. Beranda (Direct Clean Link) -->
             <div class="nav-cascade-1">
                 <a href="{{ route('home') }}" 
                    @click="mobileMenuOpen = false"
-                   class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors {{ request()->routeIs('home') ? 'bg-slate-100/90 text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-slate-200/80' }}">
+                   class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors {{ request()->routeIs('home') ? 'bg-black/[0.06] text-[#0A3D29] font-bold' : 'text-slate-800 active:bg-black/[0.08]' }}">
                     <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 001 1v4a1 1 0 001 1m-6 0h6"/>
                         </svg>
                         <span>Beranda</span>
                     </div>
-                    <span class="text-xs text-slate-400">→</span>
                 </a>
             </div>
             
@@ -528,8 +538,8 @@
             <div class="nav-cascade-2">
                 <button type="button" 
                         @click="activeSection = (activeSection === 'profil' ? null : 'profil')"
-                        class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-700 active:bg-slate-200/80"
-                        :class="activeSection === 'profil' ? 'bg-slate-100/60 text-[#0A3D29]' : ''">
+                        class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-800 active:bg-black/[0.08]"
+                        :class="activeSection === 'profil' ? 'bg-black/[0.04] text-[#0A3D29]' : ''">
                     <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0V5m0 6h4m-4 0H9"/>
@@ -544,14 +554,14 @@
                      x-transition:enter="transition ease-out duration-150"
                      x-transition:enter-start="opacity-0 -translate-y-1"
                      x-transition:enter-end="opacity-100 translate-y-0"
-                     class="bg-slate-50/70 divide-y divide-slate-100 border-t border-slate-100">
+                     class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                     <a href="{{ route('public.profile') }}" @click="mobileMenuOpen = false" 
-                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.profile') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.profile') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
                         <span>Tentang & Sejarah Desa Catur</span>
                     </a>
                     <a href="{{ route('public.officials') }}" @click="mobileMenuOpen = false" 
-                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.officials') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
-                        <span>Struktur Aparatur Pemerintahan</span>
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.officials') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
+                        <span>Struktur Perangkat Desa</span>
                     </a>
                 </div>
             </div>
@@ -560,8 +570,8 @@
             <div class="nav-cascade-3">
                 <button type="button" 
                         @click="activeSection = (activeSection === 'informasi' ? null : 'informasi')"
-                        class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-700 active:bg-slate-200/80"
-                        :class="activeSection === 'informasi' ? 'bg-slate-100/60 text-[#0A3D29]' : ''">
+                        class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-800 active:bg-black/[0.08]"
+                        :class="activeSection === 'informasi' ? 'bg-black/[0.04] text-[#0A3D29]' : ''">
                     <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"/>
@@ -576,18 +586,18 @@
                      x-transition:enter="transition ease-out duration-150"
                      x-transition:enter-start="opacity-0 -translate-y-1"
                      x-transition:enter-end="opacity-100 translate-y-0"
-                     class="bg-slate-50/70 divide-y divide-slate-100 border-t border-slate-100">
+                     class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                     <a href="{{ route('public.news.index') }}" @click="mobileMenuOpen = false" 
-                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.news*') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
-                        <span>Berita & Pengumuman Warta</span>
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.news*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
+                        <span>Warta & Pengumuman</span>
                     </a>
                     <a href="{{ route('public.statistics') }}" @click="mobileMenuOpen = false" 
-                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.statistics') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
-                        <span>Statistik & Potensi Desa</span>
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.statistics') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
+                        <span>Statistik Desa</span>
                     </a>
                     <a href="{{ route('public.gallery') }}" @click="mobileMenuOpen = false" 
-                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.gallery') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
-                        <span>Galeri Dokumentasi Foto</span>
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.gallery') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
+                        <span>Galeri Desa</span>
                     </a>
                 </div>
             </div>
@@ -596,8 +606,8 @@
             <div class="nav-cascade-4">
                 <button type="button" 
                         @click="activeSection = (activeSection === 'layanan' ? null : 'layanan')"
-                        class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-700 active:bg-slate-200/80"
-                        :class="activeSection === 'layanan' ? 'bg-slate-100/60 text-[#0A3D29]' : ''">
+                        class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-800 active:bg-black/[0.08]"
+                        :class="activeSection === 'layanan' ? 'bg-black/[0.04] text-[#0A3D29]' : ''">
                     <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -612,17 +622,17 @@
                      x-transition:enter="transition ease-out duration-150"
                      x-transition:enter-start="opacity-0 -translate-y-1"
                      x-transition:enter-end="opacity-100 translate-y-0"
-                     class="bg-slate-50/70 divide-y divide-slate-100 border-t border-slate-100">
+                     class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                     <a href="{{ route('public.services.index') }}" @click="mobileMenuOpen = false" 
-                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.services*') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.services*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
                         <span>Pusat Layanan Terpadu Desa</span>
                     </a>
                     <a href="{{ route('warga.letter.index') }}" @click="mobileMenuOpen = false" 
-                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.letter*') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.letter*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
                         <span>Permohonan Surat Online Mandiri</span>
                     </a>
                     <a href="{{ route('warga.complaint.index') }}" @click="mobileMenuOpen = false" 
-                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.complaint*') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.complaint*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
                         <span>Pengaduan & Aspirasi Warga</span>
                     </a>
                 </div>
@@ -632,15 +642,14 @@
             <div class="nav-cascade-5">
                 <a href="{{ route('public.ppko') }}" 
                    @click="mobileMenuOpen = false"
-                   class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors {{ request()->routeIs('public.ppko') ? 'bg-slate-100/90 text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-slate-200/80' }}">
+                   class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors {{ request()->routeIs('public.ppko') ? 'bg-black/[0.06] text-[#0A3D29] font-bold' : 'text-slate-800 active:bg-black/[0.08]' }}">
                     <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
                         </svg>
-                        <span>PPKO Catur Cerdas UMS</span>
+                        <span>PPKO Catur Cerdas UMS 2026</span>
                     </div>
-                    <span class="text-xs text-slate-400">→</span>
                 </a>
             </div>
 
@@ -648,17 +657,16 @@
             <div class="nav-cascade-6">
                 <a href="{{ $globalLibraryUrl ?? 'https://desacaturbyl.perpustakaan.co.id/home.ks' }}" 
                    target="_blank" 
-                   rel="noopener noreferrer"
-                   @click="mobileMenuOpen = false"
-                   class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors text-slate-700 active:bg-slate-200/80">
+                   rel="noopener noreferrer" 
+                   @click="mobileMenuOpen = false" 
+                   class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors text-slate-800 active:bg-black/[0.08]">
                     <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                         </svg>
-                        <span>Perpustakaan Digital</span>
+                        <span>Perpustakaan Digital Remen Maos</span>
                     </div>
                     <div class="flex items-center gap-1.5 text-xs text-slate-400">
-                        <span class="text-[10px] font-medium uppercase tracking-wider text-slate-400">Portal</span>
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </div>
                 </a>
@@ -668,18 +676,18 @@
             <div>
                 @auth
                     <a href="{{ route('admin.dashboard') }}" 
-                       class="w-full flex items-center justify-between px-5 py-3.5 text-xs font-semibold transition-colors text-slate-700 active:bg-slate-200/80">
+                       class="w-full flex items-center justify-between px-5 py-3.5 text-xs font-semibold transition-colors text-slate-800 active:bg-black/[0.08]">
                         <div class="flex items-center gap-3.5">
                             <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
                             <span>Dashboard Admin</span>
                         </div>
-                        <span class="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 font-medium text-slate-600">{{ Auth::user()->name }}</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-md bg-black/[0.05] font-medium text-slate-700">{{ Auth::user()->name }}</span>
                     </a>
                 @else
                     <a href="{{ route('login') }}" 
-                       class="w-full flex items-center justify-between px-5 py-3.5 text-xs font-semibold transition-colors text-slate-600 active:bg-slate-200/80">
+                       class="w-full flex items-center justify-between px-5 py-3.5 text-xs font-semibold transition-colors text-slate-700 active:bg-black/[0.08]">
                         <div class="flex items-center gap-3.5">
                             <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
@@ -909,9 +917,9 @@
                 searchOpen: false,
                 isScrolled: false,
                 init() {
-                    this.isScrolled = window.scrollY > 10;
+                    this.isScrolled = window.scrollY > 15;
                     window.addEventListener('scroll', () => {
-                        this.isScrolled = window.scrollY > 10;
+                        this.isScrolled = window.scrollY > 15;
                     }, { passive: true });
                 },
                 fetchSuggestions() {
