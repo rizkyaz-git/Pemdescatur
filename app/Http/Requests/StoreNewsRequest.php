@@ -18,6 +18,7 @@ class StoreNewsRequest extends FormRequest
             'excerpt' => ['nullable', 'string', 'max:500'],
             'content' => ['required', 'string'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:3072'],
+            'image_caption' => ['nullable', 'string', 'max:500'],
             'category' => ['required', 'string', 'max:100'],
             'status' => ['required', 'in:published,draft'],
             'published_at' => ['nullable', 'date'],

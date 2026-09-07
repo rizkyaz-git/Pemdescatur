@@ -18,6 +18,197 @@
         : asset($defaultImages[$news->id % count($defaultImages)]);
 @endphp
 
+@push('styles')
+<style>
+    /* ========================================================================= */
+    /* QUILL RICH TEXT CONTENT FORMATTING FOR NEWS ARTICLE                      */
+    /* ========================================================================= */
+    .article-body-content {
+        color: #334155;
+        font-size: 1.0625rem;
+        line-height: 1.8;
+    }
+    .article-body-content p {
+        margin-bottom: 1.25rem;
+    }
+    .article-body-content p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Headings */
+    .article-body-content h1 {
+        font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+    }
+    .article-body-content h2 {
+        font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-top: 1.75rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+        letter-spacing: -0.015em;
+    }
+    .article-body-content h3 {
+        font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.35;
+    }
+    .article-body-content h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-top: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+    .article-body-content h5 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .article-body-content h6 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #475569;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Inline text formatting */
+    .article-body-content strong,
+    .article-body-content b {
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .article-body-content em,
+    .article-body-content i {
+        font-style: italic;
+    }
+    .article-body-content u {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+    .article-body-content s {
+        text-decoration: line-through;
+    }
+
+    /* Lists */
+    .article-body-content ol {
+        list-style-type: decimal !important;
+        padding-left: 1.75rem !important;
+        margin-top: 0.75rem !important;
+        margin-bottom: 1.25rem !important;
+    }
+    .article-body-content ul {
+        list-style-type: disc !important;
+        padding-left: 1.75rem !important;
+        margin-top: 0.75rem !important;
+        margin-bottom: 1.25rem !important;
+    }
+    .article-body-content li {
+        margin-bottom: 0.5rem;
+        line-height: 1.75;
+    }
+    .article-body-content ol > li::marker {
+        font-weight: 700;
+        color: #0A3D29;
+    }
+    .article-body-content ul > li::marker {
+        color: #0A3D29;
+    }
+
+    /* Blockquote */
+    .article-body-content blockquote {
+        border-left: 4px solid #0A3D29;
+        background-color: rgba(234, 241, 232, 0.45);
+        padding: 0.85rem 1.25rem;
+        margin: 1.5rem 0;
+        font-style: italic;
+        border-radius: 0 0.5rem 0.5rem 0;
+        color: #1e293b;
+    }
+
+    /* Links */
+    .article-body-content a {
+        color: #0A3D29;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        transition: color 0.15s;
+    }
+    .article-body-content a:hover {
+        color: #145C3B;
+    }
+
+    /* Images inside content */
+    .article-body-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.75rem;
+        margin: 1.5rem auto;
+        display: block;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Code blocks */
+    .article-body-content pre {
+        background-color: #0f172a;
+        color: #f8fafc;
+        padding: 1rem 1.25rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin: 1.25rem 0;
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+    .article-body-content code {
+        background-color: #f1f5f9;
+        color: #0f172a;
+        padding: 0.15rem 0.35rem;
+        border-radius: 0.25rem;
+        font-size: 0.875em;
+    }
+
+    /* Quill Alignment Rules */
+    .article-body-content .ql-align-center {
+        text-align: center !important;
+    }
+    .article-body-content .ql-align-right {
+        text-align: right !important;
+    }
+    .article-body-content .ql-align-justify {
+        text-align: justify !important;
+        text-justify: inter-word;
+    }
+    .article-body-content .ql-align-left {
+        text-align: left !important;
+    }
+
+    /* Quill Indentation Rules */
+    .article-body-content .ql-indent-1 { padding-left: 2rem !important; }
+    .article-body-content .ql-indent-2 { padding-left: 4rem !important; }
+    .article-body-content .ql-indent-3 { padding-left: 6rem !important; }
+    .article-body-content .ql-indent-4 { padding-left: 8rem !important; }
+    .article-body-content .ql-indent-5 { padding-left: 10rem !important; }
+    .article-body-content .ql-indent-6 { padding-left: 12rem !important; }
+    .article-body-content .ql-indent-7 { padding-left: 14rem !important; }
+    .article-body-content .ql-indent-8 { padding-left: 16rem !important; }
+</style>
+@endpush
+
 <!-- Main Container (Clean White Canvas) -->
 <div class="bg-white min-h-screen py-6 sm:py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -98,17 +289,28 @@
                     </div>
                 </div>
 
-                <!-- 2. Featured Image Card -->
-                <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 shadow-xs relative"
-                     x-data="{ loaded: false }"
-                     x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
-                    <img x-ref="img"
-                         src="{{ $mainImageSrc }}" 
-                         alt="{{ $news->title }}" 
-                         @load="loaded = true;"
-                         class="w-full h-auto max-h-[460px] object-cover transition-opacity duration-300"
-                         :class="loaded ? 'opacity-100' : 'opacity-0'">
-                </div>
+                <!-- 2. Featured Image Card & Caption -->
+                <figure class="space-y-2">
+                    <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 shadow-xs relative"
+                         x-data="{ loaded: false }"
+                         x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
+                        <img x-ref="img"
+                             src="{{ $mainImageSrc }}" 
+                             alt="{{ $news->title }}" 
+                             @load="loaded = true;"
+                             class="w-full h-auto max-h-[460px] object-cover transition-opacity duration-300"
+                             :class="loaded ? 'opacity-100' : 'opacity-0'">
+                    </div>
+                    @if(!empty($news->image_caption))
+                        <figcaption class="text-xs sm:text-[13px] text-slate-500 italic text-center px-3 leading-relaxed flex items-center justify-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span>{{ $news->image_caption }}</span>
+                        </figcaption>
+                    @endif
+                </figure>
 
                 <!-- 3. Article Lead / Excerpt (Clean Editorial Flow) -->
                 @if($news->excerpt)
@@ -117,9 +319,13 @@
                     </p>
                 @endif
 
-                <!-- 4. Article Body Content -->
-                <div class="prose prose-slate max-w-none text-slate-800 text-base sm:text-lg leading-relaxed space-y-4 pt-1">
-                    {!! nl2br(e($news->content)) !!}
+                <!-- 4. Article Body Content (Rich Text Formatting from Editor) -->
+                <div class="article-body-content pt-1">
+                    @if(strip_tags($news->content) !== $news->content)
+                        {!! $news->content !!}
+                    @else
+                        {!! nl2br(e($news->content)) !!}
+                    @endif
                 </div>
 
                 <!-- 5. Bottom Action Bar (Like & Streamlined Social Share) -->

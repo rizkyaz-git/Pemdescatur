@@ -15,6 +15,7 @@ class News extends Model
         'excerpt',
         'content',
         'image_path',
+        'image_caption',
         'category',
         'views_count',
         'likes_count',

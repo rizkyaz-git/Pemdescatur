@@ -4,8 +4,8 @@
 
 @section('content')
 
-<!-- Unified Main Page Container (Matching Body Background bg-[#F7F8F2]) -->
-<div class="bg-[#F7F8F2] min-h-screen py-8 sm:py-10" x-data="{ filterOpen: false }">
+<!-- Unified Main Page Container (Clean White Canvas) -->
+<div class="bg-white min-h-screen py-8 sm:py-10" x-data="{ filterOpen: false }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         <!-- Header Title & Action Buttons (Terbaru & Filter) -->
