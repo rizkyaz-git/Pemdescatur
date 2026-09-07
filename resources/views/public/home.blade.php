@@ -7,7 +7,7 @@
 <!-- ========================================================= -->
 <!-- SECTION 1: HERO SECTION (FULL LANDSCAPE BACKGROUND WITH SOFT GRADIENT OVERLAY) -->
 <!-- ========================================================= -->
-<section class="relative w-full bg-[#0A3D29] overflow-hidden -mt-20 pt-28 pb-14 min-h-[81vh] flex flex-col justify-center items-center sm:min-h-0 sm:block sm:pt-44 sm:pb-32 lg:pt-48 lg:pb-36">
+<section class="relative w-full bg-[#0A3D29] overflow-hidden -mt-20 pt-28 pb-36 min-h-screen min-h-[100dvh] flex flex-col justify-center items-center sm:min-h-0 sm:block sm:pt-44 sm:pb-32 lg:pt-48 lg:pb-36">
     
     <!-- Hero Background Image - Clear Scenic View with Soft Gradient Overlay -->
     <div class="absolute inset-0 z-0">
@@ -19,11 +19,11 @@
     </div>
 
     <!-- Content Container (Centered Vertically on Mobile, Exact Original Layout on Desktop) -->
-    <div class="relative z-10 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 text-center flex-1 flex flex-col justify-center items-center py-6 sm:flex-initial sm:py-0 sm:block">
-        <div class="max-w-xl sm:max-w-3xl lg:max-w-4xl mx-auto space-y-4 sm:space-y-6 flex flex-col items-center pt-0 sm:pt-8 lg:pt-10">
+    <div class="relative z-10 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 text-center flex-1 flex flex-col justify-center items-center py-5 sm:py-0 sm:block">
+        <div class="max-w-xl sm:max-w-3xl lg:max-w-4xl mx-auto space-y-3 sm:space-y-6 flex flex-col items-center pt-0 sm:pt-8 lg:pt-10">
             
             <!-- 1. Headline (Fade Up Entrance Animation) -->
-            <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white leading-[1.18] sm:leading-[1.16] tracking-tight text-center max-w-4xl mx-auto drop-shadow-md fade-up-enter">
+            <h1 class="font-serif text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white leading-[1.2] sm:leading-[1.16] tracking-tight text-center max-w-4xl mx-auto drop-shadow-md fade-up-enter">
                 Selamat Datang di Website Resmi Pemerintah Desa Catur
             </h1>
 
@@ -41,8 +41,8 @@
 
 </section>
 
-<!-- FLOATING SHORTCUT CARDS CONTAINER (Overlapping Hero Section Exactly at 50% Center) -->
-<div class="relative z-30 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-14 lg:-mt-16 fade-up-enter [animation-delay:250ms]">
+<!-- FLOATING SHORTCUT CARDS CONTAINER (Overlapping Hero Section Exactly at 50% Center on Desktop, Raised Inside Hero on Mobile) -->
+<div class="relative z-30 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 -mt-40 mb-24 sm:-mt-14 sm:mb-0 lg:-mt-16 fade-up-enter [animation-delay:250ms]">
     
     <!-- A. MOBILE MODE ONLY (< sm): Single Unified Floating Card with 5 Side-by-Side Items & Elevation Shadow -->
     <div class="block sm:hidden bg-white rounded-2xl shadow-[0_12px_30px_-5px_rgba(0,0,0,0.22)] border border-slate-100 ring-1 ring-slate-900/5 py-3 px-1.5">
@@ -188,7 +188,7 @@
 <!-- ========================================================= -->
 <!-- SECTION 2: BERITA TERKINI (FEATURED & EDITORIAL MAGAZINE LAYOUT) -->
 <!-- ========================================================= -->
-<section id="berita-terkini" class="w-full bg-white pt-24 pb-8 sm:pt-28 sm:pb-10 lg:pt-32 lg:pb-12 border-b border-[#c5c6ce]/50 fade-up-scroll">
+<section id="berita-terkini" class="w-full bg-white pt-20 pb-8 sm:pt-28 sm:pb-10 lg:pt-32 lg:pb-12 border-b border-[#c5c6ce]/50 fade-up-scroll">
     <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         <!-- Header Title -->

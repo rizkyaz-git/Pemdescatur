@@ -46,6 +46,36 @@
             background-size: 200% 100%;
             animation: shimmerGlow 1.6s infinite linear;
         }
+
+        [x-cloak] { display: none !important; }
+
+        /* Staggered Cascade Down Animation for Mobile Menu */
+        @keyframes cascadeDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .nav-cascade-1 {
+            animation: cascadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.03s both;
+        }
+        .nav-cascade-2 {
+            animation: cascadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+        }
+        .nav-cascade-3 {
+            animation: cascadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.13s both;
+        }
+        .nav-cascade-4 {
+            animation: cascadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+        }
+        .nav-cascade-5 {
+            animation: cascadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.23s both;
+        }
     </style>
     @stack('styles')
 </head>
@@ -60,8 +90,8 @@
     <header class="sticky top-0 z-[99999] transition-colors duration-500 ease-in-out"
             :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) ? 'text-[#20332A]' : 'text-white'">
         
-        <!-- Header Background Layer -->
-        <div class="absolute inset-0 pointer-events-none transition-all duration-500"
+        <!-- Header Background Layer (Constrained to 80px Top Bar) -->
+        <div class="absolute inset-x-0 top-0 h-20 pointer-events-none transition-all duration-500"
              :class="mobileMenuOpen 
                  ? 'bg-white border-b border-slate-200/80 shadow-md' 
                  : ({{ $isHomePage ? 'true' : 'false' }} 
@@ -490,35 +520,47 @@
                         </span>
                     </a>
 
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" 
-                            class="p-2 rounded-xl transition-all duration-500 focus:outline-none"
+                    <button @click.stop="mobileMenuOpen = !mobileMenuOpen" type="button" 
+                            class="p-2 rounded-xl transition-all duration-300 focus:outline-none flex items-center justify-center cursor-pointer"
                             :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) ? 'text-[#20332A] hover:bg-[#EAF1E8]' : 'text-white hover:bg-white/20'" 
                             aria-label="Buka Menu Mobile">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                        <!-- Hamburger Icon (When Closed) -->
+                        <svg x-show="!mobileMenuOpen" class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                        <!-- Close 'X' Icon (When Opened) -->
+                        <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6 transition-transform duration-300 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Mobile Drawer Navigation Overlay (Solid Opaque White Background when Opened) -->
+        <!-- Mobile Drawer Navigation Overlay (Solid Opaque White Background with Staggered Cascading Entrance) -->
         <div x-show="mobileMenuOpen" 
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 -translate-y-4"
+             x-cloak
+             x-transition:enter="transition ease-out duration-250"
+             x-transition:enter-start="opacity-0 -translate-y-3"
              x-transition:enter-end="opacity-100 translate-y-0"
-             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave="transition ease-in duration-150"
              x-transition:leave-start="opacity-100 translate-y-0"
-             x-transition:leave-end="opacity-0 -translate-y-4"
+             x-transition:leave-end="opacity-0 -translate-y-2.5"
              @click.away="mobileMenuOpen = false" 
-             class="lg:hidden px-4 pt-3 pb-6 space-y-3 transition-all duration-500 bg-white border-t border-slate-200/80 text-[#20332A] shadow-2xl">
+             @click.stop
+             class="relative z-20 lg:hidden px-4 pt-3 pb-8 space-y-3.5 bg-white border-t border-slate-200/80 text-[#20332A] shadow-2xl max-h-[calc(100dvh-5rem)] overflow-y-auto">
             
-            <!-- Mobile Menu Links -->
-            <a href="{{ route('home') }}" 
-               class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition hover:bg-[#EAF1E8] text-[#20332A]">
-                <svg class="w-4 h-4 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 001 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                <span>Beranda</span>
-            </a>
+            <!-- 1. Beranda Link (Cascade Item 1) -->
+            <div class="nav-cascade-1">
+                <a href="{{ route('home') }}" 
+                   class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold transition hover:bg-[#EAF1E8] text-[#20332A]">
+                    <svg class="w-4 h-4 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 001 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    <span>Beranda</span>
+                </a>
+            </div>
             
-            <div class="py-1">
+            <!-- 2. Profil & Informasi Desa (Cascade Item 2) -->
+            <div class="py-1 nav-cascade-2">
                 <span class="block px-3 text-[11px] font-bold uppercase tracking-wider text-[#7D9B78]">Profil & Informasi Desa</span>
                 <div class="pl-2 space-y-1 pt-1">
                     <a href="{{ route('public.profile') }}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-[#EAF1E8]">
@@ -544,7 +586,8 @@
                 </div>
             </div>
 
-            <div class="py-1">
+            <!-- 3. Pelayanan Publik Terpadu (Cascade Item 3) -->
+            <div class="py-1 nav-cascade-3">
                 <span class="block px-3 text-[11px] font-bold uppercase tracking-wider text-[#7D9B78]">Pelayanan Publik Terpadu</span>
                 <div class="pl-2 space-y-1 pt-1">
                     <a href="{{ route('public.services.index') }}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-[#EAF1E8]">
@@ -562,7 +605,8 @@
                 </div>
             </div>
 
-            <div class="py-1">
+            <!-- 4. PPKO Catur Cerdas (Cascade Item 4) -->
+            <div class="py-1 nav-cascade-4">
                 <span class="block px-3 text-[11px] font-bold uppercase tracking-wider text-[#7D9B78]">PPKO Catur Cerdas</span>
                 <div class="pl-2 space-y-1 pt-1">
                     <a href="{{ route('public.profile') }}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-[#EAF1E8]">Pojok Harmoni</a>
@@ -574,8 +618,8 @@
                 </div>
             </div>
 
-            <!-- Mobile Admin Access -->
-            <div class="pt-2 border-t border-slate-100">
+            <!-- 5. Mobile Admin Access (Cascade Item 5) -->
+            <div class="pt-2 border-t border-slate-100 nav-cascade-5">
                 @auth
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#EAF1E8] text-[#0A3D29] text-xs font-bold">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
