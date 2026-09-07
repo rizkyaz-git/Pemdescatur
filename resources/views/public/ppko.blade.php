@@ -6,7 +6,7 @@
 
 @section('content')
 
-<!-- Alpine Lightbox Modal Component Scope -->
+<!-- Alpine Lightbox Modal & Floating Pojok Navigation Scope -->
 <div x-data="{
     lightboxOpen: false,
     activeImg: '',
@@ -26,6 +26,112 @@
     closeLightbox() {
         this.lightboxOpen = false;
         document.body.style.overflow = 'auto';
+    },
+    
+    // Floating Pojok Navigation State (Mobile)
+    pojoks: [
+        @foreach($pojoks as $p)
+            {
+                id: '{{ Str::slug(str_replace('Pojok ', '', $p->nama)) }}',
+                nama: '{{ $p->nama }}'
+            },
+        @endforeach
+    ],
+    activeSlug: 'harmoni',
+    activeName: 'Pojok Harmoni',
+    inPojokSection: false,
+    
+    init() {
+        this.updatePojokState();
+        window.addEventListener('scroll', () => {
+            this.updatePojokState();
+        }, { passive: true });
+    },
+    
+    updatePojokState() {
+        const container = document.getElementById('katalog-pojok-container');
+        if (!container) return;
+        
+        const rect = container.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        
+        // Aktif jika viewport sedang berada di dalam lingkup seksi katalog pojok
+        this.inPojokSection = (rect.top <= vh * 0.75 && rect.bottom >= vh * 0.25);
+        
+        if (this.inPojokSection) {
+            let closestSlug = this.pojoks[0]?.id || 'harmoni';
+            let minDistance = Infinity;
+            
+            this.pojoks.forEach(p => {
+                const el = document.getElementById(p.id);
+                if (el) {
+                    const elRect = el.getBoundingClientRect();
+                    const distance = Math.abs(elRect.top - 80);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestSlug = p.id;
+                    }
+                }
+            });
+            
+            this.activeSlug = closestSlug;
+            const currentPojok = this.pojoks.find(p => p.id === this.activeSlug);
+            if (currentPojok) {
+                this.activeName = currentPojok.nama;
+            }
+        }
+    },
+    
+    getCurrentIndex() {
+        const idx = this.pojoks.findIndex(p => p.id === this.activeSlug);
+        return idx !== -1 ? idx : 0;
+    },
+    
+    scrollToSlug(slug) {
+        this.activeSlug = slug;
+        const currentPojok = this.pojoks.find(p => p.id === slug);
+        if (currentPojok) {
+            this.activeName = currentPojok.nama;
+        }
+        const el = document.getElementById(slug);
+        if (el) {
+            const headerOffset = 70;
+            const elementPosition = el.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    },
+    
+    nextPojok() {
+        if (!this.inPojokSection) {
+            this.scrollToSlug(this.pojoks[0].id);
+            return;
+        }
+        const idx = this.getCurrentIndex();
+        if (idx < this.pojoks.length - 1) {
+            this.scrollToSlug(this.pojoks[idx + 1].id);
+        } else {
+            const nextEl = document.getElementById('galeri') || document.querySelector('footer');
+            if (nextEl) {
+                nextEl.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    },
+    
+    prevPojok() {
+        if (!this.inPojokSection) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        const idx = this.getCurrentIndex();
+        if (idx > 0) {
+            this.scrollToSlug(this.pojoks[idx - 1].id);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     }
 }" @keydown.escape.window="closeLightbox()">
 
@@ -51,11 +157,28 @@
                 if (!$ppkoCoverUrl) {
                     $ppkoCoverUrl = asset('images/cover_ppko.png');
                 }
+
+                $coverMobileCandidates = [
+                    'images/ppko/cover_ppko_mobile.png',
+                ];
+                $ppkoCoverMobileUrl = null;
+                foreach ($coverMobileCandidates as $candidate) {
+                    if (file_exists(public_path($candidate))) {
+                        $ppkoCoverMobileUrl = asset($candidate);
+                        break;
+                    }
+                }
+                if (!$ppkoCoverMobileUrl) {
+                    $ppkoCoverMobileUrl = $ppkoCoverUrl;
+                }
             @endphp
             <div class="relative w-full rounded-xl sm:rounded-2xl overflow-hidden shadow-xs border border-[#DCE6DA] bg-white group">
-                <img src="{{ $ppkoCoverUrl }}" 
-                     alt="Cover Banner PPKO Catur Cerdas UMS 2026 Desa Catur" 
-                     class="w-full h-auto object-cover object-center group-hover:scale-[1.005] transition-transform duration-700 ease-out">
+                <picture class="block w-full">
+                    <source media="(max-width: 767px)" srcset="{{ $ppkoCoverMobileUrl }}">
+                    <img src="{{ $ppkoCoverUrl }}" 
+                         alt="Cover Banner PPKO Catur Cerdas UMS 2026 Desa Catur" 
+                         class="w-full h-auto object-cover object-center group-hover:scale-[1.005] transition-transform duration-700 ease-out">
+                </picture>
             </div>
 
             <!-- ===================================================================== -->
@@ -147,120 +270,8 @@
                 </div>
             </section>
         </div>
-    </div>
-
-    <!-- ===================================================================== -->
-    <!-- 3. QUICK JUMP POJOK NAVIGATION BAR (Akses Cepat 5 Pojok) -->
-    <!-- ===================================================================== -->
-    <!-- ===================================================================== -->
-    <!-- 3. QUICK JUMP POJOK NAVIGATION BAR (Glassmorphism Capsule Island) -->
-    <!-- ===================================================================== -->
-    @php
-        $pojokIcons = [
-            // 1. Pojok Harmoni -> Ikon KELUARGA (Solid: Ayah, Ibu, Anak)
-            1 => '<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="6" r="2.2"/><circle cx="17" cy="6" r="2.2"/><circle cx="12" cy="11.5" r="1.6"/><path d="M7 9.5C4.5 9.5 3 11 3 13.5V18h3.5v-3c0-.8.7-1.5 1.5-1.5h1c.8 0 1.5.7 1.5 1.5v3H21v-4.5c0-2.5-1.5-4-4-4h-1.2c-.7.9-1.8 1.5-3 1.5h-1.6c-1.2 0-2.3-.6-3-1.5H7zm5 4.5c-1.5 0-2.5 1-2.5 2.2V18h5v-1.8c0-1.2-1-2.2-2.5-2.2z"/></svg>',
-            
-            // 2. Pojok Ceria -> Ikon LITERASI (Solid: Buku Terbuka Membaca / Open Book)
-            2 => '<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C10.2 3.4 8 3 6 3 4.2 3 2.6 3.5 1.5 4.3c-.3.2-.5.6-.5 1v13.2c0 .6.6 1.1 1.2.9C3.4 18.8 4.7 18.5 6 18.5c2 0 4.2.5 6 1.6 1.8-1.1 4-1.6 6-1.6 1.3 0 2.6.3 3.8.9.6.2 1.2-.3 1.2-.9V5.3c0-.4-.2-.8-.5-1C21.4 3.5 19.8 3 18 3c-2 0-4.2.4-6 1.5zm-1 12.3c-1.5-.9-3.3-1.3-5-1.3-1.3 0-2.6.3-3.5.7V6.1c1-.4 2.2-.6 3.5-.6 1.7 0 3.5.4 5 1.3v10z"/></svg>',
-            
-            // 3. Pojok UMKM -> Ikon KERANJANG (Solid: Shopping Basket Belanja)
-            3 => '<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M17.21 9l-4.38-6.56a1 1 0 00-1.66 0L6.79 9H2.5c-.83 0-1.5.67-1.5 1.5 0 .24.06.47.16.67L3.4 19.2c.3.9 1.1 1.8 2.1 1.8h13c1 0 1.8-.9 2.1-1.8l2.24-8.03c.1-.2.16-.43.16-.67 0-.83-.67-1.5-1.5-1.5h-4.29zm-5.21-4.22L14.8 9H9.2l2.8-4.22zM12 17.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
-            
-            // 4. Pojok Budaya -> Ikon GAMELAN (Solid: Gong Gamelan Jawa dengan Gayor Penyangga)
-            4 => '<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M2 3.5c0-.6.4-1 1-1h18c.6 0 1 .4 1 1v2.5H2V3.5z"/><path d="M3 6h2.5v13.5H3V6zm15.5 0H21v13.5h-2.5V6z"/><path d="M1.5 19.5h5.5c.3 0 .5.2.5.5V21H1v-1c0-.3.2-.5.5-.5zm15.5 0h5.5c.3 0 .5.2.5.5V21h-6.5v-1c0-.3.2-.5.5-.5z"/><path d="M9.5 6h1.2v3.5H9.5V6zm3.8 0h1.2v3.5h-1.2V6z"/><circle cx="12" cy="13.8" r="5.2"/><circle cx="12" cy="13.8" r="1.6" fill="white"/></svg>',
-            
-            // 5. Pojok Tani -> Ikon PADI (Solid: Bulir Padi Tangkai Sheaf)
-            5 => '<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.8 1.4.8 3.1 0 4.5-.8-1.4-.8-3.1 0-4.5zm-2.8 4.2c1.5.7 2.4 2.1 2.4 3.8-1.6-.3-2.9-1.4-3.4-2.8.2-.4.6-.7 1-.9zm5.6 0c.4.2.8.5 1 .9-.5 1.4-1.8 2.5-3.4 2.8 0-1.7.9-3.1 2.4-3.8zM8.3 11c1.5.6 2.5 2 2.6 3.6-1.7-.2-3.1-1.2-3.7-2.7.3-.4.7-.7 1.1-.9zm7.4 0c.4.2.8.5 1.1.9-.6 1.5-2 2.5-3.7 2.7.1-1.6 1.1-3 2.6-3.6zM7.5 15.8c1.5.6 2.6 1.9 2.7 3.5-1.7-.1-3.2-1.1-3.8-2.5.3-.4.7-.7 1.1-1zm9 0c.4.3.8.6 1.1 1-.6 1.4-2.1 2.4-3.8 2.5.1-1.6 1.2-2.9 2.7-3.5zM11 18.5v3.5h2v-3.5h-2z"/></svg>',
-        ];
-    @endphp
-
-    <div x-data="{
-        activeSlug: 'harmoni',
-        isJumping: false,
-        jumpTimeout: null,
-        scrollToPojok(slug) {
-            this.activeSlug = slug;
-            this.isJumping = true;
-            clearTimeout(this.jumpTimeout);
-            
-            const el = document.getElementById(slug);
-            if (el) {
-                const headerOffset = 135;
-                const elementPosition = el.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'auto'
-                });
-            }
-            
-            this.jumpTimeout = setTimeout(() => {
-                this.isJumping = false;
-            }, 300);
-        },
-        init() {
-            const slugs = [
-                @foreach($pojoks as $p)
-                    '{{ Str::slug(str_replace('Pojok ', '', $p->nama)) }}',
-                @endforeach
-            ];
-            const observer = new IntersectionObserver((entries) => {
-                if (this.isJumping) return;
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        this.activeSlug = entry.target.id;
-                    }
-                });
-            }, {
-                rootMargin: '-25% 0px -55% 0px',
-                threshold: 0.1
-            });
-            slugs.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) observer.observe(el);
-            });
-        }
-    }" class="md:hidden sticky top-[86px] sm:top-[96px] z-20 py-2 sm:py-3 pointer-events-none">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <!-- MODE MOBILE: Kapsul Island Nav Kaca Buram Glassmorphism (Membiaskan + Latar Menggelap + Teks Berwarna) -->
-            <div class="flex items-center justify-center">
-                <div class="inline-flex items-center p-1 rounded-full bg-white/65 backdrop-blur-xl backdrop-saturate-150 border border-white/60 shadow-[0_8px_32px_0_rgba(10,61,41,0.08),0_1px_3px_0_rgba(0,0,0,0.04)] gap-1 max-w-full overflow-x-auto scrollbar-none [&::-webkit-scrollbar]:hidden pointer-events-auto"
-                     style="scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch;">
-                    @foreach($pojoks as $p)
-                        @php
-                            $slugId = Str::slug(str_replace('Pojok ', '', $p->nama));
-                            $icon = $pojokIcons[$p->id] ?? $pojokIcons[1];
-                        @endphp
-                        <a href="#{{ $slugId }}" 
-                           @click.prevent="scrollToPojok('{{ $slugId }}')"
-                           class="inline-flex items-center gap-1.5 rounded-full py-1.5 transition-all duration-300 ease-in-out shrink-0 select-none"
-                           :class="activeSlug === '{{ $slugId }}' 
-                               ? 'bg-slate-900/[0.12] backdrop-blur-md text-[#0A3D29] font-bold shadow-2xs px-3.5' 
-                               : 'bg-transparent text-slate-500 hover:text-slate-700 hover:bg-white/30 px-2.5'">
-                            
-                            <!-- Ikon Kapsul (Berwarna saat Aktif) -->
-                            <span class="transition-colors duration-300 shrink-0"
-                                  :class="activeSlug === '{{ $slugId }}' ? 'text-[#0A3D29]' : 'text-slate-500'">
-                                {!! $icon !!}
-                            </span>
-
-                            <!-- Teks Kapsul (Berwarna saat Aktif, Melebar Halus) -->
-                            <span class="overflow-hidden transition-all duration-300 ease-in-out text-xs whitespace-nowrap"
-                                  :class="activeSlug === '{{ $slugId }}' ? 'max-w-[140px] opacity-100 text-[#0A3D29]' : 'max-w-0 opacity-0'">
-                                {{ $p->nama }}
-                            </span>
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- ===================================================================== -->
-    <!-- 4. SECTION DEDIKASI PER-POJOK (FULL-WIDTH STRIPES BERSELANG-SELING) -->
+      <!-- ===================================================================== -->
+    <!-- 3. SECTION DEDIKASI PER-POJOK (FULL-WIDTH STRIPES BERSELANG-SELING) -->
     <!-- ===================================================================== -->
     <style>
         @media (min-width: 768px) {
@@ -280,7 +291,7 @@
             }
         }
     </style>
-    <div class="divide-y divide-[#DCE6DA] border-b border-[#DCE6DA]">
+    <div id="katalog-pojok-container" class="divide-y divide-[#DCE6DA] border-b border-[#DCE6DA]">
         @foreach($pojoks as $index => $pojok)
                     @php
                         $slugId = Str::slug(str_replace('Pojok ', '', $pojok->nama));
@@ -648,32 +659,7 @@
                 @endif
             </section>
 
-            <!-- ===================================================================== -->
-            <!-- 8. PENUTUP & CALL TO ACTION (PRD Section 4.1 #7) -->
-            <!-- ===================================================================== -->
-            <section class="bg-gradient-to-br from-[#0A3D29] via-[#145C3B] to-[#0A3D29] rounded-xl sm:rounded-2xl p-6 sm:p-10 text-white text-center shadow-lg relative overflow-hidden">
-                <div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
-                <div class="relative z-10 max-w-2xl mx-auto space-y-4">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold bg-[#D9B85C] text-[#061C12] shadow-xs uppercase tracking-wider">
-                        Aksi Nyata Ormawa Indonesia
-                    </span>
-                    <h3 class="font-serif text-2xl sm:text-3xl font-extrabold leading-tight text-white">
-                        Dukung Gerakan Berkelanjutan Desa Catur Cerdas
-                    </h3>
-                    <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed font-normal">
-                        Kemandirian dan kecerdasan desa terwujud melalui partisipasi aktif setiap warga dan kepedulian generasi muda. Mari bersinergi dan berkontribusi untuk masa depan Desa Catur yang lebih berdaya.
-                    </p>
-                    <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
-                        <a href="{{ route('public.services.index') }}" class="px-5 py-2.5 rounded-lg bg-white text-[#0A3D29] hover:bg-slate-100 text-xs font-bold shadow-md transition">
-                            Pusat Layanan Surat Warga
-                        </a>
-                        <a href="{{ route('public.news.index') }}" class="px-5 py-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/20 transition">
-                            Warta Berita Desa Terkini
-                        </a>
-                    </div>
-                </div>
-            </section>
 
         </div>
     </div>
@@ -743,6 +729,52 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ========================================================================= -->
+    <!-- FLOATING MOBILE BOTTOM DOCK: MORPHING CAPSULE (KEMBALI KE ATAS & POJOK NAVIGATOR) -->
+    <!-- ========================================================================= -->
+    <div class="fixed bottom-6 right-6 z-[99999] md:hidden font-sans pointer-events-auto flex items-center h-11 sm:h-12 rounded-full bg-white/75 hover:bg-white/95 backdrop-blur-3xl backdrop-saturate-200 border-2 border-white ring-1 ring-[#0A3D29]/25 shadow-2xl text-[#0A3D29] overflow-hidden select-none p-0.5 transition-all duration-500 ease-out"
+         :title="inPojokSection ? ('Pojok Aktif: ' + activeName) : 'Kembali ke Atas'">
+        
+        <!-- Bagian Melebar ke Samping saat Masuk Katalog Pojok (Indikator & Panah Bawah) -->
+        <div class="flex items-center transition-all duration-500 ease-out overflow-hidden"
+             :class="inPojokSection ? 'max-w-[260px] opacity-100' : 'max-w-0 opacity-0 pointer-events-none'">
+            
+            <!-- Keterangan Pojok (Indikator) -->
+            <div class="pl-3.5 pr-2.5 sm:pl-4 sm:pr-3 py-1 flex items-center shrink-0">
+                <span class="text-xs sm:text-sm font-bold tracking-tight text-[#0A3D29] whitespace-nowrap" x-text="activeName"></span>
+            </div>
+
+            <!-- Garis Pemisah Antara Indikator & Tombol Ke Bawah -->
+            <div class="h-5 sm:h-6 w-px bg-[#0A3D29]/20 shrink-0"></div>
+
+            <!-- Tombol Panah Ke Bawah (Kiri: Pojok Selanjutnya) -->
+            <button type="button" 
+                    @click="nextPojok()" 
+                    class="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-[#0A3D29] hover:bg-slate-900/[0.08] active:bg-slate-900/[0.18] active:scale-90 transition-all cursor-pointer group shrink-0"
+                    aria-label="Pojok Selanjutnya"
+                    title="Pojok Selanjutnya">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#0A3D29] group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+
+            <!-- Garis Pemisah Antara Tombol Bawah & Tombol Atas -->
+            <div class="h-5 sm:h-6 w-px bg-[#0A3D29]/20 shrink-0"></div>
+        </div>
+
+        <!-- Tombol Panah Ke Atas / Kembali ke Atas (Selalu Tampil di Luar Maupun di Dalam Katalog Pojok) -->
+        <button type="button" 
+                @click="prevPojok()" 
+                class="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-[#0A3D29] hover:bg-slate-900/[0.08] active:bg-slate-900/[0.18] active:scale-90 transition-all cursor-pointer group shrink-0"
+                :aria-label="inPojokSection ? 'Pojok Sebelumnya / Kembali ke Atas' : 'Kembali ke Atas'"
+                :title="inPojokSection ? 'Pojok Sebelumnya / Kembali ke Atas' : 'Kembali ke Atas'">
+            <svg class="w-5 h-5 text-[#0A3D29] group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/>
+            </svg>
+        </button>
     </div>
 
 </div>

@@ -891,6 +891,7 @@
         </div>
     </div>
 
+    @if(!request()->routeIs('public.ppko*'))
     <!-- FLOATING SCROLL TO TOP BUTTON (RIGHT SIDE) -->
     <div class="fixed bottom-6 right-6 z-[99999] lg:hidden font-sans pointer-events-auto">
         <button type="button" 
@@ -903,6 +904,7 @@
             </svg>
         </button>
     </div>
+    @endif
 
     <script>
         function navSearchApp() {
