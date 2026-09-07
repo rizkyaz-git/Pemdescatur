@@ -271,7 +271,7 @@
             </section>
         </div>
       <!-- ===================================================================== -->
-    <!-- 3. SECTION DEDIKASI PER-POJOK (FULL-WIDTH STRIPES BERSELANG-SELING) -->
+    <!-- 3. SECTION DEDIKASI PER-POJOK (BERGAYA KARTU) -->
     <!-- ===================================================================== -->
     <style>
         @media (min-width: 768px) {
@@ -291,7 +291,7 @@
             }
         }
     </style>
-    <div id="katalog-pojok-container" class="divide-y divide-[#DCE6DA] border-b border-[#DCE6DA]">
+    <div id="katalog-pojok-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8">
         @foreach($pojoks as $index => $pojok)
                     @php
                         $slugId = Str::slug(str_replace('Pojok ', '', $pojok->nama));
@@ -364,12 +364,12 @@
                     @endphp
 
                     @php
-                        $bgHex = $loop->odd ? '#F8FAFC' : '#FFFFFF';
-                        $bgRgb = $loop->odd ? '248, 250, 252' : '255, 255, 255';
+                        $bgHex = '#F8FAFC';
+                        $bgRgb = '248, 250, 252';
                     @endphp
 
-                    <!-- POJOK SHOWCASE ROW (SINERGI GAMBAR FADE & OVERLAY SESUAI WARNA LATAR SECTION) -->
-                    <section id="{{ $slugId }}" class="w-full relative overflow-hidden pt-0 pb-12 sm:pb-20 md:py-20 lg:py-24 scroll-mt-36 border-b border-[#E2E8F0]/80" style="background-color: {{ $bgHex }};">
+                    <!-- POJOK SHOWCASE ROW (BERGAYA KARTU DENGAN PEMBUNGKUS ROUNDED-XL) -->
+                    <section id="{{ $slugId }}" class="w-full relative overflow-hidden rounded-xl border border-[#DCE6DA] shadow-xs pt-0 pb-12 sm:pb-20 md:py-20 lg:py-24 scroll-mt-28 md:scroll-mt-36" style="background-color: {{ $bgHex }};">
                         
                         <!-- 1. GAMBAR (MODE MOBILE: BANNER DI ATAS RASIO PROPORSIONAL 16:10; DESKTOP: LATAR SAMPING 68%) -->
                         <div class="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-auto md:absolute md:inset-y-0 {{ $isEven ? 'md:right-0 md:left-auto' : 'md:left-0 md:right-auto' }} md:w-[65%] lg:w-[68%] md:h-full overflow-hidden pointer-events-none {{ $isEven ? 'mask-fade-even' : 'mask-fade-odd' }} mask-fade-mobile">
@@ -735,7 +735,7 @@
     <!-- ========================================================================= -->
     <!-- FLOATING MOBILE BOTTOM DOCK: MORPHING CAPSULE (KEMBALI KE ATAS & POJOK NAVIGATOR) -->
     <!-- ========================================================================= -->
-    <div class="fixed bottom-6 right-6 z-[99999] md:hidden font-sans pointer-events-auto flex items-center h-11 sm:h-12 rounded-full bg-white/75 hover:bg-white/95 backdrop-blur-3xl backdrop-saturate-200 border-2 border-white ring-1 ring-[#0A3D29]/25 shadow-2xl text-[#0A3D29] overflow-hidden select-none p-0.5 transition-all duration-500 ease-out"
+    <div class="fixed bottom-6 right-6 z-[99999] md:hidden font-sans pointer-events-auto flex items-center h-11 sm:h-12 rounded-full bg-white/80 backdrop-blur-3xl backdrop-saturate-200 border-2 border-white ring-1 ring-[#0A3D29]/25 shadow-2xl text-[#0A3D29] overflow-hidden select-none p-0.5 transition-all duration-500 ease-out"
          :title="inPojokSection ? ('Pojok Aktif: ' + activeName) : 'Kembali ke Atas'">
         
         <!-- Bagian Melebar ke Samping saat Masuk Katalog Pojok (Indikator & Panah Bawah) -->
@@ -753,10 +753,10 @@
             <!-- Tombol Panah Ke Bawah (Kiri: Pojok Selanjutnya) -->
             <button type="button" 
                     @click="nextPojok()" 
-                    class="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-[#0A3D29] hover:bg-slate-900/[0.08] active:bg-slate-900/[0.18] active:scale-90 transition-all cursor-pointer group shrink-0"
+                    class="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-[#0A3D29] active:bg-slate-900/[0.18] active:scale-90 transition-all cursor-pointer shrink-0"
                     aria-label="Pojok Selanjutnya"
                     title="Pojok Selanjutnya">
-                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#0A3D29] group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                 </svg>
             </button>
@@ -768,10 +768,10 @@
         <!-- Tombol Panah Ke Atas / Kembali ke Atas (Selalu Tampil di Luar Maupun di Dalam Katalog Pojok) -->
         <button type="button" 
                 @click="prevPojok()" 
-                class="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-[#0A3D29] hover:bg-slate-900/[0.08] active:bg-slate-900/[0.18] active:scale-90 transition-all cursor-pointer group shrink-0"
+                class="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-[#0A3D29] active:bg-slate-900/[0.18] active:scale-90 transition-all cursor-pointer shrink-0"
                 :aria-label="inPojokSection ? 'Pojok Sebelumnya / Kembali ke Atas' : 'Kembali ke Atas'"
                 :title="inPojokSection ? 'Pojok Sebelumnya / Kembali ke Atas' : 'Kembali ke Atas'">
-            <svg class="w-5 h-5 text-[#0A3D29] group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/>
             </svg>
         </button>
