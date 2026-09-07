@@ -37,8 +37,30 @@
             <!-- ========================================================================= -->
             <!-- 1. TOP SECTION: COVER PPKO ONLY (Gambar Saja, Tanpa Route / Breadcrumbs) -->
             <!-- ========================================================================= -->
+            @php
+                $coverCandidates = [
+                    'images/assets/cover ppko.png',
+                    'images/assets/cover_ppko.png',
+                    'assets/images/cover ppko.png',
+                    'assets/images/cover_ppko.png',
+                    'images/ppko/cover ppko.png',
+                    'images/ppko/cover_ppko.png',
+                    'images/cover ppko.png',
+                    'images/cover_ppko.png',
+                ];
+                $ppkoCoverUrl = null;
+                foreach ($coverCandidates as $candidate) {
+                    if (file_exists(public_path($candidate))) {
+                        $ppkoCoverUrl = asset($candidate);
+                        break;
+                    }
+                }
+                if (!$ppkoCoverUrl) {
+                    $ppkoCoverUrl = asset('images/cover_ppko.png');
+                }
+            @endphp
             <div class="relative w-full rounded-xl sm:rounded-2xl overflow-hidden shadow-xs border border-[#DCE6DA] bg-white group">
-                <img src="{{ asset('images/cover_ppko.png') }}" 
+                <img src="{{ $ppkoCoverUrl }}" 
                      alt="Cover Banner PPKO Catur Cerdas UMS 2026 Desa Catur" 
                      class="w-full h-auto object-cover object-center group-hover:scale-[1.005] transition-transform duration-700 ease-out">
             </div>
@@ -135,38 +157,136 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- 3. QUICK JUMP POJOK NAVIGATION BAR (Akses Cepat 5 Pilar) -->
+    <!-- 3. QUICK JUMP POJOK NAVIGATION BAR (Akses Cepat 5 Pojok) -->
     <!-- ===================================================================== -->
-    <div class="sticky top-20 z-20 bg-white/95 backdrop-blur-xl border-y border-[#DCE6DA] shadow-2xs py-2.5">
+    <!-- ===================================================================== -->
+    <!-- 3. QUICK JUMP POJOK NAVIGATION BAR (Glassmorphism Capsule Island) -->
+    <!-- ===================================================================== -->
+    @php
+        $pojokIcons = [
+            // 1. Pojok Harmoni -> Ikon KELUARGA (Solid: Ayah, Ibu, Anak)
+            1 => '<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="6" r="2.2"/><circle cx="17" cy="6" r="2.2"/><circle cx="12" cy="11.5" r="1.6"/><path d="M7 9.5C4.5 9.5 3 11 3 13.5V18h3.5v-3c0-.8.7-1.5 1.5-1.5h1c.8 0 1.5.7 1.5 1.5v3H21v-4.5c0-2.5-1.5-4-4-4h-1.2c-.7.9-1.8 1.5-3 1.5h-1.6c-1.2 0-2.3-.6-3-1.5H7zm5 4.5c-1.5 0-2.5 1-2.5 2.2V18h5v-1.8c0-1.2-1-2.2-2.5-2.2z"/></svg>',
+            
+            // 2. Pojok Ceria -> Ikon LITERASI (Solid: Buku Terbuka Membaca / Open Book)
+            2 => '<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C10.2 3.4 8 3 6 3 4.2 3 2.6 3.5 1.5 4.3c-.3.2-.5.6-.5 1v13.2c0 .6.6 1.1 1.2.9C3.4 18.8 4.7 18.5 6 18.5c2 0 4.2.5 6 1.6 1.8-1.1 4-1.6 6-1.6 1.3 0 2.6.3 3.8.9.6.2 1.2-.3 1.2-.9V5.3c0-.4-.2-.8-.5-1C21.4 3.5 19.8 3 18 3c-2 0-4.2.4-6 1.5zm-1 12.3c-1.5-.9-3.3-1.3-5-1.3-1.3 0-2.6.3-3.5.7V6.1c1-.4 2.2-.6 3.5-.6 1.7 0 3.5.4 5 1.3v10z"/></svg>',
+            
+            // 3. Pojok UMKM -> Ikon KERANJANG (Solid: Shopping Basket Belanja)
+            3 => '<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M17.21 9l-4.38-6.56a1 1 0 00-1.66 0L6.79 9H2.5c-.83 0-1.5.67-1.5 1.5 0 .24.06.47.16.67L3.4 19.2c.3.9 1.1 1.8 2.1 1.8h13c1 0 1.8-.9 2.1-1.8l2.24-8.03c.1-.2.16-.43.16-.67 0-.83-.67-1.5-1.5-1.5h-4.29zm-5.21-4.22L14.8 9H9.2l2.8-4.22zM12 17.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
+            
+            // 4. Pojok Budaya -> Ikon GAMELAN (Solid: Gong Gamelan Jawa dengan Gayor Penyangga)
+            4 => '<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M2 3.5c0-.6.4-1 1-1h18c.6 0 1 .4 1 1v2.5H2V3.5z"/><path d="M3 6h2.5v13.5H3V6zm15.5 0H21v13.5h-2.5V6z"/><path d="M1.5 19.5h5.5c.3 0 .5.2.5.5V21H1v-1c0-.3.2-.5.5-.5zm15.5 0h5.5c.3 0 .5.2.5.5V21h-6.5v-1c0-.3.2-.5.5-.5z"/><path d="M9.5 6h1.2v3.5H9.5V6zm3.8 0h1.2v3.5h-1.2V6z"/><circle cx="12" cy="13.8" r="5.2"/><circle cx="12" cy="13.8" r="1.6" fill="white"/></svg>',
+            
+            // 5. Pojok Tani -> Ikon PADI (Solid: Bulir Padi Tangkai Sheaf)
+            5 => '<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.8 1.4.8 3.1 0 4.5-.8-1.4-.8-3.1 0-4.5zm-2.8 4.2c1.5.7 2.4 2.1 2.4 3.8-1.6-.3-2.9-1.4-3.4-2.8.2-.4.6-.7 1-.9zm5.6 0c.4.2.8.5 1 .9-.5 1.4-1.8 2.5-3.4 2.8 0-1.7.9-3.1 2.4-3.8zM8.3 11c1.5.6 2.5 2 2.6 3.6-1.7-.2-3.1-1.2-3.7-2.7.3-.4.7-.7 1.1-.9zm7.4 0c.4.2.8.5 1.1.9-.6 1.5-2 2.5-3.7 2.7.1-1.6 1.1-3 2.6-3.6zM7.5 15.8c1.5.6 2.6 1.9 2.7 3.5-1.7-.1-3.2-1.1-3.8-2.5.3-.4.7-.7 1.1-1zm9 0c.4.3.8.6 1.1 1-.6 1.4-2.1 2.4-3.8 2.5.1-1.6 1.2-2.9 2.7-3.5zM11 18.5v3.5h2v-3.5h-2z"/></svg>',
+        ];
+    @endphp
+
+    <div x-data="{
+        activeSlug: 'harmoni',
+        isJumping: false,
+        jumpTimeout: null,
+        scrollToPojok(slug) {
+            this.activeSlug = slug;
+            this.isJumping = true;
+            clearTimeout(this.jumpTimeout);
+            
+            const el = document.getElementById(slug);
+            if (el) {
+                const headerOffset = 135;
+                const elementPosition = el.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'auto'
+                });
+            }
+            
+            this.jumpTimeout = setTimeout(() => {
+                this.isJumping = false;
+            }, 300);
+        },
+        init() {
+            const slugs = [
+                @foreach($pojoks as $p)
+                    '{{ Str::slug(str_replace('Pojok ', '', $p->nama)) }}',
+                @endforeach
+            ];
+            const observer = new IntersectionObserver((entries) => {
+                if (this.isJumping) return;
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        this.activeSlug = entry.target.id;
+                    }
+                });
+            }, {
+                rootMargin: '-25% 0px -55% 0px',
+                threshold: 0.1
+            });
+            slugs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) observer.observe(el);
+            });
+        }
+    }" class="md:hidden sticky top-[86px] sm:top-[96px] z-20 py-2 sm:py-3 pointer-events-none">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between gap-2 overflow-x-auto scrollbar-none">
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider px-2 shrink-0 hidden md:inline">
-                    Pilih Pilar:
-                </span>
-                <div class="flex items-center gap-1.5 sm:gap-2 flex-1">
+            
+            <!-- MODE MOBILE: Kapsul Island Nav Kaca Buram Glassmorphism (Membiaskan + Latar Menggelap + Teks Berwarna) -->
+            <div class="flex items-center justify-center">
+                <div class="inline-flex items-center p-1 rounded-full bg-white/65 backdrop-blur-xl backdrop-saturate-150 border border-white/60 shadow-[0_8px_32px_0_rgba(10,61,41,0.08),0_1px_3px_0_rgba(0,0,0,0.04)] gap-1 max-w-full overflow-x-auto scrollbar-none [&::-webkit-scrollbar]:hidden pointer-events-auto"
+                     style="scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch;">
                     @foreach($pojoks as $p)
                         @php
                             $slugId = Str::slug(str_replace('Pojok ', '', $p->nama));
+                            $icon = $pojokIcons[$p->id] ?? $pojokIcons[1];
                         @endphp
                         <a href="#{{ $slugId }}" 
-                           class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 hover:text-[#0A3D29] hover:bg-[#EAF1E8] transition whitespace-nowrap flex items-center gap-1.5 border border-transparent hover:border-[#0A3D29]/20">
-                            <span>{{ $p->nama }}</span>
-                            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-100 text-slate-600 font-mono">
-                                {{ $p->kegiatans->count() }}
+                           @click.prevent="scrollToPojok('{{ $slugId }}')"
+                           class="inline-flex items-center gap-1.5 rounded-full py-1.5 transition-all duration-300 ease-in-out shrink-0 select-none"
+                           :class="activeSlug === '{{ $slugId }}' 
+                               ? 'bg-slate-900/[0.12] backdrop-blur-md text-[#0A3D29] font-bold shadow-2xs px-3.5' 
+                               : 'bg-transparent text-slate-500 hover:text-slate-700 hover:bg-white/30 px-2.5'">
+                            
+                            <!-- Ikon Kapsul (Berwarna saat Aktif) -->
+                            <span class="transition-colors duration-300 shrink-0"
+                                  :class="activeSlug === '{{ $slugId }}' ? 'text-[#0A3D29]' : 'text-slate-500'">
+                                {!! $icon !!}
+                            </span>
+
+                            <!-- Teks Kapsul (Berwarna saat Aktif, Melebar Halus) -->
+                            <span class="overflow-hidden transition-all duration-300 ease-in-out text-xs whitespace-nowrap"
+                                  :class="activeSlug === '{{ $slugId }}' ? 'max-w-[140px] opacity-100 text-[#0A3D29]' : 'max-w-0 opacity-0'">
+                                {{ $p->nama }}
                             </span>
                         </a>
                     @endforeach
                 </div>
-                <a href="#perpustakaan" class="px-3 py-1.5 rounded-lg text-xs font-bold text-[#D9B85C] bg-[#0A3D29] hover:bg-[#145C3B] transition shrink-0">
-                    Perpustakaan Desa ↗
-                </a>
             </div>
+
         </div>
     </div>
 
     <!-- ===================================================================== -->
     <!-- 4. SECTION DEDIKASI PER-POJOK (FULL-WIDTH STRIPES BERSELANG-SELING) -->
     <!-- ===================================================================== -->
+    <style>
+        @media (min-width: 768px) {
+            .mask-fade-even {
+                -webkit-mask-image: linear-gradient(to left, black 25%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.35) 75%, transparent 100%), linear-gradient(to top left, black 35%, rgba(0,0,0,0.7) 65%, transparent 100%);
+                mask-image: linear-gradient(to left, black 25%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.35) 75%, transparent 100%), linear-gradient(to top left, black 35%, rgba(0,0,0,0.7) 65%, transparent 100%);
+            }
+            .mask-fade-odd {
+                -webkit-mask-image: linear-gradient(to right, black 25%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.35) 75%, transparent 100%), linear-gradient(to top right, black 35%, rgba(0,0,0,0.7) 65%, transparent 100%);
+                mask-image: linear-gradient(to right, black 25%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.35) 75%, transparent 100%), linear-gradient(to top right, black 35%, rgba(0,0,0,0.7) 65%, transparent 100%);
+            }
+        }
+        @media (max-width: 767.98px) {
+            .mask-fade-mobile {
+                -webkit-mask-image: linear-gradient(to bottom, black 70%, rgba(0,0,0,0.75) 85%, transparent 100%);
+                mask-image: linear-gradient(to bottom, black 70%, rgba(0,0,0,0.75) 85%, transparent 100%);
+            }
+        }
+    </style>
     <div class="divide-y divide-[#DCE6DA] border-b border-[#DCE6DA]">
         @foreach($pojoks as $index => $pojok)
                     @php
@@ -239,153 +359,139 @@
                         }
                     @endphp
 
-                    <!-- POJOK SHOWCASE ROW (ALTERNATIF WARNA LATAR BERGILIR #F8FAFC & PUTIH) -->
-                    <section id="{{ $slugId }}" class="w-full {{ $loop->odd ? 'bg-[#F8FAFC]' : 'bg-white' }} py-12 sm:py-16 scroll-mt-36">
-                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div class="flex flex-col {{ $isEven ? 'sm:flex-row-reverse' : 'sm:flex-row' }} items-stretch gap-6 sm:gap-8 lg:gap-12">
-                                
-                                <!-- SISI FOTO DOKUMENTASI (sm:w-5/12) -->
-                                <div class="w-full sm:w-5/12 lg:w-5/12 shrink-0 relative {{ $loop->odd ? 'bg-white' : 'bg-[#F8FAFC]' }} rounded-md border border-[#DCE6DA] overflow-hidden min-h-[220px] sm:min-h-[260px] lg:min-h-[280px]">
-                                    <img src="{{ $mainImage }}" 
-                                     alt="{{ $pojok->nama }}" 
-                                     class="w-full h-full object-cover sm:absolute sm:inset-0">
-                                
-                                @auth
-                                    @if(auth()->user()->isAdmin())
-                                        <!-- Tombol Ganti Foto Langsung untuk Admin -->
-                                        <form action="{{ route('admin.pojoks.foto.update', $pojok) }}" method="POST" enctype="multipart/form-data" class="absolute top-3 {{ $isEven ? 'right-3' : 'left-3' }} z-10">
-                                            @csrf
-                                            <label for="input-foto-pojok-{{ $pojok->id }}" class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-900/85 hover:bg-slate-900 text-white text-xs font-semibold shadow-sm backdrop-blur-sm border border-white/20 transition-all hover:scale-105 active:scale-95">
-                                                <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                                <span>Ganti Foto</span>
-                                            </label>
-                                            <input type="file" id="input-foto-pojok-{{ $pojok->id }}" name="foto" class="hidden" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="if(this.files.length > 0) { this.form.submit(); }">
-                                        </form>
-                                    @endif
-                                @endauth
+                    @php
+                        $bgHex = $loop->odd ? '#F8FAFC' : '#FFFFFF';
+                        $bgRgb = $loop->odd ? '248, 250, 252' : '255, 255, 255';
+                    @endphp
+
+                    <!-- POJOK SHOWCASE ROW (SINERGI GAMBAR FADE & OVERLAY SESUAI WARNA LATAR SECTION) -->
+                    <section id="{{ $slugId }}" class="w-full relative overflow-hidden pt-0 pb-12 sm:pb-20 md:py-20 lg:py-24 scroll-mt-36 border-b border-[#E2E8F0]/80" style="background-color: {{ $bgHex }};">
+                        
+                        <!-- 1. GAMBAR (MODE MOBILE: BANNER DI ATAS RASIO PROPORSIONAL 16:10; DESKTOP: LATAR SAMPING 68%) -->
+                        <div class="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-auto md:absolute md:inset-y-0 {{ $isEven ? 'md:right-0 md:left-auto' : 'md:left-0 md:right-auto' }} md:w-[65%] lg:w-[68%] md:h-full overflow-hidden pointer-events-none {{ $isEven ? 'mask-fade-even' : 'mask-fade-odd' }} mask-fade-mobile">
+                            <img src="{{ $mainImage }}" 
+                                 alt="{{ $pojok->nama }}" 
+                                 class="w-full h-full object-cover object-center {{ $isEven ? 'md:object-right' : 'md:object-left' }}">
+                            <!-- Overlay gradasi mobile di bagian bawah foto agar menyatu mulus dengan warna latar section -->
+                            <div class="absolute inset-x-0 bottom-0 h-20 sm:h-24 md:hidden pointer-events-none"
+                                 style="background: linear-gradient(to bottom, transparent 0%, rgba({{ $bgRgb }}, 0.6) 45%, rgba({{ $bgRgb }}, 1) 100%);">
                             </div>
+                        </div>
 
-                            <!-- SISI DETAIL KONTEN (sm:w-7/12) -->
-                            <div class="w-full sm:w-7/12 lg:w-7/12 flex flex-col justify-between space-y-4 py-0.5">
-                                
-                                <div class="space-y-3">
-                                    <!-- Top Row: Title on Left, Pillar Tag on Right -->
-                                    <div class="flex items-start justify-between gap-3">
-                                        <div>
-                                            <h3 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                                                {{ $index + 1 }}. {{ $pojok->nama }}
-                                            </h3>
-                                        </div>
+                        <!-- 2. OVERLAY WARNA LATAR SECTION DI DESKTOP YANG BERSINERGI MULUS DENGAN GAMBAR -->
+                        @if(!$isEven)
+                            <!-- POJOK GANJIL: Teks di Kanan, Gambar di Kiri, Warna #F8FAFC -->
+                            <div class="absolute inset-0 pointer-events-none hidden md:block" 
+                                 style="background: linear-gradient(to left, rgba({{ $bgRgb }}, 1) 0%, rgba({{ $bgRgb }}, 1) 36%, rgba({{ $bgRgb }}, 0.94) 50%, rgba({{ $bgRgb }}, 0.68) 68%, rgba({{ $bgRgb }}, 0.25) 84%, rgba({{ $bgRgb }}, 0) 100%), linear-gradient(to bottom, rgba({{ $bgRgb }}, 0.35) 0%, transparent 35%);">
+                            </div>
+                        @else
+                            <!-- POJOK GENAP: Teks di Kiri, Gambar di Kanan, Warna Putih (#FFFFFF) -->
+                            <div class="absolute inset-0 pointer-events-none hidden md:block" 
+                                 style="background: linear-gradient(to right, rgba({{ $bgRgb }}, 1) 0%, rgba({{ $bgRgb }}, 1) 36%, rgba({{ $bgRgb }}, 0.94) 50%, rgba({{ $bgRgb }}, 0.68) 68%, rgba({{ $bgRgb }}, 0.25) 84%, rgba({{ $bgRgb }}, 0) 100%), linear-gradient(to bottom, rgba({{ $bgRgb }}, 0.35) 0%, transparent 35%);">
+                            </div>
+                        @endif
 
-                                        <!-- Pillar Category Badge (Bentuk Halus / Tidak Terlalu Rounded) -->
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-semibold bg-[#EAF1E8] text-[#0A3D29] border border-[#0A3D29]/20 shrink-0">
-                                            Pilar 0{{ $index + 1 }} • {{ $t['category'] }}
-                                        </span>
+                        <!-- 3. TOMBOL GANTI FOTO ADMIN (Tetap mudah diakses di sudut gambar) -->
+                        @auth
+                            @if(auth()->user()->isAdmin())
+                                <form action="{{ route('admin.pojoks.foto.update', $pojok) }}" method="POST" enctype="multipart/form-data" class="absolute top-4 {{ $isEven ? 'right-4 sm:right-6' : 'md:left-4 md:sm:left-6 right-4' }} z-20">
+                                    @csrf
+                                    <label for="input-foto-pojok-{{ $pojok->id }}" class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-900/85 hover:bg-slate-900 text-white text-xs font-semibold shadow-sm backdrop-blur-sm border border-white/20 transition-all hover:scale-105 active:scale-95">
+                                        <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                        <span>Ganti Foto</span>
+                                    </label>
+                                    <input type="file" id="input-foto-pojok-{{ $pojok->id }}" name="foto" class="hidden" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="if(this.files.length > 0) { this.form.submit(); }">
+                                </form>
+                            @endif
+                        @endauth
+
+                        <!-- 4. KONTEN DETAIL (BERSIH LANGSUNG DI ATAS WARNA LATAR SECTION) -->
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pt-4 md:pt-0">
+                            <div class="flex {{ $isEven ? 'justify-start' : 'justify-end' }}">
+                                <div class="w-full md:w-1/2 lg:w-5/12 space-y-4">
+                                    
+                                    <!-- Judul Pojok -->
+                                    <div>
+                                        <h3 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                                            {{ $index + 1 }}. {{ $pojok->nama }}
+                                        </h3>
                                     </div>
 
-                                    <!-- Highlight Row: Sasaran -->
+                                    <!-- Sasaran -->
                                     <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-800">
                                         <span class="w-1.5 h-1.5 rounded-full bg-[#0A3D29]"></span>
                                         <span>Sasaran: {{ $t['sasaran'] }}</span>
                                     </div>
 
-                                    <!-- Details Row -->
-                                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                        <span class="font-medium text-slate-700">Detail:</span> {{ $pojok->deskripsi_singkat }}
+                                    <!-- Deskripsi Singkat -->
+                                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                        {{ $pojok->deskripsi_singkat }}
                                     </p>
 
-                                    <!-- Specs / Features List with Icons -->
-                                    <div class="space-y-1.5 pt-0.5 text-xs sm:text-sm text-slate-600">
-                                        @foreach($t['fokus'] as $fokusItem)
-                                            <div class="flex items-center gap-2.5">
-                                                <svg class="w-4 h-4 text-[#0A3D29]/80 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                                <span>{{ $fokusItem }}</span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
+                                    <!-- Tombol Kurikulum & Modul -->
+                                    @php
+                                        $kurikulumDoc = $pojok->kurikulums->first(function($k) {
+                                            return stripos($k->judul, 'kurikulum') !== false || stripos($k->judul, 'silabus') !== false;
+                                        }) ?? $pojok->kurikulums->first();
 
-                                <!-- Bottom Row: Admin Tools (Left) & Action Buttons (Right: Kurikulum & Modul Atas-Bawah) -->
-                                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pt-3 border-t border-[#DCE6DA]/70 mt-2">
-                                    <div>
+                                        $modulDoc = $pojok->kurikulums->first(function($k) use ($kurikulumDoc) {
+                                            return (!$kurikulumDoc || $k->id !== $kurikulumDoc->id) && 
+                                                   (stripos($k->judul, 'modul') !== false || stripos($k->judul, 'panduan') !== false || stripos($k->judul, 'pfa') !== false);
+                                        }) ?? ($pojok->kurikulums->count() > 1 ? $pojok->kurikulums->skip(1)->first() : null);
+                                    @endphp
+
+                                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                                        <!-- Tombol Kurikulum -->
+                                        @if($kurikulumDoc)
+                                            <a href="{{ route('public.ppko.kurikulum.download', $kurikulumDoc) }}" 
+                                               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-[#0A3D29] hover:bg-[#145C3B] text-white shadow-2xs hover:shadow-xs text-xs font-bold transition-all group">
+                                                <svg class="w-3.5 h-3.5 text-[#D9B85C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                                                <span>{{ $t['kurikulumLabel'] }}</span>
+                                                <svg class="w-3.5 h-3.5 opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                            </a>
+                                        @else
+                                            <a href="#galeri" 
+                                               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-[#0A3D29] hover:bg-[#145C3B] text-white shadow-2xs hover:shadow-xs text-xs font-bold transition-all group">
+                                                <svg class="w-3.5 h-3.5 text-[#D9B85C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                                                <span>{{ $t['kurikulumLabel'] }}</span>
+                                                <svg class="w-3.5 h-3.5 opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                            </a>
+                                        @endif
+
+                                        <!-- Tombol Modul -->
+                                        @if($modulDoc)
+                                            <a href="{{ route('public.ppko.kurikulum.download', $modulDoc) }}" 
+                                               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md {{ $loop->odd ? 'bg-white hover:bg-slate-50' : 'bg-[#F8FAFC] hover:bg-white' }} text-slate-800 border border-[#DCE6DA] shadow-2xs hover:shadow-xs text-xs font-semibold transition-all group">
+                                                <svg class="w-3.5 h-3.5 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                                <span>{{ $t['modulLabel'] }}</span>
+                                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                            </a>
+                                        @else
+                                            <a href="#galeri" 
+                                               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md {{ $loop->odd ? 'bg-white hover:bg-slate-50' : 'bg-[#F8FAFC] hover:bg-white' }} text-slate-800 border border-[#DCE6DA] shadow-2xs hover:shadow-xs text-xs font-semibold transition-all group">
+                                                <svg class="w-3.5 h-3.5 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                                <span>{{ $t['modulLabel'] }}</span>
+                                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                            </a>
+                                        @endif
+
                                         @auth
                                             @if(auth()->user()->isAdmin())
-                                                <div class="flex items-center gap-2">
-                                                    <a href="{{ route('admin.pojoks.edit', $pojok) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md {{ $loop->odd ? 'bg-white hover:bg-slate-50' : 'bg-[#F8FAFC] hover:bg-white' }} text-slate-700 border border-[#DCE6DA] text-xs font-semibold transition">
-                                                        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                                        <span>Kelola Pojok</span>
+                                                <div class="inline-flex items-center gap-2 ml-auto">
+                                                    <a href="{{ route('admin.pojoks.edit', $pojok) }}" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition">
+                                                        <span>Kelola</span>
                                                     </a>
-                                                    <a href="{{ route('admin.kegiatans.create') }}" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-[#0A3D29] hover:bg-[#145C3B] text-white text-xs font-bold transition">
+                                                    <a href="{{ route('admin.kegiatans.create') }}" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md bg-[#0A3D29] hover:bg-[#145C3B] text-white text-xs font-semibold transition">
                                                         <span>+ Kegiatan</span>
                                                     </a>
                                                 </div>
                                             @endif
                                         @endauth
                                     </div>
-
-                                    <!-- Tombol Kurikulum dan Modul (Diletakkan Atas - Bawah) -->
-                                    <div class="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[200px] ml-auto">
-                                        @php
-                                            $kurikulumDoc = $pojok->kurikulums->first(function($k) {
-                                                return stripos($k->judul, 'kurikulum') !== false || stripos($k->judul, 'silabus') !== false;
-                                            }) ?? $pojok->kurikulums->first();
-
-                                            $modulDoc = $pojok->kurikulums->first(function($k) use ($kurikulumDoc) {
-                                                return (!$kurikulumDoc || $k->id !== $kurikulumDoc->id) && 
-                                                       (stripos($k->judul, 'modul') !== false || stripos($k->judul, 'panduan') !== false || stripos($k->judul, 'pfa') !== false);
-                                            }) ?? ($pojok->kurikulums->count() > 1 ? $pojok->kurikulums->skip(1)->first() : null);
-                                        @endphp
-
-                                        <!-- Tombol 1 (Atas): Kurikulum -->
-                                        @if($kurikulumDoc)
-                                            <a href="{{ route('public.ppko.kurikulum.download', $kurikulumDoc) }}" 
-                                               class="inline-flex items-center justify-between gap-3 px-3.5 py-2 rounded-md bg-[#0A3D29] hover:bg-[#145C3B] text-white shadow-2xs hover:shadow-xs text-xs font-bold transition-all group">
-                                                <span class="inline-flex items-center gap-2">
-                                                    <svg class="w-3.5 h-3.5 text-[#D9B85C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                                                    <span>{{ $t['kurikulumLabel'] }}</span>
-                                                </span>
-                                                <svg class="w-3.5 h-3.5 opacity-80 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                            </a>
-                                        @else
-                                            <a href="#galeri" 
-                                               class="inline-flex items-center justify-between gap-3 px-3.5 py-2 rounded-md bg-[#0A3D29] hover:bg-[#145C3B] text-white shadow-2xs hover:shadow-xs text-xs font-bold transition-all group">
-                                                <span class="inline-flex items-center gap-2">
-                                                    <svg class="w-3.5 h-3.5 text-[#D9B85C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                                                    <span>{{ $t['kurikulumLabel'] }}</span>
-                                                </span>
-                                                <svg class="w-3.5 h-3.5 opacity-80 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                                            </a>
-                                        @endif
-
-                                        <!-- Tombol 2 (Bawah): Modul -->
-                                        @if($modulDoc)
-                                            <a href="{{ route('public.ppko.kurikulum.download', $modulDoc) }}" 
-                                               class="inline-flex items-center justify-between gap-3 px-3.5 py-2 rounded-md {{ $loop->odd ? 'bg-white hover:bg-slate-50' : 'bg-[#F8FAFC] hover:bg-white' }} text-slate-800 border border-[#DCE6DA] shadow-2xs hover:shadow-xs text-xs font-semibold transition-all group">
-                                                <span class="inline-flex items-center gap-2">
-                                                    <svg class="w-3.5 h-3.5 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                                    <span>{{ $t['modulLabel'] }}</span>
-                                                </span>
-                                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                            </a>
-                                        @else
-                                            <a href="#galeri" 
-                                               class="inline-flex items-center justify-between gap-3 px-3.5 py-2 rounded-md {{ $loop->odd ? 'bg-white hover:bg-slate-50' : 'bg-[#F8FAFC] hover:bg-white' }} text-slate-800 border border-[#DCE6DA] shadow-2xs hover:shadow-xs text-xs font-semibold transition-all group">
-                                                <span class="inline-flex items-center gap-2">
-                                                    <svg class="w-3.5 h-3.5 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                                    <span>{{ $t['modulLabel'] }}</span>
-                                                </span>
-                                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                                            </a>
-                                        @endif
-                                    </div>
-
                                 </div>
-
                             </div>
-
                         </div>
-                    </div>
-                </section>
+                    </section>
             @endforeach
         </div>
 
