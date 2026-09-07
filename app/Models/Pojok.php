@@ -17,15 +17,7 @@ class Pojok extends Model
     ];
 
     /**
-     * Get all activities associated with this Pojok.
-     */
-    public function kegiatans(): HasMany
-    {
-        return $this->hasMany(Kegiatan::class);
-    }
-
-    /**
-     * Get all curriculum documents associated with this Pojok.
+     * Get all downloadable curriculum/module documents associated with this Pojok.
      */
     public function kurikulums(): HasMany
     {

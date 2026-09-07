@@ -78,14 +78,21 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // ===== PHASE 1: PENGADUAN MASYARAKAT =====
     Route::resource('complaints', Admin\ComplaintController::class)->except(['create', 'store']);
 
-    // ===== PPK ORMAWA: KEGIATAN, POJOK & KURIKULUM =====
-    Route::resource('kegiatans', Admin\KegiatanController::class);
-    Route::post('/kegiatans/{kegiatan}/galeri', [Admin\GaleriFotoController::class, 'store'])->name('kegiatans.galeri.store');
-    Route::delete('/galeri-fotos/{foto}', [Admin\GaleriFotoController::class, 'destroy'])->name('galeri-fotos.destroy');
-    Route::resource('pojoks', Admin\PojokController::class)->only(['index', 'edit', 'update']);
-    Route::post('/pojoks/{pojok}/foto', [Admin\PojokController::class, 'updateFoto'])->name('pojoks.foto.update');
-    Route::post('/pojoks/{pojok}/kurikulum', [Admin\PojokController::class, 'storeKurikulum'])->name('pojoks.kurikulum.store');
-    Route::delete('/kurikulums/{kurikulum}', [Admin\PojokController::class, 'destroyKurikulum'])->name('kurikulums.destroy');
+    // ===== PPK ORMAWA: ADMIN PPKO (FOTO SAMPUL & FILE UNDUHAN) =====
+    Route::prefix('ppko')->name('ppko.')->group(function () {
+        Route::get('/', [Admin\PpkoSettingController::class, 'index'])->name('index');
+        Route::get('/{pojok}', [Admin\PpkoSettingController::class, 'edit'])->name('edit');
+        Route::put('/{pojok}', [Admin\PpkoSettingController::class, 'update'])->name('update');
+        Route::post('/{pojok}/foto', [Admin\PpkoSettingController::class, 'updateFoto'])->name('foto.update');
+        Route::delete('/{pojok}/foto', [Admin\PpkoSettingController::class, 'deleteFoto'])->name('foto.delete');
+        Route::post('/{pojok}/file', [Admin\PpkoSettingController::class, 'storeFile'])->name('file.store');
+        Route::delete('/file/{kurikulum}', [Admin\PpkoSettingController::class, 'destroyFile'])->name('file.destroy');
+        Route::post('/detail-program', [Admin\PpkoSettingController::class, 'storeProgramDetail'])->name('detail-program.store');
+        Route::put('/detail-program/{detail}', [Admin\PpkoSettingController::class, 'updateProgramDetail'])->name('detail-program.update');
+        Route::delete('/detail-program/{detail}', [Admin\PpkoSettingController::class, 'destroyProgramDetail'])->name('detail-program.destroy');
+    });
+    Route::redirect('/pojoks', '/admin/ppko');
+    Route::redirect('/kegiatans', '/admin/ppko');
 });
 
 Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');

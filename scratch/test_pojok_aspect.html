@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Pojok Card Image Ratio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Entrance animation: subtle fade pop up */
+        .fade-popup-section {
+            opacity: 0;
+            transform: translateY(20px) scale(0.985);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .fade-popup-section.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 p-8 space-y-8">
+    <div class="max-w-6xl mx-auto space-y-8">
+
+        <h2 class="text-xl font-bold">Opsi A: Gambar dengan lg:absolute lg:inset-0 (Tinggi kartu dikontrol penuh oleh konten, foto otomatis cover tanpa memaksa kartu membesar)</h2>
+        <!-- Card 1 -->
+        <section class="fade-popup-section is-visible w-full relative rounded-xl border border-[#DCE6DA] shadow-xs overflow-hidden bg-[#F8FAFC]">
+            <div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+                <!-- Foto -->
+                <div class="w-full lg:col-span-5 relative min-h-[240px] sm:min-h-[280px] lg:min-h-0">
+                    <div class="relative w-full h-60 sm:h-72 lg:h-full lg:absolute lg:inset-0 bg-slate-100 group overflow-hidden">
+                        <img src="https://picsum.photos/800/600" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+                <!-- Konten -->
+                <div class="w-full lg:col-span-7 p-6 sm:p-8 lg:p-9 flex flex-col justify-center space-y-4">
+                    <h3 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900">1. Pojok Harmoni</h3>
+                    <div class="text-xs sm:text-sm font-semibold text-slate-800">Sasaran: Ibu-Ibu Caregiver Keluarga & Warga Desa</div>
+                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed text-justify">
+                        Ruang konsultasi dan pendampingan psikososial berbasis kearifan lokal untuk menciptakan keharmonisan keluarga serta ketahanan mental masyarakat desa.
+                    </p>
+                    <div class="p-3 bg-white rounded-lg border border-[#DCE6DA] text-xs">
+                        Modul Pelatihan Psychological First Aid (PFA)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <h2 class="text-xl font-bold">Opsi B: Gambar dengan Fixed Aspect Ratio aspect-[4/3] (Ukuran & rasio 4:3 fiks konsisten di semua pojok)</h2>
+        <!-- Card 2 -->
+        <section class="fade-popup-section is-visible w-full relative rounded-xl border border-[#DCE6DA] shadow-xs overflow-hidden bg-[#F8FAFC]">
+            <div class="grid grid-cols-1 lg:grid-cols-12 items-center">
+                <!-- Foto -->
+                <div class="w-full lg:col-span-5">
+                    <div class="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/3] bg-slate-100 group overflow-hidden">
+                        <img src="https://picsum.photos/1200/800" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+                <!-- Konten -->
+                <div class="w-full lg:col-span-7 p-6 sm:p-8 lg:p-9 flex flex-col justify-center space-y-4">
+                    <h3 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900">2. Pojok Literasi Remen Maos</h3>
+                    <div class="text-xs sm:text-sm font-semibold text-slate-800">Sasaran: Anak-Anak Komunitas TPA & Pelajar Desa</div>
+                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed text-justify">
+                        Pemberdayaan gemar membaca dan sarana edukatif anak melalui pojok baca interaktif dan pengenalan aplikasi perpustakaan digital Desa Catur.
+                    </p>
+                    <div class="p-3 bg-white rounded-lg border border-[#DCE6DA] text-xs">
+                        Modul Edukasi Anak & Panduan Literasi
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>

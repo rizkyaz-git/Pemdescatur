@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
-use App\Models\GaleriFoto;
-use App\Models\Kegiatan;
 use App\Models\Kurikulum;
 use App\Models\News;
 use App\Models\Partner;
 use App\Models\Pojok;
+use App\Models\PpkoProgramDetail;
 use App\Models\VillageProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -29,17 +28,15 @@ class PpkoController extends Controller
             ->take(3)
             ->get();
 
-        // 5 Pilar Pojok Pemberdayaan beserta kegiatan dan kurikulum masing-masing
+        // 5 Pilar Pojok Pemberdayaan beserta file kurikulum/modul masing-masing
         $pojoks = Pojok::with([
-            'kegiatans' => fn($q) => $q->latest('tanggal_kegiatan'),
-            'kegiatans.galeriFotos',
             'kurikulums' => fn($q) => $q->latest(),
         ])->orderBy('id')->get();
 
-        // Galeri foto dokumentasi komprehensif untuk section galeri foto lapangan
-        $galeriFotos = GaleriFoto::with(['kegiatan.pojok'])
-            ->latest()
-            ->take(12)
+        // Detail Program PPKO yang dikelola melalui Admin PPKO
+        $programDetails = PpkoProgramDetail::where('is_active', true)
+            ->orderBy('urutan')
+            ->orderBy('id')
             ->get();
 
         return view('public.ppko', compact(
@@ -47,7 +44,7 @@ class PpkoController extends Controller
             'partners',
             'recentNews',
             'pojoks',
-            'galeriFotos'
+            'programDetails'
         ));
     }
 

@@ -80,12 +80,8 @@
                 <p class="px-3.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">PPK Ormawa</p>
             </div>
 
-            <a href="{{ route('admin.kegiatans.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('admin.kegiatans.*') ? 'bg-[#0d631b] text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
-                🎯 Kegiatan & Galeri PPKO
-            </a>
-
-            <a href="{{ route('admin.pojoks.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('admin.pojoks.*') ? 'bg-[#0d631b] text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
-                📚 Pojok & Kurikulum
+            <a href="{{ route('admin.ppko.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('admin.ppko.*') ? 'bg-[#0d631b] text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
+                ⚙️ Admin PPKO
             </a>
 
             <div class="pt-3 pb-1">
