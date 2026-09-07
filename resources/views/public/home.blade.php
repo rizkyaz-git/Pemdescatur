@@ -29,10 +29,6 @@
 
             <!-- 2. Location Address Text (Clean, Unwrapped Text Under Headline) -->
             <p class="text-xs sm:text-sm lg:text-base font-medium text-white/90 tracking-wide flex items-center justify-center gap-1.5 drop-shadow-sm mx-auto fade-up-enter [animation-delay:150ms]">
-                <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
                 <span class="whitespace-normal sm:whitespace-nowrap">Jl. Raya Catur - Sambi, Desa Catur, Kec. Sambi, Kab. Boyolali, Jawa Tengah 57376</span>
             </p>
 
@@ -42,7 +38,7 @@
 </section>
 
 <!-- FLOATING SHORTCUT CARDS CONTAINER (Overlapping Hero Section Exactly at 50% Center on Desktop, Raised Inside Hero on Mobile) -->
-<div class="relative z-30 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 -mt-40 mb-24 sm:-mt-14 sm:mb-0 lg:-mt-16 fade-up-enter [animation-delay:250ms]">
+<div class="relative z-30 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 -mt-56 mb-32 sm:-mt-14 sm:mb-0 lg:-mt-16 fade-up-enter [animation-delay:250ms]">
     
     <!-- A. MOBILE MODE ONLY (< sm): Single Unified Floating Card with 5 Side-by-Side Items & Elevation Shadow -->
     <div class="block sm:hidden bg-white rounded-2xl shadow-[0_12px_30px_-5px_rgba(0,0,0,0.22)] border border-slate-100 ring-1 ring-slate-900/5 py-3 px-1.5">
@@ -73,21 +69,21 @@
                 <span class="block text-[11px] font-bold text-slate-800 group-hover:text-[#0A3D29] leading-tight truncate w-full">Statistik</span>
             </a>
 
-            <!-- 4. Pojok Literasi ↗ -->
-            <a href="{{ $globalLibraryUrl ?? 'https://perpustakaan.boyolali.go.id' }}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center px-1 py-1 group transition-colors">
+            <!-- 4. Perpustakaan Digital -->
+            <a href="{{ $globalLibraryUrl ?? 'https://desacaturbyl.perpustakaan.co.id/home.ks' }}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center px-1 py-1 group transition-colors">
                 <svg class="w-5 h-5 text-[#0A3D29] group-hover:scale-110 transition-transform mb-1 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                 </svg>
-                <span class="block text-[11px] font-bold text-slate-800 group-hover:text-[#0A3D29] leading-tight truncate w-full">Literasi</span>
+                <span class="block text-[11px] font-bold text-slate-800 group-hover:text-[#0A3D29] leading-tight truncate w-full">Perpus</span>
             </a>
 
             <!-- 5. PPK Ormawa -->
-            <a href="{{ route('public.profile') }}" class="flex flex-col items-center justify-center px-1 py-1 group transition-colors">
+            <a href="{{ route('public.ppko') }}" class="flex flex-col items-center justify-center px-1 py-1 group transition-colors">
                 <svg class="w-5 h-5 text-[#0A3D29] group-hover:scale-110 transition-transform mb-1 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
                 </svg>
-                <span class="block text-[11px] font-bold text-slate-800 group-hover:text-[#0A3D29] leading-tight truncate w-full">Ormawa</span>
+                <span class="block text-[11px] font-bold text-slate-800 group-hover:text-[#0A3D29] leading-tight truncate w-full">PPKO UMS</span>
             </a>
 
         </div>
@@ -105,7 +101,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"/>
                     </svg>
                     <h3 class="font-serif text-base lg:text-lg font-bold text-slate-900 leading-snug">
-                        Berita Desa
+                        Warta Desa
                     </h3>
                 </div>
                 <p class="text-xs text-slate-500 font-medium leading-relaxed text-left">
@@ -146,8 +142,8 @@
                 </p>
             </a>
 
-            <!-- Card 4: Pojok Literasi ↗ -->
-            <a href="{{ $globalLibraryUrl ?? 'https://perpustakaan.boyolali.go.id' }}" 
+            <!-- Card 4: Perpustakaan Digital -->
+            <a href="{{ $globalLibraryUrl ?? 'https://desacaturbyl.perpustakaan.co.id/home.ks' }}" 
                target="_blank" rel="noopener noreferrer"
                class="p-5 lg:p-6 flex flex-col space-y-2 hover:bg-slate-100/80 transition-colors">
                 <div class="flex items-center gap-2.5">
@@ -155,7 +151,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                     </svg>
                     <h3 class="font-serif text-base lg:text-lg font-bold text-slate-900 leading-snug">
-                        Remen Maos ↗
+                        Remen Maos
                     </h3>
                 </div>
                 <p class="text-xs text-slate-500 font-medium leading-relaxed text-left">
@@ -164,7 +160,7 @@
             </a>
 
             <!-- Card 5: PPK Ormawa -->
-            <a href="{{ route('public.profile') }}" 
+            <a href="{{ route('public.ppko') }}" 
                class="p-5 lg:p-6 flex flex-col space-y-2 hover:bg-slate-100/80 transition-colors">
                 <div class="flex items-center gap-2.5">
                     <svg class="w-5 h-5 lg:w-6 lg:h-6 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -172,7 +168,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
                     </svg>
                     <h3 class="font-serif text-base lg:text-lg font-bold text-slate-900 leading-snug">
-                        PPK Ormawa
+                        PPKO UMS
                     </h3>
                 </div>
                 <p class="text-xs text-slate-500 font-medium leading-relaxed text-left">

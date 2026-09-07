@@ -16,6 +16,8 @@ Route::get('/galeri', [PublicControllers\GalleryController::class, 'index'])->na
 Route::get('/layanan', [PublicControllers\ServiceController::class, 'index'])->name('public.services.index');
 Route::get('/pencarian', [PublicControllers\SearchController::class, 'index'])->name('public.search');
 Route::get('/api/search', [PublicControllers\SearchController::class, 'api'])->name('api.search');
+Route::get('/ppko-catur-cerdas', [PublicControllers\PpkoController::class, 'index'])->name('public.ppko');
+Route::redirect('/ppko', '/ppko-catur-cerdas');
 
 // --- PANEL ADMIN (TERPROTEKSI MIDDLEWARE AUTH) ---
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {

@@ -51,33 +51,33 @@
 
         /* Staggered Cascade Down Animation for Mobile Menu */
         @keyframes cascadeDown {
-            0% {
+            from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-8px);
             }
-            100% {
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
         .nav-cascade-1 {
-            animation: cascadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.03s both;
+            animation: cascadeDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
         }
         .nav-cascade-2 {
-            animation: cascadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+            animation: cascadeDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
         }
         .nav-cascade-3 {
-            animation: cascadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.13s both;
+            animation: cascadeDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
         }
         .nav-cascade-4 {
-            animation: cascadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+            animation: cascadeDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) 0.11s both;
         }
         .nav-cascade-5 {
-            animation: cascadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.23s both;
+            animation: cascadeDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both;
         }
         .nav-cascade-6 {
-            animation: cascadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+            animation: cascadeDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) 0.17s both;
         }
     </style>
     @stack('styles')
@@ -90,18 +90,20 @@
 @endphp
 
     <!-- Main Navigation Header -->
-    <header class="sticky top-0 z-[99999] transition-colors duration-500 ease-in-out"
-            :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) ? 'text-[#20332A]' : 'text-white'">
+    <header class="sticky top-0 z-[99999]"
+            :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
+                ? 'text-[#20332A] transition-colors duration-200 ease-out' 
+                : 'text-white transition-colors duration-250 delay-100 ease-out'">
         
         <!-- Header Background Layer (Constrained to 80px Top Bar) -->
-        <div class="absolute inset-x-0 top-0 h-20 pointer-events-none transition-all duration-500"
+        <div class="absolute inset-x-0 top-0 h-20 pointer-events-none"
              :class="mobileMenuOpen 
-                 ? 'bg-white border-b border-slate-200/80 shadow-md' 
+                 ? 'bg-white border-b border-slate-200/80 shadow-md transition-all duration-200 ease-out' 
                  : ({{ $isHomePage ? 'true' : 'false' }} 
                      ? (isScrolled 
-                         ? 'bg-white/85 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-md shadow-slate-900/5' 
-                         : 'bg-gradient-to-b from-slate-950/60 via-slate-950/25 to-transparent border-b-0 border-transparent shadow-none')
-                     : 'bg-white/95 backdrop-blur-md border-b border-slate-200/60 shadow-xs')">
+                         ? 'bg-white/85 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-md shadow-slate-900/5 transition-all duration-200' 
+                         : 'bg-gradient-to-b from-slate-950/60 via-slate-950/25 to-transparent border-b-0 border-transparent shadow-none transition-all duration-250 delay-100 ease-out')
+                     : 'bg-white/95 backdrop-blur-md border-b border-slate-200/60 shadow-xs transition-all duration-200')">
         </div>
 
         <div class="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -309,82 +311,17 @@
                         </div>
                     </div>
 
-                    <!-- Pojok Literasi Dropdown Button -->
-                    <div class="relative inline-block" @click.away="literasiDropdown = false">
-                        <button @click="literasiDropdown = !literasiDropdown; profileDropdown = false; infoDropdown = false; layananDropdown = false" 
-                                type="button"
-                                class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1 rounded-lg transition-all duration-500 font-semibold focus:outline-none"
-                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) 
-                                    ? 'text-[#20332A] hover:bg-[#EAF1E8] hover:text-[#0A3D29]' 
-                                    : 'text-white/90 hover:bg-white/20 hover:text-white'">
-                            <span>PPKO UMS</span>
-                            <svg class="w-3.5 h-3.5 transition-transform duration-200" 
-                                 :class="[literasiDropdown ? 'rotate-180' : '', ({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#6C7B72]' : 'text-white/80']" 
-                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-
-                        <!-- Dropdown Menu Box Pojok Literasi -->
-                        <div x-show="literasiDropdown" 
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
-                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                             x-transition:leave="transition ease-in duration-150"
-                             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-                             x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
-                             class="absolute left-0 mt-2 w-56 rounded-md p-0 z-50 overflow-hidden transition-all duration-300 shadow-xl"
-                             :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'bg-white/95 backdrop-blur-2xl border border-slate-200/90 text-[#20332A]' : 'bg-[#061C12]/95 backdrop-blur-2xl border border-white/20 text-white'">
-                            
-                            <a href="{{ route('public.profile') }}" 
-                               class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
-                                <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
-                                     :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
-                                     fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                                <span>Pojok Harmoni</span>
-                            </a>
-
-                            <a href="{{ route('public.statistics') }}" 
-                               class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
-                                <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
-                                     :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
-                                     fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                <span>Pojok Tani</span>
-                            </a>
-
-                            <a href="{{ route('public.news.index') }}" 
-                               class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
-                                <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
-                                     :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
-                                     fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
-                                <span>Pojok Ceria</span>
-                            </a>
-
-                            <a href="{{ route('public.gallery') }}" 
-                               class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
-                                <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
-                                     :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
-                                     fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                                <span>Pojok UMKM</span>
-                            </a>
-
-                            <a href="{{ route('public.profile') }}" 
-                               class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                               :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
-                                <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
-                                     :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
-                                     fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
-                                <span>Pojok Budaya</span>
-                            </a>
-                        </div>
-                    </div>
+                    <!-- PPKO Catur Cerdas UMS Direct Link -->
+                    <a href="{{ route('public.ppko') }}" 
+                       class="h-9 sm:h-10 px-3.5 inline-flex items-center rounded-lg transition-all duration-300"
+                       :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) 
+                           ? '{{ request()->routeIs('public.ppko') ? 'text-[#0A3D29] font-extrabold text-sm hover:bg-[#EAF1E8]' : 'text-[#20332A] font-semibold hover:bg-[#EAF1E8] hover:text-[#0A3D29]' }}' 
+                           : '{{ request()->routeIs('public.ppko') ? 'text-white font-extrabold text-sm drop-shadow-md hover:bg-white/20' : 'text-white/90 font-semibold hover:bg-white/20 hover:text-white' }}'">
+                        <span>PPKO UMS</span>
+                    </a>
 
                     <!-- Perpustakaan Button -->
-                    <a href="{{ $globalLibraryUrl ?? 'https://perpustakaan.boyolali.go.id' }}" 
+                    <a href="{{ $globalLibraryUrl ?? 'https://desacaturbyl.perpustakaan.co.id/home.ks' }}" 
                        target="_blank" 
                        rel="noopener noreferrer" 
                        class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1.5 rounded-lg transition-all duration-500 font-semibold"
@@ -517,22 +454,26 @@
                                 DC
                             </div>
                         @endif
-                        <span class="font-serif text-base font-bold transition-colors duration-500"
-                              :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) ? 'text-[#0A3D29]' : 'text-white'">
+                        <span class="font-serif text-base font-bold"
+                              :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
+                                  ? 'text-[#0A3D29] transition-colors duration-200 ease-out' 
+                                  : 'text-white transition-colors duration-250 delay-100 ease-out'">
                             {{ $globalVillageName ?? 'Pemerintah Desa Catur' }}
                         </span>
                     </a>
 
                     <button @click.stop="mobileMenuOpen = !mobileMenuOpen" type="button" 
-                            class="p-2 rounded-xl transition-all duration-300 focus:outline-none flex items-center justify-center cursor-pointer"
-                            :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) ? 'text-[#20332A] hover:bg-[#EAF1E8]' : 'text-white hover:bg-white/20'" 
+                            class="p-2 rounded-xl focus:outline-none flex items-center justify-center cursor-pointer transition-all duration-200"
+                            :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
+                                ? (mobileMenuOpen ? 'text-[#0A3D29] bg-slate-100 active:bg-slate-200' : 'text-[#20332A] active:bg-[#EAF1E8]') 
+                                : (mobileMenuOpen ? 'text-[#0A3D29] bg-white active:bg-white/80' : 'text-white active:bg-white/20')" 
                             aria-label="Buka Menu Mobile">
                         <!-- Hamburger Icon (When Closed) -->
-                        <svg x-show="!mobileMenuOpen" class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg x-show="!mobileMenuOpen" class="w-6 h-6 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                         </svg>
                         <!-- Close 'X' Icon (When Opened) -->
-                        <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6 transition-transform duration-300 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6 transition-transform duration-200 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                     </button>
@@ -543,7 +484,7 @@
         <!-- Backdrop Scrim for Mobile Drawer -->
         <div x-show="mobileMenuOpen" 
              x-cloak
-             x-transition:enter="transition-opacity ease-out duration-250"
+             x-transition:enter="transition-opacity ease-out duration-200"
              x-transition:enter-start="opacity-0"
              x-transition:enter-end="opacity-100"
              x-transition:leave="transition-opacity ease-in duration-150"
@@ -554,26 +495,26 @@
              aria-hidden="true">
         </div>
 
-        <!-- Mobile Drawer Navigation Overlay (Organized & Simplified Clean Accordion System) -->
+        <!-- Mobile Drawer Navigation Overlay (Full-Width Clean List Rows with Subtle Darkening) -->
         <div x-show="mobileMenuOpen" 
              x-cloak
              x-data="{ activeSection: null }"
-             x-transition:enter="transition ease-out duration-250"
+             x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0 -translate-y-3"
              x-transition:enter-end="opacity-100 translate-y-0"
              x-transition:leave="transition ease-in duration-150"
              x-transition:leave-start="opacity-100 translate-y-0"
-             x-transition:leave-end="opacity-0 -translate-y-2.5"
+             x-transition:leave-end="opacity-0 -translate-y-3"
              @click.away="mobileMenuOpen = false" 
              @click.stop
-             class="absolute top-full inset-x-0 z-50 lg:hidden px-4 pt-3 pb-6 space-y-2 bg-white border-b border-x border-slate-200/80 rounded-b-3xl text-[#20332A] shadow-2xl max-h-[calc(100dvh-5rem)] overflow-y-auto">
+             class="absolute top-full inset-x-0 z-50 lg:hidden bg-white border-b border-x border-slate-200/80 rounded-b-3xl text-[#20332A] shadow-2xl max-h-[calc(100dvh-5rem)] overflow-y-auto overflow-x-hidden divide-y divide-slate-100">
             
             <!-- 1. Beranda (Direct Clean Link) -->
             <div class="nav-cascade-1">
                 <a href="{{ route('home') }}" 
                    @click="mobileMenuOpen = false"
-                   class="flex items-center justify-between px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-colors {{ request()->routeIs('home') ? 'bg-slate-100 text-[#0A3D29]' : 'text-slate-700 hover:bg-slate-100 active:bg-slate-200' }}">
-                    <div class="flex items-center gap-3">
+                   class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors {{ request()->routeIs('home') ? 'bg-slate-100/90 text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-slate-200/80' }}">
+                    <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 001 1v4a1 1 0 001 1m-6 0h6"/>
                         </svg>
@@ -584,12 +525,12 @@
             </div>
             
             <!-- 2. Profil Desa (Collapsible Category) -->
-            <div class="nav-cascade-2 rounded-xl border border-slate-200/70 overflow-hidden bg-white">
+            <div class="nav-cascade-2">
                 <button type="button" 
                         @click="activeSection = (activeSection === 'profil' ? null : 'profil')"
-                        class="w-full flex items-center justify-between px-3.5 py-2.5 text-sm font-semibold transition-colors text-slate-700 hover:bg-slate-100 active:bg-slate-200"
-                        :class="activeSection === 'profil' ? 'bg-slate-100 text-[#0A3D29]' : ''">
-                    <div class="flex items-center gap-3">
+                        class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-700 active:bg-slate-200/80"
+                        :class="activeSection === 'profil' ? 'bg-slate-100/60 text-[#0A3D29]' : ''">
+                    <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0V5m0 6h4m-4 0H9"/>
                         </svg>
@@ -603,25 +544,25 @@
                      x-transition:enter="transition ease-out duration-150"
                      x-transition:enter-start="opacity-0 -translate-y-1"
                      x-transition:enter-end="opacity-100 translate-y-0"
-                     class="px-3 pb-2 pt-1 space-y-1 bg-white border-t border-slate-100">
+                     class="bg-slate-50/70 divide-y divide-slate-100 border-t border-slate-100">
                     <a href="{{ route('public.profile') }}" @click="mobileMenuOpen = false" 
-                       class="flex items-center px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.profile') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
                         <span>Tentang & Sejarah Desa Catur</span>
                     </a>
                     <a href="{{ route('public.officials') }}" @click="mobileMenuOpen = false" 
-                       class="flex items-center px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.officials') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
                         <span>Struktur Aparatur Pemerintahan</span>
                     </a>
                 </div>
             </div>
 
             <!-- 3. Informasi Publik (Collapsible Category) -->
-            <div class="nav-cascade-3 rounded-xl border border-slate-200/70 overflow-hidden bg-white">
+            <div class="nav-cascade-3">
                 <button type="button" 
                         @click="activeSection = (activeSection === 'informasi' ? null : 'informasi')"
-                        class="w-full flex items-center justify-between px-3.5 py-2.5 text-sm font-semibold transition-colors text-slate-700 hover:bg-slate-100 active:bg-slate-200"
-                        :class="activeSection === 'informasi' ? 'bg-slate-100 text-[#0A3D29]' : ''">
-                    <div class="flex items-center gap-3">
+                        class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-700 active:bg-slate-200/80"
+                        :class="activeSection === 'informasi' ? 'bg-slate-100/60 text-[#0A3D29]' : ''">
+                    <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"/>
                         </svg>
@@ -635,29 +576,29 @@
                      x-transition:enter="transition ease-out duration-150"
                      x-transition:enter-start="opacity-0 -translate-y-1"
                      x-transition:enter-end="opacity-100 translate-y-0"
-                     class="px-3 pb-2 pt-1 space-y-1 bg-white border-t border-slate-100">
+                     class="bg-slate-50/70 divide-y divide-slate-100 border-t border-slate-100">
                     <a href="{{ route('public.news.index') }}" @click="mobileMenuOpen = false" 
-                       class="flex items-center px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.news*') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
                         <span>Berita & Pengumuman Warta</span>
                     </a>
                     <a href="{{ route('public.statistics') }}" @click="mobileMenuOpen = false" 
-                       class="flex items-center px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.statistics') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
                         <span>Statistik & Potensi Desa</span>
                     </a>
                     <a href="{{ route('public.gallery') }}" @click="mobileMenuOpen = false" 
-                       class="flex items-center px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.gallery') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
                         <span>Galeri Dokumentasi Foto</span>
                     </a>
                 </div>
             </div>
 
             <!-- 4. Layanan Warga (Collapsible Category) -->
-            <div class="nav-cascade-4 rounded-xl border border-slate-200/70 overflow-hidden bg-white">
+            <div class="nav-cascade-4">
                 <button type="button" 
                         @click="activeSection = (activeSection === 'layanan' ? null : 'layanan')"
-                        class="w-full flex items-center justify-between px-3.5 py-2.5 text-sm font-semibold transition-colors text-slate-700 hover:bg-slate-100 active:bg-slate-200"
-                        :class="activeSection === 'layanan' ? 'bg-slate-100 text-[#0A3D29]' : ''">
-                    <div class="flex items-center gap-3">
+                        class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-700 active:bg-slate-200/80"
+                        :class="activeSection === 'layanan' ? 'bg-slate-100/60 text-[#0A3D29]' : ''">
+                    <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
@@ -671,62 +612,46 @@
                      x-transition:enter="transition ease-out duration-150"
                      x-transition:enter-start="opacity-0 -translate-y-1"
                      x-transition:enter-end="opacity-100 translate-y-0"
-                     class="px-3 pb-2 pt-1 space-y-1 bg-white border-t border-slate-100">
+                     class="bg-slate-50/70 divide-y divide-slate-100 border-t border-slate-100">
                     <a href="{{ route('public.services.index') }}" @click="mobileMenuOpen = false" 
-                       class="flex items-center px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.services*') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
                         <span>Pusat Layanan Terpadu Desa</span>
                     </a>
                     <a href="{{ route('warga.letter.index') }}" @click="mobileMenuOpen = false" 
-                       class="flex items-center px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.letter*') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
                         <span>Permohonan Surat Online Mandiri</span>
                     </a>
                     <a href="{{ route('warga.complaint.index') }}" @click="mobileMenuOpen = false" 
-                       class="flex items-center px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition">
+                       class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.complaint*') ? 'bg-slate-200/70 text-[#0A3D29] font-bold' : 'text-slate-600 active:bg-slate-200/90' }}">
                         <span>Pengaduan & Aspirasi Warga</span>
                     </a>
                 </div>
             </div>
 
-            <!-- 5. PPKO Catur Cerdas (Collapsible Category) -->
-            <div class="nav-cascade-5 rounded-xl border border-slate-200/70 overflow-hidden bg-white">
-                <button type="button" 
-                        @click="activeSection = (activeSection === 'ppko' ? null : 'ppko')"
-                        class="w-full flex items-center justify-between px-3.5 py-2.5 text-sm font-semibold transition-colors text-slate-700 hover:bg-slate-100 active:bg-slate-200"
-                        :class="activeSection === 'ppko' ? 'bg-slate-100 text-[#0A3D29]' : ''">
-                    <div class="flex items-center gap-3">
+            <!-- 5. PPKO Catur Cerdas UMS (Direct Standalone Link) -->
+            <div class="nav-cascade-5">
+                <a href="{{ route('public.ppko') }}" 
+                   @click="mobileMenuOpen = false"
+                   class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors {{ request()->routeIs('public.ppko') ? 'bg-slate-100/90 text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-slate-200/80' }}">
+                    <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
                         </svg>
-                        <span>PPKO Catur Cerdas</span>
+                        <span>PPKO Catur Cerdas UMS</span>
                     </div>
-                    <svg class="w-4 h-4 text-slate-400 transition-transform duration-200"
-                         :class="activeSection === 'ppko' ? 'rotate-180 text-[#0A3D29]' : ''"
-                         fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div x-show="activeSection === 'ppko'" 
-                     x-transition:enter="transition ease-out duration-150"
-                     x-transition:enter-start="opacity-0 -translate-y-1"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     class="px-3 pb-2 pt-1 space-y-2 bg-white border-t border-slate-100">
-                    <div class="grid grid-cols-2 gap-1.5 pt-1">
-                        <a href="{{ route('public.profile') }}" @click="mobileMenuOpen = false" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition bg-slate-50 text-center">Pojok Harmoni</a>
-                        <a href="{{ route('public.statistics') }}" @click="mobileMenuOpen = false" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition bg-slate-50 text-center">Pojok Tani</a>
-                        <a href="{{ route('public.news.index') }}" @click="mobileMenuOpen = false" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition bg-slate-50 text-center">Pojok Ceria</a>
-                        <a href="{{ route('public.gallery') }}" @click="mobileMenuOpen = false" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition bg-slate-50 text-center">Pojok UMKM</a>
-                        <a href="{{ route('public.profile') }}" @click="mobileMenuOpen = false" class="col-span-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 transition bg-slate-50 text-center">Pojok Budaya</a>
-                    </div>
-                </div>
+                    <span class="text-xs text-slate-400">→</span>
+                </a>
             </div>
 
             <!-- 6. Perpustakaan Digital (Direct Standalone Link) -->
             <div class="nav-cascade-6">
-                <a href="{{ $globalLibraryUrl ?? 'https://perpustakaan.boyolali.go.id' }}" 
+                <a href="{{ $globalLibraryUrl ?? 'https://desacaturbyl.perpustakaan.co.id/home.ks' }}" 
                    target="_blank" 
                    rel="noopener noreferrer"
                    @click="mobileMenuOpen = false"
-                   class="flex items-center justify-between px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-colors text-slate-700 hover:bg-slate-100 active:bg-slate-200 border border-slate-200/70">
-                    <div class="flex items-center gap-3">
+                   class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors text-slate-700 active:bg-slate-200/80">
+                    <div class="flex items-center gap-3.5">
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                         </svg>
@@ -739,24 +664,29 @@
                 </a>
             </div>
 
-            <!-- 7. Mobile Admin Access Footer -->
-            <div class="pt-2 border-t border-slate-100">
+            <!-- 7. Mobile Admin Access -->
+            <div>
                 @auth
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-800 text-xs font-bold transition hover:bg-slate-100 active:bg-slate-200 border border-slate-200/80">
-                        <div class="flex items-center gap-2.5">
-                            <svg class="w-4 h-4 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.dashboard') }}" 
+                       class="w-full flex items-center justify-between px-5 py-3.5 text-xs font-semibold transition-colors text-slate-700 active:bg-slate-200/80">
+                        <div class="flex items-center gap-3.5">
+                            <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
                             <span>Dashboard Admin</span>
                         </div>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 font-medium text-slate-600">{{ Auth::user()->name }}</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 font-medium text-slate-600">{{ Auth::user()->name }}</span>
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-semibold hover:bg-slate-100 active:bg-slate-200 transition">
-                        <svg class="w-4 h-4 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
-                        </svg>
-                        <span>Akses Login Admin</span>
+                    <a href="{{ route('login') }}" 
+                       class="w-full flex items-center justify-between px-5 py-3.5 text-xs font-semibold transition-colors text-slate-600 active:bg-slate-200/80">
+                        <div class="flex items-center gap-3.5">
+                            <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                            </svg>
+                            <span>Akses Login Admin</span>
+                        </div>
+                        <span class="text-xs text-slate-400">→</span>
                     </a>
                 @endauth
             </div>
