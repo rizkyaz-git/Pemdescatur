@@ -39,14 +39,7 @@
             <!-- ========================================================================= -->
             @php
                 $coverCandidates = [
-                    'images/assets/cover ppko.png',
-                    'images/assets/cover_ppko.png',
-                    'assets/images/cover ppko.png',
-                    'assets/images/cover_ppko.png',
-                    'images/ppko/cover ppko.png',
                     'images/ppko/cover_ppko.png',
-                    'images/cover ppko.png',
-                    'images/cover_ppko.png',
                 ];
                 $ppkoCoverUrl = null;
                 foreach ($coverCandidates as $candidate) {
