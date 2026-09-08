@@ -177,16 +177,16 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 pb-4">
                 @foreach($newsList as $index => $news)
                     @php
-                        $imageSrc = $news->image_path 
-                            ? asset('storage/' . $news->image_path) 
-                            : asset($defaultImages[$index % count($defaultImages)]);
+                        $imageExists = $news->image_path && (file_exists(public_path('storage/' . $news->image_path)) || file_exists(storage_path('app/public/' . $news->image_path)));
+                        $fallbackImg = asset($defaultImages[$index % count($defaultImages)]);
+                        $imageSrc = $imageExists ? asset('storage/' . $news->image_path) : $fallbackImg;
                         $formattedDate = $news->published_at ? $news->published_at->format('d M Y') : $news->created_at->format('d M Y');
                         $authorName = $news->author->name ?? 'Admin Desa';
                     @endphp
 
                     <article class="group block space-y-2.5">
                         <!-- Top Image Banner with Sparkling Shimmer Preloader (Active only while loading) -->
-                        <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-200/80 shadow-2xs"
+                        <a href="{{ route('public.news.show', $news->slug) }}" class="block relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-200/80 shadow-2xs focus:outline-none"
                              x-data="{ loaded: false }"
                              x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
                             <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
@@ -195,9 +195,10 @@
                                  alt="{{ $news->title }}" 
                                  loading="lazy"
                                  @load="loaded = true;"
+                                 x-on:error="loaded = true; $el.src = '{{ $fallbackImg }}';"
                                  class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
                                  :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
-                        </div>
+                        </a>
 
                         <!-- Card Details Directly Under Image (Frameless Minimalist Editorial) -->
                         <div class="space-y-1.5">

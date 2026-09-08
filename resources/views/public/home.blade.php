@@ -9,9 +9,14 @@
 <!-- ========================================================= -->
 <section class="relative w-full bg-[#0A3D29] overflow-hidden -mt-20 pt-28 pb-36 min-h-screen min-h-[100dvh] flex flex-col justify-center items-center sm:min-h-0 sm:block sm:pt-44 sm:pb-32 lg:pt-48 lg:pb-36">
     
+    @php
+        $heroImageSrc = (!empty($globalHeroImage) && (file_exists(public_path('storage/' . $globalHeroImage)) || file_exists(storage_path('app/public/' . $globalHeroImage))))
+            ? asset('storage/' . $globalHeroImage)
+            : asset('images/hero_landscape.png');
+    @endphp
     <!-- Hero Background Image - Clear Scenic View with Soft Gradient Overlay -->
     <div class="absolute inset-0 z-0">
-        <img src="{{ !empty($globalHeroImage) ? asset('storage/' . $globalHeroImage) : asset('images/hero_landscape.png') }}" 
+        <img src="{{ $heroImageSrc }}" 
              alt="Pemerintah Desa Catur Sambi Boyolali" 
              class="w-full h-full object-cover object-center brightness-[0.58] [mask-image:linear-gradient(to_bottom,black_85%,transparent_100%)] -webkit-[mask-image:linear-gradient(to_bottom,black_85%,transparent_100%)]">
         <!-- Soft Green Gradient Overlay for Text Contrast & High Image Visibility -->
@@ -190,13 +195,13 @@
         <!-- Header Title -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200 text-center sm:text-left">
             <h2 class="font-['Public_Sans',sans-serif] text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-800 leading-tight">
-                Berita Terkini
+                Warta Terbaru
             </h2>
             
             <!-- Desktop Action Button (Right Aligned) -->
             <a href="{{ route('public.news.index') }}" 
                class="hidden sm:inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#062c1d] text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 shrink-0">
-                <span>Lihat Semua Berita</span>
+                <span>Tampilkan Semua</span>
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                 </svg>
@@ -204,89 +209,265 @@
         </div>
 
         {{-- 1. MOBILE ONLY AUTO-SLIDING CAROUSEL (lg:hidden) --}}
-        <div class="block lg:hidden relative" x-data="{ 
-            activeSlide: 0, 
-            totalSlides: {{ (isset($latestNews) && $latestNews->count() > 0) ? min($latestNews->count(), 4) : 3 }},
-            timer: null,
-            init() {
-                this.startAutoSlide();
-            },
-            startAutoSlide() {
-                this.stopAutoSlide();
-                this.timer = setInterval(() => {
-                    this.nextSlide();
-                }, 3500);
-            },
-            stopAutoSlide() {
-                if (this.timer) clearInterval(this.timer);
-            },
-            nextSlide() {
-                this.activeSlide = (this.activeSlide + 1) % this.totalSlides;
-            },
-            prevSlide() {
-                this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides;
-            }
-        }" @mouseenter="stopAutoSlide()" @mouseleave="startAutoSlide()" @touchstart="stopAutoSlide()" @touchend="startAutoSlide()">
-            
-            <div class="relative overflow-hidden">
-                <div class="flex transition-transform duration-500 ease-out" 
-                     :style="`transform: translateX(-${activeSlide * 100}%);`">
-                    
-                    @if(isset($latestNews) && $latestNews->count() > 0)
-                        @foreach($latestNews->take(4) as $news)
+        @if(isset($latestNews) && $latestNews->count() > 0)
+            @php
+                $firstNews = $latestNews->first();
+                $sideNews = $latestNews->slice(1, 3);
+                $firstImageExists = $firstNews && $firstNews->image_path && (file_exists(public_path('storage/' . $firstNews->image_path)) || file_exists(storage_path('app/public/' . $firstNews->image_path)));
+                $firstImageSrc = $firstImageExists ? asset('storage/' . $firstNews->image_path) : asset('images/sawah_irigasi.png');
+                $firstFormattedDate = $firstNews ? ($firstNews->published_at ? $firstNews->published_at->format('d M Y') : $firstNews->created_at->format('d M Y')) : '';
+                $firstAuthorName = $firstNews ? ($firstNews->author->name ?? 'Admin Desa') : 'Admin Desa';
+
+                $fallbackSideNews = [
+                    [
+                        'title' => 'Peningkatan Kualitas Jalan Poros Dusun I Selesai Dikerjakan',
+                        'category' => 'Pembangunan',
+                        'date' => '10 Okt 2023',
+                        'author' => 'Admin Desa',
+                        'image' => asset('images/hero_landscape.png'),
+                        'url' => route('public.news.index'),
+                        'excerpt' => 'Peningkatan kualitas jalan poros Dusun I telah rampung untuk mempermudah akses dan mobilitas warga desa.',
+                    ],
+                    [
+                        'title' => 'Pelatihan Pengolahan Hasil Pertanian bagi Kelompok Tani & UMKM',
+                        'category' => 'Pemberdayaan',
+                        'date' => '08 Okt 2023',
+                        'author' => 'Admin Desa',
+                        'image' => asset('images/umbul_siraman.png'),
+                        'url' => route('public.news.index'),
+                        'excerpt' => 'Pelatihan pengolahan dan pemasaran hasil tani organik bagi petani lokal serta pelaku usaha desa.',
+                    ],
+                    [
+                        'title' => 'Penyesuaian Jam Pelayanan Kantor Desa Catur Selama Bulan Ini',
+                        'category' => 'Pengumuman',
+                        'date' => '05 Okt 2023',
+                        'author' => 'Sekretariat Desa',
+                        'image' => asset('images/logo_catur.png'),
+                        'url' => route('public.news.index'),
+                        'excerpt' => 'Pemberitahuan perubahan jam layanan tatap muka administrasi kependudukan di Kantor Balai Desa Catur.',
+                    ],
+                ];
+
+                $displaySideNews = [];
+                foreach ($sideNews as $sItem) {
+                    $sImgExists = $sItem->image_path && (file_exists(public_path('storage/' . $sItem->image_path)) || file_exists(storage_path('app/public/' . $sItem->image_path)));
+                    $displaySideNews[] = [
+                        'title' => $sItem->title,
+                        'category' => $sItem->category,
+                        'date' => $sItem->published_at ? $sItem->published_at->format('d M Y') : $sItem->created_at->format('d M Y'),
+                        'author' => $sItem->author->name ?? 'Admin Desa',
+                        'image' => $sImgExists ? asset('storage/' . $sItem->image_path) : asset('images/hero_landscape.png'),
+                        'url' => route('public.news.show', $sItem->slug),
+                        'excerpt' => $sItem->excerpt ?? Str::limit(strip_tags($sItem->content), 130),
+                    ];
+                }
+                $fbIndex = 0;
+                while (count($displaySideNews) < 3 && isset($fallbackSideNews[$fbIndex])) {
+                    $displaySideNews[] = $fallbackSideNews[$fbIndex++];
+                }
+
+                $carouselItems = array_merge([[
+                    'title' => $firstNews->title,
+                    'category' => $firstNews->category,
+                    'date' => $firstFormattedDate,
+                    'author' => $firstAuthorName,
+                    'image' => $firstImageSrc,
+                    'url' => route('public.news.show', $firstNews->slug),
+                    'excerpt' => $firstNews->excerpt ?? Str::limit(strip_tags($firstNews->content), 130),
+                ]], $displaySideNews);
+            @endphp
+
+            <div class="block lg:hidden relative" x-data="{ 
+                activeSlide: 0, 
+                totalSlides: {{ count($carouselItems) }},
+                timer: null,
+                init() {
+                    this.startAutoSlide();
+                },
+                startAutoSlide() {
+                    this.stopAutoSlide();
+                    this.timer = setInterval(() => {
+                        this.nextSlide();
+                    }, 3500);
+                },
+                stopAutoSlide() {
+                    if (this.timer) clearInterval(this.timer);
+                },
+                nextSlide() {
+                    this.activeSlide = (this.activeSlide + 1) % this.totalSlides;
+                },
+                prevSlide() {
+                    this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides;
+                }
+            }" @mouseenter="stopAutoSlide()" @mouseleave="startAutoSlide()" @touchstart="stopAutoSlide()" @touchend="startAutoSlide()">
+                
+                <div class="relative overflow-hidden">
+                    <div class="flex transition-transform duration-500 ease-out" 
+                         :style="`transform: translateX(-${activeSlide * 100}%);`">
+                        
+                        @foreach($carouselItems as $cNews)
                             <div class="w-full shrink-0 px-0.5">
-                                <a href="{{ route('public.news.show', $news->slug) }}" class="group block space-y-2.5">
+                                <a href="{{ $cNews['url'] }}" class="group block space-y-2.5">
                                     <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-slate-100 shadow-2xs"
                                          x-data="{ loaded: false }"
                                          x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
                                         <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
                                         <img x-ref="img"
-                                             src="{{ $news->thumbnail ? asset('storage/' . $news->thumbnail) : asset('images/sawah_irigasi.png') }}" 
-                                             alt="{{ $news->title }}" 
+                                             src="{{ $cNews['image'] }}" 
+                                             alt="{{ $cNews['title'] }}" 
                                              loading="lazy"
                                              @load="loaded = true;"
+                                             x-on:error="loaded = true; $el.src = '{{ asset('images/sawah_irigasi.png') }}';"
                                              class="w-full h-full object-cover transition-all duration-700"
                                              :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
                                     </div>
                                     <div class="space-y-1.5">
                                         <span class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">
-                                            {{ $news->category->name ?? 'Kegiatan' }}
+                                            {{ $cNews['category'] }}
                                         </span>
                                         <h3 class="font-['Public_Sans',sans-serif] text-lg sm:text-xl font-extrabold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug">
-                                            {{ $news->title }}
+                                            {{ $cNews['title'] }}
                                         </h3>
                                         <div class="flex items-center gap-2 text-xs text-[#75777e] font-medium">
-                                            <span>{{ optional($news->published_at)->format('d M Y') ?? '02 Sep 2026' }}</span>
+                                            <span>{{ $cNews['date'] }}</span>
                                             <span>•</span>
-                                            <span>{{ $news->author->name ?? 'Admin Desa' }}</span>
+                                            <span>{{ $cNews['author'] }}</span>
                                         </div>
                                         <p class="text-xs text-[#44474e] leading-relaxed font-normal">
-                                            {{ Str::limit(strip_tags($news->content), 130) }}
+                                            {{ $cNews['excerpt'] }}
                                         </p>
                                     </div>
                                 </a>
                             </div>
                         @endforeach
-                    @else
-                        <!-- Mobile Fallback Slide 1 -->
+
+                    </div>
+
+                    <!-- Floating Arrow Buttons -->
+                    <button @click="prevSlide(); startAutoSlide()" 
+                            class="absolute left-2 top-[28%] -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md shadow-md text-[#191c1e] hover:bg-[#0A3D29] hover:text-white flex items-center justify-center transition-all border border-[#c5c6ce]/60"
+                            aria-label="Berita Sebelumnya">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+
+                    <button @click="nextSlide(); startAutoSlide()" 
+                            class="absolute right-2 top-[28%] -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md shadow-md text-[#191c1e] hover:bg-[#0A3D29] hover:text-white flex items-center justify-center transition-all border border-[#c5c6ce]/60"
+                            aria-label="Berita Selanjutnya">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Dots Indicator -->
+                <div class="flex items-center justify-center gap-1.5 pt-3">
+                    <template x-for="i in totalSlides" :key="i">
+                        <button @click="activeSlide = i - 1; startAutoSlide()" 
+                                class="h-1.5 rounded-full transition-all duration-300"
+                                :class="activeSlide === (i - 1) ? 'w-6 bg-[#0A3D29]' : 'w-1.5 bg-[#c5c6ce]'"></button>
+                    </template>
+                </div>
+            </div>
+
+            {{-- 2. DESKTOP ONLY EDITORIAL GRID (hidden lg:grid) --}}
+            <div class="hidden lg:grid grid-cols-12 gap-8 items-start">
+                <div class="col-span-7">
+                    <a href="{{ route('public.news.show', $firstNews->slug) }}" class="group block space-y-2.5">
+                        <div class="relative w-full h-56 rounded-xl overflow-hidden bg-slate-100 shadow-2xs group-hover:shadow-md transition-all duration-500"
+                             x-data="{ loaded: false }"
+                             x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
+                            <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
+                            <img x-ref="img"
+                                 src="{{ $firstImageSrc }}" 
+                                 alt="{{ $firstNews->title }}" 
+                                 loading="lazy"
+                                 @load="loaded = true;"
+                                 x-on:error="loaded = true; $el.src = '{{ asset('images/sawah_irigasi.png') }}';"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
+                                 :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <span class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">
+                                {{ $firstNews->category }}
+                            </span>
+
+                            <h3 class="font-['Public_Sans',sans-serif] text-xl lg:text-2xl font-extrabold text-slate-800 group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                {{ $firstNews->title }}
+                            </h3>
+
+                            <div class="flex items-center gap-2 text-xs text-[#75777e] font-medium">
+                                <span>{{ $firstFormattedDate }}</span>
+                                <span>•</span>
+                                <span>{{ $firstAuthorName }}</span>
+                            </div>
+
+                            <p class="text-xs sm:text-sm text-[#44474e] leading-relaxed font-normal line-clamp-2">
+                                {{ $firstNews->excerpt ?? Str::limit(strip_tags($firstNews->content), 140) }}
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-span-5 space-y-4">
+                    @foreach($displaySideNews as $sNews)
+                        <a href="{{ $sNews['url'] }}" class="group flex items-start gap-4 p-2 -mx-2 rounded-xl hover:bg-white border border-transparent hover:border-[#c5c6ce]/60 hover:shadow-2xs transition-all duration-300">
+                            <div class="relative w-28 md:w-32 aspect-[4/3] rounded-lg overflow-hidden bg-slate-100 shrink-0 shadow-2xs group-hover:shadow-xs transition-all duration-300"
+                                 x-data="{ loaded: false }"
+                                 x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
+                                <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
+                                <img x-ref="img"
+                                     src="{{ $sNews['image'] }}" 
+                                     alt="{{ $sNews['title'] }}" 
+                                     loading="lazy"
+                                     @load="loaded = true;"
+                                     x-on:error="loaded = true; $el.src = '{{ asset('images/hero_landscape.png') }}';"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
+                                     :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
+                            </div>
+
+                            <div class="space-y-1 flex-1 min-w-0">
+                                <span class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">
+                                    {{ $sNews['category'] }}
+                                </span>
+
+                                <h4 class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                    {{ $sNews['title'] }}
+                                </h4>
+
+                                <p class="text-[11px] text-[#75777e] font-medium">
+                                    {{ $sNews['date'] }}
+                                </p>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        @else
+            <!-- Desktop Fallback Mockup Layout (No DB News) -->
+            <div class="block lg:hidden relative" x-data="{ 
+                activeSlide: 0, 
+                totalSlides: 4,
+                timer: null,
+                init() { this.startAutoSlide(); },
+                startAutoSlide() { this.stopAutoSlide(); this.timer = setInterval(() => { this.nextSlide(); }, 3500); },
+                stopAutoSlide() { if (this.timer) clearInterval(this.timer); },
+                nextSlide() { this.activeSlide = (this.activeSlide + 1) % this.totalSlides; },
+                prevSlide() { this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides; }
+            }" @mouseenter="stopAutoSlide()" @mouseleave="startAutoSlide()" @touchstart="stopAutoSlide()" @touchend="startAutoSlide()">
+                <div class="relative overflow-hidden">
+                    <div class="flex transition-transform duration-500 ease-out" :style="`transform: translateX(-${activeSlide * 100}%);`">
                         <div class="w-full shrink-0 px-0.5">
                             <a href="{{ route('public.news.index') }}" class="group block space-y-2.5">
-                                <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 shadow-2xs"
-                                     x-data="{ loaded: false }"
-                                     x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
-                                    <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
-                                    <img x-ref="img"
-                                         src="{{ asset('images/sawah_irigasi.png') }}" 
-                                         alt="Kerja Bakti" 
-                                         loading="lazy"
-                                         @load="loaded = true;"
-                                         class="w-full h-full object-cover transition-all duration-700"
-                                         :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
+                                <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 shadow-2xs">
+                                    <img src="{{ asset('images/sawah_irigasi.png') }}" alt="Panen Padi" class="w-full h-full object-cover">
                                 </div>
                                 <div class="space-y-1.5">
                                     <span class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">Kegiatan</span>
                                     <h3 class="font-['Public_Sans',sans-serif] text-lg font-extrabold text-[#191c1e] leading-snug">
-                                        Panen Padi Organik Melimpah 3 Kali Sehatun Didukung Irigasi Desa Catur
+                                        Panen Padi Organik Melimpah 3 Kali Setahun Didukung Irigasi Desa Catur
                                     </h3>
                                     <div class="flex items-center gap-2 text-xs text-[#75777e] font-medium">
                                         <span>02 Sep 2026</span> • <span>Admin Desa</span>
@@ -297,120 +478,10 @@
                                 </div>
                             </a>
                         </div>
-                    @endif
-
-                </div>
-
-                <!-- Floating Arrow Buttons -->
-                <button @click="prevSlide(); startAutoSlide()" 
-                        class="absolute left-2 top-[28%] -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md shadow-md text-[#191c1e] hover:bg-[#0A3D29] hover:text-white flex items-center justify-center transition-all border border-[#c5c6ce]/60"
-                        aria-label="Berita Sebelumnya">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                </button>
-
-                <button @click="nextSlide(); startAutoSlide()" 
-                        class="absolute right-2 top-[28%] -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md shadow-md text-[#191c1e] hover:bg-[#0A3D29] hover:text-white flex items-center justify-center transition-all border border-[#c5c6ce]/60"
-                        aria-label="Berita Selanjutnya">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Dots Indicator -->
-            <div class="flex items-center justify-center gap-1.5 pt-3">
-                <template x-for="i in totalSlides" :key="i">
-                    <button @click="activeSlide = i - 1; startAutoSlide()" 
-                            class="h-1.5 rounded-full transition-all duration-300"
-                            :class="activeSlide === (i - 1) ? 'w-6 bg-[#0A3D29]' : 'w-1.5 bg-[#c5c6ce]'"></button>
-                </template>
-            </div>
-        </div>
-
-        {{-- 2. DESKTOP ONLY EDITORIAL GRID (hidden lg:grid) --}}
-        @if(isset($latestNews) && $latestNews->count() > 0)
-            @php
-                $firstNews = $latestNews->first();
-                $sideNews = $latestNews->slice(1, 3);
-            @endphp
-
-            <div class="hidden lg:grid grid-cols-12 gap-8 items-start">
-                @if($firstNews)
-                    <div class="col-span-7">
-                        <a href="{{ route('public.news.show', $firstNews->slug) }}" class="group block space-y-2.5">
-                            <div class="relative w-full h-56 rounded-xl overflow-hidden bg-slate-100 shadow-2xs group-hover:shadow-md transition-all duration-500"
-                                 x-data="{ loaded: false }"
-                                 x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
-                                <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
-                                <img x-ref="img"
-                                     src="{{ $firstNews->thumbnail ? asset('storage/' . $firstNews->thumbnail) : asset('images/sawah_irigasi.png') }}" 
-                                     alt="{{ $firstNews->title }}" 
-                                     loading="lazy"
-                                     @load="loaded = true;"
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
-                                     :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
-                            </div>
-
-                            <div class="space-y-1.5">
-                                <span class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">
-                                    {{ $firstNews->category->name ?? 'Kegiatan' }}
-                                </span>
-
-                                <h3 class="font-['Public_Sans',sans-serif] text-xl lg:text-2xl font-extrabold text-slate-800 group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
-                                    {{ $firstNews->title }}
-                                </h3>
-
-                                <div class="flex items-center gap-2 text-xs text-[#75777e] font-medium">
-                                    <span>{{ optional($firstNews->published_at)->format('d M Y') ?? '12 Okt 2023' }}</span>
-                                    <span>•</span>
-                                    <span>{{ $firstNews->author->name ?? 'Admin Desa' }}</span>
-                                </div>
-
-                                <p class="text-xs sm:text-sm text-[#44474e] leading-relaxed font-normal line-clamp-2">
-                                    {{ Str::limit(strip_tags($firstNews->content), 140) }}
-                                </p>
-                            </div>
-                        </a>
                     </div>
-                @endif
-
-                <div class="col-span-5 space-y-4">
-                    @foreach($sideNews as $news)
-                        <a href="{{ route('public.news.show', $news->slug) }}" class="group flex items-start gap-4 p-2 -mx-2 rounded-xl hover:bg-white border border-transparent hover:border-[#c5c6ce]/60 hover:shadow-2xs transition-all duration-300">
-                            <div class="relative w-28 md:w-32 aspect-[4/3] rounded-lg overflow-hidden bg-slate-100 shrink-0 shadow-2xs group-hover:shadow-xs transition-all duration-300"
-                                 x-data="{ loaded: false }"
-                                 x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
-                                <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
-                                <img x-ref="img"
-                                     src="{{ $news->thumbnail ? asset('storage/' . $news->thumbnail) : asset('images/hero_landscape.png') }}" 
-                                     alt="{{ $news->title }}" 
-                                     loading="lazy"
-                                     @load="loaded = true;"
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
-                                     :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
-                            </div>
-
-                            <div class="space-y-1 flex-1 min-w-0">
-                                <span class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">
-                                    {{ $news->category->name ?? 'Informasi' }}
-                                </span>
-
-                                <h4 class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
-                                    {{ $news->title }}
-                                </h4>
-
-                                <p class="text-[11px] text-[#75777e] font-medium">
-                                    {{ optional($news->published_at)->format('d M Y') ?? '12 Okt 2023' }}
-                                </p>
-                            </div>
-                        </a>
-                    @endforeach
                 </div>
             </div>
-        @else
-            <!-- Desktop Fallback Mockup Layout -->
+
             <div class="hidden lg:grid grid-cols-12 gap-8 items-start">
                 <div class="col-span-7">
                     <a href="{{ route('public.news.index') }}" class="group block space-y-2.5">
@@ -550,7 +621,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="text-xs sm:text-sm font-bold text-slate-800">1.000+ Judul Buku Digital & Edukasi</span>
+                        <span class="text-xs sm:text-sm font-bold text-slate-800">Beragam Judul Buku Digital menarik untuk dibaca</span>
                     </div>
 
                     <div class="flex items-center gap-3">
@@ -559,7 +630,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="text-xs sm:text-sm font-bold text-slate-800">Akses Gratis 24 Jam Tanpa Batas</span>
+                        <span class="text-xs sm:text-sm font-bold text-slate-800">Akses Gratis 24 Jam Tanpa Batas dari semua perangkat anda</span>
                     </div>
 
                     <div class="flex items-center gap-3">
@@ -568,7 +639,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="text-xs sm:text-sm font-bold text-slate-800">Tersinkronisasi Perpustakaan Daerah Boyolali</span>
+                        <span class="text-xs sm:text-sm font-bold text-slate-800">Dikelola oleh Perpustakaan Daerah Boyolali</span>
                     </div>
                 </div>
 
@@ -577,7 +648,7 @@
                     <a href="{{ $libraryUrl ?? 'https://perpustakaan.boyolali.go.id' }}" 
                        target="_blank" rel="noopener noreferrer"
                        class="inline-flex items-center justify-center gap-2.5 bg-[#0A3D29] hover:bg-[#062c1d] text-white font-extrabold text-sm sm:text-base px-8 py-3.5 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 group shrink-0">
-                        <span>Buka Perpustakaan Digital</span>
+                        <span>Kunjungi Remen Maos Catur</span>
                         <svg class="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                         </svg>
@@ -587,17 +658,21 @@
             </div>
 
             {{-- Right Column: Transparent Seamless 3D Multi-Device Showcase Image (order-1 on mobile, order-2 on desktop) --}}
-            <div class="order-1 lg:order-2 lg:col-span-7">
-                <div class="w-full max-w-[640px] mx-auto relative"
+            <div class="order-1 lg:order-2 lg:col-span-7 flex items-center justify-center">
+                <div class="w-full max-w-[720px] mx-auto relative py-2"
                      x-data="{ loaded: false }"
                      x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
                     <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none rounded-2xl"></div>
                     <img x-ref="img"
-                         src="{{ asset('images/remen_maos_mockup.png') }}" 
-                         alt="Remen Maos Desa Catur Multi-Device Showcase" 
-                         loading="lazy"
+                         src="{{ asset('images/remen_maos_mockup.png') }}?v={{ file_exists(public_path('images/remen_maos_mockup.png')) ? filemtime(public_path('images/remen_maos_mockup.png')) : time() }}" 
+                         alt="Perpustakaan Digital Remen Maos Desa Catur Multi-Device Mockup" 
+                         width="2848"
+                         height="1494"
+                         loading="eager"
+                         decoding="async"
                          @load="loaded = true;"
-                         class="w-full h-auto object-contain drop-shadow-2xl hover:scale-[1.03] transition-all duration-700 pointer-events-auto"
+                         x-on:error="loaded = true;"
+                         class="w-full h-auto object-contain drop-shadow-md hover:scale-[1.015] transition-all duration-700 pointer-events-auto"
                          :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
                 </div>
             </div>

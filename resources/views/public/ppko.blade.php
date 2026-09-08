@@ -488,7 +488,7 @@
                 'category' => 'Literasi & Edukasi Anak',
                 'sasaran' => 'Anak-Anak Komunitas TPA & Pelajar Desa',
                 'fokus' => ['Kegiatan Belajar Edukatif & Menyenangkan', 'Penguatan Literasi & Minat Baca', 'Tumbuh Kembang Karakter Anak'],
-                'defaultImage' => asset('images/remen_maos_mockup_clean.png'),
+                'defaultImage' => asset('images/remen_maos_mockup.png'),
                 'kurikulumLabel' => 'Kurikulum',
                 'modulLabel' => 'Modul Edukasi Anak',
             ],
