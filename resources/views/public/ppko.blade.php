@@ -603,7 +603,9 @@
                                                                                 {{ $file->formatted_file_size }}
                                                                             </span>
                                                                         </div>
-                                                                                                                                  <!-- Action Buttons: Lihat, Unduh & Dropdown Trigger -->
+                                                                    </div>
+
+                                                                    <!-- Action Buttons: Lihat, Unduh & Dropdown Trigger -->
                                                                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                                                                         <!-- Tombol Lihat -->
                                                                         <a href="{{ asset('storage/' . $file->file_path) }}" 
@@ -653,9 +655,16 @@
                                                                      x-transition:leave-start="opacity-100 translate-y-0"
                                                                      x-transition:leave-end="opacity-0 -translate-y-1"
                                                                      class="border-t border-[#DCE6DA]/70 bg-slate-50/80 px-3.5 pb-3.5 pt-2.5 space-y-2.5">
+                                                                    <!-- Judul Dokumen Penuh Saat Dibuka -->
+                                                                    <div>
+                                                                        <h6 class="text-xs font-bold text-slate-800 leading-snug">
+                                                                            {{ $file->judul }}
+                                                                        </h6>
+                                                                    </div>
+
                                                                     <!-- Deskripsi Dokumen (Jika Ada) -->
                                                                     @if(!empty($file->deskripsi))
-                                                                        <div class="text-xs text-slate-700 leading-relaxed whitespace-pre-line text-justify">
+                                                                        <div class="text-xs text-slate-600 leading-relaxed whitespace-pre-line text-justify">
                                                                             {{ $file->deskripsi }}
                                                                         </div>
                                                                     @else
