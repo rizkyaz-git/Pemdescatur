@@ -818,39 +818,139 @@
                             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
 
                                 <!-- MAIN GRID: SELANG-SELING KIRI KANAN (Ganjil: Teks Kiri, Foto Kanan | Genap: Foto Kiri, Teks Kanan) -->
-                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-6 lg:gap-12 items-start">
 
                                     <!-- TEXT & INTERACTION COLUMN (Order-2 di Mobile agar Teks Berada di Bawah Gambar) -->
-                                    <div x-data="{ expanded: false }"
-                                        class="lg:col-span-7 order-2 {{ $isEven ? 'lg:order-2' : 'lg:order-1' }} flex flex-col justify-start space-y-4 sm:space-y-6">
+                                    <div x-data="{
+                                            expanded: false,
+                                            pinRafId: null,
+                                            isAnimating: false,
+                                            toggleExpanded(btnEl) {
+                                                if (this.isAnimating) return;
+                                                this.isAnimating = true;
+
+                                                const box = this.$refs.contentBox;
+                                                const btn = btnEl;
+                                                const targetTop = btn ? btn.getBoundingClientRect().top : null;
+
+                                                // 1. Dapatkan tinggi awal kontainer yang sedang tampil
+                                                const startH = box ? box.offsetHeight : 0;
+
+                                                // 2. Kunci tinggi saat ini agar tidak melompat ketika state Alpine berubah
+                                                if (box && startH > 0) {
+                                                    box.style.height = startH + 'px';
+                                                    box.style.overflow = 'hidden';
+                                                }
+
+                                                // 3. Nonaktifkan scroll-smooth bawaan sementara agar scrollBy sinkron instan per frame
+                                                const htmlEl = document.documentElement;
+                                                const hadScrollSmooth = htmlEl.classList.contains('scroll-smooth');
+                                                if (hadScrollSmooth) htmlEl.classList.remove('scroll-smooth');
+
+                                                // 4. Ubah state Alpine
+                                                this.expanded = !this.expanded;
+
+                                                // 5. Tunggu $nextTick agar view target dirender di DOM (display:none diangkat oleh Alpine)
+                                                this.$nextTick(() => {
+                                                    if (!box) {
+                                                        this.isAnimating = false;
+                                                        return;
+                                                    }
+
+                                                    const targetView = this.expanded ? this.$refs.view2 : this.$refs.view1;
+                                                    let endH = targetView ? Math.max(targetView.offsetHeight, targetView.scrollHeight) : startH;
+
+                                                    // Hormati min-height desktop jika ada
+                                                    const computedMinH = parseFloat(window.getComputedStyle(box).minHeight) || 0;
+                                                    if (computedMinH > endH) {
+                                                        endH = computedMinH;
+                                                    }
+
+                                                    // Jalankan loop animasi RAF dengan interpolasi kontinu easeOutCubic
+                                                    const startTime = performance.now();
+                                                    const duration = 420; // 420ms untuk kehalusan maksimal yang mengalir alami
+
+                                                    const animateLoop = (now) => {
+                                                        const elapsed = now - startTime;
+                                                        const progress = Math.min(elapsed / duration, 1);
+
+                                                        // Kurva cubic-bezier / easeOutCubic halus: 1 - (1 - progress)^3
+                                                        const ease = 1 - Math.pow(1 - progress, 3);
+                                                        const currentH = startH + (endH - startH) * ease;
+
+                                                        box.style.height = currentH.toFixed(2) + 'px';
+
+                                                        // Kompensasi scroll layar: kunci posisi tombol di viewport persis pada targetTop
+                                                        if (btn && targetTop !== null) {
+                                                            const currentTop = btn.getBoundingClientRect().top;
+                                                            const diff = currentTop - targetTop;
+                                                            if (Math.abs(diff) > 0.2) {
+                                                                window.scrollBy(0, diff);
+                                                            }
+                                                        }
+
+                                                        if (progress < 1) {
+                                                            this.pinRafId = requestAnimationFrame(animateLoop);
+                                                        } else {
+                                                            // Selesai: kembalikan ke tinggi alami/otomatis
+                                                            box.style.height = '';
+                                                            box.style.overflow = '';
+
+                                                            // Penyesuaian akhir tombol
+                                                            if (btn && targetTop !== null) {
+                                                                const finalDiff = btn.getBoundingClientRect().top - targetTop;
+                                                                if (Math.abs(finalDiff) > 0.2) {
+                                                                    window.scrollBy(0, finalDiff);
+                                                                }
+                                                            }
+
+                                                            if (hadScrollSmooth) {
+                                                                htmlEl.classList.add('scroll-smooth');
+                                                            }
+
+                                                            this.pinRafId = null;
+                                                            this.isAnimating = false;
+                                                        }
+                                                    };
+
+                                                    this.pinRafId = requestAnimationFrame(animateLoop);
+                                                });
+                                            }
+                                        }"
+                                        class="lg:col-span-7 order-2 {{ $isEven ? 'lg:order-2' : 'lg:order-1' }} flex flex-col justify-start space-y-3 sm:space-y-6">
 
                                         <!-- HEADER: DISPLAY NUMBER (01, 02, ...) + TITLE POJOK -->
-                                        <div class="pojok-header-wrap flex items-baseline gap-3.5 sm:gap-5 lg:gap-6 w-full">
+                                        <div class="pojok-header-wrap flex items-start sm:items-baseline gap-3.5 sm:gap-5 lg:gap-6 w-full">
                                             <!-- Animasi Angka Fade Geser dari Kiri -->
                                             <span
-                                                class="pojok-num-text harmoni-num-animate select-none font-sans font-black leading-none tracking-tight shrink-0 text-3xl sm:text-5xl md:text-6xl lg:text-[72px] xl:text-[82px] {{ $isDark ? 'text-white' : 'text-black' }}"
+                                                class="pojok-num-text harmoni-num-animate select-none font-sans font-black leading-tight sm:leading-none tracking-tight shrink-0 text-3xl sm:text-5xl md:text-6xl lg:text-[72px] xl:text-[82px] {{ $isDark ? 'text-white' : 'text-black' }}"
                                                 style="font-size: clamp(2.25rem, 5vw, 5rem);">
                                                 {{ sprintf('%02d', $loop->iteration) }}
                                             </span>
                                             <!-- Teks Judul Pojok Membentang Harmonis -->
-                                            <h2 class="pojok-title-text harmoni-text-animate font-sans font-black leading-none tracking-tight whitespace-normal sm:whitespace-nowrap text-3xl sm:text-5xl md:text-6xl lg:text-[72px] xl:text-[82px] {{ $isDark ? 'text-white' : 'text-black' }}"
+                                            <h2 class="pojok-title-text harmoni-text-animate font-sans font-black leading-tight sm:leading-none tracking-tight whitespace-normal sm:whitespace-nowrap text-3xl sm:text-5xl md:text-6xl lg:text-[72px] xl:text-[82px] {{ $isDark ? 'text-white' : 'text-black' }}"
                                                 style="font-size: clamp(2.25rem, 5vw, 5rem);">
-                                                {{ $pojok->nama }}
+                                                @if(str_contains(strtolower($pojok->nama), 'go digital'))
+                                                    {!! preg_replace('/(go\s+digital)/i', '<span class="block sm:inline">$1</span>', e($pojok->nama)) !!}
+                                                @else
+                                                    {{ $pojok->nama }}
+                                                @endif
                                             </h2>
                                         </div>
 
-                                        <!-- AREA KONTEN UTAMA DENGAN TINGGI STABIL (MENCEGAH LONJAKAN TATA LETAK SAAT TOGGLE DROPDOWN) -->
-                                        <div
-                                            class="relative w-full grid grid-cols-1 grid-rows-1 items-start min-h-[350px] sm:min-h-[290px] md:min-h-[220px] lg:min-h-[200px]">
+                                        <!-- AREA KONTEN UTAMA DENGAN TRANSISI TINGGI YANG KONTINU & MULUS -->
+                                        <div x-ref="contentBox"
+                                            class="relative w-full grid grid-cols-1 grid-rows-1 items-start min-h-0 sm:min-h-[280px] md:min-h-[220px] lg:min-h-[200px]">
 
                                             <!-- VIEW 1: TEKS DESKRIPSI POJOK (DEFAULT) -->
-                                            <div x-show="!expanded"
-                                                x-transition:enter="transition-all duration-300 ease-out delay-75 transform"
-                                                x-transition:enter-start="opacity-0 -translate-y-3"
+                                            <div x-ref="view1"
+                                                x-show="!expanded"
+                                                x-transition:enter="transition-all duration-350 ease-out transform"
+                                                x-transition:enter-start="opacity-0 translate-y-1.5"
                                                 x-transition:enter-end="opacity-100 translate-y-0"
-                                                x-transition:leave="transition-all duration-200 ease-out transform"
+                                                x-transition:leave="transition-all duration-200 ease-in transform pointer-events-none"
                                                 x-transition:leave-start="opacity-100 translate-y-0"
-                                                x-transition:leave-end="opacity-0 -translate-y-3"
+                                                x-transition:leave-end="opacity-0 -translate-y-1.5"
                                                 class="col-start-1 row-start-1 w-full grid grid-cols-1 {{ !empty($detailKanan) ? 'md:grid-cols-2' : '' }} gap-7 lg:gap-10 pt-2">
                                                 <!-- Kolom Kiri: Narasi Asli dari Database -->
                                                 <div class="harmoni-desc-animate">
@@ -872,13 +972,14 @@
                                             </div>
 
                                             <!-- VIEW 2: KONTEN MODUL AJAR & RINCIAN LENGKAP (EXPANDED) -->
-                                            <div x-show="expanded" x-cloak
-                                                x-transition:enter="transition-all duration-300 ease-out delay-75 transform"
-                                                x-transition:enter-start="opacity-0 translate-y-3"
+                                            <div x-ref="view2"
+                                                x-show="expanded" x-cloak
+                                                x-transition:enter="transition-all duration-350 ease-out transform"
+                                                x-transition:enter-start="opacity-0 translate-y-1.5"
                                                 x-transition:enter-end="opacity-100 translate-y-0"
-                                                x-transition:leave="transition-all duration-200 ease-out transform"
+                                                x-transition:leave="transition-all duration-200 ease-in transform pointer-events-none"
                                                 x-transition:leave-start="opacity-100 translate-y-0"
-                                                x-transition:leave-end="opacity-0 translate-y-3"
+                                                x-transition:leave-end="opacity-0 -translate-y-1.5"
                                                 class="col-start-1 row-start-1 w-full pt-1 pb-2">
 
                                                 @if($pojok->kurikulums->isNotEmpty())
@@ -974,9 +1075,9 @@
                                         </div>
 
                                         <!-- TRIGGER BAR DI BAGIAN BAWAH: TEKS & ARROW DI TENGAH, BERADA DI ATAS GARIS HORIZONTAL -->
-                                        <div class="pt-4 sm:pt-5 w-full flex flex-col items-center harmoni-desc-animate harmoni-desc-delay-2">
+                                        <div class="pt-3 sm:pt-5 w-full flex flex-col items-center harmoni-desc-animate harmoni-desc-delay-2">
                                             <!-- Tombol di Atas Garis, Posisikan di Tengah -->
-                                            <button type="button" @click="expanded = !expanded"
+                                            <button type="button" @click="toggleExpanded($el)"
                                                 class="inline-flex items-center justify-center gap-2 cursor-pointer select-none group focus:outline-none pb-2.5 px-4"
                                                 title="Klik untuk membuka/menutup selengkapnya">
                                                 <span
@@ -999,200 +1100,280 @@
 
                                     </div>
 
-                                    <!-- VISUAL COLUMN: 3 STACKED CARDS (Order-1 di Mobile agar Gambar Berada di Atas Teks) -->
+                                    <!-- VISUAL COLUMN (Order-1 di Mobile agar Gambar Berada di Atas Teks) -->
                                     <div
-                                        class="lg:col-span-5 order-1 {{ $isEven ? 'lg:order-1' : 'lg:order-2' }} flex flex-col items-center justify-center pt-8 sm:pt-10 lg:pt-2 pb-6 lg:pb-0">
-                                        <div x-data="{
-                                                        order: [0, 1, 2],
-                                                        isShuffling: false,
-                                                        timer: null,
-                                                        isEven: {{ $isEven ? 'true' : 'false' }},
-                                                        touchStartX: 0,
-                                                        touchStartY: 0,
-                                                        isPointerDown: false,
-                                                        pointerStartX: 0,
-                                                        swiped: false,
-                                                        init() {
-                                                            this.startAuto();
-                                                        },
-                                                        startAuto() {
-                                                            if (this.timer) clearInterval(this.timer);
-                                                            this.timer = setInterval(() => {
-                                                                this.next();
-                                                            }, 3600);
-                                                        },
-                                                        pause() {
-                                                            if (this.timer) clearInterval(this.timer);
-                                                        },
-                                                        resume() {
-                                                            this.startAuto();
-                                                        },
-                                                        next() {
-                                                            if (this.isShuffling) return;
-                                                            this.isShuffling = true;
-                                                            const top = this.order.shift();
-                                                            this.order.push(top);
-                                                            setTimeout(() => {
-                                                                this.isShuffling = false;
-                                                            }, 650);
-                                                        },
-                                                        prev() {
-                                                            if (this.isShuffling) return;
-                                                            this.isShuffling = true;
-                                                            const bottom = this.order.pop();
-                                                            this.order.unshift(bottom);
-                                                            setTimeout(() => {
-                                                                this.isShuffling = false;
-                                                            }, 650);
-                                                        },
-                                                        setFront(cardIdx) {
-                                                            let count = 0;
-                                                            while (this.order[0] !== cardIdx && count < 3) {
-                                                                this.order.push(this.order.shift());
-                                                                count++;
-                                                            }
-                                                        },
-                                                        handleTouchStart(e) {
-                                                            this.pause();
-                                                            this.swiped = false;
-                                                            this.touchStartX = e.touches[0].clientX;
-                                                            this.touchStartY = e.touches[0].clientY;
-                                                        },
-                                                        handleTouchEnd(e) {
-                                                            const diffX = e.changedTouches[0].clientX - this.touchStartX;
-                                                            const diffY = e.changedTouches[0].clientY - this.touchStartY;
-                                                            if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
-                                                                this.swiped = true;
-                                                                if (diffX < 0) {
-                                                                    this.next();
-                                                                } else {
-                                                                    this.prev();
-                                                                }
-                                                            }
-                                                            this.resume();
-                                                        },
-                                                        handleMouseDown(e) {
-                                                            this.isPointerDown = true;
-                                                            this.pointerStartX = e.clientX;
-                                                            this.swiped = false;
-                                                            this.pause();
-                                                        },
-                                                        handleMouseMove(e) {
-                                                            if (!this.isPointerDown) return;
-                                                            const diffX = e.clientX - this.pointerStartX;
-                                                            if (Math.abs(diffX) > 40) {
-                                                                this.isPointerDown = false;
-                                                                this.swiped = true;
-                                                                if (diffX < 0) {
-                                                                    this.next();
-                                                                } else {
-                                                                    this.prev();
-                                                                }
-                                                            }
-                                                        },
-                                                        handleMouseUp(e) {
-                                                            this.isPointerDown = false;
-                                                            this.resume();
-                                                        },
-                                                        handleMouseLeave() {
-                                                            this.isPointerDown = false;
-                                                            this.resume();
-                                                        },
-                                                        handleClick() {
-                                                            if (this.swiped) {
-                                                                this.swiped = false;
-                                                                return;
-                                                            }
+                                        class="lg:col-span-5 order-1 {{ $isEven ? 'lg:order-1' : 'lg:order-2' }} flex flex-col items-center justify-center pt-0 sm:pt-2 lg:pt-2 pb-0 lg:pb-0 w-full">
+
+                                        <!-- TAMPILAN MOBILE (< 1024px): SLIDER GESER BIASA (SWIPEABLE, TANPA TUMPUK, TANPA SHADOW & BORDER, TIDAK TERLALU ROUNDED) -->
+                                        <div class="block lg:hidden w-full harmoni-cards-animate">
+                                            <div x-data="{
+                                                    current: 0,
+                                                    total: 3,
+                                                    touchStartX: 0,
+                                                    touchStartY: 0,
+                                                    isPointerDown: false,
+                                                    pointerStartX: 0,
+                                                    swiped: false,
+                                                    timer: null,
+                                                    init() {
+                                                        this.startAuto();
+                                                    },
+                                                    startAuto() {
+                                                        if (this.timer) clearInterval(this.timer);
+                                                        this.timer = setInterval(() => {
                                                             this.next();
-                                                        },
-                                                        getCardClass(cardIndex) {
-                                                            const pos = this.order.indexOf(cardIndex);
-                                                            // Tampilan Mobile: Gaya tumpuk biasa lurus vertikal dengan shadow bertingkat untuk efek depth
-                                                            // Tampilan Desktop (lg): Tetap menggunakan rotasi artistik (selang-seling)
-                                                            if (this.isEven) {
-                                                                if (pos === 0) {
-                                                                    return 'z-30 scale-100 rotate-0 lg:rotate-[3.5deg] translate-x-0 translate-y-0 opacity-100 shadow-[0_20px_40px_-6px_rgba(0,0,0,0.65),0_8px_18px_-6px_rgba(0,0,0,0.45)]';
-                                                                } else if (pos === 1) {
-                                                                    return 'z-20 scale-[0.93] lg:scale-[0.97] rotate-0 lg:-rotate-[3.5deg] translate-x-0 lg:-translate-x-6 sm:lg:-translate-x-8 -translate-y-3 sm:-translate-y-3.5 lg:-translate-y-3 opacity-90 lg:opacity-95 shadow-[0_14px_28px_-6px_rgba(0,0,0,0.55),0_4px_12px_-4px_rgba(0,0,0,0.35)]';
-                                                                } else {
-                                                                    return 'z-10 scale-[0.86] lg:scale-[0.94] rotate-0 lg:-rotate-[8deg] translate-x-0 lg:-translate-x-12 sm:lg:-translate-x-16 -translate-y-6 sm:-translate-y-7 lg:translate-y-3 opacity-75 lg:opacity-90 shadow-[0_8px_20px_-4px_rgba(0,0,0,0.45)]';
-                                                                }
+                                                        }, 4000);
+                                                    },
+                                                    pause() {
+                                                        if (this.timer) clearInterval(this.timer);
+                                                    },
+                                                    resume() {
+                                                        this.startAuto();
+                                                    },
+                                                    next() {
+                                                        this.current = (this.current + 1) % this.total;
+                                                    },
+                                                    prev() {
+                                                        this.current = (this.current - 1 + this.total) % this.total;
+                                                    },
+                                                    goTo(idx) {
+                                                        this.current = idx;
+                                                    },
+                                                    handleTouchStart(e) {
+                                                        this.pause();
+                                                        this.swiped = false;
+                                                        this.touchStartX = e.touches[0].clientX;
+                                                        this.touchStartY = e.touches[0].clientY;
+                                                    },
+                                                    handleTouchEnd(e) {
+                                                        const diffX = e.changedTouches[0].clientX - this.touchStartX;
+                                                        const diffY = e.changedTouches[0].clientY - this.touchStartY;
+                                                        if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
+                                                            this.swiped = true;
+                                                            if (diffX < 0) {
+                                                                this.next();
                                                             } else {
-                                                                if (pos === 0) {
-                                                                    return 'z-30 scale-100 rotate-0 lg:-rotate-[3.5deg] translate-x-0 translate-y-0 opacity-100 shadow-[0_20px_40px_-8px_rgba(0,0,0,0.30),0_8px_18px_-6px_rgba(0,0,0,0.18)]';
-                                                                } else if (pos === 1) {
-                                                                    return 'z-20 scale-[0.93] lg:scale-[0.97] rotate-0 lg:rotate-[3.5deg] translate-x-0 lg:translate-x-6 sm:lg:translate-x-8 -translate-y-3 sm:-translate-y-3.5 lg:-translate-y-3 opacity-90 lg:opacity-95 shadow-[0_14px_26px_-6px_rgba(0,0,0,0.24),0_4px_12px_-4px_rgba(0,0,0,0.14)]';
-                                                                } else {
-                                                                    return 'z-10 scale-[0.86] lg:scale-[0.94] rotate-0 lg:rotate-[8deg] translate-x-0 lg:translate-x-12 sm:lg:translate-x-16 -translate-y-6 sm:-translate-y-7 lg:translate-y-3 opacity-75 lg:opacity-90 shadow-[0_8px_18px_-4px_rgba(0,0,0,0.18)]';
-                                                                }
+                                                                this.prev();
                                                             }
                                                         }
-                                                    }" @mouseenter="pause()" @mouseleave="handleMouseLeave()"
-                                            @mousedown="handleMouseDown($event)" @mousemove="handleMouseMove($event)"
-                                            @mouseup="handleMouseUp($event)" @touchstart.passive="handleTouchStart($event)"
-                                            @touchend="handleTouchEnd($event)" @click="handleClick()"
-                                            class="harmoni-cards-animate relative w-full max-w-[325px] xs:max-w-[355px] sm:max-w-[430px] lg:max-w-none lg:w-[430px] h-[200px] xs:h-[220px] sm:h-[260px] lg:h-[430px] mx-auto cursor-grab active:cursor-grabbing select-none group touch-pan-y">
+                                                        this.resume();
+                                                    },
+                                                    handleMouseDown(e) {
+                                                        this.isPointerDown = true;
+                                                        this.pointerStartX = e.clientX;
+                                                        this.swiped = false;
+                                                        this.pause();
+                                                    },
+                                                    handleMouseMove(e) {
+                                                        if (!this.isPointerDown) return;
+                                                        const diffX = e.clientX - this.pointerStartX;
+                                                        if (Math.abs(diffX) > 40) {
+                                                            this.isPointerDown = false;
+                                                            this.swiped = true;
+                                                            if (diffX < 0) {
+                                                                this.next();
+                                                            } else {
+                                                                this.prev();
+                                                            }
+                                                        }
+                                                    },
+                                                    handleMouseUp() {
+                                                        this.isPointerDown = false;
+                                                        this.resume();
+                                                    }
+                                                }"
+                                                @mouseenter="pause()"
+                                                @mouseleave="handleMouseUp()"
+                                                class="w-full max-w-[340px] xs:max-w-[370px] sm:max-w-[440px] md:max-w-[480px] mx-auto">
 
-                                            <!-- KARTU 1 (FOTO 1) -->
-                                            <div class="absolute inset-0 rounded-2xl sm:rounded-[24px] lg:rounded-[36px] overflow-hidden bg-slate-200 border-[1.5px] sm:border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
-                                                :class="getCardClass(0)">
-                                                <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}"
-                                                    class="w-full h-full object-cover select-none pointer-events-none"
-                                                    draggable="false">
+                                                <!-- Frame Gambar: Geser Biasa, Tanpa Shadow, Tanpa Border, Rounded Bersahaja (rounded-xl) -->
+                                                <div class="relative w-full aspect-[16/10] overflow-hidden rounded-xl bg-slate-200 cursor-grab active:cursor-grabbing select-none touch-pan-y"
+                                                    @touchstart.passive="handleTouchStart($event)"
+                                                    @touchend="handleTouchEnd($event)"
+                                                    @mousedown="handleMouseDown($event)"
+                                                    @mousemove="handleMouseMove($event)"
+                                                    @mouseup="handleMouseUp()">
+                                                    
+                                                    <!-- Track Slider Horizontal -->
+                                                    <div class="flex h-full w-full transition-transform duration-500 ease-out"
+                                                        :style="`transform: translateX(-${current * 100}%);`">
+                                                        
+                                                        <!-- Slide 1 -->
+                                                        <div class="w-full h-full shrink-0">
+                                                            <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}"
+                                                                class="w-full h-full object-cover select-none pointer-events-none"
+                                                                draggable="false">
+                                                        </div>
+
+                                                        <!-- Slide 2 -->
+                                                        <div class="w-full h-full shrink-0">
+                                                            <img src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}"
+                                                                class="w-full h-full object-cover select-none pointer-events-none"
+                                                                draggable="false">
+                                                        </div>
+
+                                                        <!-- Slide 3 -->
+                                                        <div class="w-full h-full shrink-0">
+                                                            <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}"
+                                                                class="w-full h-full object-cover select-none pointer-events-none"
+                                                                draggable="false">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Indikator Dots & Navigasi Panah Geser -->
+                                                <div class="flex items-center justify-center gap-2 mt-2 sm:mt-2.5 pointer-events-auto">
+                                                    <button type="button" @click.stop="prev()"
+                                                        class="w-6 h-6 flex items-center justify-center rounded-full transition {{ $isDark ? 'text-white/60 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' }}"
+                                                        title="Sebelumnya">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                                                        </svg>
+                                                    </button>
+
+                                                    <button type="button" @click.stop="goTo(0)"
+                                                        class="h-1.5 rounded-full transition-all duration-300"
+                                                        :class="current === 0 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40' : 'w-2 bg-slate-300' }}'"
+                                                        title="Foto 1">
+                                                    </button>
+                                                    <button type="button" @click.stop="goTo(1)"
+                                                        class="h-1.5 rounded-full transition-all duration-300"
+                                                        :class="current === 1 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40' : 'w-2 bg-slate-300' }}'"
+                                                        title="Foto 2">
+                                                    </button>
+                                                    <button type="button" @click.stop="goTo(2)"
+                                                        class="h-1.5 rounded-full transition-all duration-300"
+                                                        :class="current === 2 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40' : 'w-2 bg-slate-300' }}'"
+                                                        title="Foto 3">
+                                                    </button>
+
+                                                    <button type="button" @click.stop="next()"
+                                                        class="w-6 h-6 flex items-center justify-center rounded-full transition {{ $isDark ? 'text-white/60 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' }}"
+                                                        title="Berikutnya">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                             </div>
+                                        </div>
 
-                                            <!-- KARTU 2 (FOTO 2) -->
-                                            <div class="absolute inset-0 rounded-2xl sm:rounded-[24px] lg:rounded-[36px] overflow-hidden bg-slate-300 border-[1.5px] sm:border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
-                                                :class="getCardClass(1)">
-                                                <img src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}"
-                                                    class="w-full h-full object-cover select-none pointer-events-none"
-                                                    draggable="false">
+                                        <!-- TAMPILAN DESKTOP (>= 1024px): 3 STACKED CARDS ARTISTIK BERKIPAS -->
+                                        <div class="hidden lg:block w-full">
+                                            <div x-data="{
+                                                            order: [0, 1, 2],
+                                                            isShuffling: false,
+                                                            timer: null,
+                                                            isEven: {{ $isEven ? 'true' : 'false' }},
+                                                            init() {
+                                                                this.startAuto();
+                                                            },
+                                                            startAuto() {
+                                                                if (this.timer) clearInterval(this.timer);
+                                                                this.timer = setInterval(() => {
+                                                                    this.next();
+                                                                }, 3600);
+                                                            },
+                                                            pause() {
+                                                                if (this.timer) clearInterval(this.timer);
+                                                            },
+                                                            resume() {
+                                                                this.startAuto();
+                                                            },
+                                                            next() {
+                                                                if (this.isShuffling) return;
+                                                                this.isShuffling = true;
+                                                                const top = this.order.shift();
+                                                                this.order.push(top);
+                                                                setTimeout(() => {
+                                                                    this.isShuffling = false;
+                                                                }, 650);
+                                                            },
+                                                            prev() {
+                                                                if (this.isShuffling) return;
+                                                                this.isShuffling = true;
+                                                                const bottom = this.order.pop();
+                                                                this.order.unshift(bottom);
+                                                                setTimeout(() => {
+                                                                    this.isShuffling = false;
+                                                                }, 650);
+                                                            },
+                                                            setFront(cardIdx) {
+                                                                let count = 0;
+                                                                while (this.order[0] !== cardIdx && count < 3) {
+                                                                    this.order.push(this.order.shift());
+                                                                    count++;
+                                                                }
+                                                            },
+                                                            getCardClass(cardIndex) {
+                                                                const pos = this.order.indexOf(cardIndex);
+                                                                if (this.isEven) {
+                                                                    if (pos === 0) {
+                                                                        return 'z-30 scale-100 rotate-[3.5deg] translate-x-0 translate-y-0 opacity-100 shadow-[0_20px_40px_-6px_rgba(0,0,0,0.65),0_8px_18px_-6px_rgba(0,0,0,0.45)]';
+                                                                    } else if (pos === 1) {
+                                                                        return 'z-20 scale-[0.97] -rotate-[3.5deg] -translate-x-8 -translate-y-3 opacity-95 shadow-[0_14px_28px_-6px_rgba(0,0,0,0.55),0_4px_12px_-4px_rgba(0,0,0,0.35)]';
+                                                                    } else {
+                                                                        return 'z-10 scale-[0.94] -rotate-[8deg] -translate-x-16 translate-y-3 opacity-90 shadow-[0_8px_20px_-4px_rgba(0,0,0,0.45)]';
+                                                                    }
+                                                                } else {
+                                                                    if (pos === 0) {
+                                                                        return 'z-30 scale-100 -rotate-[3.5deg] translate-x-0 translate-y-0 opacity-100 shadow-[0_20px_40px_-8px_rgba(0,0,0,0.30),0_8px_18px_-6px_rgba(0,0,0,0.18)]';
+                                                                    } else if (pos === 1) {
+                                                                        return 'z-20 scale-[0.97] rotate-[3.5deg] translate-x-8 -translate-y-3 opacity-95 shadow-[0_14px_26px_-6px_rgba(0,0,0,0.24),0_4px_12px_-4px_rgba(0,0,0,0.14)]';
+                                                                    } else {
+                                                                        return 'z-10 scale-[0.94] rotate-[8deg] translate-x-16 translate-y-3 opacity-90 shadow-[0_8px_18px_-4px_rgba(0,0,0,0.18)]';
+                                                                    }
+                                                                }
+                                                            }
+                                                        }"
+                                                @mouseenter="pause()"
+                                                @mouseleave="resume()"
+                                                @click="next()"
+                                                class="harmoni-cards-animate relative w-[430px] h-[430px] mx-auto cursor-pointer select-none group">
+
+                                                <!-- KARTU 1 (FOTO 1) -->
+                                                <div class="absolute inset-0 rounded-[36px] overflow-hidden bg-slate-200 border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
+                                                    :class="getCardClass(0)">
+                                                    <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}"
+                                                        class="w-full h-full object-cover select-none pointer-events-none"
+                                                        draggable="false">
+                                                </div>
+
+                                                <!-- KARTU 2 (FOTO 2) -->
+                                                <div class="absolute inset-0 rounded-[36px] overflow-hidden bg-slate-300 border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
+                                                    :class="getCardClass(1)">
+                                                    <img src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}"
+                                                        class="w-full h-full object-cover select-none pointer-events-none"
+                                                        draggable="false">
+                                                </div>
+
+                                                <!-- KARTU 3 (FOTO 3) -->
+                                                <div class="absolute inset-0 rounded-[36px] overflow-hidden bg-slate-400 border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
+                                                    :class="getCardClass(2)">
+                                                    <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}"
+                                                        class="w-full h-full object-cover select-none pointer-events-none"
+                                                        draggable="false">
+                                                </div>
+
+                                                <!-- Pagination Dots Desktop -->
+                                                <div class="absolute -bottom-8 inset-x-0 flex items-center justify-center gap-2 pointer-events-auto">
+                                                    <button type="button" @click.stop="setFront(0)"
+                                                        class="h-1.5 rounded-full transition-all duration-300"
+                                                        :class="order[0] === 0 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
+                                                        title="Pindah ke Kartu 1">
+                                                    </button>
+                                                    <button type="button" @click.stop="setFront(1)"
+                                                        class="h-1.5 rounded-full transition-all duration-300"
+                                                        :class="order[0] === 1 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
+                                                        title="Pindah ke Kartu 2">
+                                                    </button>
+                                                    <button type="button" @click.stop="setFront(2)"
+                                                        class="h-1.5 rounded-full transition-all duration-300"
+                                                        :class="order[0] === 2 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
+                                                        title="Pindah ke Kartu 3">
+                                                    </button>
+                                                </div>
                                             </div>
-
-                                            <!-- KARTU 3 (FOTO 3) -->
-                                            <div class="absolute inset-0 rounded-2xl sm:rounded-[24px] lg:rounded-[36px] overflow-hidden bg-slate-400 border-[1.5px] sm:border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
-                                                :class="getCardClass(2)">
-                                                <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}"
-                                                    class="w-full h-full object-cover select-none pointer-events-none"
-                                                    draggable="false">
-                                            </div>
-
-                                            <!-- Pagination Dots / Quick Switch Indicators (dengan tombol geser di mobile) -->
-                                            <div
-                                                class="absolute -bottom-8 inset-x-0 flex items-center justify-center gap-2 pointer-events-auto">
-                                                <button type="button" @click.stop="prev()"
-                                                    class="w-5 h-5 flex items-center justify-center rounded-full transition {{ $isDark ? 'text-white/60 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' }} sm:hidden"
-                                                    title="Sebelumnya">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                            d="M15 19l-7-7 7-7" />
-                                                    </svg>
-                                                </button>
-                                                <button type="button" @click.stop="setFront(0)"
-                                                    class="h-1.5 rounded-full transition-all duration-300"
-                                                    :class="order[0] === 0 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
-                                                    title="Pindah ke Kartu 1">
-                                                </button>
-                                                <button type="button" @click.stop="setFront(1)"
-                                                    class="h-1.5 rounded-full transition-all duration-300"
-                                                    :class="order[0] === 1 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
-                                                    title="Pindah ke Kartu 2">
-                                                </button>
-                                                <button type="button" @click.stop="setFront(2)"
-                                                    class="h-1.5 rounded-full transition-all duration-300"
-                                                    :class="order[0] === 2 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
-                                                    title="Pindah ke Kartu 3">
-                                                </button>
-                                                <button type="button" @click.stop="next()"
-                                                    class="w-5 h-5 flex items-center justify-center rounded-full transition {{ $isDark ? 'text-white/60 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' }} sm:hidden"
-                                                    title="Berikutnya">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                            d="M9 5l7 7-7 7" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-
                                         </div>
 
                                         <!-- Tombol Kelola Foto Khusus Admin -->
