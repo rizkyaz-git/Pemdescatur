@@ -8,153 +8,153 @@
 
     <!-- Alpine Lightbox Modal & Floating Pojok Navigation Scope -->
     <div x-data="{
-                            lightboxOpen: false,
-                            activeImg: '',
-                            activeTitle: '',
-                            activePojok: '',
-                            activeCaption: '',
-                            activeDate: '',
-                            openLightbox(img, title, pojok, caption, date) {
-                                this.activeImg = img;
-                                this.activeTitle = title;
-                                this.activePojok = pojok;
-                                this.activeCaption = caption;
-                                this.activeDate = date;
-                                this.lightboxOpen = true;
-                                document.body.style.overflow = 'hidden';
-                            },
-                            closeLightbox() {
-                                this.lightboxOpen = false;
-                                document.body.style.overflow = 'auto';
-                            },
+                                            lightboxOpen: false,
+                                            activeImg: '',
+                                            activeTitle: '',
+                                            activePojok: '',
+                                            activeCaption: '',
+                                            activeDate: '',
+                                            openLightbox(img, title, pojok, caption, date) {
+                                                this.activeImg = img;
+                                                this.activeTitle = title;
+                                                this.activePojok = pojok;
+                                                this.activeCaption = caption;
+                                                this.activeDate = date;
+                                                this.lightboxOpen = true;
+                                                document.body.style.overflow = 'hidden';
+                                            },
+                                            closeLightbox() {
+                                                this.lightboxOpen = false;
+                                                document.body.style.overflow = 'auto';
+                                            },
 
-                            // Floating Pojok Navigation State (Mobile)
-                            pojoks: [
-                                @foreach($pojoks as $p)
-                                    {
-                                        id: '{{ Str::slug(str_replace('Pojok ', '', $p->nama)) }}',
-                                        nama: '{{ $p->nama }}'
-                                    },
-                                @endforeach
-                            ],
-                            activeSlug: 'harmoni',
-                            activeName: 'Pojok Harmoni',
-                            inPojokSection: false,
+                                            // Floating Pojok Navigation State (Mobile)
+                                            pojoks: [
+                                                @foreach($pojoks as $p)
+                                                    {
+                                                        id: '{{ Str::slug(str_replace('Pojok ', '', $p->nama)) }}',
+                                                        nama: '{{ $p->nama }}'
+                                                    },
+                                                @endforeach
+                                            ],
+                                            activeSlug: 'harmoni',
+                                            activeName: 'Pojok Harmoni',
+                                            inPojokSection: false,
 
-                            init() {
-                                this.updatePojokState();
-                                window.addEventListener('scroll', () => {
-                                    this.updatePojokState();
-                                }, { passive: true });
+                                            init() {
+                                                this.updatePojokState();
+                                                window.addEventListener('scroll', () => {
+                                                    this.updatePojokState();
+                                                }, { passive: true });
 
-                                this.$nextTick(() => {
-                                    const sections = document.querySelectorAll('.ppko-section-entrance');
-                                    if ('IntersectionObserver' in window) {
-                                        const observer = new IntersectionObserver((entries, obs) => {
-                                            entries.forEach(entry => {
-                                                if (entry.isIntersecting) {
-                                                    entry.target.classList.add('is-revealed');
-                                                    obs.unobserve(entry.target);
+                                                this.$nextTick(() => {
+                                                    const sections = document.querySelectorAll('.ppko-section-entrance');
+                                                    if ('IntersectionObserver' in window) {
+                                                        const observer = new IntersectionObserver((entries, obs) => {
+                                                            entries.forEach(entry => {
+                                                                if (entry.isIntersecting) {
+                                                                    entry.target.classList.add('is-revealed');
+                                                                    obs.unobserve(entry.target);
+                                                                }
+                                                            });
+                                                        }, {
+                                                            root: null,
+                                                            rootMargin: '0px 0px -40px 0px',
+                                                            threshold: 0.05
+                                                        });
+                                                        sections.forEach(sec => observer.observe(sec));
+                                                    } else {
+                                                        sections.forEach(sec => sec.classList.add('is-revealed'));
+                                                    }
+                                                });
+                                            },
+
+                                            updatePojokState() {
+                                                const container = document.getElementById('katalog-pojok-container');
+                                                if (!container) return;
+
+                                                const rect = container.getBoundingClientRect();
+                                                const vh = window.innerHeight || document.documentElement.clientHeight;
+
+                                                // Aktif jika viewport sedang berada di dalam lingkup seksi katalog pojok
+                                                this.inPojokSection = (rect.top <= vh * 0.75 && rect.bottom >= vh * 0.25);
+
+                                                if (this.inPojokSection) {
+                                                    let closestSlug = this.pojoks[0]?.id || 'harmoni';
+                                                    let minDistance = Infinity;
+
+                                                    this.pojoks.forEach(p => {
+                                                        const el = document.getElementById(p.id);
+                                                        if (el) {
+                                                            const elRect = el.getBoundingClientRect();
+                                                            const distance = Math.abs(elRect.top - 80);
+                                                            if (distance < minDistance) {
+                                                                minDistance = distance;
+                                                                closestSlug = p.id;
+                                                            }
+                                                        }
+                                                    });
+
+                                                    this.activeSlug = closestSlug;
+                                                    const currentPojok = this.pojoks.find(p => p.id === this.activeSlug);
+                                                    if (currentPojok) {
+                                                        this.activeName = currentPojok.nama;
+                                                    }
                                                 }
-                                            });
-                                        }, {
-                                            root: null,
-                                            rootMargin: '0px 0px -40px 0px',
-                                            threshold: 0.05
-                                        });
-                                        sections.forEach(sec => observer.observe(sec));
-                                    } else {
-                                        sections.forEach(sec => sec.classList.add('is-revealed'));
-                                    }
-                                });
-                            },
+                                            },
 
-                            updatePojokState() {
-                                const container = document.getElementById('katalog-pojok-container');
-                                if (!container) return;
+                                            getCurrentIndex() {
+                                                const idx = this.pojoks.findIndex(p => p.id === this.activeSlug);
+                                                return idx !== -1 ? idx : 0;
+                                            },
 
-                                const rect = container.getBoundingClientRect();
-                                const vh = window.innerHeight || document.documentElement.clientHeight;
+                                            scrollToSlug(slug) {
+                                                this.activeSlug = slug;
+                                                const currentPojok = this.pojoks.find(p => p.id === slug);
+                                                if (currentPojok) {
+                                                    this.activeName = currentPojok.nama;
+                                                }
+                                                const el = document.getElementById(slug);
+                                                if (el) {
+                                                    const headerOffset = 70;
+                                                    const elementPosition = el.getBoundingClientRect().top;
+                                                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                                                    window.scrollTo({
+                                                        top: offsetPosition,
+                                                        behavior: 'smooth'
+                                                    });
+                                                }
+                                            },
 
-                                // Aktif jika viewport sedang berada di dalam lingkup seksi katalog pojok
-                                this.inPojokSection = (rect.top <= vh * 0.75 && rect.bottom >= vh * 0.25);
+                                            nextPojok() {
+                                                if (!this.inPojokSection) {
+                                                    this.scrollToSlug(this.pojoks[0].id);
+                                                    return;
+                                                }
+                                                const idx = this.getCurrentIndex();
+                                                if (idx < this.pojoks.length - 1) {
+                                                    this.scrollToSlug(this.pojoks[idx + 1].id);
+                                                } else {
+                                                    const nextEl = document.getElementById('galeri') || document.querySelector('footer');
+                                                    if (nextEl) {
+                                                        nextEl.scrollIntoView({ behavior: 'smooth' });
+                                                    }
+                                                }
+                                            },
 
-                                if (this.inPojokSection) {
-                                    let closestSlug = this.pojoks[0]?.id || 'harmoni';
-                                    let minDistance = Infinity;
-
-                                    this.pojoks.forEach(p => {
-                                        const el = document.getElementById(p.id);
-                                        if (el) {
-                                            const elRect = el.getBoundingClientRect();
-                                            const distance = Math.abs(elRect.top - 80);
-                                            if (distance < minDistance) {
-                                                minDistance = distance;
-                                                closestSlug = p.id;
+                                            prevPojok() {
+                                                if (!this.inPojokSection) {
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                    return;
+                                                }
+                                                const idx = this.getCurrentIndex();
+                                                if (idx > 0) {
+                                                    this.scrollToSlug(this.pojoks[idx - 1].id);
+                                                } else {
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                }
                                             }
-                                        }
-                                    });
-
-                                    this.activeSlug = closestSlug;
-                                    const currentPojok = this.pojoks.find(p => p.id === this.activeSlug);
-                                    if (currentPojok) {
-                                        this.activeName = currentPojok.nama;
-                                    }
-                                }
-                            },
-
-                            getCurrentIndex() {
-                                const idx = this.pojoks.findIndex(p => p.id === this.activeSlug);
-                                return idx !== -1 ? idx : 0;
-                            },
-
-                            scrollToSlug(slug) {
-                                this.activeSlug = slug;
-                                const currentPojok = this.pojoks.find(p => p.id === slug);
-                                if (currentPojok) {
-                                    this.activeName = currentPojok.nama;
-                                }
-                                const el = document.getElementById(slug);
-                                if (el) {
-                                    const headerOffset = 70;
-                                    const elementPosition = el.getBoundingClientRect().top;
-                                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                                    window.scrollTo({
-                                        top: offsetPosition,
-                                        behavior: 'smooth'
-                                    });
-                                }
-                            },
-
-                            nextPojok() {
-                                if (!this.inPojokSection) {
-                                    this.scrollToSlug(this.pojoks[0].id);
-                                    return;
-                                }
-                                const idx = this.getCurrentIndex();
-                                if (idx < this.pojoks.length - 1) {
-                                    this.scrollToSlug(this.pojoks[idx + 1].id);
-                                } else {
-                                    const nextEl = document.getElementById('galeri') || document.querySelector('footer');
-                                    if (nextEl) {
-                                        nextEl.scrollIntoView({ behavior: 'smooth' });
-                                    }
-                                }
-                            },
-
-                            prevPojok() {
-                                if (!this.inPojokSection) {
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                    return;
-                                }
-                                const idx = this.getCurrentIndex();
-                                if (idx > 0) {
-                                    this.scrollToSlug(this.pojoks[idx - 1].id);
-                                } else {
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                }
-                            }
-                        }" @keydown.escape.window="closeLightbox()">
+                                        }" @keydown.escape.window="closeLightbox()">
 
         <!-- Main Container: Clean White Background with subtle sage accents (#DCE6DA) -->
         <div class="bg-white min-h-screen">
@@ -381,7 +381,7 @@
                                 </div>
 
                                 <!-- Lembaga Mitra Program -->
-                                <div class="border-t border-[#DCE6DA] pt-4 space-y-2.5">
+                                <div class="border-t border-[#DCE6DA] pt-3.5 sm:pt-4 space-y-2 sm:space-y-2.5">
                                     <h4 class="text-xs font-semibold text-slate-500 text-center tracking-wider uppercase">
                                         Mitra Program</h4>
                                     <!-- Tampilan Desktop & Tablet (>= sm): Sebaris Penuh (7 Logo, Proporsional & Terpusat) -->
@@ -435,79 +435,145 @@
                                         </a>
                                     </div>
 
-                                    <!-- Tampilan Mobile (< sm): 2 Baris Rata Tengah & Sama Besar -->
-                                    <div class="sm:hidden space-y-3 pt-1.5">
+                                    <!-- Tampilan Mobile (< sm): 2 Baris Rata Tengah, Seragam & Rapi -->
+                                    <style>
+                                        .mobile-mitra-link {
+                                            display: inline-flex !important;
+                                            align-items: center !important;
+                                            justify-content: center !important;
+                                            width: 48px !important;
+                                            height: 32px !important;
+                                            flex-shrink: 0 !important;
+                                            transition: transform 0.2s ease !important;
+                                        }
+
+                                        .mobile-mitra-link:hover {
+                                            transform: scale(1.1) !important;
+                                        }
+
+                                        .mobile-mitra-link:active {
+                                            transform: scale(0.95) !important;
+                                        }
+
+                                        .mobile-mitra-img {
+                                            height: 24px !important;
+                                            width: auto !important;
+                                            max-width: 44px !important;
+                                            object-fit: contain !important;
+                                            display: block !important;
+                                        }
+
+                                        .mobile-mitra-img.wide {
+                                            height: 19px !important;
+                                            max-width: 46px !important;
+                                        }
+                                    </style>
+                                    <div class="sm:hidden space-y-2 pt-0.5">
                                         <!-- Baris 1: 4 Logo (Kementerian & Perguruan Tinggi) Rata Tengah -->
-                                        <div class="flex items-center justify-center gap-3 w-full">
+                                        <div class="flex items-center justify-center gap-2.5 w-full">
                                             <a href="https://kemdiktisaintek.go.id/" target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="inline-flex items-center justify-center w-14 h-8 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+                                                rel="noopener noreferrer" class="mobile-mitra-link"
                                                 title="Kemendiktisaintek">
                                                 <img src="{{ asset('images/TUTWURI.png') }}" alt="Tut Wuri Handayani"
-                                                    class="h-6 w-auto object-contain">
+                                                    class="mobile-mitra-img">
                                             </a>
                                             <a href="https://kemdiktisaintek.go.id/en" target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="inline-flex items-center justify-center w-14 h-8 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+                                                rel="noopener noreferrer" class="mobile-mitra-link"
                                                 title="Diktisaintek Berdampak">
                                                 <img src="{{ asset('images/DIKTISAINTEK.png') }}" alt="Diktisaintek"
-                                                    class="h-5 w-auto max-w-[54px] object-contain">
+                                                    class="mobile-mitra-img wide">
                                             </a>
                                             <a href="https://ppkormawa.kemdiktisaintek.go.id/" target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="inline-flex items-center justify-center w-14 h-8 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                                                title="PPK Ormawa">
+                                                rel="noopener noreferrer" class="mobile-mitra-link" title="PPK Ormawa">
                                                 <img src="{{ asset('images/PPK_ORMAWA.png') }}" alt="PPK Ormawa"
-                                                    class="h-6 w-auto object-contain">
+                                                    class="mobile-mitra-img">
                                             </a>
                                             <a href="https://www.ums.ac.id/" target="_blank" rel="noopener noreferrer"
-                                                class="inline-flex items-center justify-center w-14 h-8 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                                                title="Universitas Muhammadiyah Surakarta">
+                                                class="mobile-mitra-link" title="Universitas Muhammadiyah Surakarta">
                                                 <img src="{{ asset('images/UMS.png') }}"
-                                                    alt="Universitas Muhammadiyah Surakarta"
-                                                    class="h-5 w-auto max-w-[54px] object-contain">
+                                                    alt="Universitas Muhammadiyah Surakarta" class="mobile-mitra-img wide">
                                             </a>
                                         </div>
 
                                         <!-- Baris 2: 3 Logo (Organisasi Mahasiswa, Program & Pemkab) Rata Tengah -->
-                                        <div class="flex items-center justify-center gap-5 w-full">
+                                        <div class="flex items-center justify-center gap-2.5 w-full">
                                             <a href="https://www.instagram.com/imm_alghozali/" target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="inline-flex items-center justify-center w-14 h-8 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+                                                rel="noopener noreferrer" class="mobile-mitra-link"
                                                 title="Ikatan Mahasiswa Muhammadiyah Al-Ghozali Fakultas Psikologi UMS">
                                                 <img src="{{ asset('images/IMMALGHO.png') }}" alt="IMM Al-Ghozali"
-                                                    class="h-6 w-auto object-contain">
+                                                    class="mobile-mitra-img">
                                             </a>
                                             <a href="https://www.instagram.com/ppko_caturcerdas/" target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="inline-flex items-center justify-center w-14 h-8 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+                                                rel="noopener noreferrer" class="mobile-mitra-link"
                                                 title="PPK Ormawa Catur Cerdas UMS 2026">
                                                 <img src="{{ asset('images/CATURCERDAS.png') }}" alt="Catur Cerdas"
-                                                    class="h-7 w-auto object-contain">
+                                                    class="mobile-mitra-img">
                                             </a>
                                             <a href="https://boyolali.go.id/" target="_blank" rel="noopener noreferrer"
-                                                class="inline-flex items-center justify-center w-14 h-8 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                                                title="Pemerintah Kabupaten Boyolali">
+                                                class="mobile-mitra-link" title="Pemerintah Kabupaten Boyolali">
                                                 <img src="{{ asset('images/PEMKABBYL.png') }}" alt="Pemkab Boyolali"
-                                                    class="h-6 w-auto object-contain">
+                                                    class="mobile-mitra-img">
                                             </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Kartu 2: Profil Instagram PPKO Catur Cerdas (Pas Sejajar Panel Kiri pada Desktop) -->
+                            <!-- Kartu 2: Profil Instagram PPKO Catur Cerdas (Clean & Minimalis, Pas Sejajar Panel Kiri pada Desktop) -->
                             <div id="ppko-ig-card"
-                                class="relative bg-white rounded-xl border border-[#DCE6DA] shadow-xs p-3 sm:p-3.5 overflow-hidden flex flex-col min-h-[126px]">
-                                <!-- Iframe Embed Instagram (Hanya bagian profil, pas sejajar teks kiri) -->
+                                class="relative bg-white rounded-xl border border-[#DCE6DA] shadow-xs hover:shadow-md hover:border-[#0A3D29]/40 transition-all duration-300 overflow-hidden flex flex-col min-h-[126px] group">
+                                <!-- Aksen Garis Minimalis Gradient Instagram di Sisi Atas -->
+                                <div
+                                    class="ig-accent-line h-0.5 w-full bg-linear-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] shrink-0">
+                                </div>
+
+                                <!-- Iframe Embed Instagram (Seamless & Frameless) -->
                                 <div id="ppko-ig-frame-container"
-                                    class="relative w-full h-[126px] overflow-hidden rounded-lg bg-slate-50 border border-[#DCE6DA]/70">
+                                    class="relative w-full h-[126px] overflow-hidden bg-white">
+                                    <!-- Skeleton Placeholder Halus Saat Loading -->
+                                    <div
+                                        class="absolute inset-0 flex items-center justify-center bg-slate-50/70 -z-10 animate-pulse">
+                                        <div class="flex items-center gap-2 text-slate-400 text-xs font-medium">
+                                            <svg class="w-3.5 h-3.5 animate-spin text-[#0A3D29]" fill="none"
+                                                viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                    stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                </path>
+                                            </svg>
+                                            <span>Memuat Instagram...</span>
+                                        </div>
+                                    </div>
+
                                     <iframe src="https://www.instagram.com/ppko_caturcerdas/embed"
-                                        class="w-full h-[450px] border-0" frameborder="0" scrolling="no"
+                                        class="w-full h-[450px] border-0 -mt-1" frameborder="0" scrolling="no"
                                         allowtransparency="true" allow="encrypted-media" loading="lazy"
                                         title="Profil Instagram PPKO Catur Cerdas">
                                     </iframe>
                                 </div>
+
+                                <!-- Masking Gradient Halus di Bagian Bawah (Meniadakan Cutoff Kasar) -->
+                                <div
+                                    class="pointer-events-none absolute bottom-0 inset-x-0 h-5 bg-linear-to-t from-white via-white/80 to-transparent">
+                                </div>
+
+                                <!-- Pill Minimalis: Buka Profil Instagram -->
+                                <a href="https://www.instagram.com/ppko_caturcerdas/" target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="absolute bottom-2 right-2.5 z-10 inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[11px] font-medium text-slate-600 hover:text-slate-900 bg-white/90 hover:bg-white backdrop-blur-xs border border-slate-200/90 hover:border-[#0A3D29]/40 rounded-full shadow-2xs hover:shadow-xs transition-all duration-200 group/pill"
+                                    title="Buka Profil Instagram @ppko_caturcerdas">
+                                    <svg class="w-3 h-3 text-[#E1306C] shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                                    </svg>
+                                    <span>Buka Profil</span>
+                                    <svg class="w-2.5 h-2.5 text-slate-400 group-hover/pill:text-[#0A3D29] group-hover/pill:translate-x-0.5 transition-all"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a>
                             </div>
                         </div>
                     </section>
@@ -621,528 +687,532 @@
                         transform: translateY(0) scale(1);
                     }
 
+                    /* ─── Pojok Harmoni (Pojok 01) Animations ─── */
+                    .harmoni-num-animate {
+                        opacity: 0;
+                        transform: translateX(-40px);
+                        transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+                        will-change: opacity, transform;
+                    }
+
+                    .ppko-section-entrance.is-revealed .harmoni-num-animate {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+
+                    .harmoni-text-animate {
+                        opacity: 0;
+                        transform: translateY(18px);
+                        transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.15s, transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+                        will-change: opacity, transform;
+                    }
+
+                    .ppko-section-entrance.is-revealed .harmoni-text-animate {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+
+                    .harmoni-cards-animate {
+                        opacity: 0;
+                        transform: translateY(22px) scale(0.95);
+                        transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+                        will-change: opacity, transform;
+                    }
+
+                    .ppko-section-entrance.is-revealed .harmoni-cards-animate {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+
+                    /* ─── Animasi Entrance Fade Deskripsi Pojok (Mengalir Mengikuti) ─── */
+                    .harmoni-desc-animate {
+                        opacity: 0;
+                        transform: translateY(16px);
+                        transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.25s, transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+                        will-change: opacity, transform;
+                    }
+
+                    .harmoni-desc-animate.harmoni-desc-delay {
+                        transition-delay: 0.35s;
+                    }
+
+                    .harmoni-desc-animate.harmoni-desc-delay-2 {
+                        transition-delay: 0.42s;
+                    }
+
+                    .ppko-section-entrance.is-revealed .harmoni-desc-animate {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+
                     @media (prefers-reduced-motion: reduce) {
-                        .ppko-section-entrance {
+
+                        .ppko-section-entrance,
+                        .harmoni-num-animate,
+                        .harmoni-text-animate,
+                        .harmoni-cards-animate,
+                        .harmoni-desc-animate {
                             opacity: 1 !important;
                             transform: none !important;
                             transition: none !important;
                         }
                     }
                 </style>
-                <div id="katalog-pojok-container"
-                    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8">
+
+                <!-- ===================================================================== -->
+                <!-- PEMISAH PERSEGI PANJANG: 5 POJOK PEMBERDAYAAN                      -->
+                <!-- ===================================================================== -->
+                <div id="lima-pilar-separator"
+                    class="w-full bg-[#0A3D29] text-white py-3.5 sm:py-4.5 md:py-5 relative overflow-hidden flex items-center justify-center border-y border-[#072B1D] shadow-inner mt-12 sm:mt-16 lg:mt-24">
+                    <!-- Aksen Glow Radial Halus di Latar Belakang -->
+                    <div
+                        class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.12),transparent_70%)] pointer-events-none">
+                    </div>
+
+                    <!-- Konten Teks di Bagian Tengah yang Memenuhi Area Tengah -->
+                    <div
+                        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center relative z-10 flex flex-col items-center justify-center">
+                        <h2
+                            class="font-sans font-extrabold tracking-wider sm:tracking-widest uppercase text-base sm:text-lg md:text-xl lg:text-2xl text-white leading-tight drop-shadow-xs select-none">
+                            5 Pojok Pemberdayaan
+                        </h2>
+                    </div>
+                </div>
+
+                <div id="katalog-pojok-container" class="w-full">
                     @foreach($pojoks as $index => $pojok)
                         @php
                             $slugId = Str::slug(str_replace('Pojok ', '', $pojok->nama));
 
-                            // Theme mapping for each pojok to create an engaging display atmosphere
-                            $themes = [
-                                1 => [
-                                    'category' => 'Psikososial & Keluarga',
-                                    'sasaran' => 'Ibu-Ibu Caregiver Keluarga & Warga Desa',
-                                    'fokus' => ['Pelatihan Psychological First Aid (PFA)', 'Penguatan Komunikasi Keluarga & Caregiver', 'Dukungan Psikososial Komunitas'],
-                                    'defaultImage' => asset('images/cover_ppko.png'),
-                                    'kurikulumLabel' => 'Kurikulum',
-                                    'modulLabel' => 'Modul PFA',
-                                ],
-                                2 => [
-                                    'category' => 'Literasi & Edukasi Anak',
-                                    'sasaran' => 'Anak-Anak Komunitas TPA & Pelajar Desa',
-                                    'fokus' => ['Kegiatan Belajar Edukatif & Menyenangkan', 'Penguatan Literasi & Minat Baca', 'Tumbuh Kembang Karakter Anak'],
-                                    'defaultImage' => asset('images/remen_maos_mockup.png'),
-                                    'kurikulumLabel' => 'Kurikulum',
-                                    'modulLabel' => 'Modul Edukasi Anak',
-                                ],
-                                3 => [
-                                    'category' => 'Digitalisasi Usaha & UMKM',
-                                    'sasaran' => 'Ibu-Ibu Pelaku Usaha Rumahan & Kerajinan',
-                                    'fokus' => ['Pemanfaatan WhatsApp Bisnis', 'Digital Marketing Produk Rumahan', 'Foto Produk & Kemasan Menarik'],
-                                    'defaultImage' => asset('images/coffee_processing.png'),
-                                    'kurikulumLabel' => 'Kurikulum',
-                                    'modulLabel' => 'Modul Digital UMKM',
-                                ],
-                                4 => [
-                                    'category' => 'Budaya & Karang Taruna',
-                                    'sasaran' => 'Remaja Desa Catur & Karang Taruna',
-                                    'fokus' => ['Pelestarian Seni & Tradisi Budaya', 'Pengembangan Potensi Remaja Desa', 'Kearifan Lokal di Era Digital'],
-                                    'defaultImage' => asset('images/culture_pura.png'),
-                                    'kurikulumLabel' => 'Kurikulum',
-                                    'modulLabel' => 'Modul Seni & Tradisi',
-                                ],
-                                5 => [
-                                    'category' => 'Pertanian & Gapoktan',
-                                    'sasaran' => 'Komunitas Gabungan Kelompok Tani (Gapoktan)',
-                                    'fokus' => ['Penguatan Pengetahuan Pertanian', 'Optimalisasi Potensi Lahan', 'Pertanian Ramah Lingkungan & Mandiri'],
-                                    'defaultImage' => asset('images/sawah_irigasi.png'),
-                                    'kurikulumLabel' => 'Kurikulum',
-                                    'modulLabel' => 'Modul Pertanian Sehat',
-                                ],
-                            ];
-                            $t = $themes[$pojok->id] ?? $themes[1];
-
                             $isEven = ($loop->iteration % 2 === 0);
+                            $isDark = $isEven; // Selang-seling warna latar: Ganjil (1, 3, 5) = Putih, Genap (2, 4) = Hijau Gelap #0A3D29
 
-                            $mainImage = !empty($pojok->gambar) ? asset('storage/' . $pojok->gambar) : ($t['defaultImage'] ?? asset('images/cover_ppko.png'));
+                            // Gambar card stack: ambil dari DB atau gambar representatif jika kosong
+                            $defaultFallbackCards = [
+                                1 => [asset('images/cover_ppko.png'), asset('images/culture_pura.png'), asset('images/sawah_irigasi.png')],
+                                2 => [asset('images/remen_maos_mockup.png'), asset('images/hero_landscape.png'), asset('images/cover_ppko.png')],
+                                3 => [asset('images/coffee_processing.png'), asset('images/coffee_plantation.png'), asset('images/sawah_irigasi.png')],
+                                4 => [asset('images/culture_pura.png'), asset('images/umbul_siraman.png'), asset('images/masjid_wonokusumo.png')],
+                                5 => [asset('images/sawah_irigasi.png'), asset('images/coffee_plantation.png'), asset('images/hero_landscape.png')],
+                            ];
+                            $defImgs = $defaultFallbackCards[$pojok->id] ?? [asset('images/cover_ppko.png'), asset('images/culture_pura.png'), asset('images/sawah_irigasi.png')];
+
+                            $cardImg1 = !empty($pojok->gambar) ? asset('storage/' . $pojok->gambar) : $defImgs[0];
+                            $cardImg2 = !empty($pojok->gambar_2) ? asset('storage/' . $pojok->gambar_2) : $defImgs[1];
+                            $cardImg3 = !empty($pojok->gambar_3) ? asset('storage/' . $pojok->gambar_3) : $defImgs[2];
+
+                            // Memisahkan narasi utama dan rincian fokus/mitra (murni dari database tanpa penambahan fiktif)
+                            $htmlDesc = $pojok->deskripsi_singkat ?? '';
+                            $pattern = '/((?:<p[^>]*>)?\s*<strong>\s*Fokus\s+pembelajaran.*$)/is';
+                            if (preg_match($pattern, $htmlDesc, $matches, PREG_OFFSET_CAPTURE)) {
+                                $narasiDesc = trim(substr($htmlDesc, 0, $matches[0][1]));
+                                $detailKanan = trim(substr($htmlDesc, $matches[0][1]));
+                            } else {
+                                $narasiDesc = $htmlDesc;
+                                $detailKanan = '';
+                            }
                         @endphp
 
-                        @php
-                            $bgHex = '#F8FAFC';
-                            $bgRgb = '248, 250, 252';
-                        @endphp
-
-                        <!-- POJOK SHOWCASE ROW (BERGAYA KARTU: FOTO TANPA MARGIN LUAR KECUALI SISI BERBATASAN DENGAN TEKS) -->
                         <section id="{{ $slugId }}"
-                            class="w-full relative rounded-xl border border-[#DCE6DA] shadow-xs overflow-hidden scroll-mt-28 md:scroll-mt-36 bg-[#F8FAFC] ppko-section-entrance">
-                            <div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+                            class="w-full relative scroll-mt-28 md:scroll-mt-36 py-10 sm:py-14 lg:py-18 flex flex-col justify-center ppko-section-entrance overflow-hidden border-b {{ $isDark ? 'bg-[#0A3D29] text-white border-emerald-950/40' : 'bg-white text-slate-900 border-slate-100' }}">
+                            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
 
-                                <!-- 1. GAMBAR MANDIRI (FLUSH KE TEPI LUAR KARTU, UKURAN FIKS & RASIO OTOMATIS) -->
-                                <div
-                                    class="w-full lg:col-span-5 {{ $isEven ? 'lg:order-2' : 'lg:order-1' }} relative min-h-[220px] sm:min-h-[260px] lg:min-h-0">
+                                <!-- MAIN GRID: SELANG-SELING KIRI KANAN (Ganjil: Teks Kiri, Foto Kanan | Genap: Foto Kiri, Teks Kanan) -->
+                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+
+                                    <!-- TEXT & INTERACTION COLUMN (Order-2 di Mobile agar Teks Berada di Bawah Gambar) -->
+                                    <div x-data="{ expanded: false }"
+                                        class="lg:col-span-7 order-2 {{ $isEven ? 'lg:order-2' : 'lg:order-1' }} flex flex-col justify-start space-y-4 sm:space-y-6">
+
+                                        <!-- HEADER: DISPLAY NUMBER (01, 02, ...) + TITLE POJOK -->
+                                        <div class="pojok-header-wrap flex items-baseline gap-3.5 sm:gap-5 lg:gap-6 w-full">
+                                            <!-- Animasi Angka Fade Geser dari Kiri -->
+                                            <span
+                                                class="pojok-num-text harmoni-num-animate select-none font-sans font-black leading-none tracking-tight shrink-0 text-3xl sm:text-5xl md:text-6xl lg:text-[72px] xl:text-[82px] {{ $isDark ? 'text-white' : 'text-black' }}"
+                                                style="font-size: clamp(2.25rem, 5vw, 5rem);">
+                                                {{ sprintf('%02d', $loop->iteration) }}
+                                            </span>
+                                            <!-- Teks Judul Pojok Membentang Harmonis -->
+                                            <h2 class="pojok-title-text harmoni-text-animate font-sans font-black leading-none tracking-tight whitespace-normal sm:whitespace-nowrap text-3xl sm:text-5xl md:text-6xl lg:text-[72px] xl:text-[82px] {{ $isDark ? 'text-white' : 'text-black' }}"
+                                                style="font-size: clamp(2.25rem, 5vw, 5rem);">
+                                                {{ $pojok->nama }}
+                                            </h2>
+                                        </div>
+
+                                        <!-- AREA KONTEN UTAMA DENGAN TINGGI STABIL (MENCEGAH LONJAKAN TATA LETAK SAAT TOGGLE DROPDOWN) -->
+                                        <div
+                                            class="relative w-full grid grid-cols-1 grid-rows-1 items-start min-h-[350px] sm:min-h-[290px] md:min-h-[220px] lg:min-h-[200px]">
+
+                                            <!-- VIEW 1: TEKS DESKRIPSI POJOK (DEFAULT) -->
+                                            <div x-show="!expanded"
+                                                x-transition:enter="transition-all duration-300 ease-out delay-75 transform"
+                                                x-transition:enter-start="opacity-0 -translate-y-3"
+                                                x-transition:enter-end="opacity-100 translate-y-0"
+                                                x-transition:leave="transition-all duration-200 ease-out transform"
+                                                x-transition:leave-start="opacity-100 translate-y-0"
+                                                x-transition:leave-end="opacity-0 -translate-y-3"
+                                                class="col-start-1 row-start-1 w-full grid grid-cols-1 {{ !empty($detailKanan) ? 'md:grid-cols-2' : '' }} gap-7 lg:gap-10 pt-2">
+                                                <!-- Kolom Kiri: Narasi Asli dari Database -->
+                                                <div class="harmoni-desc-animate">
+                                                    <div
+                                                        class="text-xs sm:text-[14px] lg:text-[14.5px] leading-relaxed text-justify font-normal space-y-2.5 [&>p]:leading-relaxed [&>ul]:list-disc [&>ul]:list-inside [&>ol]:list-decimal [&>ol]:list-inside [&>a]:underline {{ $isDark ? 'text-white/90 [&>a]:text-emerald-300 hover:[&>a]:text-white' : 'text-slate-800 [&>a]:text-[#0A3D29] hover:[&>a]:text-[#145C3B]' }}">
+                                                        {!! $narasiDesc !!}
+                                                    </div>
+                                                </div>
+
+                                                <!-- Kolom Kanan: Fokus Pembelajaran & Mitra Asli dari Database -->
+                                                @if(!empty($detailKanan))
+                                                    <div class="harmoni-desc-animate harmoni-desc-delay">
+                                                        <div
+                                                            class="text-xs sm:text-[14px] lg:text-[14.5px] leading-relaxed font-normal space-y-2.5 [&>p]:leading-relaxed [&>p]:mb-2.5 [&>p:last-child]:mb-0 [&>ul]:list-disc [&>ul]:list-inside [&>ol]:list-decimal [&>ol]:list-inside {{ $isDark ? 'text-white/85 [&>p>strong]:text-white' : 'text-slate-700 [&>p>strong]:text-black' }}">
+                                                            {!! $detailKanan !!}
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <!-- VIEW 2: KONTEN MODUL AJAR & RINCIAN LENGKAP (EXPANDED) -->
+                                            <div x-show="expanded" x-cloak
+                                                x-transition:enter="transition-all duration-300 ease-out delay-75 transform"
+                                                x-transition:enter-start="opacity-0 translate-y-3"
+                                                x-transition:enter-end="opacity-100 translate-y-0"
+                                                x-transition:leave="transition-all duration-200 ease-out transform"
+                                                x-transition:leave-start="opacity-100 translate-y-0"
+                                                x-transition:leave-end="opacity-0 translate-y-3"
+                                                class="col-start-1 row-start-1 w-full pt-1 pb-2">
+
+                                                @if($pojok->kurikulums->isNotEmpty())
+                                                    <div
+                                                        class="space-y-3 sm:space-y-4 max-h-[260px] md:max-h-[195px] lg:max-h-[185px] overflow-y-auto pr-1.5 pt-1">
+                                                        @foreach($pojok->kurikulums as $file)
+                                                            <div class="w-full">
+                                                                <!-- Horizontal Divider Line (Garis Tipis) -->
+                                                                <div
+                                                                    class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }} mb-2.5">
+                                                                </div>
+
+                                                                <!-- Content Row: Left Info & Right Actions -->
+                                                                <div class="flex items-start justify-between gap-4">
+                                                                    <!-- Left: Title, Italic Description & File Size -->
+                                                                    <div class="min-w-0 flex-1 pr-2">
+                                                                        <h5
+                                                                            class="font-bold text-sm sm:text-base leading-snug {{ $isDark ? 'text-white' : 'text-slate-900' }}">
+                                                                            {{ $file->judul }}
+                                                                        </h5>
+                                                                        @if(!empty($file->deskripsi))
+                                                                            <p
+                                                                                class="italic text-xs sm:text-[13px] leading-relaxed pt-0.5 {{ $isDark ? 'text-white/75' : 'text-slate-700' }}">
+                                                                                {{ $file->deskripsi }}
+                                                                            </p>
+                                                                        @endif
+                                                                        <!-- Ukuran File Dipindahkan ke Bawah Deskripsi -->
+                                                                        <span
+                                                                            class="block font-bold text-xs sm:text-sm tracking-tight pt-1.5 {{ $isDark ? 'text-emerald-300' : 'text-slate-800' }}">
+                                                                            {{ $file->formatted_file_size }}
+                                                                        </span>
+                                                                    </div>
+
+                                                                    <!-- Right: Stacked Unduh / Lihat Buttons -->
+                                                                    <div class="shrink-0 flex flex-col items-end gap-1.5 pt-0.5">
+                                                                        <!-- Tombol Unduh -->
+                                                                        <a href="{{ route('public.ppko.kurikulum.download', $file) }}"
+                                                                            class="w-22 sm:w-24 inline-flex items-center justify-center gap-1.5 py-1 px-2.5 rounded-md {{ $isDark ? 'bg-white hover:bg-emerald-50 text-[#0A3D29]' : 'bg-[#0A3D29] hover:bg-[#145C3B] text-white' }} active:scale-95 font-semibold text-xs transition shadow-2xs">
+                                                                            <svg class="w-3.5 h-3.5 {{ $isDark ? 'text-[#0A3D29]' : 'text-emerald-300' }} shrink-0"
+                                                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                                            </svg>
+                                                                            <span>Unduh</span>
+                                                                        </a>
+
+                                                                        <!-- Tombol Lihat -->
+                                                                        <a href="{{ asset('storage/' . $file->file_path) }}"
+                                                                            target="_blank" rel="noopener noreferrer"
+                                                                            class="w-22 sm:w-24 inline-flex items-center justify-center gap-1.5 py-1 px-2.5 rounded-md {{ $isDark ? 'bg-white/10 hover:bg-white/20 text-white border border-white/40 hover:border-white' : 'bg-white hover:bg-emerald-50 text-[#0A3D29] border border-[#0A3D29]/30 hover:border-[#0A3D29]' }} active:scale-95 font-semibold text-xs transition shadow-2xs">
+                                                                            <svg class="w-3.5 h-3.5 {{ $isDark ? 'text-white' : 'text-[#0A3D29]' }} shrink-0"
+                                                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                                            </svg>
+                                                                            <span>Lihat</span>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @else
+                                                    <div
+                                                        class="text-xs py-3.5 italic rounded-xl px-4 border border-dashed {{ $isDark ? 'text-white/60 bg-white/5 border-white/20' : 'text-slate-500 bg-slate-50 border-slate-200' }}">
+                                                        Modul ajar akan segera diperbarui oleh admin.
+                                                    </div>
+                                                @endif
+
+                                                @auth
+                                                    @if(auth()->user()->isAdmin())
+                                                        <div
+                                                            class="mt-3 pt-2 border-t {{ $isDark ? 'border-white/15' : 'border-slate-100' }} flex justify-end">
+                                                            <a href="{{ route('admin.ppko.edit', $pojok) }}"
+                                                                class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md transition {{ $isDark ? 'bg-white/15 hover:bg-white/25 text-white border border-white/20' : 'bg-slate-100 hover:bg-slate-200 text-slate-700' }}">
+                                                                <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                                    viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2" d="M12 4v16m8-8H4" />
+                                                                </svg>
+                                                                <span>Kelola Modul</span>
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                @endauth
+                                            </div>
+
+                                        </div>
+
+                                        <!-- TRIGGER BAR DI BAGIAN BAWAH: TEKS & ARROW DI TENGAH, BERADA DI ATAS GARIS HORIZONTAL -->
+                                        <div class="pt-4 sm:pt-5 w-full flex flex-col items-center harmoni-desc-animate harmoni-desc-delay-2">
+                                            <!-- Tombol di Atas Garis, Posisikan di Tengah -->
+                                            <button type="button" @click="expanded = !expanded"
+                                                class="inline-flex items-center justify-center gap-2 cursor-pointer select-none group focus:outline-none pb-2.5 px-4"
+                                                title="Klik untuk membuka/menutup selengkapnya">
+                                                <span
+                                                    class="font-sans font-bold italic text-xs sm:text-sm lg:text-[15px] tracking-tight transition-colors {{ $isDark ? 'text-white group-hover:text-emerald-300' : 'text-slate-800 group-hover:text-emerald-800' }}">
+                                                    Pelajari selengkapnya tentang {{ strtolower($pojok->nama) }}
+                                                </span>
+
+                                                <!-- Ikon Arrow Style Outline Murni (Menghadap Atas secara Default, Berputar 180 ke Bawah Saat Dibuka) -->
+                                                <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px] transform transition-transform duration-300 ease-out stroke-[2.5] transition-colors {{ $isDark ? 'text-white/70 group-hover:text-emerald-300' : 'text-slate-500 group-hover:text-emerald-800' }}"
+                                                    :class="expanded ? 'rotate-180 {{ $isDark ? 'text-emerald-300' : 'text-emerald-800' }}' : ''"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <!-- Chevron Pointing UP by Default (Menghadap Atas) -->
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+                                                </svg>
+                                            </button>
+
+                                            <!-- Garis Horizontal Minimalis Tipis di Bawah Teks & Arrow -->
+                                            <div class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }}"></div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- VISUAL COLUMN: 3 STACKED CARDS (Order-1 di Mobile agar Gambar Berada di Atas Teks) -->
                                     <div
-                                        class="relative w-full aspect-[16/10] sm:aspect-[16/9] lg:aspect-auto lg:h-full lg:absolute lg:inset-0 bg-slate-100 group overflow-hidden">
-                                        <img src="{{ $mainImage }}" alt="{{ $pojok->nama }}"
-                                            class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                                        class="lg:col-span-5 order-1 {{ $isEven ? 'lg:order-1' : 'lg:order-2' }} flex flex-col items-center justify-center pt-8 sm:pt-10 lg:pt-2 pb-6 lg:pb-0">
+                                        <div x-data="{
+                                                        order: [0, 1, 2],
+                                                        isShuffling: false,
+                                                        timer: null,
+                                                        isEven: {{ $isEven ? 'true' : 'false' }},
+                                                        touchStartX: 0,
+                                                        touchStartY: 0,
+                                                        isPointerDown: false,
+                                                        pointerStartX: 0,
+                                                        swiped: false,
+                                                        init() {
+                                                            this.startAuto();
+                                                        },
+                                                        startAuto() {
+                                                            if (this.timer) clearInterval(this.timer);
+                                                            this.timer = setInterval(() => {
+                                                                this.next();
+                                                            }, 3600);
+                                                        },
+                                                        pause() {
+                                                            if (this.timer) clearInterval(this.timer);
+                                                        },
+                                                        resume() {
+                                                            this.startAuto();
+                                                        },
+                                                        next() {
+                                                            if (this.isShuffling) return;
+                                                            this.isShuffling = true;
+                                                            const top = this.order.shift();
+                                                            this.order.push(top);
+                                                            setTimeout(() => {
+                                                                this.isShuffling = false;
+                                                            }, 650);
+                                                        },
+                                                        prev() {
+                                                            if (this.isShuffling) return;
+                                                            this.isShuffling = true;
+                                                            const bottom = this.order.pop();
+                                                            this.order.unshift(bottom);
+                                                            setTimeout(() => {
+                                                                this.isShuffling = false;
+                                                            }, 650);
+                                                        },
+                                                        setFront(cardIdx) {
+                                                            let count = 0;
+                                                            while (this.order[0] !== cardIdx && count < 3) {
+                                                                this.order.push(this.order.shift());
+                                                                count++;
+                                                            }
+                                                        },
+                                                        handleTouchStart(e) {
+                                                            this.pause();
+                                                            this.swiped = false;
+                                                            this.touchStartX = e.touches[0].clientX;
+                                                            this.touchStartY = e.touches[0].clientY;
+                                                        },
+                                                        handleTouchEnd(e) {
+                                                            const diffX = e.changedTouches[0].clientX - this.touchStartX;
+                                                            const diffY = e.changedTouches[0].clientY - this.touchStartY;
+                                                            if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
+                                                                this.swiped = true;
+                                                                if (diffX < 0) {
+                                                                    this.next();
+                                                                } else {
+                                                                    this.prev();
+                                                                }
+                                                            }
+                                                            this.resume();
+                                                        },
+                                                        handleMouseDown(e) {
+                                                            this.isPointerDown = true;
+                                                            this.pointerStartX = e.clientX;
+                                                            this.swiped = false;
+                                                            this.pause();
+                                                        },
+                                                        handleMouseMove(e) {
+                                                            if (!this.isPointerDown) return;
+                                                            const diffX = e.clientX - this.pointerStartX;
+                                                            if (Math.abs(diffX) > 40) {
+                                                                this.isPointerDown = false;
+                                                                this.swiped = true;
+                                                                if (diffX < 0) {
+                                                                    this.next();
+                                                                } else {
+                                                                    this.prev();
+                                                                }
+                                                            }
+                                                        },
+                                                        handleMouseUp(e) {
+                                                            this.isPointerDown = false;
+                                                            this.resume();
+                                                        },
+                                                        handleMouseLeave() {
+                                                            this.isPointerDown = false;
+                                                            this.resume();
+                                                        },
+                                                        handleClick() {
+                                                            if (this.swiped) {
+                                                                this.swiped = false;
+                                                                return;
+                                                            }
+                                                            this.next();
+                                                        },
+                                                        getCardClass(cardIndex) {
+                                                            const pos = this.order.indexOf(cardIndex);
+                                                            // Tampilan Mobile: Gaya tumpuk biasa lurus vertikal dengan shadow bertingkat untuk efek depth
+                                                            // Tampilan Desktop (lg): Tetap menggunakan rotasi artistik (selang-seling)
+                                                            if (this.isEven) {
+                                                                if (pos === 0) {
+                                                                    return 'z-30 scale-100 rotate-0 lg:rotate-[3.5deg] translate-x-0 translate-y-0 opacity-100 shadow-[0_20px_40px_-6px_rgba(0,0,0,0.65),0_8px_18px_-6px_rgba(0,0,0,0.45)]';
+                                                                } else if (pos === 1) {
+                                                                    return 'z-20 scale-[0.93] lg:scale-[0.97] rotate-0 lg:-rotate-[3.5deg] translate-x-0 lg:-translate-x-6 sm:lg:-translate-x-8 -translate-y-3 sm:-translate-y-3.5 lg:-translate-y-3 opacity-90 lg:opacity-95 shadow-[0_14px_28px_-6px_rgba(0,0,0,0.55),0_4px_12px_-4px_rgba(0,0,0,0.35)]';
+                                                                } else {
+                                                                    return 'z-10 scale-[0.86] lg:scale-[0.94] rotate-0 lg:-rotate-[8deg] translate-x-0 lg:-translate-x-12 sm:lg:-translate-x-16 -translate-y-6 sm:-translate-y-7 lg:translate-y-3 opacity-75 lg:opacity-90 shadow-[0_8px_20px_-4px_rgba(0,0,0,0.45)]';
+                                                                }
+                                                            } else {
+                                                                if (pos === 0) {
+                                                                    return 'z-30 scale-100 rotate-0 lg:-rotate-[3.5deg] translate-x-0 translate-y-0 opacity-100 shadow-[0_20px_40px_-8px_rgba(0,0,0,0.30),0_8px_18px_-6px_rgba(0,0,0,0.18)]';
+                                                                } else if (pos === 1) {
+                                                                    return 'z-20 scale-[0.93] lg:scale-[0.97] rotate-0 lg:rotate-[3.5deg] translate-x-0 lg:translate-x-6 sm:lg:translate-x-8 -translate-y-3 sm:-translate-y-3.5 lg:-translate-y-3 opacity-90 lg:opacity-95 shadow-[0_14px_26px_-6px_rgba(0,0,0,0.24),0_4px_12px_-4px_rgba(0,0,0,0.14)]';
+                                                                } else {
+                                                                    return 'z-10 scale-[0.86] lg:scale-[0.94] rotate-0 lg:rotate-[8deg] translate-x-0 lg:translate-x-12 sm:lg:translate-x-16 -translate-y-6 sm:-translate-y-7 lg:translate-y-3 opacity-75 lg:opacity-90 shadow-[0_8px_18px_-4px_rgba(0,0,0,0.18)]';
+                                                                }
+                                                            }
+                                                        }
+                                                    }" @mouseenter="pause()" @mouseleave="handleMouseLeave()"
+                                            @mousedown="handleMouseDown($event)" @mousemove="handleMouseMove($event)"
+                                            @mouseup="handleMouseUp($event)" @touchstart.passive="handleTouchStart($event)"
+                                            @touchend="handleTouchEnd($event)" @click="handleClick()"
+                                            class="harmoni-cards-animate relative w-full max-w-[325px] xs:max-w-[355px] sm:max-w-[430px] lg:max-w-none lg:w-[430px] h-[200px] xs:h-[220px] sm:h-[260px] lg:h-[430px] mx-auto cursor-grab active:cursor-grabbing select-none group touch-pan-y">
 
-                                        <!-- TOMBOL GANTI FOTO ADMIN (DI SUDUT FOTO) -->
+                                            <!-- KARTU 1 (FOTO 1) -->
+                                            <div class="absolute inset-0 rounded-2xl sm:rounded-[24px] lg:rounded-[36px] overflow-hidden bg-slate-200 border-[1.5px] sm:border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
+                                                :class="getCardClass(0)">
+                                                <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}"
+                                                    class="w-full h-full object-cover select-none pointer-events-none"
+                                                    draggable="false">
+                                            </div>
+
+                                            <!-- KARTU 2 (FOTO 2) -->
+                                            <div class="absolute inset-0 rounded-2xl sm:rounded-[24px] lg:rounded-[36px] overflow-hidden bg-slate-300 border-[1.5px] sm:border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
+                                                :class="getCardClass(1)">
+                                                <img src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}"
+                                                    class="w-full h-full object-cover select-none pointer-events-none"
+                                                    draggable="false">
+                                            </div>
+
+                                            <!-- KARTU 3 (FOTO 3) -->
+                                            <div class="absolute inset-0 rounded-2xl sm:rounded-[24px] lg:rounded-[36px] overflow-hidden bg-slate-400 border-[1.5px] sm:border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
+                                                :class="getCardClass(2)">
+                                                <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}"
+                                                    class="w-full h-full object-cover select-none pointer-events-none"
+                                                    draggable="false">
+                                            </div>
+
+                                            <!-- Pagination Dots / Quick Switch Indicators (dengan tombol geser di mobile) -->
+                                            <div
+                                                class="absolute -bottom-8 inset-x-0 flex items-center justify-center gap-2 pointer-events-auto">
+                                                <button type="button" @click.stop="prev()"
+                                                    class="w-5 h-5 flex items-center justify-center rounded-full transition {{ $isDark ? 'text-white/60 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' }} sm:hidden"
+                                                    title="Sebelumnya">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                            d="M15 19l-7-7 7-7" />
+                                                    </svg>
+                                                </button>
+                                                <button type="button" @click.stop="setFront(0)"
+                                                    class="h-1.5 rounded-full transition-all duration-300"
+                                                    :class="order[0] === 0 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
+                                                    title="Pindah ke Kartu 1">
+                                                </button>
+                                                <button type="button" @click.stop="setFront(1)"
+                                                    class="h-1.5 rounded-full transition-all duration-300"
+                                                    :class="order[0] === 1 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
+                                                    title="Pindah ke Kartu 2">
+                                                </button>
+                                                <button type="button" @click.stop="setFront(2)"
+                                                    class="h-1.5 rounded-full transition-all duration-300"
+                                                    :class="order[0] === 2 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
+                                                    title="Pindah ke Kartu 3">
+                                                </button>
+                                                <button type="button" @click.stop="next()"
+                                                    class="w-5 h-5 flex items-center justify-center rounded-full transition {{ $isDark ? 'text-white/60 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' }} sm:hidden"
+                                                    title="Berikutnya">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                            d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- Tombol Kelola Foto Khusus Admin -->
                                         @auth
                                             @if(auth()->user()->isAdmin())
-                                                <form action="{{ route('admin.ppko.foto.update', $pojok) }}" method="POST"
-                                                    enctype="multipart/form-data"
-                                                    class="absolute top-3 {{ $isEven ? 'right-3' : 'left-3' }} z-10">
-                                                    @csrf
-                                                    <label for="input-foto-pojok-{{ $pojok->id }}"
-                                                        class="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-slate-900/85 hover:bg-slate-900 text-white text-xs font-semibold shadow-md backdrop-blur-sm border border-white/20 transition-all hover:scale-105 active:scale-95">
-                                                        <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
+                                                <div class="mt-6 flex justify-center">
+                                                    <a href="{{ route('admin.ppko.edit', $pojok) }}"
+                                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow-xs transition hover:scale-105 active:scale-95 {{ $isDark ? 'bg-white hover:bg-slate-100 text-[#0A3D29]' : 'bg-slate-900 hover:bg-slate-800 text-white' }}">
+                                                        <svg class="w-3.5 h-3.5 {{ $isDark ? 'text-[#0A3D29]' : 'text-emerald-400' }}"
+                                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                                         </svg>
-                                                        <span>Ganti Foto Sampul</span>
-                                                    </label>
-                                                    <input type="file" id="input-foto-pojok-{{ $pojok->id }}" name="foto" class="hidden"
-                                                        accept="image/jpeg,image/png,image/jpg,image/webp"
-                                                        onchange="if(this.files.length > 0) { this.form.submit(); }">
-                                                </form>
+                                                        <span>Kelola 3 Foto Kartu</span>
+                                                    </a>
+                                                </div>
                                             @endif
                                         @endauth
                                     </div>
                                 </div>
-
-                                <!-- 2. KONTEN DETAIL TEKS & MODUL FILE UNDUHAN (MEMILIKI JARAK NYAMAN DARI FOTO) -->
-                                <div
-                                    class="w-full lg:col-span-7 {{ $isEven ? 'lg:order-1' : 'lg:order-2' }} p-6 sm:p-8 lg:p-9 flex flex-col justify-center space-y-4 min-h-[280px] lg:min-h-[320px]">
-                                    <!-- Judul Pojok -->
-                                    <div>
-                                        <h3 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-                                            {{ $index + 1 }}. {{ $pojok->nama }}
-                                        </h3>
-                                    </div>
-
-                                    <!-- Deskripsi Singkat (Mendukung Rich Text Quill) -->
-                                    <div class="text-xs sm:text-sm text-slate-700 leading-relaxed text-justify space-y-2 [&>p]:leading-relaxed [&>ul]:list-disc [&>ul]:list-inside [&>ol]:list-decimal [&>ol]:list-inside [&>a]:text-[#0A3D29] [&>a]:underline hover:[&>a]:text-[#145C3B]">
-                                        {!! $pojok->deskripsi_singkat !!}
-                                    </div>
-
-                                    <!-- Garis Pemisah Tipis di Bawah Deskripsi Pojok -->
-                                    <div class="border-b border-[#DCE6DA]/80"></div>
-
-                                    @php
-                                        $isPojokBudaya = str_contains(strtolower($pojok->nama), 'budaya') || $pojok->id == 4;
-                                        $isPojokCeria = str_contains(strtolower($pojok->nama), 'ceria') || $pojok->id == 2;
-                                        $isPojokTani = str_contains(strtolower($pojok->nama), 'tani') || $pojok->id == 5;
-                                        $hasMitra = $isPojokBudaya || $isPojokCeria || $isPojokTani;
-                                    @endphp
-
-                                    <!-- File Unduhan, Modul Materi & Kemitraan -->
-                                    @if($pojok->kurikulums->isNotEmpty() || $hasMitra)
-                                        <div class="space-y-2">
-                                            @if($pojok->kurikulums->isNotEmpty())
-                                                @foreach($pojok->kurikulums as $file)
-                                                    <div x-data="{ expanded: false }"
-                                                        class="rounded-xl bg-slate-100/80 border border-slate-200/90 transition-colors duration-200 overflow-hidden group">
-
-                                                        <!-- Header Bar: Hover menggelapkan area yang ditekan, seluruh baris bisa diklik -->
-                                                        <div class="p-2.5 sm:p-3 flex justify-between gap-2.5 sm:gap-3 cursor-pointer select-none transition-colors duration-200 hover:bg-slate-200/70 active:bg-slate-300/70"
-                                                            :class="expanded ? 'items-start bg-slate-200/50' : 'items-center'"
-                                                            @click="expanded = !expanded" title="Klik untuk melihat detail lengkap">
-
-                                                            <!-- Judul File & Ikon -->
-                                                            <div class="flex gap-2.5 sm:gap-3 min-w-0 flex-1"
-                                                                :class="expanded ? 'items-start' : 'items-center'">
-                                                                <span
-                                                                    class="w-8 h-8 rounded-lg bg-[#0A3D29]/10 text-[#0A3D29] flex items-center justify-center shrink-0 transition-colors group-hover:bg-[#0A3D29]/15">
-                                                                    <svg class="w-4 h-4 text-[#0A3D29]" fill="none" stroke="currentColor"
-                                                                        viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                                            stroke-width="2"
-                                                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                                    </svg>
-                                                                </span>
-                                                                <div class="min-w-0 flex-1">
-                                                                    <h5 class="text-xs sm:text-sm font-bold text-slate-800 leading-snug"
-                                                                        :class="expanded ? 'whitespace-normal' : 'truncate'"
-                                                                        title="{{ $file->judul }}">
-                                                                        {{ $file->judul }}
-                                                                    </h5>
-                                                                    <span class="text-[11px] text-slate-500 font-medium block mt-0.5">
-                                                                        {{ $file->formatted_file_size }}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Action Buttons: Tombol Atas & Chevron -->
-                                                            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                                                                <!-- Tombol Lihat & Unduh: Tampil saat tertutup, disembunyikan saat dropdown dibuka -->
-                                                                <div x-show="!expanded" x-cloak
-                                                                    class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                                                                    <!-- Tombol Lihat -->
-                                                                    <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank"
-                                                                        rel="noopener noreferrer" @click.stop
-                                                                        class="inline-flex items-center justify-center gap-1 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 hover:text-slate-900 px-2.5 py-1.5 rounded-lg transition shadow-2xs group shrink-0"
-                                                                        title="Lihat dokumen di tab baru"
-                                                                        aria-label="Lihat {{ $file->judul }}">
-                                                                        <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-700 transition-colors"
-                                                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                stroke-width="2"
-                                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                                        </svg>
-                                                                        <span class="hidden xs:inline">Lihat</span>
-                                                                    </a>
-
-                                                                    <!-- Tombol Unduh -->
-                                                                    <a href="{{ route('public.ppko.kurikulum.download', $file) }}"
-                                                                        @click.stop
-                                                                        class="inline-flex items-center justify-center gap-1 text-xs font-semibold text-white bg-[#0A3D29] hover:bg-[#145C3B] px-2.5 py-1.5 rounded-lg transition shadow-2xs group shrink-0"
-                                                                        title="Unduh file dokumen" aria-label="Unduh {{ $file->judul }}">
-                                                                        <svg class="w-3.5 h-3.5 text-[#D9B85C]" fill="none"
-                                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                stroke-width="2"
-                                                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                                                        </svg>
-                                                                        <span class="hidden xs:inline">Unduh</span>
-                                                                    </a>
-                                                                </div>
-
-                                                                <!-- Chevron Indicator -->
-                                                                <div
-                                                                    class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-slate-400 transition-colors shrink-0">
-                                                                    <svg class="w-4 h-4 transform transition-transform duration-300 ease-in-out text-slate-500"
-                                                                        :class="expanded ? 'rotate-180 text-[#0A3D29]' : ''" fill="none"
-                                                                        stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                                            stroke-width="2.5" d="M19 9l-7 7-7-7" />
-                                                                    </svg>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Expanded Dropdown Content -->
-                                                        <div x-show="expanded" x-cloak x-collapse.duration.300ms>
-                                                            <div class="px-3.5 pb-3.5 pt-1 space-y-3">
-                                                                <!-- Deskripsi Dokumen (Jika Ada) -->
-                                                                @if(!empty($file->deskripsi))
-                                                                    <p
-                                                                        class="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line text-justify">
-                                                                        {{ $file->deskripsi }}
-                                                                    </p>
-                                                                @else
-                                                                    <p class="text-xs text-slate-400 italic">Tidak ada deskripsi tambahan untuk
-                                                                        dokumen ini.</p>
-                                                                @endif
-
-                                                                <!-- Tombol Aksi di Bawah (Penuh & nyaman diakses) -->
-                                                                <div class="grid grid-cols-2 gap-2 pt-1">
-                                                                    <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank"
-                                                                        rel="noopener noreferrer"
-                                                                        class="w-full inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 hover:text-slate-900 py-2 px-2.5 rounded-lg transition shadow-2xs group text-center"
-                                                                        title="Lihat file di tab baru">
-                                                                        <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-700 transition-colors shrink-0"
-                                                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                stroke-width="2"
-                                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                                        </svg>
-                                                                        <span>Buka Dokumen</span>
-                                                                    </a>
-
-                                                                    <a href="{{ route('public.ppko.kurikulum.download', $file) }}"
-                                                                        class="w-full inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-white bg-[#0A3D29] hover:bg-[#145C3B] py-2 px-2.5 rounded-lg transition shadow-2xs group text-center"
-                                                                        title="Unduh file dokumen">
-                                                                        <svg class="w-3.5 h-3.5 text-[#D9B85C] shrink-0" fill="none"
-                                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                stroke-width="2"
-                                                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                                                        </svg>
-                                                                        <span>Unduh File</span>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                @endforeach
-                                            @endif
-
-                                            <!-- Dropdown Mitra Komunitas TPA (Khusus Pojok Ceria) -->
-                                            @if($isPojokCeria)
-                                                <div x-data="{ expanded: false }"
-                                                    class="rounded-xl bg-slate-100/80 border border-slate-200/90 transition-colors duration-200 overflow-hidden group">
-
-                                                    <!-- Header Bar -->
-                                                    <div class="p-2.5 sm:p-3 flex justify-between items-center gap-2.5 sm:gap-3 cursor-pointer select-none transition-colors duration-200 hover:bg-slate-200/70 active:bg-slate-300/70"
-                                                        :class="expanded ? 'bg-slate-200/50' : ''" @click="expanded = !expanded"
-                                                        title="Klik untuk melihat daftar mitra komunitas TPA">
-
-                                                        <!-- Judul & Ikon -->
-                                                        <div class="flex gap-2.5 sm:gap-3 min-w-0 flex-1 items-center">
-                                                            <span
-                                                                class="w-8 h-8 rounded-lg bg-[#0A3D29]/10 text-[#0A3D29] flex items-center justify-center shrink-0 transition-colors group-hover:bg-[#0A3D29]/15">
-                                                                <svg class="w-4 h-4 text-[#0A3D29]" fill="none" stroke="currentColor"
-                                                                    viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2"
-                                                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                                                </svg>
-                                                            </span>
-                                                            <div class="min-w-0 flex-1">
-                                                                <h5 class="text-xs sm:text-sm font-bold text-slate-800 leading-snug">
-                                                                    Mitra Komunitas TPA
-                                                                </h5>
-                                                                <span class="text-[11px] text-slate-500 font-medium block mt-0.5">
-                                                                    2 Komunitas TPA Desa Catur
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Chevron Indicator -->
-                                                        <div
-                                                            class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-slate-400 transition-colors shrink-0">
-                                                            <svg class="w-4 h-4 transform transition-transform duration-300 ease-in-out text-slate-500"
-                                                                :class="expanded ? 'rotate-180 text-[#0A3D29]' : ''" fill="none"
-                                                                stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                                    d="M19 9l-7 7-7-7" />
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Expanded Content: Numbered List -->
-                                                    <div x-show="expanded" x-cloak x-collapse.duration.300ms>
-                                                        <div class="px-3.5 pb-3.5 pt-2 border-t border-slate-200/70 bg-white/70">
-                                                            <ol
-                                                                class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-slate-700">
-                                                                @php
-                                                                    $tpaList = [
-                                                                        'TPA Masjid Gumukrejo',
-                                                                        'TPA Masjid Dukuh Catur'
-                                                                    ];
-                                                                @endphp
-                                                                @foreach($tpaList as $tpaIdx => $tpaName)
-                                                                    <li
-                                                                        class="flex items-center gap-2.5 py-1.5 px-2.5 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
-                                                                        <span
-                                                                            class="w-5 h-5 rounded-full bg-[#0A3D29]/10 text-[#0A3D29] text-[11px] font-bold flex items-center justify-center shrink-0">
-                                                                            {{ $tpaIdx + 1 }}
-                                                                        </span>
-                                                                        <span
-                                                                            class="text-slate-800 text-xs sm:text-sm font-medium leading-snug">
-                                                                            {{ $tpaName }}
-                                                                        </span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ol>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endif
-
-                                            <!-- Dropdown Mitra Karang Taruna (Khusus Pojok Budaya) -->
-                                            @if($isPojokBudaya)
-                                                <div x-data="{ expanded: false }"
-                                                    class="rounded-xl bg-slate-100/80 border border-slate-200/90 transition-colors duration-200 overflow-hidden group">
-
-                                                    <!-- Header Bar -->
-                                                    <div class="p-2.5 sm:p-3 flex justify-between items-center gap-2.5 sm:gap-3 cursor-pointer select-none transition-colors duration-200 hover:bg-slate-200/70 active:bg-slate-300/70"
-                                                        :class="expanded ? 'bg-slate-200/50' : ''" @click="expanded = !expanded"
-                                                        title="Klik untuk melihat daftar mitra karang taruna">
-
-                                                        <!-- Judul & Ikon -->
-                                                        <div class="flex gap-2.5 sm:gap-3 min-w-0 flex-1 items-center">
-                                                            <span
-                                                                class="w-8 h-8 rounded-lg bg-[#0A3D29]/10 text-[#0A3D29] flex items-center justify-center shrink-0 transition-colors group-hover:bg-[#0A3D29]/15">
-                                                                <svg class="w-4 h-4 text-[#0A3D29]" fill="none" stroke="currentColor"
-                                                                    viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2"
-                                                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                                                </svg>
-                                                            </span>
-                                                            <div class="min-w-0 flex-1">
-                                                                <h5 class="text-xs sm:text-sm font-bold text-slate-800 leading-snug">
-                                                                    Mitra Karang Taruna
-                                                                </h5>
-                                                                <span class="text-[11px] text-slate-500 font-medium block mt-0.5">
-                                                                    13 Karang Taruna Pedukuhan Desa Catur
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Chevron Indicator -->
-                                                        <div
-                                                            class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-slate-400 transition-colors shrink-0">
-                                                            <svg class="w-4 h-4 transform transition-transform duration-300 ease-in-out text-slate-500"
-                                                                :class="expanded ? 'rotate-180 text-[#0A3D29]' : ''" fill="none"
-                                                                stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                                    d="M19 9l-7 7-7-7" />
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Expanded Content: Numbered List -->
-                                                    <div x-show="expanded" x-cloak x-collapse.duration.300ms>
-                                                        <div class="px-3.5 pb-3.5 pt-2 border-t border-slate-200/70 bg-white/70">
-                                                            <ol
-                                                                class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-slate-700">
-                                                                @php
-                                                                    $karangTarunaList = [
-                                                                        'Karang Taruna Dukuh Kungon',
-                                                                        'Karang Taruna Dukuh Catur',
-                                                                        'Karang Taruna Dukuh Sabrangan',
-                                                                        'Karang Taruna Dukuh Karakan',
-                                                                        'Karang Taruna Dukuh Gunungpuyuh',
-                                                                        'Karang Taruna Dukuh Gumuk Ngembes',
-                                                                        'Karang Taruna Dukuh Tropayan',
-                                                                        'Karang Taruna Dukuh Giring',
-                                                                        'Karang Taruna Dukuh Karangjowo',
-                                                                        'Karang Taruna Dukuh Bakalan',
-                                                                        'Karang Taruna Dukuh Kragan',
-                                                                        'Karang Taruna Dukuh Wonotoro',
-                                                                        'Karang Taruna Dukuh Gumukrejo'
-                                                                    ];
-                                                                @endphp
-                                                                @foreach($karangTarunaList as $ktIdx => $ktName)
-                                                                    <li
-                                                                        class="flex items-center gap-2.5 py-1.5 px-2.5 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
-                                                                        <span
-                                                                            class="w-5 h-5 rounded-full bg-[#0A3D29]/10 text-[#0A3D29] text-[11px] font-bold flex items-center justify-center shrink-0">
-                                                                            {{ $ktIdx + 1 }}
-                                                                        </span>
-                                                                        <span
-                                                                            class="text-slate-800 text-xs sm:text-sm font-medium leading-snug">
-                                                                            {{ $ktName }}
-                                                                        </span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ol>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endif
-
-                                            <!-- Dropdown Mitra Komunitas GAPOKTAN (Khusus Pojok Tani) -->
-                                            @if($isPojokTani)
-                                                <div x-data="{ expanded: false }"
-                                                    class="rounded-xl bg-slate-100/80 border border-slate-200/90 transition-colors duration-200 overflow-hidden group">
-
-                                                    <!-- Header Bar -->
-                                                    <div class="p-2.5 sm:p-3 flex justify-between items-center gap-2.5 sm:gap-3 cursor-pointer select-none transition-colors duration-200 hover:bg-slate-200/70 active:bg-slate-300/70"
-                                                        :class="expanded ? 'bg-slate-200/50' : ''" @click="expanded = !expanded"
-                                                        title="Klik untuk melihat daftar mitra komunitas GAPOKTAN">
-
-                                                        <!-- Judul & Ikon -->
-                                                        <div class="flex gap-2.5 sm:gap-3 min-w-0 flex-1 items-center">
-                                                            <span
-                                                                class="w-8 h-8 rounded-lg bg-[#0A3D29]/10 text-[#0A3D29] flex items-center justify-center shrink-0 transition-colors group-hover:bg-[#0A3D29]/15">
-                                                                <svg class="w-4 h-4 text-[#0A3D29]" viewBox="0 0 24 24" fill="none"
-                                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                                    stroke-linejoin="round">
-                                                                    <path d="M7 20h10" />
-                                                                    <path d="M10 20c0-4 1-7 2-10" />
-                                                                    <path d="M12 10a4 4 0 0 1 4-4c0 3-1.5 5-4 5" />
-                                                                    <path d="M12 14a4 4 0 0 0-4-4c0 3 1.5 5 4 5" />
-                                                                </svg>
-                                                            </span>
-                                                            <div class="min-w-0 flex-1">
-                                                                <h5 class="text-xs sm:text-sm font-bold text-slate-800 leading-snug">
-                                                                    Mitra Komunitas GAPOKTAN
-                                                                </h5>
-                                                                <span class="text-[11px] text-slate-500 font-medium block mt-0.5">
-                                                                    Gabungan Kelompok Tani Desa Catur
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Chevron Indicator -->
-                                                        <div
-                                                            class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-slate-400 transition-colors shrink-0">
-                                                            <svg class="w-4 h-4 transform transition-transform duration-300 ease-in-out text-slate-500"
-                                                                :class="expanded ? 'rotate-180 text-[#0A3D29]' : ''" fill="none"
-                                                                stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                                    d="M19 9l-7 7-7-7" />
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Expanded Content: Numbered List -->
-                                                    <div x-show="expanded" x-cloak x-collapse.duration.300ms>
-                                                        <div class="px-3.5 pb-3.5 pt-2 border-t border-slate-200/70 bg-white/70">
-                                                            <ol class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-slate-700">
-                                                                @php
-                                                                    $gapoktanList = [
-                                                                        'Kelompok Tani Budi Rahayu',
-                                                                        'Kelompok Tani Ngudi Rejeki',
-                                                                        'Kelompok Tani Sarono Tani',
-                                                                        'Kelompok Tani Marsudi Mulyo'
-                                                                    ];
-                                                                @endphp
-                                                                @foreach($gapoktanList as $gIdx => $gName)
-                                                                    <li
-                                                                        class="flex items-center gap-2.5 py-1.5 px-2.5 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
-                                                                        <span
-                                                                            class="w-5 h-5 rounded-full bg-[#0A3D29]/10 text-[#0A3D29] text-[11px] font-bold flex items-center justify-center shrink-0">
-                                                                            {{ $gIdx + 1 }}
-                                                                        </span>
-                                                                        <span
-                                                                            class="text-slate-800 text-xs sm:text-sm font-medium leading-snug">
-                                                                            {{ $gName }}
-                                                                        </span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ol>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @endif
-
-                                    @auth
-                                        @if(auth()->user()->isAdmin())
-                                            <div class="pt-2 flex items-center justify-end">
-                                                <a href="{{ route('admin.ppko.edit', $pojok) }}"
-                                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#0A3D29] hover:bg-[#145C3B] text-white text-xs font-semibold transition shadow-2xs">
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                    </svg>
-                                                    <span>Kelola Foto & File</span>
-                                                </a>
-                                            </div>
-                                        @endif
-                                    @endauth
-                                </div>
-
                             </div>
                         </section>
                     @endforeach
@@ -1291,21 +1361,67 @@
             if (targetHeight > 60) {
                 igCard.style.height = targetHeight + 'px';
                 const cardStyle = window.getComputedStyle(igCard);
-                const padTop = parseFloat(cardStyle.paddingTop) || 14;
-                const padBottom = parseFloat(cardStyle.paddingBottom) || 14;
+                const padTop = parseFloat(cardStyle.paddingTop) || 0;
+                const padBottom = parseFloat(cardStyle.paddingBottom) || 0;
                 const borderTop = parseFloat(cardStyle.borderTopWidth) || 1;
                 const borderBottom = parseFloat(cardStyle.borderBottomWidth) || 1;
-                const containerHeight = Math.max(60, targetHeight - padTop - padBottom - borderTop - borderBottom);
+                const accentLine = igCard.querySelector('.ig-accent-line');
+                const accentHeight = accentLine ? accentLine.offsetHeight : 0;
+                const containerHeight = Math.max(60, targetHeight - padTop - padBottom - borderTop - borderBottom - accentHeight);
                 igFrame.style.height = containerHeight + 'px';
             } else {
                 igFrame.style.height = '126px';
             }
         }
 
+        // Otomatis menyesuaikan ukuran font nomor & judul pojok agar membentang pas sampai ujung kanan kolom
+        function fitAllPojokTitles() {
+            const wraps = document.querySelectorAll('.pojok-header-wrap');
+            wraps.forEach(wrap => {
+                const num = wrap.querySelector('.pojok-num-text');
+                const title = wrap.querySelector('.pojok-title-text');
+                if (!num || !title) return;
+
+                const wrapWidth = Math.floor(wrap.clientWidth);
+                if (window.innerWidth >= 640 && wrapWidth > 150) {
+                    const baseSize = 80;
+                    num.style.fontSize = baseSize + 'px';
+                    title.style.fontSize = baseSize + 'px';
+
+                    const style = window.getComputedStyle(wrap);
+                    const gap = parseFloat(style.columnGap || style.gap) || 16;
+                    const totalContentWidth = num.offsetWidth + gap + title.offsetWidth;
+
+                    if (totalContentWidth > 0) {
+                        const targetWidth = wrapWidth - 2;
+                        const computedSize = Math.floor(baseSize * (targetWidth / totalContentWidth));
+                        const finalSize = Math.max(30, Math.min(120, computedSize));
+                        num.style.fontSize = finalSize + 'px';
+                        title.style.fontSize = finalSize + 'px';
+                    }
+                } else {
+                    num.style.fontSize = '';
+                    title.style.fontSize = '';
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             syncIgCardWithLeftPanel();
-            window.addEventListener('resize', syncIgCardWithLeftPanel);
-            window.addEventListener('load', syncIgCardWithLeftPanel);
+            fitAllPojokTitles();
+
+            window.addEventListener('resize', () => {
+                syncIgCardWithLeftPanel();
+                fitAllPojokTitles();
+            });
+            window.addEventListener('load', () => {
+                syncIgCardWithLeftPanel();
+                fitAllPojokTitles();
+            });
+
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(fitAllPojokTitles);
+            }
 
             if (window.ResizeObserver) {
                 const ro = new ResizeObserver(() => syncIgCardWithLeftPanel());
@@ -1313,6 +1429,13 @@
                 const detailCard = document.getElementById('ppko-detail-card');
                 if (leftPanel) ro.observe(leftPanel);
                 if (detailCard) ro.observe(detailCard);
+
+                const roPojok = new ResizeObserver(() => fitAllPojokTitles());
+                document.querySelectorAll('.pojok-header-wrap').forEach(wrap => {
+                    if (wrap.parentElement) {
+                        roPojok.observe(wrap.parentElement);
+                    }
+                });
             }
         });
     </script>

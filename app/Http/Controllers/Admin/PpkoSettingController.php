@@ -59,10 +59,17 @@ class PpkoSettingController extends Controller
     }
 
     /**
-     * Update or upload the cover photo for the Pojok.
+     * Update or upload the cover photo for the Pojok (supports slot 1, 2, 3).
      */
     public function updateFoto(Request $request, Pojok $pojok): RedirectResponse
     {
+        $slot = (int) $request->input('slot', 1);
+        $field = match($slot) {
+            2 => 'gambar_2',
+            3 => 'gambar_3',
+            default => 'gambar',
+        };
+
         $request->validate([
             'foto' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
         ], [
@@ -72,28 +79,37 @@ class PpkoSettingController extends Controller
             'foto.max' => 'Ukuran gambar maksimal 5MB.',
         ]);
 
-        if ($pojok->gambar && Storage::disk('public')->exists($pojok->gambar)) {
-            Storage::disk('public')->delete($pojok->gambar);
+        if ($pojok->$field && Storage::disk('public')->exists($pojok->$field)) {
+            Storage::disk('public')->delete($pojok->$field);
         }
 
         $path = $request->file('foto')->store('ppko/pojok', 'public');
-        $pojok->update(['gambar' => $path]);
+        $pojok->update([$field => $path]);
 
-        return back()->with('success', 'Foto sampul ' . $pojok->nama . ' berhasil diperbarui.');
+        $slotLabel = $slot > 1 ? " (Kartu ke-{$slot})" : "";
+        return back()->with('success', 'Foto ' . $pojok->nama . $slotLabel . ' berhasil diperbarui.');
     }
 
     /**
-     * Delete the custom cover photo and revert to default.
+     * Delete the custom photo and revert to default.
      */
-    public function deleteFoto(Pojok $pojok): RedirectResponse
+    public function deleteFoto(Request $request, Pojok $pojok): RedirectResponse
     {
-        if ($pojok->gambar && Storage::disk('public')->exists($pojok->gambar)) {
-            Storage::disk('public')->delete($pojok->gambar);
+        $slot = (int) $request->input('slot', 1);
+        $field = match($slot) {
+            2 => 'gambar_2',
+            3 => 'gambar_3',
+            default => 'gambar',
+        };
+
+        if ($pojok->$field && Storage::disk('public')->exists($pojok->$field)) {
+            Storage::disk('public')->delete($pojok->$field);
         }
 
-        $pojok->update(['gambar' => null]);
+        $pojok->update([$field => null]);
 
-        return back()->with('success', 'Foto sampul ' . $pojok->nama . ' berhasil direset ke foto bawaan.');
+        $slotLabel = $slot > 1 ? " kartu ke-{$slot}" : "";
+        return back()->with('success', 'Foto ' . $pojok->nama . $slotLabel . ' berhasil direset ke foto bawaan.');
     }
 
     /**

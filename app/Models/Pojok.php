@@ -14,6 +14,8 @@ class Pojok extends Model
         'nama',
         'deskripsi_singkat',
         'gambar',
+        'gambar_2',
+        'gambar_3',
     ];
 
     /**
