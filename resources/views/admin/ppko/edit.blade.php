@@ -2,6 +2,47 @@
 
 @section('title', 'Kelola ' . $pojok->nama . ' – Admin PPKO')
 
+@push('styles')
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<style>
+    /* Quill Editor Styling & Tailwind Reset Fixes */
+    .ql-editor {
+        min-height: 180px;
+        font-size: 14px;
+        line-height: 1.6;
+        font-family: inherit;
+    }
+    .ql-toolbar.ql-snow {
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+        border-color: #d1d5db;
+        background-color: #f9fafb;
+    }
+    .ql-container.ql-snow {
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+        border-color: #d1d5db;
+        font-family: inherit;
+    }
+    .ql-toolbar button svg,
+    .ql-toolbar .ql-picker-label svg {
+        width: 16px !important;
+        height: 16px !important;
+        display: inline-block !important;
+        float: none !important;
+    }
+    .ql-toolbar button {
+        width: 28px !important;
+        height: 28px !important;
+        padding: 3px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        float: left !important;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="space-y-8 max-w-5xl mx-auto">
 
@@ -278,34 +319,36 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- 4. EDIT INFORMASI POJOK (NAMA & DESKRIPSI SINGKAT) -->
+    <!-- 4. EDIT INFORMASI POJOK (NAMA & DESKRIPSI SINGKAT DENGAN QUILL) -->
     <!-- ========================================================================= -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-xs p-6 sm:p-8 space-y-4">
         <h4 class="font-serif font-bold text-base text-gray-900 pb-2 border-b border-gray-100 flex items-center gap-2">
             <span>📝</span>
             <span>Informasi Narasi {{ $pojok->nama }}</span>
         </h4>
-        <form action="{{ route('admin.ppko.update', $pojok) }}" method="POST" class="space-y-4">
+        <form id="form-informasi-pojok" action="{{ route('admin.ppko.update', $pojok) }}" method="POST" class="space-y-4">
             @csrf
             @method('PUT')
 
-            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
-                <div class="sm:col-span-4">
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                        Nama Pilar Pojok <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="nama" value="{{ old('nama', $pojok->nama) }}" class="w-full text-xs rounded-lg border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 p-2.5" required>
-                </div>
-                <div class="sm:col-span-8">
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                        Deskripsi Singkat Program <span class="text-red-500">*</span>
-                    </label>
-                    <textarea name="deskripsi_singkat" rows="3" class="w-full text-xs rounded-lg border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 p-2.5" required>{{ old('deskripsi_singkat', $pojok->deskripsi_singkat) }}</textarea>
-                </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                    Nama Pilar Pojok <span class="text-red-500">*</span>
+                </label>
+                <input type="text" name="nama" value="{{ old('nama', $pojok->nama) }}" class="w-full text-xs rounded-lg border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 p-2.5 bg-white shadow-2xs" required>
             </div>
 
-            <div class="flex justify-end pt-1">
-                <button type="submit" class="inline-flex items-center gap-1.5 bg-gray-800 hover:bg-gray-900 text-white font-bold text-xs px-4 py-2 rounded-lg transition">
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                    Deskripsi Program (Quill Rich Text Editor) <span class="text-red-500">*</span>
+                </label>
+                <div id="deskripsi-quill-editor" class="bg-white">{!! old('deskripsi_singkat', $pojok->deskripsi_singkat) !!}</div>
+                <input type="hidden" name="deskripsi_singkat" id="deskripsi_input" value="{{ old('deskripsi_singkat', $pojok->deskripsi_singkat) }}">
+                <p class="text-[11px] text-gray-400">Gunakan toolbar untuk format teks tebal, miring, garis bawah, daftar poin, perataan teks, dan tautan.</p>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button type="submit" class="inline-flex items-center gap-1.5 bg-[#0d631b] hover:bg-emerald-800 text-white font-bold text-xs px-5 py-2.5 rounded-lg shadow-sm transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                     <span>Simpan Perubahan Informasi</span>
                 </button>
             </div>
@@ -314,6 +357,8 @@
 
 </div>
 
+@push('scripts')
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <script>
 function previewCoverImage(input) {
     if (input.files && input.files[0]) {
@@ -327,5 +372,33 @@ function previewCoverImage(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const toolbarOptions = [
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'align': [] }],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ['blockquote', 'link'],
+        ['clean']
+    ];
+
+    const quill = new Quill('#deskripsi-quill-editor', {
+        theme: 'snow',
+        modules: { toolbar: toolbarOptions },
+        placeholder: 'Tuliskan narasi dan deskripsi pilar pojok pemberdayaan ini...'
+    });
+
+    const form = document.getElementById('form-informasi-pojok');
+    if (form) {
+        form.addEventListener('submit', function() {
+            const text = quill.getText().trim();
+            // Jika editor kosong, set string kosong agar validasi Laravel menangkapnya
+            document.getElementById('deskripsi_input').value = text.length === 0 ? '' : quill.root.innerHTML;
+        });
+    }
+});
 </script>
+@endpush
 @endsection
