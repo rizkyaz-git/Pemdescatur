@@ -358,6 +358,20 @@
                                             </tbody>
                                         </table>
                                     </div>
+
+                                    <!-- Lembaga Mitra Program -->
+                                    <div class="border-t border-[#DCE6DA] pt-4 space-y-2.5">
+                                        <h4 class="text-xs font-semibold text-slate-500 text-center tracking-wider uppercase">Lembaga Mitra Program</h4>
+                                        <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 pt-1">
+                                            <img src="{{ asset('images/TUTWURI.png') }}" alt="Tut Wuri Handayani" class="h-7 sm:h-8 w-auto object-contain hover:scale-105 transition-transform" title="Kemendikbudristek">
+                                            <img src="{{ asset('images/DIKTISAINTEK.png') }}" alt="Diktisaintek" class="h-7 sm:h-8 w-auto object-contain hover:scale-105 transition-transform" title="Diktisaintek">
+                                            <img src="{{ asset('images/PPK_ORMAWA.png') }}" alt="PPK Ormawa" class="h-7 sm:h-8 w-auto object-contain hover:scale-105 transition-transform" title="PPK Ormawa">
+                                            <img src="{{ asset('images/UMS.png') }}" alt="Universitas Muhammadiyah Surakarta" class="h-7 sm:h-8 w-auto object-contain hover:scale-105 transition-transform" title="UMS">
+                                            <img src="{{ asset('images/IMMALGHO.png') }}" alt="IMM Al-Ghozali" class="h-7 sm:h-8 w-auto object-contain hover:scale-105 transition-transform" title="IMM Al-Ghozali">
+                                            <img src="{{ asset('images/CATURCERDAS.png') }}" alt="Catur Cerdas" class="h-7 sm:h-8 w-auto object-contain hover:scale-105 transition-transform" title="Catur Cerdas">
+                                            <img src="{{ asset('images/PEMKABBYL.png') }}" alt="Pemkab Boyolali" class="h-7 sm:h-8 w-auto object-contain hover:scale-105 transition-transform" title="Pemkab Boyolali">
+                                        </div>
+                                    </div>
                                 </div>
                             </section>
                         </div>
@@ -575,39 +589,43 @@
                                                     {{ $pojok->deskripsi_singkat }}
                                                 </p>
 
+                                                <!-- Garis Pemisah Tipis di Bawah Deskripsi Pojok -->
+                                                <div class="border-b border-[#DCE6DA]/80"></div>
+
                                                 <!-- File Unduhan & Modul Materi -->
                                                 @if($pojok->kurikulums->isNotEmpty())
-                                                    <div class="pt-2 space-y-2">
+                                                    <div class="space-y-2">
                                                         @foreach($pojok->kurikulums as $file)
                                                             <div x-data="{ expanded: false }" 
-                                                                 class="rounded-lg bg-white/95 border border-[#DCE6DA] shadow-2xs hover:border-[#0A3D29]/40 transition-colors duration-200 overflow-hidden">
+                                                                 class="rounded-xl bg-slate-100/80 transition-colors duration-200 overflow-hidden group">
                                                                 
-                                                                <!-- Main Header Row (Judul + Tombol Lihat & Unduh + Tombol Expand Dropdown) -->
-                                                                <div class="p-2.5 sm:p-3 flex justify-between gap-2 sm:gap-3"
-                                                                     :class="expanded ? 'items-start' : 'items-center'">
-                                                                    <!-- Judul File & Ikon (Bisa diklik untuk buka/tutup dropdown) -->
-                                                                    <div class="flex gap-2 sm:gap-2.5 min-w-0 flex-1 cursor-pointer select-none" 
-                                                                         :class="expanded ? 'items-start' : 'items-center'"
-                                                                         @click="expanded = !expanded"
-                                                                         title="Klik untuk melihat detail lengkap">
-                                                                        <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#EAF1E8] text-[#0A3D29] flex items-center justify-center shrink-0 border border-[#DCE6DA]/80 shadow-2xs">
+                                                                <!-- Header Bar: Tanpa border, hover menggelapkan area yang ditekan, seluruh baris bisa diklik -->
+                                                                <div class="p-2.5 sm:p-3 flex justify-between gap-2.5 sm:gap-3 cursor-pointer select-none transition-colors duration-200 hover:bg-slate-200/70 active:bg-slate-300/70"
+                                                                     :class="expanded ? 'items-start bg-slate-200/50' : 'items-center'"
+                                                                     @click="expanded = !expanded"
+                                                                     title="Klik untuk melihat detail lengkap">
+                                                                    
+                                                                    <!-- Judul File & Ikon -->
+                                                                    <div class="flex gap-2.5 sm:gap-3 min-w-0 flex-1" 
+                                                                         :class="expanded ? 'items-start' : 'items-center'">
+                                                                        <span class="w-8 h-8 rounded-lg bg-[#0A3D29]/10 text-[#0A3D29] flex items-center justify-center shrink-0 transition-colors group-hover:bg-[#0A3D29]/15">
                                                                             <svg class="w-4 h-4 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                                                             </svg>
                                                                         </span>
                                                                         <div class="min-w-0 flex-1">
-                                                                            <h5 class="text-xs sm:text-sm font-bold text-slate-900 leading-snug"
+                                                                            <h5 class="text-xs sm:text-sm font-bold text-slate-800 leading-snug"
                                                                                 :class="expanded ? 'whitespace-normal' : 'truncate'"
                                                                                 title="{{ $file->judul }}">
                                                                                 {{ $file->judul }}
                                                                             </h5>
-                                                                            <span class="text-[10px] text-slate-400 font-medium block">
+                                                                            <span class="text-[11px] text-slate-500 font-medium block mt-0.5">
                                                                                 {{ $file->formatted_file_size }}
                                                                             </span>
                                                                         </div>
                                                                     </div>
 
-                                                                    <!-- Action Buttons: Lihat, Unduh & Dropdown Trigger -->
+                                                                    <!-- Action Buttons: Tombol Atas & Chevron -->
                                                                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                                                                         <!-- Tombol Lihat & Unduh: Tampil saat tertutup, disembunyikan saat dropdown dibuka -->
                                                                         <div x-show="!expanded" x-cloak class="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -616,7 +634,7 @@
                                                                                target="_blank" 
                                                                                rel="noopener noreferrer"
                                                                                @click.stop
-                                                                               class="inline-flex items-center justify-center gap-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 px-2.5 py-1.5 rounded-md transition shadow-2xs group shrink-0"
+                                                                               class="inline-flex items-center justify-center gap-1 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 hover:text-slate-900 px-2.5 py-1.5 rounded-lg transition shadow-2xs group shrink-0"
                                                                                title="Lihat dokumen di tab baru"
                                                                                aria-label="Lihat {{ $file->judul }}">
                                                                                 <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-700 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -626,7 +644,7 @@
                                                                             <!-- Tombol Unduh -->
                                                                             <a href="{{ route('public.ppko.kurikulum.download', $file) }}" 
                                                                                @click.stop
-                                                                               class="inline-flex items-center justify-center gap-1 text-xs font-semibold text-white bg-[#0A3D29] hover:bg-[#145C3B] px-2.5 py-1.5 rounded-md transition shadow-2xs group shrink-0"
+                                                                               class="inline-flex items-center justify-center gap-1 text-xs font-semibold text-white bg-[#0A3D29] hover:bg-[#145C3B] px-2.5 py-1.5 rounded-lg transition shadow-2xs group shrink-0"
                                                                                title="Unduh file dokumen"
                                                                                aria-label="Unduh {{ $file->judul }}">
                                                                                 <svg class="w-3.5 h-3.5 text-[#D9B85C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
@@ -634,19 +652,14 @@
                                                                             </a>
                                                                         </div>
 
-                                                                        <!-- Tombol Dropdown / Expand -->
-                                                                        <button type="button" 
-                                                                                @click.stop="expanded = !expanded"
-                                                                                class="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"
-                                                                                :class="expanded ? 'bg-slate-100 text-[#0A3D29]' : ''"
-                                                                                :title="expanded ? 'Tutup Detail' : 'Buka Detail Lengkap'"
-                                                                                :aria-expanded="expanded">
-                                                                            <svg class="w-4 h-4 transform transition-transform duration-300 ease-in-out" 
-                                                                                 :class="expanded ? 'rotate-180' : ''" 
+                                                                        <!-- Chevron Indicator -->
+                                                                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-slate-400 transition-colors shrink-0">
+                                                                            <svg class="w-4 h-4 transform transition-transform duration-300 ease-in-out text-slate-500" 
+                                                                                 :class="expanded ? 'rotate-180 text-[#0A3D29]' : ''" 
                                                                                  fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                                                                             </svg>
-                                                                        </button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
@@ -654,12 +667,12 @@
                                                                 <div x-show="expanded" 
                                                                      x-cloak
                                                                      x-collapse.duration.300ms>
-                                                                    <div class="border-t border-[#DCE6DA]/70 bg-slate-50/80 px-3.5 pb-3.5 pt-2.5 space-y-2.5">
+                                                                    <div class="px-3.5 pb-3.5 pt-1 space-y-3">
                                                                         <!-- Deskripsi Dokumen (Jika Ada) -->
                                                                         @if(!empty($file->deskripsi))
-                                                                            <div class="text-xs text-slate-600 leading-relaxed whitespace-pre-line text-justify">
+                                                                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line text-justify">
                                                                                 {{ $file->deskripsi }}
-                                                                            </div>
+                                                                            </p>
                                                                         @else
                                                                             <p class="text-xs text-slate-400 italic">Tidak ada deskripsi tambahan untuk dokumen ini.</p>
                                                                         @endif
@@ -669,7 +682,7 @@
                                                                             <a href="{{ asset('storage/' . $file->file_path) }}" 
                                                                                target="_blank" 
                                                                                rel="noopener noreferrer"
-                                                                               class="w-full inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 bg-white border border-[#DCE6DA] hover:bg-slate-100 hover:text-slate-900 py-2 px-2.5 rounded-lg transition shadow-2xs group text-center"
+                                                                               class="w-full inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 hover:text-slate-900 py-2 px-2.5 rounded-lg transition shadow-2xs group text-center"
                                                                                title="Lihat file di tab baru">
                                                                                 <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-700 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                                                                 <span>Buka Dokumen</span>
@@ -706,31 +719,8 @@
                                     </section>
                             @endforeach
                         </div>
-
-                        <!-- ===================================================================== -->
-                        <!-- BAGIAN BAWAH: LEMBAGA MITRA PROGRAM -->
-                        <!-- ===================================================================== -->
-                        <div class="pt-4 sm:pt-6 pb-10 sm:pb-14">
-                            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-                                <!-- LEMBAGA MITRA PROGRAM -->
-                                <section class="text-center space-y-4 sm:space-y-6 ppko-section-entrance">
-                                    <div class="max-w-2xl mx-auto">
-                                        <h3 class="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight">
-                                            Lembaga Mitra Program
-                                        </h3>
-                                    </div>
-
-                                    <div class="max-w-3xl mx-auto flex items-center justify-center">
-                                        <img src="{{ asset('images/partnership_logo.png') }}" 
-                                             alt="Lembaga Mitra Program" 
-                                             class="w-full max-w-2xl sm:max-w-3xl h-auto object-contain">
-                                    </div>
-                                </section>
-
-                            </div>
-                        </div>
                     </div>
+                </div>
 
                     <!-- ========================================================================= -->
                     <!-- LIGHTBOX MODAL (Interactive Alpine.js) -->
