@@ -580,12 +580,14 @@
                                                     <div class="pt-2 space-y-2">
                                                         @foreach($pojok->kurikulums as $file)
                                                             <div x-data="{ expanded: false }" 
-                                                                 class="rounded-lg bg-white/95 border border-[#DCE6DA] shadow-2xs hover:border-[#0A3D29]/40 transition-all duration-200 overflow-hidden">
+                                                                 class="rounded-lg bg-white/95 border border-[#DCE6DA] shadow-2xs hover:border-[#0A3D29]/40 transition-colors duration-200 overflow-hidden">
                                                                 
                                                                 <!-- Main Header Row (Judul + Tombol Lihat & Unduh + Tombol Expand Dropdown) -->
-                                                                <div class="p-2.5 sm:p-3 flex items-center justify-between gap-2 sm:gap-3">
+                                                                <div class="p-2.5 sm:p-3 flex justify-between gap-2 sm:gap-3"
+                                                                     :class="expanded ? 'items-start' : 'items-center'">
                                                                     <!-- Judul File & Ikon (Bisa diklik untuk buka/tutup dropdown) -->
-                                                                    <div class="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1 cursor-pointer select-none" 
+                                                                    <div class="flex gap-2 sm:gap-2.5 min-w-0 flex-1 cursor-pointer select-none" 
+                                                                         :class="expanded ? 'items-start' : 'items-center'"
                                                                          @click="expanded = !expanded"
                                                                          title="Klik untuk melihat detail lengkap">
                                                                         <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#EAF1E8] text-[#0A3D29] flex items-center justify-center shrink-0 border border-[#DCE6DA]/80 shadow-2xs">
@@ -607,27 +609,30 @@
 
                                                                     <!-- Action Buttons: Lihat, Unduh & Dropdown Trigger -->
                                                                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                                                                        <!-- Tombol Lihat -->
-                                                                        <a href="{{ asset('storage/' . $file->file_path) }}" 
-                                                                           target="_blank" 
-                                                                           rel="noopener noreferrer"
-                                                                           @click.stop
-                                                                           class="inline-flex items-center justify-center gap-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 px-2.5 py-1.5 rounded-md transition shadow-2xs group shrink-0"
-                                                                           title="Lihat dokumen di tab baru"
-                                                                           aria-label="Lihat {{ $file->judul }}">
-                                                                            <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-700 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                                                            <span class="hidden xs:inline">Lihat</span>
-                                                                        </a>
+                                                                        <!-- Tombol Lihat & Unduh: Tampil saat tertutup, disembunyikan saat dropdown dibuka -->
+                                                                        <div x-show="!expanded" x-cloak class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                                                                            <!-- Tombol Lihat -->
+                                                                            <a href="{{ asset('storage/' . $file->file_path) }}" 
+                                                                               target="_blank" 
+                                                                               rel="noopener noreferrer"
+                                                                               @click.stop
+                                                                               class="inline-flex items-center justify-center gap-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 px-2.5 py-1.5 rounded-md transition shadow-2xs group shrink-0"
+                                                                               title="Lihat dokumen di tab baru"
+                                                                               aria-label="Lihat {{ $file->judul }}">
+                                                                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-700 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                                                <span class="hidden xs:inline">Lihat</span>
+                                                                            </a>
 
-                                                                        <!-- Tombol Unduh -->
-                                                                        <a href="{{ route('public.ppko.kurikulum.download', $file) }}" 
-                                                                           @click.stop
-                                                                           class="inline-flex items-center justify-center gap-1 text-xs font-semibold text-white bg-[#0A3D29] hover:bg-[#145C3B] px-2.5 py-1.5 rounded-md transition shadow-2xs group shrink-0"
-                                                                           title="Unduh file dokumen"
-                                                                           aria-label="Unduh {{ $file->judul }}">
-                                                                            <svg class="w-3.5 h-3.5 text-[#D9B85C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                                                            <span class="hidden xs:inline">Unduh</span>
-                                                                        </a>
+                                                                            <!-- Tombol Unduh -->
+                                                                            <a href="{{ route('public.ppko.kurikulum.download', $file) }}" 
+                                                                               @click.stop
+                                                                               class="inline-flex items-center justify-center gap-1 text-xs font-semibold text-white bg-[#0A3D29] hover:bg-[#145C3B] px-2.5 py-1.5 rounded-md transition shadow-2xs group shrink-0"
+                                                                               title="Unduh file dokumen"
+                                                                               aria-label="Unduh {{ $file->judul }}">
+                                                                                <svg class="w-3.5 h-3.5 text-[#D9B85C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                                                                <span class="hidden xs:inline">Unduh</span>
+                                                                            </a>
+                                                                        </div>
 
                                                                         <!-- Tombol Dropdown / Expand -->
                                                                         <button type="button" 
@@ -648,46 +653,35 @@
                                                                 <!-- Expanded Dropdown Content -->
                                                                 <div x-show="expanded" 
                                                                      x-cloak
-                                                                     x-transition:enter="transition ease-out duration-200"
-                                                                     x-transition:enter-start="opacity-0 -translate-y-1"
-                                                                     x-transition:enter-end="opacity-100 translate-y-0"
-                                                                     x-transition:leave="transition ease-in duration-150"
-                                                                     x-transition:leave-start="opacity-100 translate-y-0"
-                                                                     x-transition:leave-end="opacity-0 -translate-y-1"
-                                                                     class="border-t border-[#DCE6DA]/70 bg-slate-50/80 px-3.5 pb-3.5 pt-2.5 space-y-2.5">
-                                                                    <!-- Judul Dokumen Penuh Saat Dibuka -->
-                                                                    <div>
-                                                                        <h6 class="text-xs font-bold text-slate-800 leading-snug">
-                                                                            {{ $file->judul }}
-                                                                        </h6>
-                                                                    </div>
+                                                                     x-collapse.duration.300ms>
+                                                                    <div class="border-t border-[#DCE6DA]/70 bg-slate-50/80 px-3.5 pb-3.5 pt-2.5 space-y-2.5">
+                                                                        <!-- Deskripsi Dokumen (Jika Ada) -->
+                                                                        @if(!empty($file->deskripsi))
+                                                                            <div class="text-xs text-slate-600 leading-relaxed whitespace-pre-line text-justify">
+                                                                                {{ $file->deskripsi }}
+                                                                            </div>
+                                                                        @else
+                                                                            <p class="text-xs text-slate-400 italic">Tidak ada deskripsi tambahan untuk dokumen ini.</p>
+                                                                        @endif
 
-                                                                    <!-- Deskripsi Dokumen (Jika Ada) -->
-                                                                    @if(!empty($file->deskripsi))
-                                                                        <div class="text-xs text-slate-600 leading-relaxed whitespace-pre-line text-justify">
-                                                                            {{ $file->deskripsi }}
+                                                                        <!-- Tombol Aksi di Bawah (Penuh & nyaman diakses) -->
+                                                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                                                            <a href="{{ asset('storage/' . $file->file_path) }}" 
+                                                                               target="_blank" 
+                                                                               rel="noopener noreferrer"
+                                                                               class="w-full inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 bg-white border border-[#DCE6DA] hover:bg-slate-100 hover:text-slate-900 py-2 px-2.5 rounded-lg transition shadow-2xs group text-center"
+                                                                               title="Lihat file di tab baru">
+                                                                                <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-700 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                                                <span>Buka Dokumen</span>
+                                                                            </a>
+
+                                                                            <a href="{{ route('public.ppko.kurikulum.download', $file) }}" 
+                                                                               class="w-full inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-white bg-[#0A3D29] hover:bg-[#145C3B] py-2 px-2.5 rounded-lg transition shadow-2xs group text-center"
+                                                                               title="Unduh file dokumen">
+                                                                                <svg class="w-3.5 h-3.5 text-[#D9B85C] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                                                                <span>Unduh File</span>
+                                                                            </a>
                                                                         </div>
-                                                                    @else
-                                                                        <p class="text-xs text-slate-400 italic">Tidak ada deskripsi tambahan untuk dokumen ini.</p>
-                                                                    @endif
-
-                                                                    <!-- Tombol Aksi di Bawah (Penuh & nyaman diakses) -->
-                                                                    <div class="grid grid-cols-2 gap-2 pt-1">
-                                                                        <a href="{{ asset('storage/' . $file->file_path) }}" 
-                                                                           target="_blank" 
-                                                                           rel="noopener noreferrer"
-                                                                           class="w-full inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-700 bg-white border border-[#DCE6DA] hover:bg-slate-100 hover:text-slate-900 py-2 px-2.5 rounded-lg transition shadow-2xs group text-center"
-                                                                           title="Lihat file di tab baru">
-                                                                            <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-700 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                                                            <span>Buka Dokumen</span>
-                                                                        </a>
-
-                                                                        <a href="{{ route('public.ppko.kurikulum.download', $file) }}" 
-                                                                           class="w-full inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-white bg-[#0A3D29] hover:bg-[#145C3B] py-2 px-2.5 rounded-lg transition shadow-2xs group text-center"
-                                                                           title="Unduh file dokumen">
-                                                                            <svg class="w-3.5 h-3.5 text-[#D9B85C] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                                                            <span>Unduh File</span>
-                                                                        </a>
                                                                     </div>
                                                                 </div>
 
