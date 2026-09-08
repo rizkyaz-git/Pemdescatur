@@ -17,9 +17,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {{-- ========================================================================= --}}
-        {{-- 1. CENTERED TOP HEADER (Gaya Klasik Editorial dengan Warna Khas Desa)    --}}
+        {{-- 1. CENTERED TOP HEADER (Tanpa garis bawah)                                --}}
         {{-- ========================================================================= --}}
-        <header class="text-center space-y-3 pb-8 sm:pb-10 border-b border-[#DCE6DA] max-w-4xl mx-auto">
+        <header class="text-center pb-8 sm:pb-10 max-w-4xl mx-auto">
             <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#20332A] tracking-tight leading-tight">
                 Profil Pemerintah Desa Catur
             </h1>
@@ -28,19 +28,19 @@
         {{-- ========================================================================= --}}
         {{-- 2. 3-COLUMN EDITORIAL GRID (Left Sidebar + Center Story + Right Sidebar)   --}}
         {{-- ========================================================================= --}}
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 items-start mt-8 sm:mt-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start mt-2 sm:mt-4">
 
-            {{-- ================= LEFT COLUMN: ~3 COLS (Pimpinan & Data Ringkas) ================= --}}
-            <aside class="lg:col-span-3 space-y-8 order-2 lg:order-1">
+            {{-- ================= LEFT COLUMN: ~3 COLS (Card Panel Kiri) ================= --}}
+            <aside class="lg:col-span-3 space-y-6 order-2 lg:order-1">
 
-                <!-- Widget 1: Pimpinan Desa (Persis format "About Me" pada referensi) -->
-                <div class="space-y-3.5">
-                    <h3 class="font-serif font-bold text-xs uppercase tracking-widest text-[#0A3D29] border-b border-[#DCE6DA] pb-2 flex items-center gap-1.5">
-                        <span>Pimpinan Desa</span>
+                <!-- Kartu 1: Pimpinan Desa -->
+                <div class="bg-white border border-[#DCE6DA] rounded-lg p-5 shadow-xs space-y-3.5">
+                    <h3 class="font-serif font-bold text-xs uppercase tracking-widest text-[#0A3D29] border-b border-[#DCE6DA] pb-2">
+                        Pimpinan Desa
                     </h3>
                     
-                    <!-- Portrait Photo (Sudut rounded-sm halus, tidak berlebihan) -->
-                    <div class="w-full max-w-[210px] aspect-[4/5] bg-[#EAF1E8]/40 overflow-hidden border border-[#DCE6DA] rounded-sm">
+                    <!-- Portrait Photo -->
+                    <div class="w-full max-w-[210px] aspect-[4/5] bg-[#EAF1E8]/40 overflow-hidden border border-[#DCE6DA] rounded-md">
                         @if($kades && $kades->photo_path)
                             <img src="{{ asset('storage/' . $kades->photo_path) }}" 
                                  alt="{{ $kades->name }}" 
@@ -76,13 +76,13 @@
                             Kantor Desa
                         </h4>
                         <p class="leading-relaxed">Jl. Raya Catur - Sambi, Boyolali, Jawa Tengah 57376</p>
-                        <p class="text-[11px]">Email: <a href="mailto:pemdes@desacatur-boyolali.id" class="text-[#0A3D29] hover:underline font-medium">pemdes@catur.desa.id</a></p>
+                        <p class="text-[11px]">Email: <a href="mailto:pemdes@catur.desa.id" class="text-[#0A3D29] hover:underline font-medium">pemdes@catur.desa.id</a></p>
                         <p class="text-[11px]">Telepon: <span class="text-[#20332A] font-semibold">0812-3456-7890</span></p>
                     </div>
                 </div>
 
-                <!-- Widget 2: Data Geografis Ringkas -->
-                <div class="space-y-3 pt-2 border-t border-[#DCE6DA]">
+                <!-- Kartu 2: Data Geografis Ringkas -->
+                <div class="bg-white border border-[#DCE6DA] rounded-lg p-5 shadow-xs space-y-3">
                     <h3 class="font-serif font-bold text-xs uppercase tracking-widest text-[#0A3D29] border-b border-[#DCE6DA] pb-2">
                         Data Ringkas Wilayah
                     </h3>
@@ -121,13 +121,13 @@
             <main class="lg:col-span-6 space-y-6 order-1 lg:order-2">
 
                 <!-- Featured Large Landscape Photo -->
-                <div class="w-full aspect-[16/10] overflow-hidden bg-slate-100 border border-[#DCE6DA] rounded-sm">
+                <div class="w-full aspect-[16/10] overflow-hidden bg-slate-100 border border-[#DCE6DA] rounded-lg">
                     <img src="{{ $coverImage }}" 
                          alt="Pemandangan Alam Desa Catur" 
                          class="w-full h-full object-cover">
                 </div>
 
-                <!-- Editorial Story Content (Diisi oleh Admin via Editor Sejarah) -->
+                <!-- Editorial Story Content -->
                 <div class="prose prose-slate max-w-none text-[#20332A] text-sm sm:text-base leading-relaxed space-y-4 pt-1 font-sans prose-headings:font-serif prose-headings:text-[#20332A] prose-headings:tracking-tight prose-p:text-[#3E4D45] prose-p:leading-relaxed prose-blockquote:border-l-2 prose-blockquote:border-[#0A3D29] prose-blockquote:bg-[#EAF1E8]/30 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:italic prose-blockquote:font-serif prose-blockquote:rounded-r-sm prose-a:text-[#0A3D29] prose-a:font-semibold hover:prose-a:underline">
                     
                     @if($profile && trim(strip_tags($profile->history)) !== '')
@@ -145,11 +145,11 @@
             </main>
 
 
-            {{-- ================= RIGHT COLUMN: ~3 COLS (Pedukuhan & Lembaga) ================= --}}
-            <aside class="lg:col-span-3 space-y-8 order-3">
+            {{-- ================= RIGHT COLUMN: ~3 COLS (Card Panel Kanan) ================= --}}
+            <aside class="lg:col-span-3 space-y-6 order-3">
 
-                <!-- Widget 1: Pembagian Wilayah (Persis format "Recent posts" pada referensi) -->
-                <div class="space-y-3">
+                <!-- Kartu 3: Wilayah Pedukuhan -->
+                <div class="bg-white border border-[#DCE6DA] rounded-lg p-5 shadow-xs space-y-3">
                     <h3 class="font-serif font-bold text-xs uppercase tracking-widest text-[#0A3D29] border-b border-[#DCE6DA] pb-2">
                         Wilayah Pedukuhan
                     </h3>
@@ -175,8 +175,8 @@
                     </div>
                 </div>
 
-                <!-- Widget 2: Kelembagaan Desa (Persis format "ARCHIVE" pada referensi) -->
-                <div class="space-y-3 pt-2 border-t border-[#DCE6DA]">
+                <!-- Kartu 4: Kelembagaan Desa -->
+                <div class="bg-white border border-[#DCE6DA] rounded-lg p-5 shadow-xs space-y-3">
                     <h3 class="font-serif font-bold text-xs uppercase tracking-widest text-[#0A3D29] border-b border-[#DCE6DA] pb-2">
                         Kelembagaan Desa
                     </h3>
@@ -203,8 +203,8 @@
                     </ul>
                 </div>
 
-                <!-- Widget 3: Batas Wilayah & Peta -->
-                <div class="space-y-3 pt-2 border-t border-[#DCE6DA]">
+                <!-- Kartu 5: Batas Wilayah & Peta -->
+                <div class="bg-white border border-[#DCE6DA] rounded-lg p-5 shadow-xs space-y-3">
                     <div class="flex items-center justify-between border-b border-[#DCE6DA] pb-2">
                         <h3 class="font-serif font-bold text-xs uppercase tracking-widest text-[#0A3D29]">
                             Batas Wilayah
@@ -221,8 +221,8 @@
                         <p><span class="text-[#6C7B72] font-bold uppercase text-[10px]">Barat:</span> <span class="text-[#20332A] font-medium">{{ $profile->batas_barat ?? 'Desa Papringan' }}</span></p>
                     </div>
 
-                    <!-- Clean Embedded Map (Sudut rounded-sm terukur) -->
-                    <div class="w-full h-36 overflow-hidden border border-[#DCE6DA] rounded-sm mt-2">
+                    <!-- Clean Embedded Map -->
+                    <div class="w-full h-36 overflow-hidden border border-[#DCE6DA] rounded-md mt-2">
                         <iframe
                             src="https://maps.google.com/maps?q=Catur%2C+Sambi%2C+Boyolali&t=h&z=14&output=embed"
                             class="w-full h-full border-0"

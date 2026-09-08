@@ -6,6 +6,7 @@ window.Alpine = Alpine;
 
 Alpine.data('navSearchApp', (initialQuery = '') => ({
     mobileMenuOpen: false,
+    mobileSearchOpen: false,
     profileDropdown: false,
     infoDropdown: false,
     layananDropdown: false,
@@ -45,6 +46,7 @@ Alpine.data('navSearchApp', (initialQuery = '') => ({
 window.navSearchApp = function(initialQuery = '') {
     return {
         mobileMenuOpen: false,
+        mobileSearchOpen: false,
         profileDropdown: false,
         infoDropdown: false,
         layananDropdown: false,

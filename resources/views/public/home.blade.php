@@ -550,7 +550,7 @@
         <div class="block sm:hidden text-center pt-2">
             <a href="{{ route('public.news.index') }}" 
                class="inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#062c1d] text-white font-bold text-xs px-6 py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 min-h-[44px]">
-                <span>Lihat Semua Berita</span>
+                <span>Tampilkan Semua</span>
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                 </svg>

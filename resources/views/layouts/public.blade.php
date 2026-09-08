@@ -91,7 +91,7 @@
 
     <!-- Main Navigation Header -->
     <header class="sticky top-0 z-[99999]"
-            :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
+            :class="(isScrolled || mobileMenuOpen || mobileSearchOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
                 ? 'text-[#20332A] transition-colors duration-700 ease-in-out' 
                 : 'text-white transition-colors duration-700 ease-in-out'">
         
@@ -100,12 +100,12 @@
             @if($isHomePage)
                 <!-- 1. Top Gradient Layer (Fades out softly and slowly when scrolling down) -->
                 <div class="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/30 to-transparent transition-opacity duration-700 ease-in-out pointer-events-none"
-                     :class="(isScrolled || mobileMenuOpen) ? 'opacity-0' : 'opacity-100'">
+                     :class="(isScrolled || mobileMenuOpen || mobileSearchOpen) ? 'opacity-0' : 'opacity-100'">
                 </div>
 
                 <!-- 2. Scrolled Glassmorphism Layer (Fades in softly and smoothly when scrolled down) -->
                 <div class="absolute inset-0 bg-white/80 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.05)] transition-opacity ease-in-out pointer-events-none"
-                     :class="mobileMenuOpen 
+                     :class="(mobileMenuOpen || mobileSearchOpen) 
                          ? 'opacity-100 duration-200' 
                          : (isScrolled 
                              ? 'opacity-100 duration-700' 
@@ -454,42 +454,172 @@
 
                 </div>
 
-                <!-- MOBILE HEADER BRAND & HAMBURGER BUTTON -->
+                <!-- MOBILE HEADER BRAND & ACTION BUTTONS -->
                 <div class="flex items-center justify-between w-full lg:hidden">
-                    <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0">
+                    <a href="{{ route('home') }}" class="flex items-center gap-2 min-w-0 flex-1 mr-2">
                         @if(isset($globalLogo) && $globalLogo && Storage::disk('public')->exists($globalLogo))
                             <img src="{{ asset('storage/' . $globalLogo) }}" alt="{{ $globalVillageName ?? 'Desa Catur' }}" class="h-9 w-auto object-contain shrink-0">
                         @elseif(file_exists(public_path('images/logo_catur.png')))
                             <img src="{{ asset('images/logo_catur.png') }}" alt="{{ $globalVillageName ?? 'Desa Catur' }}" class="h-9 w-auto object-contain shrink-0">
                         @else
-                            <div class="w-9 h-9 bg-gradient-to-br from-[#0A3D29] to-[#145C3B] text-white rounded-lg flex items-center justify-center font-serif text-base font-bold shadow-xs">
+                            <div class="w-9 h-9 bg-gradient-to-br from-[#0A3D29] to-[#145C3B] text-white rounded-lg flex items-center justify-center font-serif text-base font-bold shadow-xs shrink-0">
                                 DC
                             </div>
                         @endif
-                        <span class="font-serif text-base font-bold transition-colors duration-700 ease-in-out"
-                              :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
+                        <span class="font-serif text-base font-bold transition-colors duration-700 ease-in-out truncate"
+                              :class="(isScrolled || mobileMenuOpen || mobileSearchOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
                                   ? 'text-[#0A3D29]' 
                                   : 'text-white'">
                             {{ $globalVillageName ?? 'Pemerintah Desa Catur' }}
                         </span>
                     </a>
 
-                    <button @click.stop="mobileMenuOpen = !mobileMenuOpen" type="button" 
-                            class="p-2 rounded-xl focus:outline-none flex items-center justify-center cursor-pointer transition-all duration-700 ease-in-out"
-                            :class="(isScrolled || mobileMenuOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
-                                ? (mobileMenuOpen ? 'text-[#0A3D29] bg-slate-100 active:bg-slate-200' : 'text-[#20332A] active:bg-[#EAF1E8]') 
-                                : (mobileMenuOpen ? 'text-[#0A3D29] bg-white active:bg-white/80' : 'text-white active:bg-white/20')" 
-                            aria-label="Buka Menu Mobile">
-                        <!-- Hamburger Icon (When Closed) -->
-                        <svg x-show="!mobileMenuOpen" class="w-6 h-6 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
-                        <!-- Close 'X' Icon (When Opened) -->
-                        <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6 transition-transform duration-200 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
+                    <!-- Action Buttons: Search Button (Left of Hamburger) + Hamburger Menu Button -->
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <!-- 1. Mobile Search Trigger Button -->
+                        <button @click.stop="mobileSearchOpen = !mobileSearchOpen; if(mobileSearchOpen) { mobileMenuOpen = false; $nextTick(() => { $refs.mobileHeaderSearchInput && $refs.mobileHeaderSearchInput.focus(); }); }" 
+                                type="button" 
+                                class="w-10 h-10 p-2 rounded-xl focus:outline-none flex items-center justify-center shrink-0 cursor-pointer transition-all duration-700 ease-in-out {{ $isHomePage ? 'text-white' : 'text-[#20332A]' }}"
+                                :class="(isScrolled || mobileMenuOpen || mobileSearchOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
+                                    ? (mobileSearchOpen ? 'text-[#0A3D29] bg-[#EAF1E8]' : 'text-[#20332A] active:bg-[#EAF1E8]') 
+                                    : (mobileSearchOpen ? 'text-[#0A3D29] bg-white' : 'text-white active:bg-white/20')" 
+                                aria-label="Buka Pencarian"
+                                title="Pencarian">
+                            <!-- Search Icon (When Closed) -->
+                            <svg x-show="!mobileSearchOpen" class="w-6 h-6 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            <!-- Close 'X' Icon (When Opened) -->
+                            <svg x-show="mobileSearchOpen" x-cloak class="w-6 h-6 transition-transform duration-200 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+
+                        <!-- 2. Hamburger Menu Button -->
+                        <button @click.stop="mobileMenuOpen = !mobileMenuOpen; if(mobileMenuOpen) mobileSearchOpen = false;" 
+                                type="button" 
+                                class="w-10 h-10 p-2 rounded-xl focus:outline-none flex items-center justify-center shrink-0 cursor-pointer transition-all duration-700 ease-in-out {{ $isHomePage ? 'text-white' : 'text-[#20332A]' }}"
+                                :class="(isScrolled || mobileMenuOpen || mobileSearchOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
+                                    ? (mobileMenuOpen ? 'text-[#0A3D29] bg-slate-100 active:bg-slate-200' : 'text-[#20332A] active:bg-[#EAF1E8]') 
+                                    : (mobileMenuOpen ? 'text-[#0A3D29] bg-white active:bg-white/80' : 'text-white active:bg-white/20')" 
+                                aria-label="Buka Menu Mobile">
+                            <!-- Hamburger Icon (When Closed) -->
+                            <svg x-show="!mobileMenuOpen" class="w-6 h-6 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                            <!-- Close 'X' Icon (When Opened) -->
+                            <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6 transition-transform duration-200 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Backdrop Scrim for Mobile Search -->
+        <div x-show="mobileSearchOpen" 
+             x-cloak
+             x-transition:enter="transition-opacity ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition-opacity ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @click="mobileSearchOpen = false"
+             class="fixed inset-0 top-20 bg-black/40 backdrop-blur-xs z-40 lg:hidden"
+             aria-hidden="true">
+        </div>
+
+        <!-- Mobile Search Popup (Refracting Frosted Glass Glassmorphism) -->
+        <div x-show="mobileSearchOpen" 
+             x-cloak
+             x-transition:enter="transition ease-out duration-250"
+             x-transition:enter-start="opacity-0 -translate-y-3 scale-[0.98]"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+             x-transition:leave-end="opacity-0 -translate-y-3 scale-[0.98]"
+             @click.away="mobileSearchOpen = false"
+             class="fixed top-20 inset-x-0 z-50 px-4 pt-3 pb-6 max-w-lg mx-auto lg:hidden pointer-events-auto">
+            
+            <div class="relative bg-white/80 backdrop-blur-3xl backdrop-saturate-200 border-2 border-white/90 ring-1 ring-slate-900/10 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_10px_25px_rgba(10,61,41,0.1)] rounded-3xl p-4 sm:p-5 space-y-3 text-[#20332A]">
+                
+                <!-- Search Bar Form -->
+                <form action="{{ route('public.search') }}" method="GET" @submit="mobileSearchOpen = false">
+                    <div class="relative flex items-center">
+                        <input type="text" 
+                               name="q" 
+                               x-ref="mobileHeaderSearchInput"
+                               x-model="searchQuery" 
+                               @input.debounce.300ms="fetchSuggestions()" 
+                               @keydown.escape="mobileSearchOpen = false"
+                               placeholder="Cari informasi di Desa Catur..." 
+                               aria-label="Cari informasi di Desa Catur"
+                               class="w-full h-12 pl-11 pr-10 rounded-2xl text-xs sm:text-sm font-semibold bg-white/70 backdrop-blur-xl text-[#20332A] placeholder-[#6C7B72] border border-[#DCE6DA] focus:outline-none focus:ring-2 focus:ring-[#0A3D29] focus:bg-white shadow-inner transition-all">
+                        
+                        <!-- Search Icon (Left) -->
+                        <svg class="w-5 h-5 text-[#0A3D29] absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        
+                        <!-- Clear Button (Right) -->
+                        <button type="button" 
+                                x-show="searchQuery.length > 0" 
+                                @click="searchQuery = ''; searchResults = []; $refs.mobileHeaderSearchInput.focus()" 
+                                class="absolute right-3 p-1 rounded-full text-[#6C7B72] hover:text-[#20332A] active:bg-slate-100 transition-colors"
+                                aria-label="Hapus kata kunci">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Search Results Underneath Search Bar -->
+                <div x-show="searchQuery.length >= 2" class="space-y-2 pt-1 border-t border-slate-200/60">
+                    <!-- Loading State -->
+                    <div x-show="searchLoading" class="py-4 text-center text-xs font-semibold text-[#6C7B72] flex items-center justify-center gap-2">
+                        <svg class="animate-spin w-4 h-4 text-[#0A3D29]" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Mencari informasi...</span>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div x-show="!searchLoading && searchResults.length === 0" class="py-4 text-center text-xs text-[#6C7B72]">
+                        <p>Tidak ada hasil untuk "<span class="font-bold text-[#20332A]" x-text="searchQuery"></span>"</p>
+                    </div>
+
+                    <!-- Result Items List -->
+                    <div x-show="!searchLoading && searchResults.length > 0" class="divide-y divide-slate-200/60 max-h-64 overflow-y-auto pr-1">
+                        <template x-for="item in searchResults" :key="item.url + item.title">
+                            <a :href="item.url" class="block p-2.5 rounded-xl hover:bg-white/90 active:bg-[#EAF1E8] transition text-left group">
+                                <div class="flex items-center justify-between gap-1 mb-1">
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-md text-[#0A3D29] bg-[#EAF1E8] group-hover:bg-[#0A3D29] group-hover:text-white transition" x-text="item.badge"></span>
+                                    <span class="text-[9px] uppercase font-semibold text-slate-400" x-text="item.type"></span>
+                                </div>
+                                <span class="block text-xs font-bold text-[#20332A] group-hover:text-[#0A3D29] line-clamp-1 transition" x-text="item.title"></span>
+                                <span class="block text-[10px] font-normal text-[#6C7B72] line-clamp-1 mt-0.5" x-text="item.snippet"></span>
+                            </a>
+                        </template>
+                    </div>
+
+                    <!-- View All Results Button -->
+                    <div x-show="!searchLoading && searchResults.length > 0" class="pt-2 border-t border-slate-200/60 text-center">
+                        <a :href="'{{ route('public.search') }}?q=' + encodeURIComponent(searchQuery)" 
+                           class="block py-2 text-xs font-bold text-[#0A3D29] bg-[#EAF1E8] hover:bg-[#0A3D29] hover:text-white active:scale-[0.99] rounded-xl transition-all shadow-2xs">
+                            Lihat semua hasil pencarian →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Helper Hint When Query < 2 Characters -->
+                <div x-show="searchQuery.length < 2" class="pt-1 text-center">
+                    <p class="text-[11px] text-[#6C7B72] font-medium">Ketik minimal 2 karakter untuk mencari informasi desa</p>
+                </div>
+
             </div>
         </div>
 
@@ -807,89 +937,7 @@
     </footer>
 
 
-    <!-- FLOATING MOBILE SEARCH BUTTON (LEFT SIDE) -->
-    <div class="fixed bottom-6 left-6 z-[99999] lg:hidden font-sans pointer-events-auto flex flex-col items-start"
-         @click.away="searchOpen = false">
-        
-        <!-- Floating Glassmorphism Search Icon-Only Button -->
-        <button type="button" 
-                @click="searchOpen = !searchOpen" 
-                class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/75 hover:bg-white/95 backdrop-blur-3xl backdrop-saturate-200 border-2 border-white ring-1 ring-[#0A3D29]/25 shadow-2xl text-[#0A3D29] flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300 group shrink-0"
-                aria-label="Cari Informasi"
-                title="Cari Informasi">
-            <svg x-show="!searchOpen" class="w-5 h-5 text-[#0A3D29] group-hover:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <svg x-show="searchOpen" class="w-5 h-5 text-[#0A3D29] group-hover:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
 
-        <!-- Floating Glassmorphism Search Input & Suggestions Popup (Left Aligned Above Button) -->
-        <div x-show="searchOpen" 
-             x-transition:enter="transition ease-out duration-250"
-             x-transition:enter-start="opacity-0 scale-90 translate-y-3"
-             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-             x-transition:leave="transition ease-in duration-150"
-             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-             x-transition:leave-end="opacity-0 scale-90 translate-y-3"
-             class="absolute bottom-16 left-0 w-[calc(100vw-3rem)] sm:w-96 bg-white/90 backdrop-blur-2xl backdrop-saturate-150 border border-white/90 rounded-3xl p-4 shadow-2xl text-[#20332A] space-y-3">
-            
-            <form action="{{ route('public.search') }}" method="GET" class="relative" @submit="searchOpen = false">
-                <div class="relative flex items-center">
-                    <input type="text" 
-                           name="q" 
-                           x-model="searchQuery" 
-                           @input.debounce.300ms="fetchSuggestions()" 
-                           placeholder="Cari informasi di Desa Catur..." 
-                           aria-label="Cari informasi di Desa Catur"
-                           class="w-full h-11 pl-10 pr-9 rounded-2xl text-xs font-semibold bg-[#F0F5EE] text-[#20332A] placeholder-[#6C7B72] border border-[#DCE6DA] focus:outline-none focus:ring-2 focus:ring-[#0A3D29]">
-                    
-                    <svg class="w-4 h-4 text-[#0A3D29] absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                    
-                    <button type="button" 
-                            x-show="searchQuery.length > 0" 
-                            @click="searchQuery = ''; searchResults = []" 
-                            class="absolute right-3.5 text-[#6C7B72] hover:text-[#20332A]">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                </div>
-            </form>
-
-            <!-- Live Suggestions List -->
-            <div x-show="searchQuery.length >= 2" class="space-y-2">
-                <div x-show="searchLoading" class="p-3 text-center text-xs text-[#6C7B72] flex items-center justify-center gap-2">
-                    <svg class="animate-spin w-4 h-4 text-[#0A3D29]" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                    <span>Mencari informasi...</span>
-                </div>
-
-                <div x-show="!searchLoading && searchResults.length === 0" class="p-3 text-center text-xs text-[#6C7B72]">
-                    <p>Tidak ada hasil untuk "<span class="font-semibold text-[#20332A]" x-text="searchQuery"></span>"</p>
-                </div>
-
-                <div x-show="!searchLoading && searchResults.length > 0" class="divide-y divide-slate-100 max-h-60 overflow-y-auto">
-                    <template x-for="item in searchResults" :key="item.title">
-                        <a :href="item.url" class="block p-2.5 rounded-xl hover:bg-[#EAF1E8] transition text-left group">
-                            <div class="flex items-center justify-between gap-1 mb-1">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md text-[#0A3D29] bg-[#EAF1E8]" x-text="item.badge"></span>
-                                <span class="text-[9px] uppercase font-semibold text-slate-400" x-text="item.type"></span>
-                            </div>
-                            <span class="block text-xs font-bold text-[#20332A] group-hover:text-[#0A3D29] line-clamp-1" x-text="item.title"></span>
-                            <span class="block text-[10px] font-normal text-[#6C7B72] line-clamp-1 mt-0.5" x-text="item.snippet"></span>
-                        </a>
-                    </template>
-                </div>
-
-                <div x-show="!searchLoading && searchResults.length > 0" class="pt-2 border-t border-slate-100 text-center">
-                    <a :href="'{{ route('public.search') }}?q=' + encodeURIComponent(searchQuery)" class="block py-1.5 text-xs font-bold text-[#0A3D29] hover:bg-[#EAF1E8] rounded-xl transition">
-                        Lihat semua hasil pencarian →
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     @if(!request()->routeIs('public.ppko*'))
     <!-- FLOATING SCROLL TO TOP BUTTON (RIGHT SIDE) -->
@@ -910,6 +958,7 @@
         function navSearchApp() {
             return {
                 mobileMenuOpen: false,
+                mobileSearchOpen: false,
                 profileDropdown: false,
                 infoDropdown: false,
                 layananDropdown: false,
