@@ -688,6 +688,49 @@
                         }
                     }
 
+                    /* ─── Slider Frame: Pipih 16:9 pada Mobile, Tinggi Tetap pada Desktop ─── */
+                    .pojok-slider-frame {
+                        width: 100%;
+                        aspect-ratio: 16 / 9;
+                        max-height: 250px;
+                    }
+                    @media (min-width: 640px) {
+                        .pojok-slider-frame {
+                            aspect-ratio: 16 / 9;
+                            max-height: 330px;
+                        }
+                    }
+                    @media (min-width: 1024px) {
+                        .pojok-slider-frame {
+                            aspect-ratio: auto;
+                            max-height: none;
+                            height: 360px;
+                        }
+                    }
+                    @media (min-width: 1280px) {
+                        .pojok-slider-frame {
+                            height: 380px;
+                        }
+                    }
+
+                    /* ─── Tombol Navigasi Slider: Hanya Tampil Saat Hover di Layar Desktop (768px+) ─── */
+                    .pojok-slider-btn {
+                        display: none;
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: opacity 0.25s ease, transform 0.2s ease, background-color 0.2s ease;
+                    }
+                    @media (min-width: 768px) {
+                        .pojok-slider-btn {
+                            display: flex;
+                        }
+                        .pojok-slider-frame:hover .pojok-slider-btn,
+                        .pojok-slider-btn:focus-visible {
+                            opacity: 1;
+                            pointer-events: auto;
+                        }
+                    }
+
                     @media (prefers-reduced-motion: reduce) {
 
                         .ppko-section-entrance,
@@ -1203,8 +1246,6 @@
                                                 isTransitioning: false,
                                                 touchStartX: 0,
                                                 touchStartY: 0,
-                                                isPointerDown: false,
-                                                pointerStartX: 0,
                                                 swiped: false,
                                                 timer: null,
                                                 init() {
@@ -1294,42 +1335,16 @@
                                                         }
                                                     }
                                                     this.resume();
-                                                },
-                                                handleMouseDown(e) {
-                                                    this.isPointerDown = true;
-                                                    this.pointerStartX = e.clientX;
-                                                    this.swiped = false;
-                                                    this.pause();
-                                                },
-                                                handleMouseMove(e) {
-                                                    if (!this.isPointerDown) return;
-                                                    const diffX = e.clientX - this.pointerStartX;
-                                                    if (Math.abs(diffX) > 40) {
-                                                        this.isPointerDown = false;
-                                                        this.swiped = true;
-                                                        if (diffX < 0) {
-                                                            this.next();
-                                                        } else {
-                                                            this.prev();
-                                                        }
-                                                    }
-                                                },
-                                                handleMouseUp() {
-                                                    this.isPointerDown = false;
-                                                    this.resume();
                                                 }
                                             }"
                                             @mouseenter="pause()"
-                                            @mouseleave="handleMouseUp()"
+                                            @mouseleave="resume()"
                                             class="harmoni-cards-animate w-full">
 
                                             <!-- RECTANGULAR SLIDER FRAME (16:9 Pipih pada Mobile, Tetap pada Desktop) -->
-                                            <div class="relative w-full aspect-[16/9] lg:aspect-auto lg:h-[360px] xl:h-[380px] overflow-hidden bg-slate-900/10 cursor-grab active:cursor-grabbing select-none touch-pan-y group shadow-md rounded-xl sm:rounded-2xl border border-black/5 {{ $isDark ? 'border-white/10' : 'border-slate-200' }}"
+                                            <div class="pojok-slider-frame relative overflow-hidden bg-slate-900/10 select-none touch-pan-y group shadow-md rounded-xl sm:rounded-2xl border border-black/5 {{ $isDark ? 'border-white/10' : 'border-slate-200' }}"
                                                 @touchstart.passive="handleTouchStart($event)"
-                                                @touchend="handleTouchEnd($event)"
-                                                @mousedown="handleMouseDown($event)"
-                                                @mousemove="handleMouseMove($event)"
-                                                @mouseup="handleMouseUp()">
+                                                @touchend="handleTouchEnd($event)">
 
                                                 <!-- Horizontal Track Sliding with Infinite Seamless Loop -->
                                                 <div class="flex h-full w-full ease-out"
@@ -1377,20 +1392,20 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Overlay Click-to-Slide Arrows on Desktop Only (Hidden on Mobile) -->
+                                                <!-- Overlay Click-to-Slide Arrows on Desktop Only (Minimalis, Tampil Saat Hover di Desktop) -->
                                                 <button type="button" @click.stop="prev()"
-                                                    class="hidden lg:flex absolute top-1/2 -translate-y-1/2 left-3.5 z-20 w-9 h-9 rounded-full bg-black/45 hover:bg-black/80 active:scale-90 text-white backdrop-blur-sm items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all duration-300 shadow-md cursor-pointer"
+                                                    class="pojok-slider-btn absolute top-1/2 -translate-y-1/2 left-3 z-20 w-8 h-8 rounded-full bg-black/30 hover:bg-black/60 active:scale-90 text-white/90 hover:text-white backdrop-blur-sm border border-white/20 items-center justify-center cursor-pointer shadow-xs"
                                                     title="Foto Sebelumnya" aria-label="Foto Sebelumnya">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                                                     </svg>
                                                 </button>
 
                                                 <button type="button" @click.stop="next()"
-                                                    class="hidden lg:flex absolute top-1/2 -translate-y-1/2 right-3.5 z-20 w-9 h-9 rounded-full bg-black/45 hover:bg-black/80 active:scale-90 text-white backdrop-blur-sm items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all duration-300 shadow-md cursor-pointer"
+                                                    class="pojok-slider-btn absolute top-1/2 -translate-y-1/2 right-3 z-20 w-8 h-8 rounded-full bg-black/30 hover:bg-black/60 active:scale-90 text-white/90 hover:text-white backdrop-blur-sm border border-white/20 items-center justify-center cursor-pointer shadow-xs"
                                                     title="Foto Berikutnya" aria-label="Foto Berikutnya">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                                     </svg>
                                                 </button>
                                             </div>
