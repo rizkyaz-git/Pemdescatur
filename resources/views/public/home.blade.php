@@ -189,8 +189,8 @@
 <!-- ========================================================= -->
 <!-- SECTION 2: BERITA TERKINI (FEATURED & EDITORIAL MAGAZINE LAYOUT) -->
 <!-- ========================================================= -->
-<section id="berita-terkini" class="w-full bg-white py-14 sm:py-16 lg:py-20 border-b border-[#c5c6ce]/50 flex items-center min-h-[580px] lg:min-h-[640px] fade-up-scroll">
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+<section id="berita-terkini" class="w-full bg-white py-10 sm:py-16 lg:py-20 border-b border-[#c5c6ce]/50 flex flex-col justify-center min-h-0 lg:min-h-[600px] fade-up-scroll">
+    <div class="w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
         
         <!-- Header Title -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200 text-center sm:text-left">
@@ -281,6 +281,8 @@
                 activeSlide: 0, 
                 totalSlides: {{ count($carouselItems) }},
                 timer: null,
+                touchStartX: 0,
+                touchStartY: 0,
                 init() {
                     this.startAutoSlide();
                 },
@@ -288,7 +290,7 @@
                     this.stopAutoSlide();
                     this.timer = setInterval(() => {
                         this.nextSlide();
-                    }, 3500);
+                    }, 4000);
                 },
                 stopAutoSlide() {
                     if (this.timer) clearInterval(this.timer);
@@ -298,8 +300,27 @@
                 },
                 prevSlide() {
                     this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides;
+                },
+                handleTouchStart(e) {
+                    this.stopAutoSlide();
+                    this.touchStartX = e.touches[0].clientX;
+                    this.touchStartY = e.touches[0].clientY;
+                },
+                handleTouchEnd(e) {
+                    const diffX = e.changedTouches[0].clientX - this.touchStartX;
+                    const diffY = e.changedTouches[0].clientY - this.touchStartY;
+                    if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
+                        if (diffX < 0) {
+                            this.nextSlide();
+                        } else {
+                            this.prevSlide();
+                        }
+                    }
+                    this.startAutoSlide();
                 }
-            }" @mouseenter="stopAutoSlide()" @mouseleave="startAutoSlide()" @touchstart="stopAutoSlide()" @touchend="startAutoSlide()">
+            }" @mouseenter="stopAutoSlide()" @mouseleave="startAutoSlide()"
+               @touchstart.passive="handleTouchStart($event)"
+               @touchend="handleTouchEnd($event)">
                 
                 <div class="relative overflow-hidden">
                     <div class="flex transition-transform duration-500 ease-out" 
@@ -308,7 +329,7 @@
                         @foreach($carouselItems as $cNews)
                             <div class="w-full shrink-0 px-0.5">
                                 <a href="{{ $cNews['url'] }}" class="group block space-y-2.5">
-                                    <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-slate-100 shadow-2xs"
+                                    <div class="relative w-full aspect-[16/9] sm:aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 shadow-2xs"
                                          x-data="{ loaded: false }"
                                          x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
                                         <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
@@ -325,7 +346,7 @@
                                         <span class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">
                                             {{ $cNews['category'] }}
                                         </span>
-                                        <h3 class="font-['Public_Sans',sans-serif] text-lg sm:text-xl font-extrabold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug">
+                                        <h3 class="font-['Public_Sans',sans-serif] text-base sm:text-lg font-extrabold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug line-clamp-2">
                                             {{ $cNews['title'] }}
                                         </h3>
                                         <div class="flex items-center gap-2 text-xs text-[#75777e] font-medium">
@@ -333,7 +354,7 @@
                                             <span>•</span>
                                             <span>{{ $cNews['author'] }}</span>
                                         </div>
-                                        <p class="text-xs text-[#44474e] leading-relaxed font-normal">
+                                        <p class="text-xs text-[#44474e] leading-relaxed font-normal line-clamp-2">
                                             {{ $cNews['excerpt'] }}
                                         </p>
                                     </div>
@@ -342,32 +363,34 @@
                         @endforeach
 
                     </div>
+                </div>
 
-                    <!-- Floating Arrow Buttons -->
+                <!-- Navigation Controls: Left/Right Arrows + Center Dots -->
+                <div class="flex items-center justify-between pt-3 px-1">
                     <button @click="prevSlide(); startAutoSlide()" 
-                            class="absolute left-2 top-[28%] -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md shadow-md text-[#191c1e] hover:bg-[#0A3D29] hover:text-white flex items-center justify-center transition-all border border-[#c5c6ce]/60"
+                            class="w-8 h-8 rounded-full bg-slate-100 hover:bg-[#0A3D29] hover:text-white text-slate-700 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer"
                             aria-label="Berita Sebelumnya">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
                         </svg>
                     </button>
 
+                    <!-- Dots Indicator -->
+                    <div class="flex items-center justify-center gap-1.5">
+                        <template x-for="i in totalSlides" :key="i">
+                            <button @click="activeSlide = i - 1; startAutoSlide()" 
+                                    class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
+                                    :class="activeSlide === (i - 1) ? 'w-5 bg-[#0A3D29]' : 'w-1.5 bg-[#c5c6ce]'"></button>
+                        </template>
+                    </div>
+
                     <button @click="nextSlide(); startAutoSlide()" 
-                            class="absolute right-2 top-[28%] -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md shadow-md text-[#191c1e] hover:bg-[#0A3D29] hover:text-white flex items-center justify-center transition-all border border-[#c5c6ce]/60"
+                            class="w-8 h-8 rounded-full bg-slate-100 hover:bg-[#0A3D29] hover:text-white text-slate-700 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer"
                             aria-label="Berita Selanjutnya">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                         </svg>
                     </button>
-                </div>
-
-                <!-- Dots Indicator -->
-                <div class="flex items-center justify-center gap-1.5 pt-3">
-                    <template x-for="i in totalSlides" :key="i">
-                        <button @click="activeSlide = i - 1; startAutoSlide()" 
-                                class="h-1.5 rounded-full transition-all duration-300"
-                                :class="activeSlide === (i - 1) ? 'w-6 bg-[#0A3D29]' : 'w-1.5 bg-[#c5c6ce]'"></button>
-                    </template>
                 </div>
             </div>
 

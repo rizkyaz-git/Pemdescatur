@@ -384,137 +384,55 @@
                                 <div class="border-t border-[#DCE6DA] pt-3.5 sm:pt-4 space-y-2 sm:space-y-2.5">
                                     <h4 class="text-xs font-semibold text-slate-500 text-center tracking-wider uppercase">
                                         Mitra Program</h4>
-                                    <!-- Tampilan Desktop & Tablet (>= sm): Sebaris Penuh (7 Logo, Proporsional & Terpusat) -->
+                                    <!-- Jajaran 7 Logo Lembaga Mitra Program (Sebaris di Mobile & Desktop) -->
                                     <div
-                                        class="hidden sm:flex items-center justify-center gap-3.5 sm:gap-4 lg:gap-4.5 w-full flex-nowrap pt-1.5">
+                                        class="flex items-center justify-between xs:justify-center gap-1.5 xs:gap-2 sm:gap-3.5 lg:gap-4.5 w-full flex-nowrap pt-1">
                                         <a href="https://kemdiktisaintek.go.id/" target="_blank" rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="Kemendiktisaintek">
                                             <img src="{{ asset('images/TUTWURI.png') }}" alt="Tut Wuri Handayani"
-                                                class="h-7.5 sm:h-8 lg:h-8.5 w-auto max-w-[60px] object-contain">
+                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
                                         </a>
                                         <a href="https://kemdiktisaintek.go.id/en" target="_blank" rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="Diktisaintek Berdampak">
                                             <img src="{{ asset('images/DIKTISAINTEK.png') }}" alt="Diktisaintek"
-                                                class="h-6.5 sm:h-7 lg:h-7.5 w-auto max-w-[88px] object-contain">
+                                                class="h-4 xs:h-4.5 sm:h-7 lg:h-7.5 w-auto max-w-[42px] xs:max-w-[48px] sm:max-w-[88px] object-contain">
                                         </a>
                                         <a href="https://ppkormawa.kemdiktisaintek.go.id/" target="_blank"
                                             rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="PPK Ormawa">
                                             <img src="{{ asset('images/PPK_ORMAWA.png') }}" alt="PPK Ormawa"
-                                                class="h-7.5 sm:h-8 lg:h-8.5 w-auto max-w-[60px] object-contain">
+                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
                                         </a>
                                         <a href="https://www.ums.ac.id/" target="_blank" rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="Universitas Muhammadiyah Surakarta">
                                             <img src="{{ asset('images/UMS.png') }}"
                                                 alt="Universitas Muhammadiyah Surakarta"
-                                                class="h-6.5 sm:h-7 lg:h-7.5 w-auto max-w-[88px] object-contain">
+                                                class="h-4 xs:h-4.5 sm:h-7 lg:h-7.5 w-auto max-w-[42px] xs:max-w-[48px] sm:max-w-[88px] object-contain">
                                         </a>
                                         <a href="https://www.instagram.com/imm_alghozali/" target="_blank"
                                             rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="Ikatan Mahasiswa Muhammadiyah Al-Ghozali Fakultas Psikologi UMS">
                                             <img src="{{ asset('images/IMMALGHO.png') }}" alt="IMM Al-Ghozali"
-                                                class="h-7.5 sm:h-8 lg:h-8.5 w-auto max-w-[60px] object-contain">
+                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
                                         </a>
                                         <a href="https://www.instagram.com/ppko_caturcerdas/" target="_blank"
                                             rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="PPK Ormawa Catur Cerdas UMS 2026">
                                             <img src="{{ asset('images/CATURCERDAS.png') }}" alt="Catur Cerdas"
-                                                class="h-7.5 sm:h-8 lg:h-8.5 w-auto max-w-[70px] object-contain">
+                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[34px] xs:max-w-[40px] sm:max-w-[70px] object-contain">
                                         </a>
                                         <a href="https://boyolali.go.id/" target="_blank" rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="Pemerintah Kabupaten Boyolali">
                                             <img src="{{ asset('images/PEMKABBYL.png') }}" alt="Pemkab Boyolali"
-                                                class="h-7.5 sm:h-8 lg:h-8.5 w-auto max-w-[60px] object-contain">
+                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
                                         </a>
-                                    </div>
-
-                                    <!-- Tampilan Mobile (< sm): 2 Baris Rata Tengah, Seragam & Rapi -->
-                                    <style>
-                                        .mobile-mitra-link {
-                                            display: inline-flex !important;
-                                            align-items: center !important;
-                                            justify-content: center !important;
-                                            width: 48px !important;
-                                            height: 32px !important;
-                                            flex-shrink: 0 !important;
-                                            transition: transform 0.2s ease !important;
-                                        }
-
-                                        .mobile-mitra-link:hover {
-                                            transform: scale(1.1) !important;
-                                        }
-
-                                        .mobile-mitra-link:active {
-                                            transform: scale(0.95) !important;
-                                        }
-
-                                        .mobile-mitra-img {
-                                            height: 24px !important;
-                                            width: auto !important;
-                                            max-width: 44px !important;
-                                            object-fit: contain !important;
-                                            display: block !important;
-                                        }
-
-                                        .mobile-mitra-img.wide {
-                                            height: 19px !important;
-                                            max-width: 46px !important;
-                                        }
-                                    </style>
-                                    <div class="sm:hidden space-y-2 pt-0.5">
-                                        <!-- Baris 1: 4 Logo (Kementerian & Perguruan Tinggi) Rata Tengah -->
-                                        <div class="flex items-center justify-center gap-2.5 w-full">
-                                            <a href="https://kemdiktisaintek.go.id/" target="_blank"
-                                                rel="noopener noreferrer" class="mobile-mitra-link"
-                                                title="Kemendiktisaintek">
-                                                <img src="{{ asset('images/TUTWURI.png') }}" alt="Tut Wuri Handayani"
-                                                    class="mobile-mitra-img">
-                                            </a>
-                                            <a href="https://kemdiktisaintek.go.id/en" target="_blank"
-                                                rel="noopener noreferrer" class="mobile-mitra-link"
-                                                title="Diktisaintek Berdampak">
-                                                <img src="{{ asset('images/DIKTISAINTEK.png') }}" alt="Diktisaintek"
-                                                    class="mobile-mitra-img wide">
-                                            </a>
-                                            <a href="https://ppkormawa.kemdiktisaintek.go.id/" target="_blank"
-                                                rel="noopener noreferrer" class="mobile-mitra-link" title="PPK Ormawa">
-                                                <img src="{{ asset('images/PPK_ORMAWA.png') }}" alt="PPK Ormawa"
-                                                    class="mobile-mitra-img">
-                                            </a>
-                                            <a href="https://www.ums.ac.id/" target="_blank" rel="noopener noreferrer"
-                                                class="mobile-mitra-link" title="Universitas Muhammadiyah Surakarta">
-                                                <img src="{{ asset('images/UMS.png') }}"
-                                                    alt="Universitas Muhammadiyah Surakarta" class="mobile-mitra-img wide">
-                                            </a>
-                                        </div>
-
-                                        <!-- Baris 2: 3 Logo (Organisasi Mahasiswa, Program & Pemkab) Rata Tengah -->
-                                        <div class="flex items-center justify-center gap-2.5 w-full">
-                                            <a href="https://www.instagram.com/imm_alghozali/" target="_blank"
-                                                rel="noopener noreferrer" class="mobile-mitra-link"
-                                                title="Ikatan Mahasiswa Muhammadiyah Al-Ghozali Fakultas Psikologi UMS">
-                                                <img src="{{ asset('images/IMMALGHO.png') }}" alt="IMM Al-Ghozali"
-                                                    class="mobile-mitra-img">
-                                            </a>
-                                            <a href="https://www.instagram.com/ppko_caturcerdas/" target="_blank"
-                                                rel="noopener noreferrer" class="mobile-mitra-link"
-                                                title="PPK Ormawa Catur Cerdas UMS 2026">
-                                                <img src="{{ asset('images/CATURCERDAS.png') }}" alt="Catur Cerdas"
-                                                    class="mobile-mitra-img">
-                                            </a>
-                                            <a href="https://boyolali.go.id/" target="_blank" rel="noopener noreferrer"
-                                                class="mobile-mitra-link" title="Pemerintah Kabupaten Boyolali">
-                                                <img src="{{ asset('images/PEMKABBYL.png') }}" alt="Pemkab Boyolali"
-                                                    class="mobile-mitra-img">
-                                            </a>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -714,14 +632,14 @@
 
                     .harmoni-cards-animate {
                         opacity: 0;
-                        transform: translateY(22px) scale(0.95);
-                        transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+                        transform: translateY(16px);
+                        transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
                         will-change: opacity, transform;
                     }
 
                     .ppko-section-entrance.is-revealed .harmoni-cards-animate {
                         opacity: 1;
-                        transform: translateY(0) scale(1);
+                        transform: translateY(0);
                     }
 
                     /* ─── Animasi Entrance Fade Deskripsi Pojok (Mengalir Mengikuti) ─── */
@@ -1259,11 +1177,11 @@
                                                     Pelajari selengkapnya tentang {{ strtolower($pojok->nama) }}
                                                 </span>
 
-                                                <!-- Ikon Arrow Style Outline Murni (Menghadap Bawah secara Default, Berputar 180 ke Atas Saat Dibuka) -->
+                                                <!-- Ikon Arrow: Menghadap ke Atas Saat Belum Dibuka, Berputar 180 ke Bawah Saat Dibuka -->
                                                 <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px] transform transition-transform duration-300 ease-out stroke-[2.5] transition-colors {{ $isDark ? 'text-white/70 group-hover:text-emerald-300' : 'text-slate-500 group-hover:text-emerald-800' }}"
                                                     :class="expanded ? 'rotate-180 {{ $isDark ? 'text-emerald-300' : 'text-emerald-800' }}' : ''"
                                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
                                                 </svg>
                                             </button>
                                         </div>
@@ -1353,8 +1271,8 @@
                                             @mouseleave="handleMouseUp()"
                                             class="harmoni-cards-animate w-full">
 
-                                            <!-- RECTANGULAR SLIDER FRAME (Ukuran Proporsional Mengikuti Kontainer Elemen Lain, Sedikit Lebih Rounded) -->
-                                            <div class="relative w-full h-[250px] xs:h-[280px] sm:h-[320px] md:h-[350px] lg:h-[360px] xl:h-[380px] overflow-hidden bg-slate-900/10 cursor-grab active:cursor-grabbing select-none touch-pan-y group shadow-md rounded-xl sm:rounded-2xl border border-black/5 {{ $isDark ? 'border-white/10' : 'border-slate-200' }}"
+                                            <!-- RECTANGULAR SLIDER FRAME (16:9 Pipih pada Mobile, Tetap pada Desktop) -->
+                                            <div class="relative w-full aspect-[16/9] lg:aspect-auto lg:h-[360px] xl:h-[380px] overflow-hidden bg-slate-900/10 cursor-grab active:cursor-grabbing select-none touch-pan-y group shadow-md rounded-xl sm:rounded-2xl border border-black/5 {{ $isDark ? 'border-white/10' : 'border-slate-200' }}"
                                                 @touchstart.passive="handleTouchStart($event)"
                                                 @touchend="handleTouchEnd($event)"
                                                 @mousedown="handleMouseDown($event)"
@@ -1390,9 +1308,9 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Overlay Click-to-Slide Arrows on Hover / Focus -->
+                                                <!-- Overlay Click-to-Slide Arrows on Desktop Only (Hidden on Mobile) -->
                                                 <button type="button" @click.stop="prev()"
-                                                    class="absolute top-1/2 -translate-y-1/2 left-3 sm:left-4 w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-black/50 hover:bg-black/80 text-white backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 group-active:opacity-100 focus:opacity-100 transition-all duration-300 shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                                                    class="hidden lg:flex absolute top-1/2 -translate-y-1/2 left-3.5 z-20 w-9 h-9 rounded-full bg-black/45 hover:bg-black/80 active:scale-90 text-white backdrop-blur-sm items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all duration-300 shadow-md cursor-pointer"
                                                     title="Foto Sebelumnya" aria-label="Foto Sebelumnya">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
@@ -1400,7 +1318,7 @@
                                                 </button>
 
                                                 <button type="button" @click.stop="next()"
-                                                    class="absolute top-1/2 -translate-y-1/2 right-3 sm:right-4 w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-black/50 hover:bg-black/80 text-white backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 group-active:opacity-100 focus:opacity-100 transition-all duration-300 shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                                                    class="hidden lg:flex absolute top-1/2 -translate-y-1/2 right-3.5 z-20 w-9 h-9 rounded-full bg-black/45 hover:bg-black/80 active:scale-90 text-white backdrop-blur-sm items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all duration-300 shadow-md cursor-pointer"
                                                     title="Foto Berikutnya" aria-label="Foto Berikutnya">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
@@ -1415,12 +1333,12 @@
                                                 <div class="relative flex-1 min-h-[34px] sm:min-h-[38px] grid grid-cols-1 grid-rows-1 items-center overflow-hidden">
                                                     @foreach($cardDescs as $idx => $desc)
                                                         <div x-show="current === {{ $idx }}"
-                                                             x-transition:enter="transition-all duration-400 ease-out delay-100"
-                                                             x-transition:enter-start="opacity-0 translate-y-1"
-                                                             x-transition:enter-end="opacity-100 translate-y-0"
-                                                             x-transition:leave="transition-all duration-200 ease-in"
-                                                             x-transition:leave-start="opacity-100 translate-y-0"
-                                                             x-transition:leave-end="opacity-0 -translate-y-1"
+                                                             x-transition:enter="transition-opacity duration-300 ease-out delay-150"
+                                                             x-transition:enter-start="opacity-0"
+                                                             x-transition:enter-end="opacity-100"
+                                                             x-transition:leave="transition-opacity duration-150 ease-in"
+                                                             x-transition:leave-start="opacity-100"
+                                                             x-transition:leave-end="opacity-0"
                                                              class="col-start-1 row-start-1 flex items-center pr-2">
                                                             
                                                             <p class="text-xs sm:text-[13px] leading-snug font-medium italic {{ $isDark ? 'text-white/85' : 'text-slate-600' }} line-clamp-2">
@@ -1530,50 +1448,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- ========================================================================= -->
-        <!-- ========================================================================= -->
-        <!-- FLOATING MOBILE BOTTOM DOCK: MORPHING CAPSULE (KEMBALI KE ATAS & POJOK NAVIGATOR) -->
-        <!-- ========================================================================= -->
-        <div class="fixed bottom-6 right-6 z-[99999] md:hidden font-sans pointer-events-auto flex items-center h-11 sm:h-12 rounded-full bg-white/80 backdrop-blur-3xl backdrop-saturate-200 border-2 border-white ring-1 ring-[#0A3D29]/25 shadow-2xl text-[#0A3D29] overflow-hidden select-none p-0.5 transition-all duration-500 ease-out"
-            :title="inPojokSection ? ('Pojok Aktif: ' + activeName) : 'Kembali ke Atas'">
-
-            <!-- Bagian Melebar ke Samping saat Masuk Katalog Pojok (Indikator & Panah Bawah) -->
-            <div class="flex items-center transition-all duration-500 ease-out overflow-hidden"
-                :class="inPojokSection ? 'max-w-[260px] opacity-100' : 'max-w-0 opacity-0 pointer-events-none'">
-
-                <!-- Keterangan Pojok (Indikator) -->
-                <div class="pl-3.5 pr-2.5 sm:pl-4 sm:pr-3 py-1 flex items-center shrink-0">
-                    <span class="text-xs sm:text-sm font-bold tracking-tight text-[#0A3D29] whitespace-nowrap"
-                        x-text="activeName"></span>
-                </div>
-
-                <!-- Garis Pemisah Antara Indikator & Tombol Ke Bawah -->
-                <div class="h-5 sm:h-6 w-px bg-[#0A3D29]/20 shrink-0"></div>
-
-                <!-- Tombol Panah Ke Bawah (Kiri: Pojok Selanjutnya) -->
-                <button type="button" @click="nextPojok()"
-                    class="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-[#0A3D29] active:bg-slate-900/[0.18] active:scale-90 transition-all cursor-pointer shrink-0"
-                    aria-label="Pojok Selanjutnya" title="Pojok Selanjutnya">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-
-                <!-- Garis Pemisah Antara Tombol Bawah & Tombol Atas -->
-                <div class="h-5 sm:h-6 w-px bg-[#0A3D29]/20 shrink-0"></div>
-            </div>
-
-            <!-- Tombol Panah Ke Atas / Kembali ke Atas (Selalu Tampil di Luar Maupun di Dalam Katalog Pojok) -->
-            <button type="button" @click="prevPojok()"
-                class="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-[#0A3D29] active:bg-slate-900/[0.18] active:scale-90 transition-all cursor-pointer shrink-0"
-                :aria-label="inPojokSection ? 'Pojok Sebelumnya / Kembali ke Atas' : 'Kembali ke Atas'"
-                :title="inPojokSection ? 'Pojok Sebelumnya / Kembali ke Atas' : 'Kembali ke Atas'">
-                <svg class="w-5 h-5 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7" />
-                </svg>
-            </button>
         </div>
 
     </div>
