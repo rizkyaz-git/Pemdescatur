@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Gallery;
 use App\Models\News;
 use App\Models\Official;
-use App\Models\LetterRequest;
+use App\Models\LetterTemplate;
 use App\Models\Complaint;
+use App\Models\Pojok;
+use App\Models\User;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -18,8 +20,10 @@ class DashboardController extends Controller
             'news_count' => News::count(),
             'officials_count' => Official::count(),
             'galleries_count' => Gallery::count(),
-            'pending_letters_count' => LetterRequest::where('status', 'pending')->count(),
+            'letter_templates_count' => LetterTemplate::count(),
             'new_complaints_count' => Complaint::where('status', 'new')->count(),
+            'users_count' => User::count(),
+            'pojoks_count' => class_exists(Pojok::class) ? Pojok::count() : 4,
         ];
 
         $latestNews = News::latest()->take(5)->get();

@@ -28,7 +28,7 @@
                         class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm font-semibold @error('template_id') border-red-500 @enderror">
                         <option value="">-- Pilih Jenis Surat Administrasi --</option>
                         @foreach($templates as $tpl)
-                            <option value="{{ $tpl->id }}" {{ old('template_id') == $tpl->id ? 'selected' : '' }}>
+                            <option value="{{ $tpl->id }}" {{ (old('template_id', request('template_id')) == $tpl->id) ? 'selected' : '' }}>
                                 {{ $tpl->title ?? $tpl->name }} ({{ $tpl->code }})
                             </option>
                         @endforeach

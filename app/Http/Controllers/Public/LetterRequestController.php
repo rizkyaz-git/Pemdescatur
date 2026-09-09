@@ -12,30 +12,42 @@ use Illuminate\Http\RedirectResponse;
 class LetterRequestController extends Controller
 {
     /**
-     * Display list / search of letter requests
+     * Display list / search of ready-to-print letter templates
      */
     public function index(Request $request): View
     {
         $search = trim($request->input('search', ''));
 
-        $query = LetterRequest::with('template');
+        $query = LetterTemplate::query();
 
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
-                $q->where('ticket_number', 'like', "%{$search}%")
-                  ->orWhere('form_data', 'like', "%{$search}%");
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('code', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('requirements', 'like', "%{$search}%");
             });
-        } elseif (auth()->check()) {
-            $query->where('user_id', auth()->id());
-        } else {
-            // For guest with no search, show empty or recent public tickets
-            $query->whereNull('user_id');
         }
 
-        $requests = $query->latest()->paginate(10)->withQueryString();
-        $templates = LetterTemplate::all();
+        $templates = $query->orderBy('name')->get();
 
-        return view('public.layanan.surat.index', compact('requests', 'templates', 'search'));
+        return view('public.layanan.surat.index', compact('templates', 'search'));
+    }
+
+    /**
+     * Download the ready-to-print template file
+     */
+    public function downloadTemplate(LetterTemplate $letterTemplate)
+    {
+        if (!$letterTemplate->file_path || !\Illuminate\Support\Facades\Storage::disk('public')->exists($letterTemplate->file_path)) {
+            return back()->with('error', 'File template surat belum tersedia untuk diunduh. Silakan hubungi perangkat Desa Catur.');
+        }
+
+        $ext = pathinfo($letterTemplate->file_path, PATHINFO_EXTENSION);
+        $filename = 'Template_' . \Illuminate\Support\Str::slug($letterTemplate->name, '_') . ($ext ? '.' . $ext : '.doc');
+        $fullPath = \Illuminate\Support\Facades\Storage::disk('public')->path($letterTemplate->file_path);
+
+        return response()->download($fullPath, $filename);
     }
 
     /**

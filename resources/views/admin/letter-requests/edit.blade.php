@@ -4,23 +4,16 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto space-y-6">
-    <div class="flex items-center justify-between">
-        <div>
-            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-[#0F4C3A] border border-emerald-100 mb-2">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-                <span>Proses Layanan Surat</span>
-            </div>
-            <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Proses Permohonan Surat</h1>
-            <p class="text-xs text-[#64748B] mt-1">Tiket Permohonan: <strong class="font-mono text-[#0F4C3A] tabular-nums font-bold">{{ $request->ticket_number }}</strong></p>
-        </div>
-        <a href="{{ route('admin.letter-requests.index') }}" class="inline-flex items-center gap-1.5 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl border border-[#E2E8F0] transition shadow-xs">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="flex items-center gap-3.5">
+        <a href="{{ route('admin.letter-requests.index') }}" 
+           class="w-10 h-10 rounded-xl bg-white border border-[#E2E8F0] hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs shrink-0"
+           title="Kembali"
+           aria-label="Kembali">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
             </svg>
-            <span>Kembali</span>
         </a>
+        <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Proses Permohonan Surat</h1>
     </div>
 
     <div class="bg-white rounded-[20px] border border-[#E2E8F0] shadow-xs p-6 sm:p-8">

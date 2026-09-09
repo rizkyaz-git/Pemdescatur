@@ -4,14 +4,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Panel') - Smart Village Civic OS Desa Catur</title>
+    <title>@yield('title', 'Admin Panel') - Desa Catur</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('styles')
 </head>
 
-<body class="bg-[#F4F6F5] font-sans antialiased text-[#111C2D] min-h-screen flex" x-data="{ sidebarOpen: false }">
+<body class="bg-[#F4F6F5] font-sans antialiased text-[#111C2D] min-h-screen flex" x-data="{ 
+          sidebarOpen: false, 
+          searchModalOpen: false,
+          searchQuery: '',
+          selectedIndex: 0,
+          adminItems: [
+              { title: 'Dashboard', category: 'Navigasi Utama', url: '{{ route('admin.dashboard') }}', keywords: 'home beranda ringkasan statistik metric kpi' },
+              { title: 'Pengaturan Profil Saya', category: 'Pengaturan', url: '{{ route('admin.profile.edit') }}', keywords: 'profil saya foto profil nama sandi password akun' },
+              @if(Auth::user()->canAccessNews())
+              { title: 'Berita & Pengumuman', category: 'Kelola Konten', url: '{{ route('admin.news.index') }}', keywords: 'berita warta pengumuman kabar publikasi artikel informasi' },
+              { title: 'Tambah Berita Baru', category: 'Kelola Konten', url: '{{ route('admin.news.create') }}', keywords: 'tambah berita buat warta tulis artikel baru' },
+              @endif
+              @if(Auth::user()->canAccessVillageProfile())
+              { title: 'Profil Desa & Visi Misi', category: 'Kelola Konten', url: '{{ route('admin.village-profile.edit') }}', keywords: 'profil visi misi sejarah gambaran umum batas wilayah' },
+              @endif
+              @if(Auth::user()->canAccessOfficials())
+              { title: 'Perangkat Desa', category: 'Kelola Konten', url: '{{ route('admin.officials.index') }}', keywords: 'perangkat aparatur pamong kades sekdes kaur kasi kadus struktur organisasi' },
+              { title: 'Tambah Perangkat Desa', category: 'Kelola Konten', url: '{{ route('admin.officials.create') }}', keywords: 'tambah perangkat aparatur pamong baru' },
+              @endif
+              @if(Auth::user()->canAccessGalleries())
+              { title: 'Galeri Foto Kegiatan', category: 'Kelola Konten', url: '{{ route('admin.galleries.index') }}', keywords: 'galeri foto dokumentasi gambar album kegiatan' },
+              { title: 'Tambah Foto Galeri', category: 'Kelola Konten', url: '{{ route('admin.galleries.create') }}', keywords: 'tambah foto galeri dokumentasi album baru' },
+              @endif
+              @if(Auth::user()->canAccessPpko())
+              { title: 'Admin PPKO Cerdas', category: 'PPK Ormawa', url: '{{ route('admin.ppko.index') }}', keywords: 'ppko ppk ormawa pojok literasi tani budaya ceria modul kegiatan' },
+              @endif
+              @if(Auth::user()->canAccessPublicServices())
+              { title: 'Template Surat Resmi', category: 'Layanan Publik', url: '{{ route('admin.letter-templates.index') }}', keywords: 'template surat format permohonan skck sku sktm domisili' },
+              { title: 'Tambah Template Surat', category: 'Layanan Publik', url: '{{ route('admin.letter-templates.create') }}', keywords: 'buat tambah template surat baru' },
+              { title: 'Pengaduan & Aspirasi Warga', category: 'Layanan Publik', url: '{{ route('admin.complaints.index') }}', keywords: 'pengaduan keluhan aspirasi laporan pesan warga' },
+              @endif
+              @if(Auth::user()->canManageSettings())
+              { title: 'Pengaturan Website & Identitas', category: 'Pengaturan', url: '{{ route('admin.settings.edit') }}', keywords: 'pengaturan setting logo hero kontak alamat nomor telepon email perpustakaan' },
+              @endif
+              @if(Auth::user()->canManageUsers())
+              { title: 'Kelola Pengguna & Hak Akses', category: 'Pengaturan', url: '{{ route('admin.users.index') }}', keywords: 'pengguna user admin akun password tambah edit hapus role' },
+              { title: 'Tambah Pengguna Baru', category: 'Pengaturan', url: '{{ route('admin.users.create') }}', keywords: 'tambah pengguna baru akun admin role' },
+              @endif
+          ],
+          get filteredAdminItems() {
+              if (!this.searchQuery.trim()) return this.adminItems;
+              const q = this.searchQuery.toLowerCase().trim();
+              return this.adminItems.filter(item => 
+                  item.title.toLowerCase().includes(q) || 
+                  item.category.toLowerCase().includes(q) || 
+                  item.keywords.toLowerCase().includes(q)
+              );
+          },
+          openSelected() {
+              const items = this.filteredAdminItems;
+              if (items.length > 0 && items[this.selectedIndex]) {
+                  window.location.href = items[this.selectedIndex].url;
+              }
+          }
+      }" x-init="$watch('searchQuery', () => { selectedIndex = 0; })"
+    @keydown.window="if (($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'k') { $event.preventDefault(); searchModalOpen = true; $nextTick(() => { if ($refs.adminSearchInput) { $refs.adminSearchInput.focus(); selectedIndex = 0; } }); } else if ($event.key === 'Escape') { searchModalOpen = false; }">
 
     <!-- Mobile Sidebar Backdrop with Blur -->
     <div x-show="sidebarOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
@@ -19,9 +74,9 @@
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="sidebarOpen = false"
         class="fixed inset-0 bg-[#072C21]/60 backdrop-blur-xs z-40 lg:hidden"></div>
 
-    <!-- Sidebar Navigation (Smart Village Civic OS) -->
+    <!-- Sidebar Navigation -->
     <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-        class="fixed lg:static inset-y-0 left-0 z-50 w-[270px] bg-[#072C21] text-white flex flex-col transition-transform duration-250 ease-in-out lg:translate-x-0 border-r border-[#0F4C3A]/50 shadow-2xl lg:shadow-none">
+        class="fixed lg:sticky top-0 inset-y-0 left-0 z-50 w-[270px] h-screen bg-[#072C21] text-white flex flex-col shrink-0 transition-transform duration-250 ease-in-out lg:translate-x-0 border-r border-[#0F4C3A]/50 shadow-2xl lg:shadow-none">
 
         <!-- Sidebar Brand Header -->
         <div class="h-[76px] bg-[#052219] flex items-center px-5 gap-3 border-b border-white/10 shrink-0">
@@ -38,13 +93,7 @@
                 </div>
             @endif
             <div class="min-w-0 flex-1">
-                <div class="flex items-center gap-1.5">
-                    <h1 class="font-jakarta font-bold text-sm text-white leading-tight truncate">Pemerintah Desa</h1>
-                </div>
-                <span
-                    class="inline-block text-[9.5px] font-bold text-[#86EFAC] tracking-wider uppercase opacity-90 truncate">
-                    Civic OS • Desa Catur
-                </span>
+                <h1 class="font-jakarta font-bold text-sm text-white leading-tight truncate">Halaman Admin</h1>
             </div>
         </div>
 
@@ -68,10 +117,12 @@
             </a>
 
             <!-- SECTION: KELOLA KONTEN -->
+            @if(Auth::user()->canAccessVillageProfile() || Auth::user()->canAccessNews() || Auth::user()->canAccessOfficials() || Auth::user()->canAccessGalleries())
             <div class="pt-4 pb-1">
                 <p class="px-3.5 text-[10px] font-bold text-[#82BBA4] uppercase tracking-wider">Kelola Konten</p>
             </div>
 
+            @if(Auth::user()->canAccessVillageProfile())
             <a href="{{ route('admin.village-profile.edit') }}"
                 class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.village-profile.*') ? 'bg-[#0F4C3A] text-white shadow-xs' : 'text-[#BFC9C3] hover:bg-white/[0.07] hover:text-white' }}">
                 <div class="flex items-center gap-3 min-w-0">
@@ -86,7 +137,9 @@
                     <span class="w-1.5 h-3.5 rounded-full bg-[#22C55E]"></span>
                 @endif
             </a>
+            @endif
 
+            @if(Auth::user()->canAccessNews())
             <a href="{{ route('admin.news.index') }}"
                 class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.news.*') ? 'bg-[#0F4C3A] text-white shadow-xs' : 'text-[#BFC9C3] hover:bg-white/[0.07] hover:text-white' }}">
                 <div class="flex items-center gap-3 min-w-0">
@@ -101,7 +154,9 @@
                     <span class="w-1.5 h-3.5 rounded-full bg-[#22C55E]"></span>
                 @endif
             </a>
+            @endif
 
+            @if(Auth::user()->canAccessOfficials())
             <a href="{{ route('admin.officials.index') }}"
                 class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.officials.*') ? 'bg-[#0F4C3A] text-white shadow-xs' : 'text-[#BFC9C3] hover:bg-white/[0.07] hover:text-white' }}">
                 <div class="flex items-center gap-3 min-w-0">
@@ -116,7 +171,9 @@
                     <span class="w-1.5 h-3.5 rounded-full bg-[#22C55E]"></span>
                 @endif
             </a>
+            @endif
 
+            @if(Auth::user()->canAccessGalleries())
             <a href="{{ route('admin.galleries.index') }}"
                 class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.galleries.*') ? 'bg-[#0F4C3A] text-white shadow-xs' : 'text-[#BFC9C3] hover:bg-white/[0.07] hover:text-white' }}">
                 <div class="flex items-center gap-3 min-w-0">
@@ -131,8 +188,11 @@
                     <span class="w-1.5 h-3.5 rounded-full bg-[#22C55E]"></span>
                 @endif
             </a>
+            @endif
+            @endif
 
             <!-- SECTION: PPK ORMAWA -->
+            @if(Auth::user()->canAccessPpko())
             <div class="pt-4 pb-1">
                 <p class="px-3.5 text-[10px] font-bold text-[#82BBA4] uppercase tracking-wider">PPK Ormawa</p>
             </div>
@@ -151,8 +211,10 @@
                     <span class="w-1.5 h-3.5 rounded-full bg-[#22C55E]"></span>
                 @endif
             </a>
+            @endif
 
             <!-- SECTION: LAYANAN PUBLIK -->
+            @if(Auth::user()->canAccessPublicServices())
             <div class="pt-4 pb-1">
                 <p class="px-3.5 text-[10px] font-bold text-[#82BBA4] uppercase tracking-wider">Layanan Publik</p>
             </div>
@@ -172,21 +234,6 @@
                 @endif
             </a>
 
-            <a href="{{ route('admin.letter-requests.index') }}"
-                class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.letter-requests.*') ? 'bg-[#0F4C3A] text-white shadow-xs' : 'text-[#BFC9C3] hover:bg-white/[0.07] hover:text-white' }}">
-                <div class="flex items-center gap-3 min-w-0">
-                    <svg class="w-4 h-4 shrink-0 transition-colors {{ request()->routeIs('admin.letter-requests.*') ? 'text-[#86EFAC]' : 'text-[#82BBA4] group-hover:text-white' }}"
-                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                    </svg>
-                    <span class="truncate">Permohonan Surat</span>
-                </div>
-                @if(request()->routeIs('admin.letter-requests.*'))
-                    <span class="w-1.5 h-3.5 rounded-full bg-[#22C55E]"></span>
-                @endif
-            </a>
-
             <a href="{{ route('admin.complaints.index') }}"
                 class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.complaints.*') ? 'bg-[#0F4C3A] text-white shadow-xs' : 'text-[#BFC9C3] hover:bg-white/[0.07] hover:text-white' }}">
                 <div class="flex items-center gap-3 min-w-0">
@@ -201,12 +248,14 @@
                     <span class="w-1.5 h-3.5 rounded-full bg-[#22C55E]"></span>
                 @endif
             </a>
+            @endif
 
             <!-- SECTION: PENGATURAN -->
             <div class="pt-4 pb-1">
                 <p class="px-3.5 text-[10px] font-bold text-[#82BBA4] uppercase tracking-wider">Pengaturan</p>
             </div>
 
+            @if(Auth::user()->canManageSettings())
             <a href="{{ route('admin.settings.edit') }}"
                 class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.settings.*') ? 'bg-[#0F4C3A] text-white shadow-xs' : 'text-[#BFC9C3] hover:bg-white/[0.07] hover:text-white' }}">
                 <div class="flex items-center gap-3 min-w-0">
@@ -222,29 +271,47 @@
                     <span class="w-1.5 h-3.5 rounded-full bg-[#22C55E]"></span>
                 @endif
             </a>
-        </nav>
+            @endif
 
-        <!-- Sidebar Footer -->
-        <div class="p-3.5 border-t border-white/10 bg-[#052219]">
-            <a href="{{ route('home') }}" target="_blank"
-                class="flex items-center justify-between w-full px-3.5 py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-xs font-semibold text-white transition duration-150 group">
-                <span class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-[#22C55E] animate-pulse"></span>
-                    <span>Portal Publik</span>
-                </span>
-                <svg class="w-3.5 h-3.5 text-[#86EFAC] group-hover:translate-x-0.5 transition-transform" fill="none"
-                    stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                </svg>
+            @if(Auth::user()->canManageUsers())
+            <a href="{{ route('admin.users.index') }}"
+                class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.users.*') ? 'bg-[#0F4C3A] text-white shadow-xs' : 'text-[#BFC9C3] hover:bg-white/[0.07] hover:text-white' }}">
+                <div class="flex items-center gap-3 min-w-0">
+                    <svg class="w-4 h-4 shrink-0 transition-colors {{ request()->routeIs('admin.users.*') ? 'text-[#86EFAC]' : 'text-[#82BBA4] group-hover:text-white' }}"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                    </svg>
+                    <span class="truncate">Kelola Pengguna</span>
+                </div>
+                @if(request()->routeIs('admin.users.*'))
+                    <span class="w-1.5 h-3.5 rounded-full bg-[#22C55E]"></span>
+                @endif
             </a>
-        </div>
+            @endif
+
+            <!-- Profil Saya (Dapat diakses oleh semua peran) -->
+            <a href="{{ route('admin.profile.edit') }}"
+                class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.profile.*') ? 'bg-[#0F4C3A] text-white shadow-xs' : 'text-[#BFC9C3] hover:bg-white/[0.07] hover:text-white' }}">
+                <div class="flex items-center gap-3 min-w-0">
+                    <svg class="w-4 h-4 shrink-0 transition-colors {{ request()->routeIs('admin.profile.*') ? 'text-[#86EFAC]' : 'text-[#82BBA4] group-hover:text-white' }}"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.964 0a9 9 0 10-11.964 0m11.964 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span class="truncate">Profil Saya</span>
+                </div>
+                @if(request()->routeIs('admin.profile.*'))
+                    <span class="w-1.5 h-3.5 rounded-full bg-[#22C55E]"></span>
+                @endif
+            </a>
+        </nav>
     </aside>
 
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col min-w-0">
 
-        <!-- Top Navigation Header (Smart Village Civic OS Top Bar) -->
+        <!-- Top Navigation Header -->
         <header
             class="bg-white shadow-[0_1px_3px_rgba(15,76,58,0.04),0_1px_2px_rgba(0,0,0,0.02)] h-[72px] flex items-center justify-between px-4 sm:px-8 border-b border-[#E2E8F0] sticky top-0 z-30">
 
@@ -263,45 +330,79 @@
                     <h2 class="font-jakarta font-bold text-base sm:text-lg text-[#111C2D] truncate">
                         @yield('title', 'Dashboard')
                     </h2>
-                    <p class="hidden sm:block text-[11px] font-medium text-[#64748B]">
-                        Sistem Informasi Tata Kelola Pemerintahan Desa Catur
-                    </p>
                 </div>
             </div>
 
             <!-- Right: Action Pills, User Profile & Logout -->
             <div class="flex items-center gap-2 sm:gap-3 shrink-0">
 
-                <!-- Quick Search / Shortcut Indicator (Desktop) -->
-                <div
-                    class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F4F6F5] border border-[#E2E8F0] text-xs text-[#64748B]">
-                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
+                <!-- 1. Interactive Admin Search Button (Trigger Modal) -->
+                <button type="button"
+                    @click="searchModalOpen = true; $nextTick(() => { if ($refs.adminSearchInput) { $refs.adminSearchInput.focus(); selectedIndex = 0; } });"
+                    title="Cari menu & layanan admin (Ctrl+K)"
+                    class="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#F4F6F5] hover:bg-[#E2E8F0] border border-[#E2E8F0] text-xs text-[#64748B] hover:text-slate-900 transition-colors shadow-2xs group cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none"
+                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                     </svg>
-                    <span class="text-[11px] font-medium">Cari</span>
+                    <span class="text-[11px] font-medium hidden md:inline">Cari menu admin...</span>
+                    <span class="text-[11px] font-medium md:hidden">Cari</span>
                     <kbd
-                        class="text-[10px] font-semibold bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-500 font-mono">⌘K</kbd>
-                </div>
+                        class="hidden sm:inline-block text-[10px] font-semibold bg-white px-1.5 py-0.2 rounded border border-slate-200 text-slate-500 font-mono shadow-3xs">⌘K</kbd>
+                </button>
+
+                <!-- 2. Preview Publik Button (Moved to top bar beside search) -->
+                <a href="{{ route('home') }}" target="_blank" title="Buka Portal Publik di tab baru"
+                    class="inline-flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#0F4C3A] text-xs font-bold border border-emerald-200/80 transition-all duration-150 shadow-2xs group shrink-0">
+                    <span class="relative flex h-2 w-2">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+                    </span>
+                    <span class="hidden sm:inline">Portal Publik</span>
+                    <svg class="w-3.5 h-3.5 text-[#0F4C3A]/70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                    </svg>
+                </a>
 
                 <!-- User Profile Pill -->
-                <div class="flex items-center gap-2.5 pl-2 sm:pl-3 sm:border-l border-[#E2E8F0]">
-                    <div
-                        class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#0F4C3A] text-[#86EFAC] font-jakarta font-bold flex items-center justify-center text-xs shadow-xs ring-2 ring-[#0F4C3A]/10">
-                        {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
+                <a href="{{ route('admin.profile.edit') }}" title="Buka Pengaturan Profil Saya" class="flex items-center gap-2.5 pl-2 sm:pl-3 sm:border-l border-[#E2E8F0] hover:opacity-90 transition group">
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden bg-[#0F4C3A] text-white font-jakarta font-bold flex items-center justify-center text-xs shadow-xs ring-2 ring-[#0F4C3A]/10 shrink-0">
+                        @if(Auth::user()->avatar_url)
+                            <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
+                        @else
+                            <span>{{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}</span>
+                        @endif
                     </div>
                     <div class="text-left hidden sm:block">
-                        <p class="text-xs font-bold text-[#111C2D] leading-tight">
-                            {{ Auth::user()->name ?? 'Admin Desa' }}
+                        <p class="text-xs font-bold text-[#111C2D] leading-tight truncate max-w-[130px] group-hover:text-[#0F4C3A] transition-colors">
+                            {{ Auth::user()->name ?? 'Admin' }}
                         </p>
-                        <span
-                            class="inline-flex items-center gap-1 text-[10px] font-bold text-[#15803D] bg-[#DCFCE7] px-1.5 py-0.2 rounded-full">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[#15803D]"></span>
-                            Operator
-                        </span>
+                        @if(Auth::user()->isSuperAdmin())
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-purple-700 bg-purple-100 px-1.5 py-0.2 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+                                Super Admin
+                            </span>
+                        @elseif(Auth::user()->isAdminPemdes())
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-[#15803D] bg-[#DCFCE7] px-1.5 py-0.2 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#15803D]"></span>
+                                Admin Pemdes
+                            </span>
+                        @elseif(Auth::user()->isPpkOrmawa())
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                                PPK Ormawa
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-slate-700 bg-slate-100 px-1.5 py-0.2 rounded-full">
+                                {{ Auth::user()->role_label }}
+                            </span>
+                        @endif
                     </div>
-                </div>
+                </a>
 
                 <!-- Modern Logout Button -->
                 <form method="POST" action="{{ route('logout') }}" class="inline">
@@ -368,6 +469,91 @@
 
             @yield('content')
         </main>
+    </div>
+
+    <!-- Interactive Admin Command Center / Search Modal -->
+    <div x-show="searchModalOpen" x-transition:enter="transition ease-out duration-150"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-50 overflow-y-auto p-4 sm:p-6 md:p-20 bg-[#072C21]/60 backdrop-blur-xs flex items-start justify-center"
+        style="display: none;" @click.self="searchModalOpen = false">
+
+        <div class="w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-[#E2E8F0] overflow-hidden transition-all transform mt-8 sm:mt-14"
+            @click.away="searchModalOpen = false">
+
+            <!-- Search Header & Input -->
+            <div class="relative flex items-center border-b border-[#E2E8F0] px-4 py-3.5 bg-white">
+                <svg class="w-5 h-5 text-[#0F4C3A] shrink-0 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+                <input type="text" x-ref="adminSearchInput" x-model="searchQuery"
+                    @keydown.arrow-down.prevent="selectedIndex = (selectedIndex + 1) % (filteredAdminItems.length || 1)"
+                    @keydown.arrow-up.prevent="selectedIndex = (selectedIndex - 1 + (filteredAdminItems.length || 1)) % (filteredAdminItems.length || 1)"
+                    @keydown.enter.prevent="openSelected()"
+                    placeholder="Cari menu, layanan surat, berita, atau modul..."
+                    class="w-full bg-transparent border-0 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:ring-0 p-0">
+                <button type="button" @click="searchModalOpen = false"
+                    class="text-xs text-slate-400 hover:text-slate-600 px-2 py-1 rounded-md bg-slate-100 cursor-pointer">
+                    ESC
+                </button>
+            </div>
+
+            <!-- Search Results List -->
+            <div class="max-h-80 overflow-y-auto p-2 divide-y divide-slate-100 custom-scrollbar">
+                <template x-for="(item, index) in filteredAdminItems" :key="item.url + item.title">
+                    <a :href="item.url" @mouseenter="selectedIndex = index"
+                        class="flex items-center justify-between p-3 rounded-xl text-xs transition-colors group"
+                        :class="selectedIndex === index ? 'bg-[#0F4C3A] text-white' : 'hover:bg-slate-50 text-slate-700'">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors"
+                                :class="selectedIndex === index ? 'bg-white/15 text-[#86EFAC]' : 'bg-emerald-50 text-[#0F4C3A]'">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                </svg>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="font-bold truncate"
+                                    :class="selectedIndex === index ? 'text-white' : 'text-[#0F172A]'"
+                                    x-text="item.title"></p>
+                                <p class="text-[10px] truncate"
+                                    :class="selectedIndex === index ? 'text-white/75' : 'text-slate-400'"
+                                    x-text="item.category"></p>
+                            </div>
+                        </div>
+                        <svg class="w-4 h-4 shrink-0 transition-transform"
+                            :class="selectedIndex === index ? 'text-[#86EFAC] translate-x-0.5' : 'text-slate-300 opacity-0 group-hover:opacity-100'"
+                            fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </template>
+
+                <!-- Empty State -->
+                <div x-show="filteredAdminItems.length === 0" class="py-10 text-center text-slate-400">
+                    <p class="text-xs font-semibold text-slate-600">Tidak ada menu yang cocok</p>
+                    <p class="text-[11px] text-slate-400 mt-1">Coba kata kunci lain seperti "surat", "berita",
+                        "perangkat", "galeri", atau "pengaturan".</p>
+                </div>
+            </div>
+
+            <!-- Footer Hint -->
+            <div
+                class="px-4 py-2.5 bg-[#F8FAFC] border-t border-[#E2E8F0] flex items-center justify-between text-[11px] text-slate-500">
+                <span class="flex items-center gap-1.5">
+                    <kbd class="px-1.5 py-0.5 rounded bg-white border border-slate-200 text-[10px] font-mono">↑↓</kbd>
+                    Navigasi
+                    <kbd
+                        class="px-1.5 py-0.5 rounded bg-white border border-slate-200 text-[10px] font-mono ml-2">↵</kbd>
+                    Buka
+                </span>
+                <span>Pencarian Cepat Panel Admin</span>
+            </div>
+        </div>
     </div>
 
     @stack('scripts')

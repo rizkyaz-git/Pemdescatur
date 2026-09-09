@@ -1,76 +1,133 @@
 @extends('layouts.public')
 
-@section('title', 'Detail Tanggapan Pengaduan - Desa Catur')
+@section('title', 'Detail Tanggapan Pengaduan - Pemerintah Desa Catur')
+@section('meta_description', 'Pantau detail tindak lanjut dan respon resmi Pemerintah Desa Catur terhadap laporan pengaduan warga.')
 
 @section('content')
-<div class="bg-gray-50 min-h-screen py-12">
+<div class="bg-white min-h-screen py-10 sm:py-14 border-b border-slate-200">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="font-serif text-2xl font-bold text-gray-900">📢 Detail Pengaduan & Tanggapan</h1>
-                <p class="text-xs text-gray-500 mt-1">Tiket: <strong class="font-mono text-emerald-800">{{ $complaint->ticket_number }}</strong></p>
+        {{-- Navigation Header --}}
+        <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5">
+                <a href="{{ route('warga.complaint.index') }}" 
+                   class="w-10 h-10 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition shadow-2xs shrink-0"
+                   title="Kembali ke Daftar Pengaduan"
+                   aria-label="Kembali">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Detail Laporan &amp; Tanggapan</h1>
+                    <p class="text-xs text-slate-500 mt-0.5">Nomor Tiket: <span class="font-mono font-bold text-[#0A3D29]">{{ $complaint->ticket_number }}</span></p>
+                </div>
             </div>
-            <a href="{{ route('warga.complaint.index') }}" class="inline-flex items-center gap-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold px-4 py-2 rounded-xl transition">
-                ⬅️ Kembali
+
+            <a href="{{ route('warga.complaint.create') }}" 
+               class="inline-flex items-center gap-1.5 bg-[#0A3D29] hover:bg-[#072B1D] text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition shadow-2xs shrink-0">
+                <svg class="w-3.5 h-3.5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span class="hidden sm:inline">Tulis Laporan Baru</span>
+                <span class="sm:hidden">Baru</span>
             </a>
         </div>
 
-        <div class="bg-white rounded-2xl border border-gray-200 shadow-xs p-6 sm:p-8 space-y-6">
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                <span class="px-3 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-800">
-                    📁 {{ $complaint->category ? $complaint->category->name : 'Kategori Umum' }}
-                </span>
-                <span class="text-xs text-gray-500 font-medium">
-                    🕒 {{ $complaint->created_at ? $complaint->created_at->format('d F Y, H:i') : '-' }} WIB
-                </span>
-            </div>
-
-            <div>
-                <h2 class="font-bold text-xl text-gray-900 mb-3">{{ $complaint->title }}</h2>
-                <div class="prose prose-sm text-gray-700 bg-gray-50 p-4 rounded-xl border border-gray-200">
-                    <p class="whitespace-pre-line">{{ $complaint->description }}</p>
+        {{-- Main Detail Card --}}
+        <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-6 sm:p-8 space-y-6">
+            
+            {{-- Category, Date, Status Info Bar --}}
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700">
+                        {{ $complaint->category ? $complaint->category->name : 'Kategori Umum' }}
+                    </span>
+                    <span class="text-xs text-slate-400">
+                        {{ $complaint->created_at ? $complaint->created_at->translatedFormat('d F Y, H:i') : '-' }} WIB
+                    </span>
                 </div>
-            </div>
 
-            @if($complaint->attachment_path)
-                <div>
-                    <p class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Lampiran Bukti Foto:</p>
-                    <a href="{{ asset('storage/' . $complaint->attachment_path) }}" target="_blank">
-                        <img src="{{ asset('storage/' . $complaint->attachment_path) }}" alt="Lampiran Pengaduan" class="max-h-64 rounded-xl border border-gray-300 shadow-xs hover:opacity-90 transition">
-                    </a>
-                </div>
-            @endif
-
-            <!-- Status Badge -->
-            <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
-                <span class="text-xs font-bold text-gray-500 uppercase">Status Penanganan:</span>
                 <div>
                     @if($complaint->status === 'new')
-                        <span class="px-3 py-1 text-xs font-bold rounded-full bg-red-100 text-red-800">🔴 Laporan Baru (Menunggu Respon)</span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-rose-50 text-rose-700 border border-rose-200/80">
+                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                            <span>Menunggu Respon</span>
+                        </span>
                     @elseif($complaint->status === 'processing')
-                        <span class="px-3 py-1 text-xs font-bold rounded-full bg-amber-100 text-amber-800">🟡 Sedang Ditindaklanjuti</span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 border border-amber-200/80">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                            <span>Sedang Ditindaklanjuti</span>
+                        </span>
                     @else
-                        <span class="px-3 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800">🟢 Selesai Ditanggapi</span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                            <span>Selesai Ditanggapi</span>
+                        </span>
                     @endif
                 </div>
             </div>
 
-            <!-- Admin Response -->
-            @if($complaint->admin_response)
-                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 space-y-2">
-                    <div class="flex items-center justify-between border-b border-emerald-200 pb-2">
-                        <h3 class="font-bold text-sm text-emerald-900">💬 Tanggapan Resmi Pemerintah Desa Catur</h3>
-                        <span class="text-xs text-emerald-700">{{ $complaint->responded_at ? \Carbon\Carbon::parse($complaint->responded_at)->format('d/m/Y H:i') : '' }}</span>
-                    </div>
-                    <p class="text-sm text-emerald-800 whitespace-pre-line leading-relaxed">{{ $complaint->admin_response }}</p>
+            {{-- Title & Body --}}
+            <div class="space-y-3">
+                <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 leading-snug">
+                    {{ $complaint->title }}
+                </h2>
+                <div class="bg-slate-50/70 p-4 sm:p-5 rounded-lg border border-slate-200/80 text-sm text-slate-700 leading-relaxed whitespace-pre-line">
+                    {{ $complaint->description }}
                 </div>
-            @else
-                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
-                    <p class="text-xs font-semibold text-amber-800">⏳ Laporan Anda telah diterima dan akan segera ditanggapi oleh tim Pemerintah Desa Catur.</p>
+            </div>
+
+            {{-- Attachment Photo if available --}}
+            @if($complaint->attachment_path)
+                <div class="space-y-2 pt-2">
+                    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                        Lampiran Foto Bukti:
+                    </span>
+                    <div class="inline-block">
+                        <a href="{{ asset('storage/' . $complaint->attachment_path) }}" target="_blank" class="group block">
+                            <img src="{{ asset('storage/' . $complaint->attachment_path) }}" 
+                                 alt="Lampiran Bukti Pengaduan" 
+                                 class="max-h-72 rounded-lg border border-slate-200 shadow-2xs group-hover:opacity-95 transition">
+                            <span class="text-[11px] text-slate-400 group-hover:text-emerald-800 mt-1 block">
+                                Klik untuk melihat ukuran penuh ↗
+                            </span>
+                        </a>
+                    </div>
                 </div>
             @endif
+
+            {{-- Official Village Response Box --}}
+            <div class="pt-4 border-t border-slate-100">
+                @if(!empty($complaint->admin_response))
+                    <div class="bg-[#0A3D29]/5 border border-[#0A3D29]/20 rounded-xl p-5 sm:p-6 space-y-2.5">
+                        <div class="flex items-center justify-between border-b border-[#0A3D29]/15 pb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-[#0A3D29]"></span>
+                                <h3 class="font-serif font-bold text-sm text-[#0A3D29]">
+                                    Tanggapan Resmi Pemerintah Desa Catur
+                                </h3>
+                            </div>
+                            <span class="text-xs text-slate-500">
+                                {{ $complaint->responded_at ? \Carbon\Carbon::parse($complaint->responded_at)->translatedFormat('d F Y, H:i') : '' }} WIB
+                            </span>
+                        </div>
+                        <p class="text-sm text-slate-800 whitespace-pre-line leading-relaxed pt-1">
+                            {{ $complaint->admin_response }}
+                        </p>
+                    </div>
+                @else
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 text-center space-y-1">
+                        <p class="text-xs font-semibold text-slate-700">Laporan Telah Diterima Sistem</p>
+                        <p class="text-xs text-slate-500">
+                            Pengaduan Anda sedang dalam antrean verifikasi dan akan segera ditanggapi oleh Pemerintah Desa Catur.
+                        </p>
+                    </div>
+                @endif
+            </div>
+
         </div>
+
     </div>
 </div>
 @endsection

@@ -142,10 +142,10 @@
                 <!-- 2. Scrolled Glassmorphism Layer (Fades in softly and smoothly when scrolled down) -->
                 <div class="absolute inset-0 bg-white/80 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.05)] transition-opacity ease-in-out pointer-events-none"
                     :class="(mobileMenuOpen || mobileSearchOpen) 
-                                                                     ? 'opacity-100 duration-200' 
-                                                                     : (isScrolled 
-                                                                         ? 'opacity-100 duration-700' 
-                                                                         : 'opacity-0 duration-700 delay-100')">
+                                                                                 ? 'opacity-100 duration-200' 
+                                                                                 : (isScrolled 
+                                                                                     ? 'opacity-100 duration-700' 
+                                                                                     : 'opacity-0 duration-700 delay-100')">
                 </div>
             @else
                 <!-- Non-homepage glassmorphism navbar background with scroll shadow -->
@@ -331,23 +331,6 @@
                             class="absolute left-0 mt-2 w-72 rounded-md p-0 z-50 overflow-hidden transition-all duration-300 shadow-xl"
                             :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'bg-white/95 backdrop-blur-2xl border border-slate-200/90 text-[#20332A]' : 'bg-[#061C12]/95 backdrop-blur-2xl border border-white/20 text-white'">
 
-                            <!-- 1. Pusat Layanan Desa -->
-                            <a href="{{ route('public.services.index') }}"
-                                class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
-                                <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
-                                    :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0V5m0 6h4m-4 0H9" />
-                                </svg>
-                                <div>
-                                    <span class="block font-bold">Pusat Layanan Desa</span>
-                                    <span class="block text-[10px] font-normal opacity-75">Katalog & panduan lengkap
-                                        pelayanan</span>
-                                </div>
-                            </a>
-
                             <!-- 2. Surat Online Mandiri -->
                             <a href="{{ route('warga.letter.index') }}"
                                 class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
@@ -359,9 +342,7 @@
                                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
                                 <div>
-                                    <span class="block font-bold">Surat Online Mandiri</span>
-                                    <span class="block text-[10px] font-normal opacity-75">Permohonan SKU, SKD, SKTM,
-                                        SKK</span>
+                                    <span class="block font-bold">Cetak Surat Mandiri</span>
                                 </div>
                             </a>
 
@@ -376,9 +357,7 @@
                                         d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.684A1.76 1.76 0 013 12c0-.97.784-1.76 1.75-1.76l6.25 1.05M18 13l2.25 3.5" />
                                 </svg>
                                 <div>
-                                    <span class="block font-bold">Pengaduan & Aspirasi</span>
-                                    <span class="block text-[10px] font-normal opacity-75">Saluran keluhan & masukan
-                                        warga</span>
+                                    <span class="block font-bold">Laporan & Pengaduan</span>
                                 </div>
                             </a>
                         </div>
@@ -566,10 +545,10 @@
                         <button
                             @click.stop="mobileSearchOpen = !mobileSearchOpen; if(mobileSearchOpen) { mobileMenuOpen = false; $nextTick(() => { $refs.mobileHeaderSearchInput && $refs.mobileHeaderSearchInput.focus(); }); }"
                             type="button"
-                            class="w-10 h-10 p-2 rounded-xl focus:outline-none flex items-center justify-center shrink-0 cursor-pointer transition-all duration-700 ease-in-out {{ $isHomePage ? 'text-white' : 'text-[#20332A]' }}"
+                            class="w-10 h-10 p-2 rounded-xl focus:outline-none flex items-center justify-center shrink-0 cursor-pointer transition-colors duration-300 ease-in-out"
                             :class="(isScrolled || mobileMenuOpen || mobileSearchOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
-                                    ? (mobileSearchOpen ? 'text-[#0A3D29] bg-[#EAF1E8]' : 'text-[#20332A] active:bg-[#EAF1E8]') 
-                                    : (mobileSearchOpen ? 'text-[#0A3D29] bg-white' : 'text-white active:bg-white/20')"
+                                    ? (mobileSearchOpen ? 'text-[#0A3D29] bg-[#EAF1E8]' : 'text-[#0A3D29] hover:bg-black/5 active:bg-[#EAF1E8]') 
+                                    : (mobileSearchOpen ? 'text-[#0A3D29] bg-white' : 'text-white hover:bg-white/10 active:bg-white/20')"
                             aria-label="Buka Pencarian" title="Pencarian">
                             <!-- Search Icon (When Closed) -->
                             <svg x-show="!mobileSearchOpen" class="w-6 h-6 transition-transform duration-200"
@@ -590,10 +569,10 @@
                         <button
                             @click.stop="mobileMenuOpen = !mobileMenuOpen; if(mobileMenuOpen) mobileSearchOpen = false;"
                             type="button"
-                            class="w-10 h-10 p-2 rounded-xl focus:outline-none flex items-center justify-center shrink-0 cursor-pointer transition-all duration-700 ease-in-out {{ $isHomePage ? 'text-white' : 'text-[#20332A]' }}"
+                            class="w-10 h-10 p-2 rounded-xl focus:outline-none flex items-center justify-center shrink-0 cursor-pointer transition-colors duration-300 ease-in-out"
                             :class="(isScrolled || mobileMenuOpen || mobileSearchOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
-                                    ? (mobileMenuOpen ? 'text-[#0A3D29] bg-slate-100 active:bg-slate-200' : 'text-[#20332A] active:bg-[#EAF1E8]') 
-                                    : (mobileMenuOpen ? 'text-[#0A3D29] bg-white active:bg-white/80' : 'text-white active:bg-white/20')"
+                                    ? (mobileMenuOpen ? 'text-[#0A3D29] bg-slate-100 active:bg-slate-200' : 'text-[#0A3D29] hover:bg-black/5 active:bg-[#EAF1E8]') 
+                                    : (mobileMenuOpen ? 'text-[#0A3D29] bg-white active:bg-white/80' : 'text-white hover:bg-white/10 active:bg-white/20')"
                             aria-label="Buka Menu Mobile">
                             <!-- Hamburger Icon (When Closed) -->
                             <svg x-show="!mobileMenuOpen" class="w-6 h-6 transition-transform duration-200" fill="none"
@@ -847,10 +826,6 @@
                     x-transition:enter-start="opacity-0 -translate-y-1"
                     x-transition:enter-end="opacity-100 translate-y-0"
                     class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
-                    <a href="{{ route('public.services.index') }}" @click="mobileMenuOpen = false"
-                        class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.services*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
-                        <span>Pusat Layanan Terpadu Desa</span>
-                    </a>
                     <a href="{{ route('warga.letter.index') }}" @click="mobileMenuOpen = false"
                         class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.letter*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
                         <span>Permohonan Surat Online Mandiri</span>
@@ -1012,8 +987,8 @@
                     <ul class="space-y-2 text-xs sm:text-sm text-slate-300 font-light">
                         <li><a href="{{ route('public.officials') }}" class="hover:text-white transition">Struktur
                                 Perangkat Desa</a></li>
-                        <li><a href="{{ route('public.services.index') }}" class="hover:text-white transition">Layanan
-                                Mandiri Warga</a></li>
+                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Layanan
+                                Surat Mandiri</a></li>
                         <li><a href="{{ route('public.profile') }}" class="hover:text-white transition">Regulasi &
                                 Produk Hukum Desa</a></li>
                         <li><a href="{{ route('public.news.index') }}" class="hover:text-white transition">PPID &
@@ -1061,8 +1036,7 @@
             <!-- Bottom Sub-Footer Bar -->
             <div
                 class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400 font-semibold tracking-wider uppercase">
-                <p>&copy; {{ date('Y') }} PEMERINTAH DESA CATUR | TIM PPK ORMAWA PK IMM AL-GHOZALI FAKULTAS PSIKOLOGI
-                    UMS</p>
+                <p>&copy; {{ date('Y') }} PEMERINTAH DESA CATUR | TIM PPK ORMAWA CATUR CERDAS</p>
                 <div class="flex items-center gap-6">
                     <a href="#" class="hover:text-white transition">KEBIJAKAN PRIVASI</a>
                     <a href="#" class="hover:text-white transition">SYARAT & KETENTUAN</a>

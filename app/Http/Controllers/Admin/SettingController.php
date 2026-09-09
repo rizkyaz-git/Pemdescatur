@@ -24,11 +24,6 @@ class SettingController extends Controller
             'hero_image_path' => Setting::get('hero_image_path'),
             'hero_title' => Setting::get('hero_title', 'Selamat Datang di Portal Resmi Desa Catur'),
             'hero_subtitle' => Setting::get('hero_subtitle', 'Pusat Informasi Terpadu, Transparansi Pemerintahan, dan Agribisnis Desa Catur Sambi Boyolali'),
-            'welcome_title' => Setting::get('welcome_title', 'Selamat Datang di Website Resmi Desa Catur'),
-            'welcome_content' => Setting::get('welcome_content', 'Assalamu’alaikum Warahmatullahi Wabarakatuh. Selamat datang di Portal Resmi Pemerintah Desa Catur, Kecamatan Sambi, Kabupaten Boyolali. Portal ini hadir sebagai wujud transparansi, keterbukaan informasi publik, dan peningkatan kualitas pelayanan masyarakat Desa Catur. Kami berkomitmen untuk terus mendorong potensi desa di bidang pertanian organik, UMKM, dan kesejahteraan seluruh warga. Semoga portal ini memberikan manfaat yang sebesar-besarnya bagi kita semua.'),
-            'head_name' => Setting::get('head_name', 'Dra. NUNIK S RAHAYU, M.Pd'),
-            'head_title' => Setting::get('head_title', 'Kepala Desa Catur'),
-            'head_photo_path' => Setting::get('head_photo_path'),
             'library_desktop_image_path' => Setting::get('library_desktop_image_path'),
             'library_tablet_image_path' => Setting::get('library_tablet_image_path'),
             'library_mobile_image_path' => Setting::get('library_mobile_image_path'),
@@ -49,10 +44,6 @@ class SettingController extends Controller
         Setting::set('library_url', $validated['library_url']);
         Setting::set('hero_title', $validated['hero_title'] ?? '');
         Setting::set('hero_subtitle', $validated['hero_subtitle'] ?? '');
-        Setting::set('welcome_title', $validated['welcome_title'] ?? '');
-        Setting::set('welcome_content', $validated['welcome_content'] ?? '');
-        Setting::set('head_name', $validated['head_name'] ?? '');
-        Setting::set('head_title', $validated['head_title'] ?? '');
 
         if ($request->hasFile('village_logo')) {
             $oldLogo = Setting::get('village_logo_path');
@@ -70,15 +61,6 @@ class SettingController extends Controller
             }
             $heroPath = $request->file('hero_image')->store('settings', 'public');
             Setting::set('hero_image_path', $heroPath);
-        }
-
-        if ($request->hasFile('head_photo')) {
-            $oldPhoto = Setting::get('head_photo_path');
-            if ($oldPhoto && Storage::disk('public')->exists($oldPhoto)) {
-                Storage::disk('public')->delete($oldPhoto);
-            }
-            $photoPath = $request->file('head_photo')->store('settings', 'public');
-            Setting::set('head_photo_path', $photoPath);
         }
 
         if ($request->hasFile('library_desktop_image')) {
@@ -109,7 +91,7 @@ class SettingController extends Controller
         }
 
         return redirect()->route('admin.settings.edit')
-            ->with('success', 'Pengaturan website, sambutan, dan gambar mockup perpustakaan berhasil diperbarui!');
+            ->with('success', 'Pengaturan website dan gambar mockup perpustakaan berhasil diperbarui!');
     }
 
     public function deleteLogo(): RedirectResponse
@@ -134,18 +116,6 @@ class SettingController extends Controller
 
         return redirect()->route('admin.settings.edit')
             ->with('success', 'Gambar background hero berhasil dihapus dan dikembalikan ke bawaan.');
-    }
-
-    public function deleteHeadPhoto(): RedirectResponse
-    {
-        $oldPhoto = Setting::get('head_photo_path');
-        if ($oldPhoto && Storage::disk('public')->exists($oldPhoto)) {
-            Storage::disk('public')->delete($oldPhoto);
-        }
-        Setting::set('head_photo_path', null);
-
-        return redirect()->route('admin.settings.edit')
-            ->with('success', 'Foto Kepala Desa berhasil dihapus.');
     }
 
     public function deleteLibraryDesktopImage(): RedirectResponse

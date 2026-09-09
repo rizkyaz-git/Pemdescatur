@@ -7,14 +7,7 @@
     <!-- Header Page -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-[20px] border border-[#E2E8F0] shadow-xs">
         <div>
-            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200/60 mb-2">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                <span>Layanan Mandiri Warga</span>
-            </div>
             <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Permohonan Surat Warga</h1>
-            <p class="text-xs text-[#64748B] mt-1">Daftar masuk, verifikasi berkas, dan penerbitan dokumen administrasi surat keterangan warga desa.</p>
         </div>
     </div>
 

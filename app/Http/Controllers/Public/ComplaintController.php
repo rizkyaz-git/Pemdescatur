@@ -17,23 +17,35 @@ class ComplaintController extends Controller
     public function index(Request $request): View
     {
         $search = trim($request->input('search', ''));
+        $selectedCategory = $request->input('kategori');
+        $selectedStatus = $request->input('status');
 
         $query = Complaint::with('category');
 
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhere('id', $search);
+                  ->orWhere('description', 'like', "%{$search}%");
+                
+                // Also search by ID if user typed ticket number like PGD-202609-00001 or just digits
+                if (preg_match('/(\d+)$/', $search, $matches)) {
+                    $q->orWhere('id', intval($matches[1]));
+                }
             });
-        } elseif (auth()->check()) {
-            $query->where('user_id', auth()->id());
         }
 
-        $complaints = $query->latest()->paginate(10)->withQueryString();
+        if (!empty($selectedCategory)) {
+            $query->where('category_id', $selectedCategory);
+        }
+
+        if (!empty($selectedStatus)) {
+            $query->where('status', $selectedStatus);
+        }
+
+        $complaints = $query->latest()->paginate(9)->withQueryString();
         $categories = ComplaintCategory::all();
 
-        return view('public.layanan.pengaduan.index', compact('complaints', 'categories', 'search'));
+        return view('public.layanan.pengaduan.index', compact('complaints', 'categories', 'search', 'selectedCategory', 'selectedStatus'));
     }
 
     /**

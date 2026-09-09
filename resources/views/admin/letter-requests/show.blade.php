@@ -4,23 +4,16 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
-    <div class="flex items-center justify-between">
-        <div>
-            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-[#0F4C3A] border border-emerald-100 mb-2">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-                <span>Detail Berkas Surat</span>
-            </div>
-            <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Detail Permohonan Surat</h1>
-            <p class="text-xs text-[#64748B] mt-1">Nomor Tiket: <strong class="font-mono text-[#0F4C3A] font-bold tabular-nums">{{ $request->ticket_number }}</strong></p>
-        </div>
-        <a href="{{ route('admin.letter-requests.index') }}" class="inline-flex items-center gap-1.5 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl border border-[#E2E8F0] transition shadow-xs">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="flex items-center gap-3.5">
+        <a href="{{ route('admin.letter-requests.index') }}" 
+           class="w-10 h-10 rounded-xl bg-white border border-[#E2E8F0] hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs shrink-0"
+           title="Kembali"
+           aria-label="Kembali">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
             </svg>
-            <span>Kembali</span>
         </a>
+        <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Detail Permohonan Surat</h1>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

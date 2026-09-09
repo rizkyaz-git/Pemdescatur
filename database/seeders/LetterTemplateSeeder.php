@@ -16,25 +16,55 @@ class LetterTemplateSeeder extends Seeder
             [
                 'name' => 'Surat Keterangan Usaha',
                 'code' => 'SKU',
-                'description' => 'Surat keterangan untuk usaha/bisnis warga',
-                'template_text' => $this->getSKUTemplate(),
+                'description' => 'Surat keterangan resmi dari Pemerintah Desa Catur untuk keperluan legalitas usaha, pengajuan pinjaman bank/KUR, perizinan dagang, dan kemitraan bisnis warga.',
+                'file_path' => 'letter_templates/template_sku.doc',
+                'requirements' => "- Surat Pengantar dari Ketua RT dan RW setempat\n- Fotokopi Kartu Tanda Penduduk (KTP) Pemohon\n- Fotokopi Kartu Keluarga (KK) Desa Catur\n- Foto tempat usaha / kegiatan operasional usaha\n- Bukti lunas PBB tahun berjalan (opsional)",
+                'template_text' => null,
             ],
             [
                 'name' => 'Surat Keterangan Domisili',
                 'code' => 'SKD',
-                'description' => 'Surat keterangan tempat tinggal warga',
-                'template_text' => $this->getSKDTemplate(),
+                'description' => 'Surat keterangan bukti tempat tinggal sah warga atau pendatang di wilayah Desa Catur untuk keperluan perbankan, lamaran kerja, atau pendaftaran sekolah.',
+                'file_path' => 'letter_templates/template_skd.doc',
+                'requirements' => "- Surat Pengantar dari Ketua RT/RW setempat\n- Fotokopi KTP Pemohon yang bersangkutan\n- Fotokopi Kartu Keluarga (KK)\n- Pas foto ukuran 3x4 (1 lembar jika diminta instansi tujuan)",
+                'template_text' => null,
             ],
             [
                 'name' => 'Surat Keterangan Kelahiran',
                 'code' => 'SKK',
-                'description' => 'Surat keterangan untuk pengurusan akta kelahiran',
-                'template_text' => $this->getSKKTemplate(),
+                'description' => 'Surat keterangan pengantar untuk pelaporan peristiwa kelahiran bayi warga Desa Catur dan penerbitan Akta Kelahiran resmi dari Disdukcapil.',
+                'file_path' => 'letter_templates/template_skk.doc',
+                'requirements' => "- Surat Keterangan Lahir asli dari Bidan/Rumah Sakit/Klinik penolong\n- Fotokopi KTP Ayah dan Ibu bayi\n- Fotokopi Kartu Keluarga (KK)\n- Fotokopi Buku Nikah / Akta Perkawinan orang tua\n- Fotokopi KTP 2 (dua) orang saksi peristiwa kelahiran",
+                'template_text' => null,
+            ],
+            [
+                'name' => 'Surat Keterangan Tidak Mampu',
+                'code' => 'SKTM',
+                'description' => 'Surat keterangan kondisi ekonomi keluarga untuk pengajuan beasiswa pendidikan (KIP/PIP), keringanan biaya pengobatan Rumah Sakit/BPJS PBI, dan bantuan sosial.',
+                'file_path' => 'letter_templates/template_sktm.doc',
+                'requirements' => "- Surat Pengantar RT/RW menyatakan kondisi keluarga tidak mampu/pra-sejahtera\n- Fotokopi KTP Kepala Keluarga & Pemohon\n- Fotokopi Kartu Keluarga (KK)\n- Foto kondisi rumah tinggal tampak depan\n- Kartu KIP/KIS/PKH (apabila telah memiliki)",
+                'template_text' => null,
+            ],
+            [
+                'name' => 'Surat Pengantar Nikah',
+                'code' => 'SPN',
+                'description' => 'Surat pengantar permohonan kehendak nikah (Model N1-N4) dari Pemerintah Desa Catur menuju Kantor Urusan Agama (KUA) atau Catatan Sipil.',
+                'file_path' => 'letter_templates/template_spn.doc',
+                'requirements' => "- Surat Pengantar RT/RW calon mempelai\n- Fotokopi KTP dan KK calon mempelai & kedua orang tua\n- Fotokopi Akta Kelahiran & Ijazah terakhir\n- Pas foto berlatar belakang biru ukuran 2x3 (4 lembar) dan 4x6 (2 lembar)\n- Fotokopi KTP 2 orang saksi akad nikah",
+                'template_text' => null,
+            ],
+            [
+                'name' => 'Surat Keterangan Kematian',
+                'code' => 'SKKM',
+                'description' => 'Surat keterangan pencatatan peristiwa wafatnya warga Desa Catur untuk pengurusan Akta Kematian, klaim santunan/asuransi, dan pembaruan Kartu Keluarga.',
+                'file_path' => 'letter_templates/template_skkm.doc',
+                'requirements' => "- Surat Keterangan Kematian dari Dokter/Puskesmas/RS (bila meninggal di faskes)\n- KTP dan KK asli almarhum/almarhumah\n- Fotokopi KTP & KK Pelapor (ahli waris/keluarga terdekat)\n- Surat Pengantar dari Ketua RT/RW setempat",
+                'template_text' => null,
             ],
         ];
 
         foreach ($templates as $template) {
-            LetterTemplate::firstOrCreate(
+            LetterTemplate::updateOrCreate(
                 ['code' => $template['code']],
                 $template
             );

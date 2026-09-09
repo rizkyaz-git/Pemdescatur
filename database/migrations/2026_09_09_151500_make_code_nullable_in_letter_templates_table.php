@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('role', 50)
-                ->default('warga')
-                ->after('password');
+        Schema::table('letter_templates', function (Blueprint $table) {
+            $table->string('code')->nullable()->change();
         });
     }
 
@@ -23,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+        Schema::table('letter_templates', function (Blueprint $table) {
+            $table->string('code')->nullable(false)->change();
         });
     }
 };
