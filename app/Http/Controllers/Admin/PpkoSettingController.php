@@ -59,7 +59,7 @@ class PpkoSettingController extends Controller
     }
 
     /**
-     * Update or upload the cover photo for the Pojok (supports slot 1, 2, 3).
+     * Update or upload the cover photo & description for the Pojok (supports slot 1, 2, 3).
      */
     public function updateFoto(Request $request, Pojok $pojok): RedirectResponse
     {
@@ -69,25 +69,45 @@ class PpkoSettingController extends Controller
             3 => 'gambar_3',
             default => 'gambar',
         };
+        $descField = match($slot) {
+            2 => 'deskripsi_gambar_2',
+            3 => 'deskripsi_gambar_3',
+            default => 'deskripsi_gambar',
+        };
 
         $request->validate([
-            'foto' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'foto' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'deskripsi' => ['nullable', 'string', 'max:500'],
         ], [
-            'foto.required' => 'Silakan pilih file foto terlebih dahulu.',
             'foto.image' => 'File harus berupa gambar.',
             'foto.mimes' => 'Format gambar yang didukung: JPG, PNG, WEBP.',
             'foto.max' => 'Ukuran gambar maksimal 5MB.',
+            'deskripsi.max' => 'Deskripsi gambar maksimal 500 karakter.',
         ]);
 
-        if ($pojok->$field && Storage::disk('public')->exists($pojok->$field)) {
-            Storage::disk('public')->delete($pojok->$field);
+        $updates = [];
+
+        if ($request->hasFile('foto')) {
+            if ($pojok->$field && Storage::disk('public')->exists($pojok->$field)) {
+                Storage::disk('public')->delete($pojok->$field);
+            }
+
+            $path = $request->file('foto')->store('ppko/pojok', 'public');
+            $updates[$field] = $path;
         }
 
-        $path = $request->file('foto')->store('ppko/pojok', 'public');
-        $pojok->update([$field => $path]);
+        if ($request->has('deskripsi')) {
+            $updates[$descField] = $request->input('deskripsi');
+        }
 
-        $slotLabel = $slot > 1 ? " (Kartu ke-{$slot})" : "";
-        return back()->with('success', 'Foto ' . $pojok->nama . $slotLabel . ' berhasil diperbarui.');
+        if (empty($updates)) {
+            return back()->withErrors(['foto' => 'Silakan pilih file foto atau isi deskripsi gambar terlebih dahulu.']);
+        }
+
+        $pojok->update($updates);
+
+        $slotLabel = $slot > 1 ? " (Foto ke-{$slot})" : " (Foto ke-1)";
+        return back()->with('success', 'Foto dan deskripsi ' . $pojok->nama . $slotLabel . ' berhasil diperbarui.');
     }
 
     /**
@@ -101,15 +121,23 @@ class PpkoSettingController extends Controller
             3 => 'gambar_3',
             default => 'gambar',
         };
+        $descField = match($slot) {
+            2 => 'deskripsi_gambar_2',
+            3 => 'deskripsi_gambar_3',
+            default => 'deskripsi_gambar',
+        };
 
         if ($pojok->$field && Storage::disk('public')->exists($pojok->$field)) {
             Storage::disk('public')->delete($pojok->$field);
         }
 
-        $pojok->update([$field => null]);
+        $pojok->update([
+            $field => null,
+            $descField => null,
+        ]);
 
-        $slotLabel = $slot > 1 ? " kartu ke-{$slot}" : "";
-        return back()->with('success', 'Foto ' . $pojok->nama . $slotLabel . ' berhasil direset ke foto bawaan.');
+        $slotLabel = $slot > 1 ? " foto ke-{$slot}" : " foto ke-1";
+        return back()->with('success', 'Foto ' . $pojok->nama . $slotLabel . ' berhasil direset ke foto & deskripsi bawaan.');
     }
 
     /**

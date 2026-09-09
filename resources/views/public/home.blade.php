@@ -187,47 +187,6 @@
 </div>
 
 <!-- ========================================================= -->
-<!-- SECTION: PRAKIRAAN CUACA HARI INI (DESA CATUR SAMBI BOYOLALI - ACCUWEATHER) -->
-<!-- ========================================================= -->
-<section id="prakiraan-cuaca" class="w-full bg-[#f8fafc] py-14 sm:py-16 lg:py-20 border-b border-[#c5c6ce]/50 flex items-center min-h-[580px] lg:min-h-[640px] fade-up-scroll">
-    <div class="max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        
-        <!-- Header Title (Matching Warta & Perangkat styling) -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200 text-center sm:text-left">
-            <div>
-                <h2 class="font-['Public_Sans',sans-serif] text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-800 leading-tight">
-                    Prakiraan Cuaca Desa Catur
-                </h2>
-                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
-                    Kecamatan Sambi, Kabupaten Boyolali • Siaran Cuaca AccuWeather
-                </p>
-            </div>
-            
-            <!-- Action Button (AccuWeather Direct Link) -->
-            <a href="https://www.accuweather.com/id/id/sambi/208426/weather-forecast/208426" 
-               target="_blank" rel="noopener noreferrer"
-               class="inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#062c1d] text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 shrink-0 mx-auto sm:mx-0">
-                <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#FF6600] text-white text-[10px] font-black">☀️</span>
-                <span>Buka di AccuWeather</span>
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-            </a>
-        </div>
-
-        <!-- AccuWeather Iframe Container -->
-        <div class="relative w-full h-[460px] sm:h-[500px] lg:h-[520px] rounded-2xl overflow-hidden border border-slate-200/90 bg-white shadow-xs">
-            <iframe src="https://www.accuweather.com/id/id/sambi/208426/weather-forecast/208426" 
-                    class="w-full h-full border-0" 
-                    title="Prakiraan Cuaca Desa Catur Sambi Boyolali - AccuWeather"
-                    loading="lazy">
-            </iframe>
-        </div>
-
-    </div>
-</section>
-
-<!-- ========================================================= -->
 <!-- SECTION 2: BERITA TERKINI (FEATURED & EDITORIAL MAGAZINE LAYOUT) -->
 <!-- ========================================================= -->
 <section id="berita-terkini" class="w-full bg-white py-14 sm:py-16 lg:py-20 border-b border-[#c5c6ce]/50 flex items-center min-h-[580px] lg:min-h-[640px] fade-up-scroll">

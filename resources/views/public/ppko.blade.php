@@ -745,6 +745,31 @@
                         transform: translateY(0);
                     }
 
+                    /* ─── Responsive Title & Number Pojok (Single Line UMKM Mobile) ─── */
+                    .pojok-title-umkm {
+                        font-size: clamp(0.92rem, 4.1vw, 1.45rem);
+                        white-space: nowrap;
+                    }
+                    .pojok-num-umkm {
+                        font-size: clamp(1rem, 4.3vw, 1.55rem);
+                    }
+                    .pojok-title-standard {
+                        font-size: clamp(1.4rem, 5.5vw, 5rem);
+                    }
+                    .pojok-num-standard {
+                        font-size: clamp(1.5rem, 5.8vw, 5rem);
+                    }
+                    @media (min-width: 640px) {
+                        .pojok-title-umkm,
+                        .pojok-title-standard {
+                            font-size: clamp(2.25rem, 5vw, 5rem);
+                        }
+                        .pojok-num-umkm,
+                        .pojok-num-standard {
+                            font-size: clamp(2.25rem, 5vw, 5rem);
+                        }
+                    }
+
                     @media (prefers-reduced-motion: reduce) {
 
                         .ppko-section-entrance,
@@ -786,20 +811,46 @@
 
                             $isEven = ($loop->iteration % 2 === 0);
                             $isDark = $isEven; // Selang-seling warna latar: Ganjil (1, 3, 5) = Putih, Genap (2, 4) = Hijau Gelap #0A3D29
+                            $isUmkmGoDigital = str_contains(strtolower($pojok->nama), 'go digital') || str_contains(strtolower($pojok->nama), 'umkm');
 
-                            // Gambar card stack: ambil dari DB atau gambar representatif jika kosong
+                            // Gambar slider & deskripsi: ambil dari DB atau gambar representatif jika kosong
                             $defaultFallbackCards = [
-                                1 => [asset('images/cover_ppko.png'), asset('images/culture_pura.png'), asset('images/sawah_irigasi.png')],
-                                2 => [asset('images/remen_maos_mockup.png'), asset('images/hero_landscape.png'), asset('images/cover_ppko.png')],
-                                3 => [asset('images/coffee_processing.png'), asset('images/coffee_plantation.png'), asset('images/sawah_irigasi.png')],
-                                4 => [asset('images/culture_pura.png'), asset('images/umbul_siraman.png'), asset('images/masjid_wonokusumo.png')],
-                                5 => [asset('images/sawah_irigasi.png'), asset('images/coffee_plantation.png'), asset('images/hero_landscape.png')],
+                                1 => [
+                                    ['url' => asset('images/cover_ppko.png'), 'desc' => 'Sesi bimbingan belajar dan ruang kreasi anak-anak Desa Catur'],
+                                    ['url' => asset('images/culture_pura.png'), 'desc' => 'Kegiatan keagamaan dan penguatan harmoni sosial lintas warga'],
+                                    ['url' => asset('images/sawah_irigasi.png'), 'desc' => 'Ruang konseling dan pendampingan kesejahteraan psikososial keluarga'],
+                                ],
+                                2 => [
+                                    ['url' => asset('images/remen_maos_mockup.png'), 'desc' => 'Pojok literasi ramah anak dan pojok baca Remen Maos'],
+                                    ['url' => asset('images/hero_landscape.png'), 'desc' => 'Permainan edukatif dan aktivitas dongeng inspiratif nusantara'],
+                                    ['url' => asset('images/cover_ppko.png'), 'desc' => 'Edukasi kesehatan emosional dan pembentukan karakter generasi muda'],
+                                ],
+                                3 => [
+                                    ['url' => asset('images/coffee_processing.png'), 'desc' => 'Pendampingan pengolahan pasca panen dan pengemasan produk kopi lokal'],
+                                    ['url' => asset('images/coffee_plantation.png'), 'desc' => 'Pelatihan pemasaran digital dan optimasi katalog e-commerce warga'],
+                                    ['url' => asset('images/sawah_irigasi.png'), 'desc' => 'Workshop manajemen keuangan mandiri bagi pelaku usaha desa'],
+                                ],
+                                4 => [
+                                    ['url' => asset('images/culture_pura.png'), 'desc' => 'Pelestarian situs cagar budaya dan tradisi kearifan lokal Desa Catur'],
+                                    ['url' => asset('images/umbul_siraman.png'), 'desc' => 'Dokumentasi seni karawitan dan ruang ekspresi kebudayaan tradisional'],
+                                    ['url' => asset('images/masjid_wonokusumo.png'), 'desc' => 'Wisata edukasi sejarah dan pengenalan warisan leluhur desa'],
+                                ],
+                                5 => [
+                                    ['url' => asset('images/sawah_irigasi.png'), 'desc' => 'Inovasi sistem irigasi cerdas dan pemetaan lahan pertanian produktif'],
+                                    ['url' => asset('images/coffee_plantation.png'), 'desc' => 'Pemberdayaan kelompok tani dalam pembuatan pupuk organik ramah lingkungan'],
+                                    ['url' => asset('images/hero_landscape.png'), 'desc' => 'Budidaya tanaman pangan berkelanjutan menuju ketahanan pangan desa'],
+                                ],
                             ];
-                            $defImgs = $defaultFallbackCards[$pojok->id] ?? [asset('images/cover_ppko.png'), asset('images/culture_pura.png'), asset('images/sawah_irigasi.png')];
+                            $defSet = $defaultFallbackCards[$pojok->id] ?? $defaultFallbackCards[1];
 
-                            $cardImg1 = !empty($pojok->gambar) ? asset('storage/' . $pojok->gambar) : $defImgs[0];
-                            $cardImg2 = !empty($pojok->gambar_2) ? asset('storage/' . $pojok->gambar_2) : $defImgs[1];
-                            $cardImg3 = !empty($pojok->gambar_3) ? asset('storage/' . $pojok->gambar_3) : $defImgs[2];
+                            $cardImg1 = !empty($pojok->gambar) ? asset('storage/' . $pojok->gambar) : $defSet[0]['url'];
+                            $cardImg2 = !empty($pojok->gambar_2) ? asset('storage/' . $pojok->gambar_2) : $defSet[1]['url'];
+                            $cardImg3 = !empty($pojok->gambar_3) ? asset('storage/' . $pojok->gambar_3) : $defSet[2]['url'];
+
+                            $cardDesc1 = !empty($pojok->deskripsi_gambar) ? $pojok->deskripsi_gambar : $defSet[0]['desc'];
+                            $cardDesc2 = !empty($pojok->deskripsi_gambar_2) ? $pojok->deskripsi_gambar_2 : $defSet[1]['desc'];
+                            $cardDesc3 = !empty($pojok->deskripsi_gambar_3) ? $pojok->deskripsi_gambar_3 : $defSet[2]['desc'];
+                            $cardDescs = [$cardDesc1, $cardDesc2, $cardDesc3];
 
                             // Memisahkan narasi utama dan rincian fokus/mitra (murni dari database tanpa penambahan fiktif)
                             $htmlDesc = $pojok->deskripsi_singkat ?? '';
@@ -810,6 +861,51 @@
                             } else {
                                 $narasiDesc = $htmlDesc;
                                 $detailKanan = '';
+                            }
+
+                            // Data Mitra Komunitas Tambahan untuk Pojok Ceria, Budaya, dan Tani
+                            $mitraKomunitas = null;
+                            $pNamaLower = strtolower($pojok->nama);
+                            if (str_contains($pNamaLower, 'ceria')) {
+                                $mitraKomunitas = [
+                                    'title' => 'Mitra Komunitas TPA',
+                                    'type' => 'numbered',
+                                    'items' => [
+                                        'TPA masjid Gumukrejo',
+                                        'TPA masjid Dukuh Catur',
+                                    ]
+                                ];
+                            } elseif (str_contains($pNamaLower, 'budaya')) {
+                                $mitraKomunitas = [
+                                    'title' => 'Mitra Komunitas Karang Taruna',
+                                    'type' => 'numbered',
+                                    'items' => [
+                                        'Dukuh Kungon',
+                                        'Dukuh Catur',
+                                        'Dukuh Sabrangan',
+                                        'Dukuh Karakan',
+                                        'Dukuh Gunungpuyuh',
+                                        'Dukuh Gumuk Ngembes',
+                                        'Dukuh Tropayan',
+                                        'Dukuh Giring',
+                                        'Dukuh Karangjowo',
+                                        'Dukuh Bakalan',
+                                        'Dukuh Kragan',
+                                        'Dukuh Wonotoro',
+                                        'Dukuh Gumukrejo',
+                                    ]
+                                ];
+                            } elseif (str_contains($pNamaLower, 'tani')) {
+                                $mitraKomunitas = [
+                                    'title' => 'Mitra Komunitas Gabungan Kelompok Tani (GAPOKTAN)',
+                                    'type' => 'numbered',
+                                    'items' => [
+                                        'kelompok tani Budi Rahayu',
+                                        'kelompok tani Ngudi Rejeki',
+                                        'kelompok tani Sarono Tani',
+                                        'kelompok tani Marsudi Mulyo',
+                                    ]
+                                ];
                             }
                         @endphp
 
@@ -825,6 +921,45 @@
                                             expanded: false,
                                             pinRafId: null,
                                             isAnimating: false,
+                                            closeDropdown() {
+                                                if (!this.expanded || this.isAnimating) return;
+                                                this.isAnimating = true;
+                                                const box = this.$refs.contentBox;
+                                                const startH = box ? box.offsetHeight : 0;
+                                                if (box && startH > 0) {
+                                                    box.style.height = startH + 'px';
+                                                    box.style.overflow = 'hidden';
+                                                }
+                                                this.expanded = false;
+                                                this.$nextTick(() => {
+                                                    if (!box) {
+                                                        this.isAnimating = false;
+                                                        return;
+                                                    }
+                                                    const targetView = this.$refs.view1;
+                                                    let endH = targetView ? Math.max(targetView.offsetHeight, targetView.scrollHeight) : 0;
+                                                    const computedMinH = parseFloat(window.getComputedStyle(box).minHeight) || 0;
+                                                    if (computedMinH > endH) endH = computedMinH;
+
+                                                    const startTime = performance.now();
+                                                    const duration = 380;
+                                                    const animateClose = (now) => {
+                                                        const elapsed = now - startTime;
+                                                        const progress = Math.min(elapsed / duration, 1);
+                                                        const ease = 1 - Math.pow(1 - progress, 3);
+                                                        const currentH = startH + (endH - startH) * ease;
+                                                        box.style.height = currentH.toFixed(2) + 'px';
+                                                        if (progress < 1) {
+                                                            requestAnimationFrame(animateClose);
+                                                        } else {
+                                                            box.style.height = '';
+                                                            box.style.overflow = '';
+                                                            this.isAnimating = false;
+                                                        }
+                                                    };
+                                                    requestAnimationFrame(animateClose);
+                                                });
+                                            },
                                             toggleExpanded(btnEl) {
                                                 if (this.isAnimating) return;
                                                 this.isAnimating = true;
@@ -849,6 +984,11 @@
 
                                                 // 4. Ubah state Alpine
                                                 this.expanded = !this.expanded;
+
+                                                // Bila dibuka, beritahu dropdown pojok lainnya agar otomatis tertutup
+                                                if (this.expanded) {
+                                                    window.dispatchEvent(new CustomEvent('close-other-pojoks', { detail: { id: {{ $pojok->id }} } }));
+                                                }
 
                                                 // 5. Tunggu $nextTick agar view target dirender di DOM (display:none diangkat oleh Alpine)
                                                 this.$nextTick(() => {
@@ -917,24 +1057,19 @@
                                                 });
                                             }
                                         }"
+                                        @close-other-pojoks.window="if ($event.detail.id !== {{ $pojok->id }} && expanded) closeDropdown()"
                                         class="lg:col-span-7 order-2 {{ $isEven ? 'lg:order-2' : 'lg:order-1' }} flex flex-col justify-start space-y-3 sm:space-y-6">
 
                                         <!-- HEADER: DISPLAY NUMBER (01, 02, ...) + TITLE POJOK -->
-                                        <div class="pojok-header-wrap flex items-start sm:items-baseline gap-3.5 sm:gap-5 lg:gap-6 w-full">
+                                        <div class="pojok-header-wrap flex items-center sm:items-baseline gap-2.5 sm:gap-5 lg:gap-6 w-full min-w-0">
                                             <!-- Animasi Angka Fade Geser dari Kiri -->
                                             <span
-                                                class="pojok-num-text harmoni-num-animate select-none font-sans font-black leading-tight sm:leading-none tracking-tight shrink-0 text-3xl sm:text-5xl md:text-6xl lg:text-[72px] xl:text-[82px] {{ $isDark ? 'text-white' : 'text-black' }}"
-                                                style="font-size: clamp(2.25rem, 5vw, 5rem);">
+                                                class="pojok-num-text harmoni-num-animate select-none font-sans font-black leading-tight sm:leading-none tracking-tight shrink-0 {{ $isUmkmGoDigital ? 'pojok-num-umkm' : 'pojok-num-standard' }} {{ $isDark ? 'text-white' : 'text-black' }}">
                                                 {{ sprintf('%02d', $loop->iteration) }}
                                             </span>
                                             <!-- Teks Judul Pojok Membentang Harmonis -->
-                                            <h2 class="pojok-title-text harmoni-text-animate font-sans font-black leading-tight sm:leading-none tracking-tight whitespace-normal sm:whitespace-nowrap text-3xl sm:text-5xl md:text-6xl lg:text-[72px] xl:text-[82px] {{ $isDark ? 'text-white' : 'text-black' }}"
-                                                style="font-size: clamp(2.25rem, 5vw, 5rem);">
-                                                @if(str_contains(strtolower($pojok->nama), 'go digital'))
-                                                    {!! preg_replace('/(go\s+digital)/i', '<span class="block sm:inline">$1</span>', e($pojok->nama)) !!}
-                                                @else
-                                                    {{ $pojok->nama }}
-                                                @endif
+                                            <h2 class="pojok-title-text harmoni-text-animate font-sans font-black leading-tight sm:leading-none tracking-tight {{ $isUmkmGoDigital ? 'pojok-title-umkm' : 'pojok-title-standard whitespace-normal sm:whitespace-nowrap' }} {{ $isDark ? 'text-white' : 'text-black' }}">
+                                                {{ $pojok->nama }}
                                             </h2>
                                         </div>
 
@@ -982,9 +1117,11 @@
                                                 x-transition:leave-end="opacity-0 -translate-y-1.5"
                                                 class="col-start-1 row-start-1 w-full pt-1 pb-2">
 
-                                                @if($pojok->kurikulums->isNotEmpty())
+                                                @if($pojok->kurikulums->isNotEmpty() || !empty($mitraKomunitas))
                                                     <div
-                                                        class="space-y-3 sm:space-y-4 max-h-[260px] md:max-h-[195px] lg:max-h-[185px] overflow-y-auto pr-1.5 pt-1">
+                                                        class="space-y-4 w-full pt-1">
+                                                        
+                                                        {{-- Modul Ajar / File Unduhan (Jika ada) --}}
                                                         @foreach($pojok->kurikulums as $file)
                                                             <div class="w-full">
                                                                 <!-- Horizontal Divider Line (Garis Tipis) -->
@@ -1046,10 +1183,44 @@
                                                                 </div>
                                                             </div>
                                                         @endforeach
+
+                                                        {{-- Informasi Mitra Komunitas (Minimalis, Serupa Format Unduhan Tanpa Tombol) --}}
+                                                        @if(!empty($mitraKomunitas))
+                                                            <div class="w-full">
+                                                                <!-- Horizontal Divider Line (Garis Tipis) -->
+                                                                <div
+                                                                    class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }} mb-2.5">
+                                                                </div>
+
+                                                                <div class="pr-2">
+                                                                    <h5
+                                                                        class="font-bold text-sm sm:text-base leading-snug {{ $isDark ? 'text-white' : 'text-slate-900' }} mb-2">
+                                                                        {{ $mitraKomunitas['title'] }} :
+                                                                    </h5>
+
+                                                                    @if($mitraKomunitas['type'] === 'numbered')
+                                                                        <ol
+                                                                            class="text-xs sm:text-[13.5px] leading-relaxed space-y-1.5 pl-5 list-decimal {{ $isDark ? 'text-white/85' : 'text-slate-700' }} {{ count($mitraKomunitas['items']) > 6 ? 'grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 pl-6' : '' }}">
+                                                                            @foreach($mitraKomunitas['items'] as $item)
+                                                                                <li>{{ $item }}</li>
+                                                                            @endforeach
+                                                                        </ol>
+                                                                    @else
+                                                                        <ul
+                                                                            class="text-xs sm:text-[13.5px] leading-relaxed space-y-1.5 pl-5 list-disc {{ $isDark ? 'text-white/85' : 'text-slate-700' }}">
+                                                                            @foreach($mitraKomunitas['items'] as $item)
+                                                                                <li>{{ $item }}</li>
+                                                                            @endforeach
+                                                                        </ul>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        @endif
+
                                                     </div>
                                                 @else
                                                     <div
-                                                        class="text-xs py-3.5 italic rounded-xl px-4 border border-dashed {{ $isDark ? 'text-white/60 bg-white/5 border-white/20' : 'text-slate-500 bg-slate-50 border-slate-200' }}">
+                                                        class="text-xs py-3.5 italic rounded-lg px-4 border border-dashed {{ $isDark ? 'text-white/60 bg-white/5 border-white/20' : 'text-slate-500 bg-slate-50 border-slate-200' }}">
                                                         Modul ajar akan segera diperbarui oleh admin.
                                                     </div>
                                                 @endif
@@ -1062,8 +1233,8 @@
                                                                 class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md transition {{ $isDark ? 'bg-white/15 hover:bg-white/25 text-white border border-white/20' : 'bg-slate-100 hover:bg-slate-200 text-slate-700' }}">
                                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor"
                                                                     viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2" d="M12 4v16m8-8H4" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M12 4v16m8-8H4" />
                                                                 </svg>
                                                                 <span>Kelola Modul</span>
                                                             </a>
@@ -1074,324 +1245,219 @@
 
                                         </div>
 
-                                        <!-- TRIGGER BAR DI BAGIAN BAWAH: TEKS & ARROW DI TENGAH, BERADA DI ATAS GARIS HORIZONTAL -->
+                                        <!-- TRIGGER BAR DI BAGIAN BAWAH: GARIS HORIZONTAL DI ATAS, TEKS & ARROW DI BAWAH GARIS -->
                                         <div class="pt-3 sm:pt-5 w-full flex flex-col items-center harmoni-desc-animate harmoni-desc-delay-2">
-                                            <!-- Tombol di Atas Garis, Posisikan di Tengah -->
+                                            <!-- Garis Horizontal Minimalis Tipis di Atas Teks & Arrow -->
+                                            <div class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }} mb-2.5"></div>
+
+                                            <!-- Tombol di Bawah Garis, Posisikan di Tengah -->
                                             <button type="button" @click="toggleExpanded($el)"
-                                                class="inline-flex items-center justify-center gap-2 cursor-pointer select-none group focus:outline-none pb-2.5 px-4"
+                                                class="inline-flex items-center justify-center gap-2 cursor-pointer select-none group focus:outline-none pt-0.5 pb-1 px-4"
                                                 title="Klik untuk membuka/menutup selengkapnya">
                                                 <span
                                                     class="font-sans font-bold italic text-xs sm:text-sm lg:text-[15px] tracking-tight transition-colors {{ $isDark ? 'text-white group-hover:text-emerald-300' : 'text-slate-800 group-hover:text-emerald-800' }}">
                                                     Pelajari selengkapnya tentang {{ strtolower($pojok->nama) }}
                                                 </span>
 
-                                                <!-- Ikon Arrow Style Outline Murni (Menghadap Atas secara Default, Berputar 180 ke Bawah Saat Dibuka) -->
+                                                <!-- Ikon Arrow Style Outline Murni (Menghadap Bawah secara Default, Berputar 180 ke Atas Saat Dibuka) -->
                                                 <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px] transform transition-transform duration-300 ease-out stroke-[2.5] transition-colors {{ $isDark ? 'text-white/70 group-hover:text-emerald-300' : 'text-slate-500 group-hover:text-emerald-800' }}"
                                                     :class="expanded ? 'rotate-180 {{ $isDark ? 'text-emerald-300' : 'text-emerald-800' }}' : ''"
                                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <!-- Chevron Pointing UP by Default (Menghadap Atas) -->
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                                                 </svg>
                                             </button>
-
-                                            <!-- Garis Horizontal Minimalis Tipis di Bawah Teks & Arrow -->
-                                            <div class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }}"></div>
                                         </div>
-
                                     </div>
 
-                                    <!-- VISUAL COLUMN (Order-1 di Mobile agar Gambar Berada di Atas Teks) -->
+                                    <!-- VISUAL COLUMN: RECTANGULAR EDGE-BLEED SLIDER (Mepet Ujung Halaman pada Desktop) -->
                                     <div
-                                        class="lg:col-span-5 order-1 {{ $isEven ? 'lg:order-1' : 'lg:order-2' }} flex flex-col items-center justify-center pt-0 sm:pt-2 lg:pt-2 pb-0 lg:pb-0 w-full">
+                                        class="lg:col-span-5 order-1 {{ $isEven ? 'lg:order-1' : 'lg:order-2' }} flex flex-col justify-center pt-0 sm:pt-2 lg:pt-0 pb-0 w-full">
 
-                                        <!-- TAMPILAN MOBILE (< 1024px): SLIDER GESER BIASA (SWIPEABLE, TANPA TUMPUK, TANPA SHADOW & BORDER, TIDAK TERLALU ROUNDED) -->
-                                        <div class="block lg:hidden w-full harmoni-cards-animate">
-                                            <div x-data="{
-                                                    current: 0,
-                                                    total: 3,
-                                                    touchStartX: 0,
-                                                    touchStartY: 0,
-                                                    isPointerDown: false,
-                                                    pointerStartX: 0,
-                                                    swiped: false,
-                                                    timer: null,
-                                                    init() {
-                                                        this.startAuto();
-                                                    },
-                                                    startAuto() {
-                                                        if (this.timer) clearInterval(this.timer);
-                                                        this.timer = setInterval(() => {
+                                        <div x-data="{
+                                                current: 0,
+                                                total: 3,
+                                                touchStartX: 0,
+                                                touchStartY: 0,
+                                                isPointerDown: false,
+                                                pointerStartX: 0,
+                                                swiped: false,
+                                                timer: null,
+                                                init() {
+                                                    this.startAuto();
+                                                },
+                                                startAuto() {
+                                                    if (this.timer) clearInterval(this.timer);
+                                                    this.timer = setInterval(() => {
+                                                        this.next();
+                                                    }, 4500);
+                                                },
+                                                pause() {
+                                                    if (this.timer) clearInterval(this.timer);
+                                                },
+                                                resume() {
+                                                    this.startAuto();
+                                                },
+                                                next() {
+                                                    this.current = (this.current + 1) % this.total;
+                                                },
+                                                prev() {
+                                                    this.current = (this.current - 1 + this.total) % this.total;
+                                                },
+                                                goTo(idx) {
+                                                    this.current = idx;
+                                                },
+                                                handleTouchStart(e) {
+                                                    this.pause();
+                                                    this.swiped = false;
+                                                    this.touchStartX = e.touches[0].clientX;
+                                                    this.touchStartY = e.touches[0].clientY;
+                                                },
+                                                handleTouchEnd(e) {
+                                                    const diffX = e.changedTouches[0].clientX - this.touchStartX;
+                                                    const diffY = e.changedTouches[0].clientY - this.touchStartY;
+                                                    if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
+                                                        this.swiped = true;
+                                                        if (diffX < 0) {
                                                             this.next();
-                                                        }, 4000);
-                                                    },
-                                                    pause() {
-                                                        if (this.timer) clearInterval(this.timer);
-                                                    },
-                                                    resume() {
-                                                        this.startAuto();
-                                                    },
-                                                    next() {
-                                                        this.current = (this.current + 1) % this.total;
-                                                    },
-                                                    prev() {
-                                                        this.current = (this.current - 1 + this.total) % this.total;
-                                                    },
-                                                    goTo(idx) {
-                                                        this.current = idx;
-                                                    },
-                                                    handleTouchStart(e) {
-                                                        this.pause();
-                                                        this.swiped = false;
-                                                        this.touchStartX = e.touches[0].clientX;
-                                                        this.touchStartY = e.touches[0].clientY;
-                                                    },
-                                                    handleTouchEnd(e) {
-                                                        const diffX = e.changedTouches[0].clientX - this.touchStartX;
-                                                        const diffY = e.changedTouches[0].clientY - this.touchStartY;
-                                                        if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
-                                                            this.swiped = true;
-                                                            if (diffX < 0) {
-                                                                this.next();
-                                                            } else {
-                                                                this.prev();
-                                                            }
+                                                        } else {
+                                                            this.prev();
                                                         }
-                                                        this.resume();
-                                                    },
-                                                    handleMouseDown(e) {
-                                                        this.isPointerDown = true;
-                                                        this.pointerStartX = e.clientX;
-                                                        this.swiped = false;
-                                                        this.pause();
-                                                    },
-                                                    handleMouseMove(e) {
-                                                        if (!this.isPointerDown) return;
-                                                        const diffX = e.clientX - this.pointerStartX;
-                                                        if (Math.abs(diffX) > 40) {
-                                                            this.isPointerDown = false;
-                                                            this.swiped = true;
-                                                            if (diffX < 0) {
-                                                                this.next();
-                                                            } else {
-                                                                this.prev();
-                                                            }
-                                                        }
-                                                    },
-                                                    handleMouseUp() {
-                                                        this.isPointerDown = false;
-                                                        this.resume();
                                                     }
-                                                }"
-                                                @mouseenter="pause()"
-                                                @mouseleave="handleMouseUp()"
-                                                class="w-full max-w-[340px] xs:max-w-[370px] sm:max-w-[440px] md:max-w-[480px] mx-auto">
+                                                    this.resume();
+                                                },
+                                                handleMouseDown(e) {
+                                                    this.isPointerDown = true;
+                                                    this.pointerStartX = e.clientX;
+                                                    this.swiped = false;
+                                                    this.pause();
+                                                },
+                                                handleMouseMove(e) {
+                                                    if (!this.isPointerDown) return;
+                                                    const diffX = e.clientX - this.pointerStartX;
+                                                    if (Math.abs(diffX) > 40) {
+                                                        this.isPointerDown = false;
+                                                        this.swiped = true;
+                                                        if (diffX < 0) {
+                                                            this.next();
+                                                        } else {
+                                                            this.prev();
+                                                        }
+                                                    }
+                                                },
+                                                handleMouseUp() {
+                                                    this.isPointerDown = false;
+                                                    this.resume();
+                                                }
+                                            }"
+                                            @mouseenter="pause()"
+                                            @mouseleave="handleMouseUp()"
+                                            class="harmoni-cards-animate w-full">
 
-                                                <!-- Frame Gambar: Geser Biasa, Tanpa Shadow, Tanpa Border, Rounded Bersahaja (rounded-xl) -->
-                                                <div class="relative w-full aspect-[16/10] overflow-hidden rounded-xl bg-slate-200 cursor-grab active:cursor-grabbing select-none touch-pan-y"
-                                                    @touchstart.passive="handleTouchStart($event)"
-                                                    @touchend="handleTouchEnd($event)"
-                                                    @mousedown="handleMouseDown($event)"
-                                                    @mousemove="handleMouseMove($event)"
-                                                    @mouseup="handleMouseUp()">
-                                                    
-                                                    <!-- Track Slider Horizontal -->
-                                                    <div class="flex h-full w-full transition-transform duration-500 ease-out"
-                                                        :style="`transform: translateX(-${current * 100}%);`">
-                                                        
-                                                        <!-- Slide 1 -->
-                                                        <div class="w-full h-full shrink-0">
-                                                            <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}"
-                                                                class="w-full h-full object-cover select-none pointer-events-none"
-                                                                draggable="false">
-                                                        </div>
+                                            <!-- RECTANGULAR SLIDER FRAME (Ukuran Proporsional Mengikuti Kontainer Elemen Lain, Sedikit Lebih Rounded) -->
+                                            <div class="relative w-full h-[250px] xs:h-[280px] sm:h-[320px] md:h-[350px] lg:h-[360px] xl:h-[380px] overflow-hidden bg-slate-900/10 cursor-grab active:cursor-grabbing select-none touch-pan-y group shadow-md rounded-xl sm:rounded-2xl border border-black/5 {{ $isDark ? 'border-white/10' : 'border-slate-200' }}"
+                                                @touchstart.passive="handleTouchStart($event)"
+                                                @touchend="handleTouchEnd($event)"
+                                                @mousedown="handleMouseDown($event)"
+                                                @mousemove="handleMouseMove($event)"
+                                                @mouseup="handleMouseUp()">
 
-                                                        <!-- Slide 2 -->
-                                                        <div class="w-full h-full shrink-0">
-                                                            <img src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}"
-                                                                class="w-full h-full object-cover select-none pointer-events-none"
-                                                                draggable="false">
-                                                        </div>
+                                                <!-- Horizontal Track Sliding -->
+                                                <div class="flex h-full w-full transition-transform duration-500 ease-out"
+                                                    :style="'transform: translateX(-' + (current * 100) + '%);'">
 
-                                                        <!-- Slide 3 -->
-                                                        <div class="w-full h-full shrink-0">
-                                                            <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}"
-                                                                class="w-full h-full object-cover select-none pointer-events-none"
-                                                                draggable="false">
-                                                        </div>
+                                                    <!-- Slide 1 -->
+                                                    <div class="w-full h-full shrink-0 relative">
+                                                        <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}"
+                                                            class="w-full h-full object-cover select-none pointer-events-none"
+                                                            draggable="false">
+                                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                                                    </div>
+
+                                                    <!-- Slide 2 -->
+                                                    <div class="w-full h-full shrink-0 relative">
+                                                        <img src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}"
+                                                            class="w-full h-full object-cover select-none pointer-events-none"
+                                                            draggable="false">
+                                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                                                    </div>
+
+                                                    <!-- Slide 3 -->
+                                                    <div class="w-full h-full shrink-0 relative">
+                                                        <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}"
+                                                            class="w-full h-full object-cover select-none pointer-events-none"
+                                                            draggable="false">
+                                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
                                                     </div>
                                                 </div>
 
-                                                <!-- Indikator Dots & Navigasi Panah Geser -->
-                                                <div class="flex items-center justify-center gap-2 mt-2 sm:mt-2.5 pointer-events-auto">
-                                                    <button type="button" @click.stop="prev()"
-                                                        class="w-6 h-6 flex items-center justify-center rounded-full transition {{ $isDark ? 'text-white/60 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' }}"
-                                                        title="Sebelumnya">
-                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-                                                        </svg>
-                                                    </button>
+                                                <!-- Overlay Click-to-Slide Arrows on Hover / Focus -->
+                                                <button type="button" @click.stop="prev()"
+                                                    class="absolute top-1/2 -translate-y-1/2 left-3 sm:left-4 w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-black/50 hover:bg-black/80 text-white backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 group-active:opacity-100 focus:opacity-100 transition-all duration-300 shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                                                    title="Foto Sebelumnya" aria-label="Foto Sebelumnya">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                                                    </svg>
+                                                </button>
 
-                                                    <button type="button" @click.stop="goTo(0)"
-                                                        class="h-1.5 rounded-full transition-all duration-300"
-                                                        :class="current === 0 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40' : 'w-2 bg-slate-300' }}'"
-                                                        title="Foto 1">
-                                                    </button>
-                                                    <button type="button" @click.stop="goTo(1)"
-                                                        class="h-1.5 rounded-full transition-all duration-300"
-                                                        :class="current === 1 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40' : 'w-2 bg-slate-300' }}'"
-                                                        title="Foto 2">
-                                                    </button>
-                                                    <button type="button" @click.stop="goTo(2)"
-                                                        class="h-1.5 rounded-full transition-all duration-300"
-                                                        :class="current === 2 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40' : 'w-2 bg-slate-300' }}'"
-                                                        title="Foto 3">
-                                                    </button>
+                                                <button type="button" @click.stop="next()"
+                                                    class="absolute top-1/2 -translate-y-1/2 right-3 sm:right-4 w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-black/50 hover:bg-black/80 text-white backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 group-active:opacity-100 focus:opacity-100 transition-all duration-300 shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                                                    title="Foto Berikutnya" aria-label="Foto Berikutnya">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </button>
+                                            </div>
 
-                                                    <button type="button" @click.stop="next()"
-                                                        class="w-6 h-6 flex items-center justify-center rounded-full transition {{ $isDark ? 'text-white/60 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' }}"
-                                                        title="Berikutnya">
-                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-                                                        </svg>
-                                                    </button>
+                                            <!-- DESKRIPSI GAMBAR KECIL DENGAN ANIMASI FADE IN & FADE OUT HALUS & INDIKATOR SLIDING (TANPA PANAH BAWAH) -->
+                                            <div class="mt-2.5 sm:mt-3 w-full flex items-center justify-between gap-3 px-1">
+                                                
+                                                <!-- Bagian Kiri: Teks Deskripsi Gambar (Fade In & Fade Out Halus Mengikuti Momentum Slider) -->
+                                                <div class="relative flex-1 min-h-[34px] sm:min-h-[38px] grid grid-cols-1 grid-rows-1 items-center overflow-hidden">
+                                                    @foreach($cardDescs as $idx => $desc)
+                                                        <div x-show="current === {{ $idx }}"
+                                                             x-transition:enter="transition-all duration-400 ease-out delay-100"
+                                                             x-transition:enter-start="opacity-0 translate-y-1"
+                                                             x-transition:enter-end="opacity-100 translate-y-0"
+                                                             x-transition:leave="transition-all duration-200 ease-in"
+                                                             x-transition:leave-start="opacity-100 translate-y-0"
+                                                             x-transition:leave-end="opacity-0 -translate-y-1"
+                                                             class="col-start-1 row-start-1 flex items-center pr-2">
+                                                            
+                                                            <p class="text-xs sm:text-[13px] leading-snug font-medium italic {{ $isDark ? 'text-white/85' : 'text-slate-600' }} line-clamp-2">
+                                                                {{ $desc }}
+                                                            </p>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+
+                                                <!-- Bagian Kanan: Indikator Titik Slider (Dots) Saja Tanpa Panah Tambahan -->
+                                                <div class="flex items-center gap-1.5 shrink-0 select-none py-1">
+                                                    @foreach([0, 1, 2] as $idx)
+                                                        <button type="button" @click.stop="goTo({{ $idx }})"
+                                                            class="h-1.5 rounded-sm transition-all duration-300"
+                                                            :class="current === {{ $idx }} ? '{{ $isDark ? 'w-5 bg-white' : 'w-5 bg-[#0A3D29]' }}' : '{{ $isDark ? 'w-1.5 bg-white/40 hover:bg-white/70' : 'w-1.5 bg-slate-300 hover:bg-slate-400' }}'"
+                                                            title="Foto {{ $idx + 1 }}">
+                                                        </button>
+                                                    @endforeach
                                                 </div>
                                             </div>
+
+                                            <!-- Tombol Kelola Foto & Deskripsi Khusus Admin -->
+                                            @auth
+                                                @if(auth()->user()->isAdmin())
+                                                    <div class="mt-3 flex justify-center">
+                                                        <a href="{{ route('admin.ppko.edit', $pojok) }}"
+                                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-xs transition hover:scale-105 active:scale-95 {{ $isDark ? 'bg-white hover:bg-slate-100 text-[#0A3D29]' : 'bg-slate-900 hover:bg-slate-800 text-white' }}">
+                                                            <svg class="w-3.5 h-3.5 {{ $isDark ? 'text-[#0A3D29]' : 'text-emerald-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                                            </svg>
+                                                            <span>Kelola 3 Foto & Deskripsi</span>
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                            @endauth
+
                                         </div>
-
-                                        <!-- TAMPILAN DESKTOP (>= 1024px): 3 STACKED CARDS ARTISTIK BERKIPAS -->
-                                        <div class="hidden lg:block w-full">
-                                            <div x-data="{
-                                                            order: [0, 1, 2],
-                                                            isShuffling: false,
-                                                            timer: null,
-                                                            isEven: {{ $isEven ? 'true' : 'false' }},
-                                                            init() {
-                                                                this.startAuto();
-                                                            },
-                                                            startAuto() {
-                                                                if (this.timer) clearInterval(this.timer);
-                                                                this.timer = setInterval(() => {
-                                                                    this.next();
-                                                                }, 3600);
-                                                            },
-                                                            pause() {
-                                                                if (this.timer) clearInterval(this.timer);
-                                                            },
-                                                            resume() {
-                                                                this.startAuto();
-                                                            },
-                                                            next() {
-                                                                if (this.isShuffling) return;
-                                                                this.isShuffling = true;
-                                                                const top = this.order.shift();
-                                                                this.order.push(top);
-                                                                setTimeout(() => {
-                                                                    this.isShuffling = false;
-                                                                }, 650);
-                                                            },
-                                                            prev() {
-                                                                if (this.isShuffling) return;
-                                                                this.isShuffling = true;
-                                                                const bottom = this.order.pop();
-                                                                this.order.unshift(bottom);
-                                                                setTimeout(() => {
-                                                                    this.isShuffling = false;
-                                                                }, 650);
-                                                            },
-                                                            setFront(cardIdx) {
-                                                                let count = 0;
-                                                                while (this.order[0] !== cardIdx && count < 3) {
-                                                                    this.order.push(this.order.shift());
-                                                                    count++;
-                                                                }
-                                                            },
-                                                            getCardClass(cardIndex) {
-                                                                const pos = this.order.indexOf(cardIndex);
-                                                                if (this.isEven) {
-                                                                    if (pos === 0) {
-                                                                        return 'z-30 scale-100 rotate-[3.5deg] translate-x-0 translate-y-0 opacity-100 shadow-[0_20px_40px_-6px_rgba(0,0,0,0.65),0_8px_18px_-6px_rgba(0,0,0,0.45)]';
-                                                                    } else if (pos === 1) {
-                                                                        return 'z-20 scale-[0.97] -rotate-[3.5deg] -translate-x-8 -translate-y-3 opacity-95 shadow-[0_14px_28px_-6px_rgba(0,0,0,0.55),0_4px_12px_-4px_rgba(0,0,0,0.35)]';
-                                                                    } else {
-                                                                        return 'z-10 scale-[0.94] -rotate-[8deg] -translate-x-16 translate-y-3 opacity-90 shadow-[0_8px_20px_-4px_rgba(0,0,0,0.45)]';
-                                                                    }
-                                                                } else {
-                                                                    if (pos === 0) {
-                                                                        return 'z-30 scale-100 -rotate-[3.5deg] translate-x-0 translate-y-0 opacity-100 shadow-[0_20px_40px_-8px_rgba(0,0,0,0.30),0_8px_18px_-6px_rgba(0,0,0,0.18)]';
-                                                                    } else if (pos === 1) {
-                                                                        return 'z-20 scale-[0.97] rotate-[3.5deg] translate-x-8 -translate-y-3 opacity-95 shadow-[0_14px_26px_-6px_rgba(0,0,0,0.24),0_4px_12px_-4px_rgba(0,0,0,0.14)]';
-                                                                    } else {
-                                                                        return 'z-10 scale-[0.94] rotate-[8deg] translate-x-16 translate-y-3 opacity-90 shadow-[0_8px_18px_-4px_rgba(0,0,0,0.18)]';
-                                                                    }
-                                                                }
-                                                            }
-                                                        }"
-                                                @mouseenter="pause()"
-                                                @mouseleave="resume()"
-                                                @click="next()"
-                                                class="harmoni-cards-animate relative w-[430px] h-[430px] mx-auto cursor-pointer select-none group">
-
-                                                <!-- KARTU 1 (FOTO 1) -->
-                                                <div class="absolute inset-0 rounded-[36px] overflow-hidden bg-slate-200 border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
-                                                    :class="getCardClass(0)">
-                                                    <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}"
-                                                        class="w-full h-full object-cover select-none pointer-events-none"
-                                                        draggable="false">
-                                                </div>
-
-                                                <!-- KARTU 2 (FOTO 2) -->
-                                                <div class="absolute inset-0 rounded-[36px] overflow-hidden bg-slate-300 border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
-                                                    :class="getCardClass(1)">
-                                                    <img src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}"
-                                                        class="w-full h-full object-cover select-none pointer-events-none"
-                                                        draggable="false">
-                                                </div>
-
-                                                <!-- KARTU 3 (FOTO 3) -->
-                                                <div class="absolute inset-0 rounded-[36px] overflow-hidden bg-slate-400 border-2 {{ $isDark ? 'border-white/25' : 'border-white/80' }} transition-all duration-700 ease-[cubic-bezier(0.34,1.35,0.64,1)]"
-                                                    :class="getCardClass(2)">
-                                                    <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}"
-                                                        class="w-full h-full object-cover select-none pointer-events-none"
-                                                        draggable="false">
-                                                </div>
-
-                                                <!-- Pagination Dots Desktop -->
-                                                <div class="absolute -bottom-8 inset-x-0 flex items-center justify-center gap-2 pointer-events-auto">
-                                                    <button type="button" @click.stop="setFront(0)"
-                                                        class="h-1.5 rounded-full transition-all duration-300"
-                                                        :class="order[0] === 0 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
-                                                        title="Pindah ke Kartu 1">
-                                                    </button>
-                                                    <button type="button" @click.stop="setFront(1)"
-                                                        class="h-1.5 rounded-full transition-all duration-300"
-                                                        :class="order[0] === 1 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
-                                                        title="Pindah ke Kartu 2">
-                                                    </button>
-                                                    <button type="button" @click.stop="setFront(2)"
-                                                        class="h-1.5 rounded-full transition-all duration-300"
-                                                        :class="order[0] === 2 ? '{{ $isDark ? 'w-6 bg-white' : 'w-6 bg-slate-900' }}' : '{{ $isDark ? 'w-2 bg-white/40 hover:bg-white/70' : 'w-2 bg-slate-300 hover:bg-slate-500' }}'"
-                                                        title="Pindah ke Kartu 3">
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Tombol Kelola Foto Khusus Admin -->
-                                        @auth
-                                            @if(auth()->user()->isAdmin())
-                                                <div class="mt-6 flex justify-center">
-                                                    <a href="{{ route('admin.ppko.edit', $pojok) }}"
-                                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow-xs transition hover:scale-105 active:scale-95 {{ $isDark ? 'bg-white hover:bg-slate-100 text-[#0A3D29]' : 'bg-slate-900 hover:bg-slate-800 text-white' }}">
-                                                        <svg class="w-3.5 h-3.5 {{ $isDark ? 'text-[#0A3D29]' : 'text-emerald-400' }}"
-                                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                                        </svg>
-                                                        <span>Kelola 3 Foto Kartu</span>
-                                                    </a>
-                                                </div>
-                                            @endif
-                                        @endauth
                                     </div>
                                 </div>
                             </div>

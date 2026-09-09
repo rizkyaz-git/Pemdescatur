@@ -86,197 +86,150 @@
     </div>
 
     @php
-        $isHarmoni = ($pojok->id == 1);
-        $defaultImages = [
-            1 => asset('images/cover_ppko.png'),
-            2 => asset('images/remen_maos_mockup.png'),
-            3 => asset('images/coffee_processing.png'),
-            4 => asset('images/culture_pura.png'),
-            5 => asset('images/sawah_irigasi.png'),
-        ];
-        $hasCustomPhoto = !empty($pojok->gambar);
-        $currentPhoto = $hasCustomPhoto ? asset('storage/' . $pojok->gambar) : ($defaultImages[$pojok->id] ?? asset('images/cover_ppko.png'));
-
-        // For Pojok Harmoni 3-Card Stack Showcase
-        $cardPhotos = [
+        $defaultFallbackCards = [
             1 => [
-                'title' => 'Kartu 1 (Depan / Teratas)',
-                'badge' => 'Front Card',
-                'hasCustom' => !empty($pojok->gambar),
-                'url' => !empty($pojok->gambar) ? asset('storage/' . $pojok->gambar) : asset('images/cover_ppko.png'),
-                'desc' => 'Tampil paling depan pada tumpukan kartu bergaya shuffle Pojok Harmoni.',
+                ['url' => asset('images/cover_ppko.png'), 'desc' => 'Sesi bimbingan belajar dan ruang kreasi anak-anak Desa Catur'],
+                ['url' => asset('images/culture_pura.png'), 'desc' => 'Kegiatan keagamaan dan penguatan harmoni sosial lintas warga'],
+                ['url' => asset('images/sawah_irigasi.png'), 'desc' => 'Ruang konseling dan pendampingan kesejahteraan psikososial keluarga'],
             ],
             2 => [
-                'title' => 'Kartu 2 (Tengah)',
-                'badge' => 'Middle Card',
-                'hasCustom' => !empty($pojok->gambar_2),
-                'url' => !empty($pojok->gambar_2) ? asset('storage/' . $pojok->gambar_2) : asset('images/culture_pura.png'),
-                'desc' => 'Tampil di lapisan kedua pada tumpukan kartu bergaya shuffle Pojok Harmoni.',
+                ['url' => asset('images/remen_maos_mockup.png'), 'desc' => 'Pojok literasi ramah anak dan pojok baca Remen Maos'],
+                ['url' => asset('images/hero_landscape.png'), 'desc' => 'Permainan edukatif dan aktivitas dongeng inspiratif nusantara'],
+                ['url' => asset('images/cover_ppko.png'), 'desc' => 'Edukasi kesehatan emosional dan pembentukan karakter generasi muda'],
             ],
             3 => [
-                'title' => 'Kartu 3 (Belakang / Terbawah)',
-                'badge' => 'Back Card',
+                ['url' => asset('images/coffee_processing.png'), 'desc' => 'Pendampingan pengolahan pasca panen dan pengemasan produk kopi lokal'],
+                ['url' => asset('images/coffee_plantation.png'), 'desc' => 'Pelatihan pemasaran digital dan optimasi katalog e-commerce warga'],
+                ['url' => asset('images/sawah_irigasi.png'), 'desc' => 'Workshop manajemen keuangan mandiri bagi pelaku usaha desa'],
+            ],
+            4 => [
+                ['url' => asset('images/culture_pura.png'), 'desc' => 'Pelestarian situs cagar budaya dan tradisi kearifan lokal Desa Catur'],
+                ['url' => asset('images/umbul_siraman.png'), 'desc' => 'Dokumentasi seni karawitan dan ruang ekspresi kebudayaan tradisional'],
+                ['url' => asset('images/masjid_wonokusumo.png'), 'desc' => 'Wisata edukasi sejarah dan pengenalan warisan leluhur desa'],
+            ],
+            5 => [
+                ['url' => asset('images/sawah_irigasi.png'), 'desc' => 'Inovasi sistem irigasi cerdas dan pemetaan lahan pertanian produktif'],
+                ['url' => asset('images/coffee_plantation.png'), 'desc' => 'Pemberdayaan kelompok tani dalam pembuatan pupuk organik ramah lingkungan'],
+                ['url' => asset('images/hero_landscape.png'), 'desc' => 'Budidaya tanaman pangan berkelanjutan menuju ketahanan pangan desa'],
+            ],
+        ];
+
+        $defSet = $defaultFallbackCards[$pojok->id] ?? $defaultFallbackCards[1];
+
+        $cardPhotos = [
+            1 => [
+                'title' => 'Foto 1 (Slide Utama)',
+                'badge' => 'Slide 1',
+                'hasCustom' => !empty($pojok->gambar),
+                'url' => !empty($pojok->gambar) ? asset('storage/' . $pojok->gambar) : $defSet[0]['url'],
+                'desc' => !empty($pojok->deskripsi_gambar) ? $pojok->deskripsi_gambar : $defSet[0]['desc'],
+                'hasCustomDesc' => !empty($pojok->deskripsi_gambar),
+            ],
+            2 => [
+                'title' => 'Foto 2 (Slide Kedua)',
+                'badge' => 'Slide 2',
+                'hasCustom' => !empty($pojok->gambar_2),
+                'url' => !empty($pojok->gambar_2) ? asset('storage/' . $pojok->gambar_2) : $defSet[1]['url'],
+                'desc' => !empty($pojok->deskripsi_gambar_2) ? $pojok->deskripsi_gambar_2 : $defSet[1]['desc'],
+                'hasCustomDesc' => !empty($pojok->deskripsi_gambar_2),
+            ],
+            3 => [
+                'title' => 'Foto 3 (Slide Ketiga)',
+                'badge' => 'Slide 3',
                 'hasCustom' => !empty($pojok->gambar_3),
-                'url' => !empty($pojok->gambar_3) ? asset('storage/' . $pojok->gambar_3) : asset('images/sawah_irigasi.png'),
-                'desc' => 'Tampil di lapisan belakang pada tumpukan kartu bergaya shuffle Pojok Harmoni.',
+                'url' => !empty($pojok->gambar_3) ? asset('storage/' . $pojok->gambar_3) : $defSet[2]['url'],
+                'desc' => !empty($pojok->deskripsi_gambar_3) ? $pojok->deskripsi_gambar_3 : $defSet[2]['desc'],
+                'hasCustomDesc' => !empty($pojok->deskripsi_gambar_3),
             ],
         ];
     @endphp
 
     <!-- ========================================================================= -->
-    <!-- 1. KELOLA FOTO POJOK -->
+    <!-- 1. KELOLA 3 FOTO SLIDER & DESKRIPSI GAMBAR POJOK -->
     <!-- ========================================================================= -->
-    @if($isHarmoni)
-        <!-- KHUSUS POJOK HARMONI: 3 FOTO KARTU TUMPUK (CARD STACK) -->
-        <div class="bg-white rounded-xl border border-gray-200 shadow-xs p-6 sm:p-8 space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-gray-100">
-                <div>
-                    <h4 class="font-serif font-bold text-base text-gray-900 flex items-center gap-2">
-                        <span>🃏</span>
-                        <span>3 Foto Kartu Tumpuk (Card Stack) {{ $pojok->nama }}</span>
-                    </h4>
-                    <p class="text-xs text-gray-500 mt-0.5">Pojok Harmoni menampilkan galeri 3 kartu foto bertumpuk yang berotasi otomatis. Anda dapat memasukkan 3 foto berbeda untuk masing-masing kartu.</p>
-                </div>
-                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800">
-                    ✨ Fitur Kartu Tumpuk Aktif
-                </span>
+    <div class="bg-white rounded-xl border border-gray-200 shadow-xs p-6 sm:p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-gray-100">
+            <div>
+                <h4 class="font-serif font-bold text-base text-gray-900 flex items-center gap-2">
+                    <span>🖼️</span>
+                    <span>Kelola 3 Foto Slider & Keterangan Gambar ({{ $pojok->nama }})</span>
+                </h4>
+                <p class="text-xs text-gray-500 mt-0.5">Semua foto akan ditampilkan bergaya sliding otomatis di section profil PPKO. Anda dapat mengunggah file foto baru dan menuliskan deskripsi gambar untuk masing-masing slide.</p>
             </div>
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 shrink-0">
+                ✨ 3 Foto Slider Aktif
+            </span>
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                @foreach($cardPhotos as $slot => $card)
-                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 flex flex-col justify-between space-y-4">
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="font-bold text-xs text-slate-800 uppercase tracking-wider">{{ $card['title'] }}</span>
-                                @if($card['hasCustom'])
-                                    <span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Kustom</span>
-                                @else
-                                    <span class="text-[10px] font-medium bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">Bawaan</span>
-                                @endif
-                            </div>
-                            <p class="text-[11px] text-gray-500 mb-3">{{ $card['desc'] }}</p>
-                            
-                            <div class="relative aspect-square bg-slate-200 rounded-xl overflow-hidden border border-slate-300 shadow-xs">
-                                <img id="card-preview-{{ $slot }}" 
-                                     src="{{ $card['url'] }}" 
-                                     alt="{{ $card['title'] }}" 
-                                     class="w-full h-full object-cover">
-                            </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            @foreach($cardPhotos as $slot => $card)
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-xs text-slate-800 uppercase tracking-wider">{{ $card['title'] }}</span>
+                            @if($card['hasCustom'] || $card['hasCustomDesc'])
+                                <span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Kustom</span>
+                            @else
+                                <span class="text-[10px] font-medium bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">Bawaan</span>
+                            @endif
                         </div>
 
-                        <div class="space-y-3 pt-2 border-t border-slate-200">
-                            <form action="{{ route('admin.ppko.foto.update', $pojok) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
-                                @csrf
-                                <input type="hidden" name="slot" value="{{ $slot }}">
-                                <label class="block text-[11px] font-semibold text-slate-700">Pilih Foto Kartu {{ $slot }}</label>
+                        <!-- Image Preview Box -->
+                        <div class="relative aspect-[16/10] bg-slate-200 rounded-xl overflow-hidden border border-slate-300 shadow-xs mb-3">
+                            <img id="card-preview-{{ $slot }}" 
+                                 src="{{ $card['url'] }}" 
+                                 alt="{{ $card['title'] }}" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 pt-2 border-t border-slate-200">
+                        <form action="{{ route('admin.ppko.foto.update', $pojok) }}" method="POST" enctype="multipart/form-data" class="space-y-2.5">
+                            @csrf
+                            <input type="hidden" name="slot" value="{{ $slot }}">
+                            
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Ganti File Foto (Opsional jika hanya ubah teks)</label>
                                 <input type="file" 
                                        name="foto" 
                                        id="foto-slot-{{ $slot }}"
                                        accept="image/jpeg,image/png,image/webp" 
-                                       class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-2.5 file:rounded file:border-0 file:text-[11px] file:font-semibold file:bg-[#0d631b] file:text-white hover:file:bg-emerald-800 cursor-pointer bg-white p-1.5 rounded-md border border-gray-300 transition" 
-                                       required
+                                       class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-2.5 file:rounded file:border-0 file:text-[11px] file:font-semibold file:bg-[#0d631b] file:text-white hover:file:bg-emerald-800 cursor-pointer bg-white p-1 rounded-md border border-gray-300 transition" 
                                        onchange="previewCardImage(this, 'card-preview-{{ $slot }}')">
-                                <button type="submit" class="w-full inline-flex items-center justify-center gap-1.5 bg-[#0d631b] hover:bg-emerald-800 text-white font-bold text-xs py-2 px-3 rounded-lg shadow-xs transition">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                                    <span>Simpan Kartu {{ $slot }}</span>
-                                </button>
-                            </form>
+                                <p class="text-[10px] text-gray-400 mt-0.5">JPG, PNG, WEBP (Maks 5MB).</p>
+                            </div>
 
-                            @if($card['hasCustom'])
-                                <form action="{{ route('admin.ppko.foto.delete', $pojok) }}" method="POST" onsubmit="return confirm('Kembalikan foto kartu ke-{{ $slot }} ke foto bawaan?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <input type="hidden" name="slot" value="{{ $slot }}">
-                                    <button type="submit" class="w-full inline-flex items-center justify-center gap-1 text-[11px] font-semibold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 py-1.5 px-2.5 rounded-md transition">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                        <span>Reset Kartu {{ $slot }}</span>
-                                    </button>
-                                </form>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @else
-        <!-- UNTUK POJOK LAINNYA: 1 FOTO SAMPUL STANDAR -->
-        <div class="bg-white rounded-xl border border-gray-200 shadow-xs p-6 sm:p-8 space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-gray-100">
-                <div>
-                    <h4 class="font-serif font-bold text-base text-gray-900 flex items-center gap-2">
-                        <span>📷</span>
-                        <span>Foto Sampul {{ $pojok->nama }}</span>
-                    </h4>
-                    <p class="text-xs text-gray-500 mt-0.5">Foto sampul akan ditampilkan di section katalog pojok pada halaman profil PPKO.</p>
-                </div>
-                <div>
-                    @if($hasCustomPhoto)
-                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
-                            ✓ Foto Kustom Aktif
-                        </span>
-                    @else
-                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                            Menggunakan Foto Bawaan
-                        </span>
-                    @endif
-                </div>
-            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Deskripsi / Keterangan Gambar</label>
+                                <textarea name="deskripsi" 
+                                          rows="2" 
+                                          class="w-full text-xs rounded-md border-gray-300 shadow-2xs focus:border-emerald-600 focus:ring-emerald-600 p-2 bg-white" 
+                                          placeholder="Tuliskan keterangan singkat aktivitas foto ini...">{{ old('deskripsi', $card['desc']) }}</textarea>
+                                <p class="text-[10px] text-gray-400 mt-0.5">Akan tampil di bawah foto dengan animasi fade in/out halus.</p>
+                            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                <!-- Image Preview Box -->
-                <div class="md:col-span-6 space-y-2">
-                    <span class="block text-xs font-bold text-gray-600 uppercase tracking-wider">Pratinjau Foto Sampul Saat Ini</span>
-                    <div class="relative aspect-[16/10] bg-slate-100 rounded-xl overflow-hidden border border-gray-200 shadow-inner">
-                        <img id="cover-preview" 
-                             src="{{ $currentPhoto }}" 
-                             alt="{{ $pojok->nama }}" 
-                             class="w-full h-full object-cover">
-                    </div>
-                    <p class="text-[11px] text-gray-400">Rasio tampilan optimal: 16:10 atau 16:9 (Landscape).</p>
-                </div>
-
-                <!-- Upload & Actions Form -->
-                <div class="md:col-span-6 space-y-4">
-                    <form action="{{ route('admin.ppko.foto.update', $pojok) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
-                        @csrf
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                                Pilih Foto Baru untuk Foto Sampul
-                            </label>
-                            <input type="file" 
-                                   name="foto" 
-                                   id="foto-input"
-                                   accept="image/jpeg,image/png,image/webp" 
-                                   class="w-full text-xs text-gray-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#0d631b] file:text-white hover:file:bg-emerald-800 cursor-pointer bg-gray-50 p-2.5 rounded-lg border border-gray-300 transition" 
-                                   required
-                                   onchange="previewCoverImage(this)">
-                            <p class="text-[11px] text-gray-400 mt-1">Mendukung format JPG, PNG, WEBP (Maksimal 5MB).</p>
-                        </div>
-
-                        <div class="flex items-center gap-3 pt-2">
-                            <button type="submit" class="inline-flex items-center gap-1.5 bg-[#0d631b] hover:bg-emerald-800 text-white font-bold text-xs px-5 py-2.5 rounded-lg shadow-sm transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                                <span>Simpan Foto Sampul Baru</span>
+                            <button type="submit" class="w-full inline-flex items-center justify-center gap-1.5 bg-[#0d631b] hover:bg-emerald-800 text-white font-bold text-xs py-2 px-3 rounded-lg shadow-xs transition">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>Simpan Foto & Deskripsi {{ $slot }}</span>
                             </button>
-                        </div>
-                    </form>
+                        </form>
 
-                    @if($hasCustomPhoto)
-                        <div class="pt-3 border-t border-gray-100">
-                            <form action="{{ route('admin.ppko.foto.delete', $pojok) }}" method="POST" onsubmit="return confirm('Kembalikan foto sampul ke foto bawaan sistem?')">
+                        @if($card['hasCustom'] || $card['hasCustomDesc'])
+                            <form action="{{ route('admin.ppko.foto.delete', $pojok) }}" method="POST" onsubmit="return confirm('Kembalikan foto dan deskripsi slide ke-{{ $slot }} ke setelan bawaan?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 px-3.5 py-2 rounded-lg transition">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    <span>Reset ke Foto Bawaan</span>
+                                <input type="hidden" name="slot" value="{{ $slot }}">
+                                <button type="submit" class="w-full inline-flex items-center justify-center gap-1 text-[11px] font-semibold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 py-1.5 px-2.5 rounded-md transition">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    <span>Reset ke Bawaan</span>
                                 </button>
                             </form>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
                 </div>
-            </div>
+            @endforeach
         </div>
-    @endif
+    </div>
 
     <!-- ========================================================================= -->
     <!-- 2. FORM TAMBAH FILE UNDUHAN BARU -->
