@@ -938,11 +938,11 @@
 
                                                         box.style.height = currentH.toFixed(2) + 'px';
 
-                                                        // Kompensasi scroll layar: HANYA bila bertambah tinggi dan mendorong tombol ke bawah
-                                                        if (btn && targetTop !== null && this.expanded && endH > startH) {
+                                                        // Kompensasi scroll layar: kunci posisi tombol di viewport persis pada targetTop
+                                                        if (btn && targetTop !== null) {
                                                             const currentTop = btn.getBoundingClientRect().top;
                                                             const diff = currentTop - targetTop;
-                                                            if (diff > 0.5) {
+                                                            if (Math.abs(diff) > 0.2) {
                                                                 window.scrollBy(0, diff);
                                                             }
                                                         }
@@ -954,10 +954,10 @@
                                                             box.style.height = '';
                                                             box.style.overflow = '';
 
-                                                            // Penyesuaian akhir tombol
-                                                            if (btn && targetTop !== null && this.expanded && endH > startH) {
+                                                            // Penyesuaian akhir tombol agar posisi targetTop terkunci sempurna
+                                                            if (btn && targetTop !== null) {
                                                                 const finalDiff = btn.getBoundingClientRect().top - targetTop;
-                                                                if (finalDiff > 0.5) {
+                                                                if (Math.abs(finalDiff) > 0.2) {
                                                                     window.scrollBy(0, finalDiff);
                                                                 }
                                                             }
@@ -993,6 +993,7 @@
 
                                         <!-- AREA KONTEN UTAMA DENGAN TRANSISI TINGGI YANG KONTINU & MULUS -->
                                         <div x-ref="contentBox"
+                                            style="overflow-anchor: none;"
                                             class="relative w-full grid grid-cols-1 grid-rows-1 items-start min-h-0 sm:min-h-[280px] md:min-h-[220px] lg:min-h-[200px]">
 
                                             <!-- VIEW 1: TEKS DESKRIPSI POJOK (DEFAULT) -->
@@ -1004,7 +1005,7 @@
                                                 x-transition:leave="transition-opacity duration-180 ease-in pointer-events-none"
                                                 x-transition:leave-start="opacity-100"
                                                 x-transition:leave-end="opacity-0"
-                                                class="col-start-1 row-start-1 w-full grid grid-cols-1 {{ !empty($detailKanan) ? 'md:grid-cols-2' : '' }} gap-7 lg:gap-10 pt-2">
+                                                class="col-start-1 row-start-1 w-full flow-root grid grid-cols-1 {{ !empty($detailKanan) ? 'md:grid-cols-2' : '' }} gap-7 lg:gap-10 pt-2">
                                                 <!-- Kolom Kiri: Narasi Asli dari Database -->
                                                 <div class="harmoni-desc-animate">
                                                     <div
@@ -1033,78 +1034,15 @@
                                                 x-transition:leave="transition-opacity duration-180 ease-in pointer-events-none"
                                                 x-transition:leave-start="opacity-100"
                                                 x-transition:leave-end="opacity-0"
-                                                class="col-start-1 row-start-1 w-full pt-1 pb-2">
+                                                class="col-start-1 row-start-1 w-full flow-root pt-1 pb-2">
 
                                                 @if($pojok->kurikulums->isNotEmpty() || !empty($mitraKomunitas))
                                                     <div
-                                                        class="space-y-4 w-full pt-1">
+                                                        class="flex flex-col gap-4 w-full pt-1">
                                                         
-                                                        {{-- Modul Ajar / File Unduhan (Jika ada) --}}
-                                                        @foreach($pojok->kurikulums as $file)
-                                                            <div class="w-full">
-                                                                <!-- Horizontal Divider Line (Garis Tipis) -->
-                                                                <div
-                                                                    class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }} mb-2.5">
-                                                                </div>
-
-                                                                <!-- Content Row: Left Info & Right Actions -->
-                                                                <div class="flex items-start justify-between gap-4">
-                                                                    <!-- Left: Title, Italic Description & File Size -->
-                                                                    <div class="min-w-0 flex-1 pr-2">
-                                                                        <h5
-                                                                            class="font-bold text-sm sm:text-base leading-snug {{ $isDark ? 'text-white' : 'text-slate-900' }}">
-                                                                            {{ $file->judul }}
-                                                                        </h5>
-                                                                        @if(!empty($file->deskripsi))
-                                                                            <p
-                                                                                class="italic text-xs sm:text-[13px] leading-relaxed pt-0.5 {{ $isDark ? 'text-white/75' : 'text-slate-700' }}">
-                                                                                {{ $file->deskripsi }}
-                                                                            </p>
-                                                                        @endif
-                                                                        <!-- Ukuran File Dipindahkan ke Bawah Deskripsi -->
-                                                                        <span
-                                                                            class="block font-bold text-xs sm:text-sm tracking-tight pt-1.5 {{ $isDark ? 'text-emerald-300' : 'text-slate-800' }}">
-                                                                            {{ $file->formatted_file_size }}
-                                                                        </span>
-                                                                    </div>
-
-                                                                    <!-- Right: Stacked Unduh / Lihat Buttons -->
-                                                                    <div class="shrink-0 flex flex-col items-end gap-1.5 pt-0.5">
-                                                                        <!-- Tombol Unduh -->
-                                                                        <a href="{{ route('public.ppko.kurikulum.download', $file) }}"
-                                                                            class="w-22 sm:w-24 inline-flex items-center justify-center gap-1.5 py-1 px-2.5 rounded-md {{ $isDark ? 'bg-white hover:bg-emerald-50 text-[#0A3D29]' : 'bg-[#0A3D29] hover:bg-[#145C3B] text-white' }} active:scale-95 font-semibold text-xs transition shadow-2xs">
-                                                                            <svg class="w-3.5 h-3.5 {{ $isDark ? 'text-[#0A3D29]' : 'text-emerald-300' }} shrink-0"
-                                                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                    stroke-width="2"
-                                                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                                                            </svg>
-                                                                            <span>Unduh</span>
-                                                                        </a>
-
-                                                                        <!-- Tombol Lihat -->
-                                                                        <a href="{{ asset('storage/' . $file->file_path) }}"
-                                                                            target="_blank" rel="noopener noreferrer"
-                                                                            class="w-22 sm:w-24 inline-flex items-center justify-center gap-1.5 py-1 px-2.5 rounded-md {{ $isDark ? 'bg-white/10 hover:bg-white/20 text-white border border-white/40 hover:border-white' : 'bg-white hover:bg-emerald-50 text-[#0A3D29] border border-[#0A3D29]/30 hover:border-[#0A3D29]' }} active:scale-95 font-semibold text-xs transition shadow-2xs">
-                                                                            <svg class="w-3.5 h-3.5 {{ $isDark ? 'text-white' : 'text-[#0A3D29]' }} shrink-0"
-                                                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                    stroke-width="2"
-                                                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                    stroke-width="2"
-                                                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                                            </svg>
-                                                                            <span>Lihat</span>
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
-
-                                                        {{-- Informasi Mitra Komunitas (Minimalis, Serupa Format Unduhan Tanpa Tombol) --}}
+                                                        {{-- Informasi Mitra Komunitas (Tampil Pertama di Mobile, Kedua di Desktop) --}}
                                                         @if(!empty($mitraKomunitas))
-                                                            <div class="w-full">
+                                                            <div class="w-full order-1 lg:order-2">
                                                                 <!-- Horizontal Divider Line (Garis Tipis) -->
                                                                 <div
                                                                     class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }} mb-2.5">
@@ -1132,6 +1070,73 @@
                                                                         </ul>
                                                                     @endif
                                                                 </div>
+                                                            </div>
+                                                        @endif
+
+                                                        {{-- Modul Ajar / File Unduhan (Tampil Kedua di Mobile, Pertama di Desktop) --}}
+                                                        @if($pojok->kurikulums->isNotEmpty())
+                                                            <div class="w-full flex flex-col gap-4 order-2 lg:order-1">
+                                                                @foreach($pojok->kurikulums as $file)
+                                                                    <div class="w-full">
+                                                                        <!-- Horizontal Divider Line (Garis Tipis) -->
+                                                                        <div
+                                                                            class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }} mb-2.5">
+                                                                        </div>
+
+                                                                        <!-- Content Row: Left Info & Right Actions -->
+                                                                        <div class="flex items-start justify-between gap-4">
+                                                                            <!-- Left: Title, Italic Description & File Size -->
+                                                                            <div class="min-w-0 flex-1 pr-2">
+                                                                                <h5
+                                                                                    class="font-bold text-sm sm:text-base leading-snug {{ $isDark ? 'text-white' : 'text-slate-900' }}">
+                                                                                    {{ $file->judul }}
+                                                                                </h5>
+                                                                                @if(!empty($file->deskripsi))
+                                                                                    <p
+                                                                                        class="italic text-xs sm:text-[13px] leading-relaxed pt-0.5 {{ $isDark ? 'text-white/75' : 'text-slate-700' }}">
+                                                                                        {{ $file->deskripsi }}
+                                                                                    </p>
+                                                                                @endif
+                                                                                <!-- Ukuran File Dipindahkan ke Bawah Deskripsi -->
+                                                                                <span
+                                                                                    class="block font-bold text-xs sm:text-sm tracking-tight pt-1.5 {{ $isDark ? 'text-emerald-300' : 'text-slate-800' }}">
+                                                                                    {{ $file->formatted_file_size }}
+                                                                                </span>
+                                                                            </div>
+
+                                                                            <!-- Right: Stacked Unduh / Lihat Buttons -->
+                                                                            <div class="shrink-0 flex flex-col items-end gap-1.5 pt-0.5">
+                                                                                <!-- Tombol Unduh -->
+                                                                                <a href="{{ route('public.ppko.kurikulum.download', $file) }}"
+                                                                                    class="w-22 sm:w-24 inline-flex items-center justify-center gap-1.5 py-1 px-2.5 rounded-md {{ $isDark ? 'bg-white hover:bg-emerald-50 text-[#0A3D29]' : 'bg-[#0A3D29] hover:bg-[#145C3B] text-white' }} active:scale-95 font-semibold text-xs transition shadow-2xs">
+                                                                                    <svg class="w-3.5 h-3.5 {{ $isDark ? 'text-[#0A3D29]' : 'text-emerald-300' }} shrink-0"
+                                                                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                                            stroke-width="2"
+                                                                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                                                    </svg>
+                                                                                    <span>Unduh</span>
+                                                                                </a>
+
+                                                                                <!-- Tombol Lihat -->
+                                                                                <a href="{{ asset('storage/' . $file->file_path) }}"
+                                                                                    target="_blank" rel="noopener noreferrer"
+                                                                                    class="w-22 sm:w-24 inline-flex items-center justify-center gap-1.5 py-1 px-2.5 rounded-md {{ $isDark ? 'bg-white/10 hover:bg-white/20 text-white border border-white/40 hover:border-white' : 'bg-white hover:bg-emerald-50 text-[#0A3D29] border border-[#0A3D29]/30 hover:border-[#0A3D29]' }} active:scale-95 font-semibold text-xs transition shadow-2xs">
+                                                                                    <svg class="w-3.5 h-3.5 {{ $isDark ? 'text-white' : 'text-[#0A3D29]' }} shrink-0"
+                                                                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                                            stroke-width="2"
+                                                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                                            stroke-width="2"
+                                                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                                                    </svg>
+                                                                                    <span>Lihat</span>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
                                                             </div>
                                                         @endif
 
@@ -1391,7 +1396,7 @@
                                             </div>
 
                                             <!-- DESKRIPSI GAMBAR KECIL DENGAN ANIMASI FADE IN & FADE OUT HALUS & INDIKATOR SLIDING (TANPA PANAH BAWAH) -->
-                                            <div class="mt-3.5 sm:mt-4 w-full flex items-center justify-between gap-3 px-1">
+                                            <div class="mt-5 sm:mt-6 lg:mt-5 w-full flex items-center justify-between gap-3.5 px-1.5">
                                                 
                                                 <!-- Bagian Kiri: Teks Deskripsi Gambar (Fade In & Fade Out Halus Mengikuti Momentum Slider) -->
                                                 <div class="relative flex-1 min-h-[34px] sm:min-h-[38px] grid grid-cols-1 grid-rows-1 items-center overflow-hidden">
