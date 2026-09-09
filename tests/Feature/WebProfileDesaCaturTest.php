@@ -18,7 +18,6 @@ class WebProfileDesaCaturTest extends TestCase
         $this->get('/profil')->assertStatus(200)->assertSee('Profil Desa Catur');
         $this->get('/struktur')->assertStatus(200)->assertSee('Struktur Organisasi');
         $this->get('/berita')->assertStatus(200)->assertSee('Berita & Pengumuman');
-        $this->get('/statistik')->assertStatus(200)->assertSee('Statistik Desa');
         $this->get('/galeri')->assertStatus(200)->assertSee('Galeri Foto');
         $this->get('/layanan')->assertStatus(200)->assertSee('Pusat Layanan');
         $this->get('/kontak')->assertStatus(200)->assertSee('Kontak');

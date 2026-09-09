@@ -8,7 +8,6 @@ use App\Models\Menu;
 use App\Models\News;
 use App\Models\Official;
 use App\Models\Setting;
-use App\Models\Statistic;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -65,19 +64,7 @@ class AdminCrudTest extends TestCase
         $this->assertDatabaseMissing('officials', ['id' => $official->id]);
     }
 
-    public function test_admin_can_crud_statistics(): void
-    {
-        $response = $this->actingAs($this->admin)->post('/admin/statistics', [
-            'category' => 'Pertanian & Potensi',
-            'label' => 'Jumlah Kelompok Tani Kopi',
-            'value' => '12',
-            'unit' => 'Kelompok',
-            'period' => '2026',
-            'order' => 1,
-        ]);
-        $response->assertRedirect('/admin/statistics');
-        $this->assertDatabaseHas('statistics', ['label' => 'Jumlah Kelompok Tani Kopi']);
-    }
+
 
     public function test_admin_can_crud_galleries(): void
     {

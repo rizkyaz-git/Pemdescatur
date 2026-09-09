@@ -60,9 +60,6 @@
                 🏛️ Perangkat Desa
             </a>
 
-            <a href="{{ route('admin.statistics.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('admin.statistics.*') ? 'bg-[#0d631b] text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
-                📈 Data Statistik
-            </a>
 
             <a href="{{ route('admin.galleries.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('admin.galleries.*') ? 'bg-[#0d631b] text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                 🖼️ Galeri Foto

@@ -11,11 +11,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminUserSeeder::class,
             VillageProfileSeeder::class,
-            VillageStatSeeder::class,
             VillageRegionSeeder::class,
             OfficialSeeder::class,
             NewsSeeder::class,
-            StatisticSeeder::class,
             GallerySeeder::class,
             LocationSeeder::class,
             MenuSeeder::class,

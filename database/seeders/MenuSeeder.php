@@ -78,13 +78,6 @@ class MenuSeeder extends Seeder
             'is_external' => false,
         ]);
 
-        Menu::create([
-            'label' => 'Statistik Desa',
-            'slug_or_url' => '/statistik',
-            'order' => 6,
-            'is_active' => true,
-            'is_external' => false,
-        ]);
 
         Menu::create([
             'label' => 'Galeri Foto',

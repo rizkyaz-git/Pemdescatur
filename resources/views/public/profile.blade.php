@@ -84,39 +84,6 @@
                         </div>
                     </div>
 
-                    <!-- Kartu 2: Data Geografis Ringkas -->
-                    <div class="bg-white border border-[#DCE6DA] rounded-lg p-5 shadow-xs space-y-3">
-                        <h3
-                            class="font-serif font-bold text-xs uppercase tracking-widest text-[#0A3D29] border-b border-[#DCE6DA] pb-2">
-                            Data Ringkas Wilayah
-                        </h3>
-                        <div class="space-y-2 text-xs text-[#4B5851]">
-                            <div class="flex justify-between items-center py-1 border-b border-[#DCE6DA]/50">
-                                <span class="text-[#6C7B72]">Luas Wilayah</span>
-                                <span
-                                    class="font-bold text-[#20332A]">{{ number_format($profile->luas_wilayah_ha ?? 244.5, 1) }}
-                                    Ha</span>
-                            </div>
-                            <div class="flex justify-between items-center py-1 border-b border-[#DCE6DA]/50">
-                                <span class="text-[#6C7B72]">Ketinggian</span>
-                                <span class="font-bold text-[#20332A]">{{ $profile->ketinggian_mdpl ?? 269 }} mdpl</span>
-                            </div>
-                            <div class="flex justify-between items-center py-1 border-b border-[#DCE6DA]/50">
-                                <span class="text-[#6C7B72]">Jumlah Kadus</span>
-                                <span class="font-bold text-[#20332A]">3 Kebayanan</span>
-                            </div>
-                            <div class="flex justify-between items-center py-1 border-b border-[#DCE6DA]/50">
-                                <span class="text-[#6C7B72]">Jumlah Dukuh</span>
-                                <span class="font-bold text-[#20332A]">13 Pedukuhan</span>
-                            </div>
-                            <div class="flex justify-between items-center py-1 border-b border-[#DCE6DA]/50">
-                                <span class="text-[#6C7B72]">Curah Hujan</span>
-                                <span class="font-bold text-[#20332A]">{{ number_format($profile->curah_hujan_mm ?? 2368) }}
-                                    mm/th</span>
-                            </div>
-                        </div>
-                    </div>
-
                 </aside>
 
 
@@ -152,64 +119,40 @@
                 {{-- ================= RIGHT COLUMN: ~3 COLS (Card Panel Kanan) ================= --}}
                 <aside class="lg:col-span-3 space-y-6 order-3">
 
-                    <!-- Kartu 3: Wilayah Pedukuhan -->
+                    <!-- Kartu: Data Geografis Ringkas (Dipindahkan di atas Batas Wilayah) -->
                     <div class="bg-white border border-[#DCE6DA] rounded-lg p-5 shadow-xs space-y-3">
                         <h3
                             class="font-serif font-bold text-xs uppercase tracking-widest text-[#0A3D29] border-b border-[#DCE6DA] pb-2">
-                            Wilayah Pedukuhan
+                            Data Ringkas Wilayah
                         </h3>
-
-                        <div class="space-y-4 pt-1">
-                            @if(isset($regions) && $regions->count())
-                                @foreach($regions as $kadusNo => $dukuhs)
-                                    <div class="space-y-1">
-                                        <span class="text-[10px] font-bold uppercase tracking-wider text-[#0A3D29] block">
-                                            Kebayanan Kadus {{ $kadusNo }}
-                                        </span>
-                                        <h4 class="font-serif font-bold text-xs sm:text-sm text-[#20332A] leading-snug">
-                                            {{ $dukuhs->pluck('nama_dukuh')->join(', ') }}
-                                        </h4>
-                                        <span class="text-[11px] text-[#6C7B72] block">
-                                            {{ $dukuhs->count() }} Pedukuhan
-                                        </span>
-                                    </div>
-                                @endforeach
-                            @else
-                                <p class="text-xs text-[#6C7B72]">13 Pedukuhan di bawah 3 Kebayanan Kadus.</p>
-                            @endif
+                        <div class="space-y-2 text-xs text-[#4B5851]">
+                            <div class="flex justify-between items-center py-1 border-b border-[#DCE6DA]/50">
+                                <span class="text-[#6C7B72]">Luas Wilayah</span>
+                                <span
+                                    class="font-bold text-[#20332A]">{{ number_format($profile->luas_wilayah_ha ?? 244.5, 1) }}
+                                    Ha</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1 border-b border-[#DCE6DA]/50">
+                                <span class="text-[#6C7B72]">Ketinggian</span>
+                                <span class="font-bold text-[#20332A]">{{ $profile->ketinggian_mdpl ?? 269 }} mdpl</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1 border-b border-[#DCE6DA]/50">
+                                <span class="text-[#6C7B72]">Jumlah Kadus</span>
+                                <span class="font-bold text-[#20332A]">3 Kebayanan</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1 border-b border-[#DCE6DA]/50">
+                                <span class="text-[#6C7B72]">Jumlah Dukuh</span>
+                                <span class="font-bold text-[#20332A]">13 Pedukuhan</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1 border-b border-[#DCE6DA]/50">
+                                <span class="text-[#6C7B72]">Curah Hujan</span>
+                                <span class="font-bold text-[#20332A]">{{ number_format($profile->curah_hujan_mm ?? 2368) }}
+                                    mm/th</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Kartu 4: Kelembagaan Desa -->
-                    <div class="bg-white border border-[#DCE6DA] rounded-lg p-5 shadow-xs space-y-3">
-                        <h3
-                            class="font-serif font-bold text-xs uppercase tracking-widest text-[#0A3D29] border-b border-[#DCE6DA] pb-2">
-                            Kelembagaan Desa
-                        </h3>
-
-                        <ul class="space-y-2 text-xs text-[#4B5851]">
-                            <li class="hover:text-[#0A3D29] transition-colors">
-                                <span class="font-bold text-[#20332A]">BPD</span> — Badan Permusyawaratan Desa
-                            </li>
-                            <li class="hover:text-[#0A3D29] transition-colors">
-                                <span class="font-bold text-[#20332A]">LPMD</span> — Pemberdayaan Masyarakat
-                            </li>
-                            <li class="hover:text-[#0A3D29] transition-colors">
-                                <span class="font-bold text-[#20332A]">TP PKK</span> — Kesejahteraan Keluarga & Posyandu
-                            </li>
-                            <li class="hover:text-[#0A3D29] transition-colors">
-                                <span class="font-bold text-[#20332A]">Karang Taruna</span> — Generasi Muda Desa
-                            </li>
-                            <li class="hover:text-[#0A3D29] transition-colors">
-                                <span class="font-bold text-[#20332A]">Gapoktan</span> — Pertanian Padi Organik
-                            </li>
-                            <li class="hover:text-[#0A3D29] transition-colors">
-                                <span class="font-bold text-[#20332A]">Desa Cerdas</span> — Kemendes PDTT
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Kartu 5: Batas Wilayah & Peta -->
+                    <!-- Kartu: Batas Wilayah & Peta -->
                     <div class="bg-white border border-[#DCE6DA] rounded-lg p-5 shadow-xs space-y-3">
                         <div class="flex items-center justify-between border-b border-[#DCE6DA] pb-2">
                             <h3 class="font-serif font-bold text-xs uppercase tracking-widest text-[#0A3D29]">

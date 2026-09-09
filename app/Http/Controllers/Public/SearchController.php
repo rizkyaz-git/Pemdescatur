@@ -7,7 +7,6 @@ use App\Models\Gallery;
 use App\Models\Location;
 use App\Models\News;
 use App\Models\Official;
-use App\Models\Statistic;
 use App\Models\VillageProfile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -109,23 +108,7 @@ class SearchController extends Controller
             ];
         }
 
-        // 3. Statistik & Potensi Desa
-        $stats = Statistic::where('title', 'like', "%{$q}%")
-            ->orWhere('category', 'like', "%{$q}%")
-            ->orWhere('description', 'like', "%{$q}%")
-            ->take(4)
-            ->get();
 
-        foreach ($stats as $stat) {
-            $results[] = [
-                'type' => 'Potensi',
-                'title' => $stat->title,
-                'category' => $stat->category ?? 'Potensi Desa',
-                'snippet' => $stat->value ? ("Nilai/Jumlah: " . $stat->value . " - " . strip_tags($stat->description)) : strip_tags($stat->description),
-                'url' => route('public.statistics'),
-                'badge' => '📊 Potensi'
-            ];
-        }
 
         // 4. Galeri & Wisata
         $galleries = Gallery::where('title', 'like', "%{$q}%")
@@ -160,7 +143,7 @@ class SearchController extends Controller
                 'keywords' => ['tani', 'pojok tani', 'pertanian', 'padi', 'organik', 'irigasi', 'wonotoro', 'waduk'],
                 'category' => 'Pojok Literasi',
                 'snippet' => 'Edukasi pertanian padi organik dengan pengairan sepanjang tahun dari Waduk Wonotoro.',
-                'url' => route('public.statistics'),
+                'url' => route('public.profile'),
                 'badge' => '🌾 Pojok Literasi'
             ],
             [

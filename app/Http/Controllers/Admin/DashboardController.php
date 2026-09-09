@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Gallery;
 use App\Models\News;
 use App\Models\Official;
-use App\Models\Statistic;
 use App\Models\Resident;
 use App\Models\Family;
 use App\Models\LetterRequest;
@@ -20,7 +19,6 @@ class DashboardController extends Controller
         $stats = [
             'news_count' => News::count(),
             'officials_count' => Official::count(),
-            'statistics_count' => Statistic::count(),
             'galleries_count' => Gallery::count(),
             'residents_count' => Resident::count(),
             'families_count' => Family::count(),

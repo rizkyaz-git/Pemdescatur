@@ -199,51 +199,13 @@
                     </div>
                 </div>
 
-                <!-- 3. CITIZEN SUPPORT (Bantuan & Kontak Pelayanan) -->
-                <div class="bg-white border border-[#DCE6DA] rounded-sm p-6 shadow-2xs space-y-4">
-                    <div class="border-b border-[#DCE6DA] pb-3">
-                        <h2 class="font-serif font-bold text-base sm:text-lg text-[#20332A] tracking-tight">
-                            Citizen Support • Bantuan Layanan Warga
-                        </h2>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 text-xs">
-                        <div class="space-y-1">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#6C7B72] block">Hotline & WhatsApp</span>
-                            <p class="font-bold text-sm text-[#0A3D29] flex items-center gap-1.5">
-                                <svg class="w-4 h-4 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                                <span>{{ $contactPhone ?? '0812-3456-7890' }}</span>
-                            </p>
-                        </div>
-
-                        <div class="space-y-1">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#6C7B72] block">Jam Kerja Balai Desa</span>
-                            <p class="font-medium text-xs text-[#20332A] leading-relaxed">
-                                {{ $officeHours ?? 'Senin - Jumat: 08:00 - 15:30 WIB' }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="pt-3 border-t border-[#DCE6DA] space-y-2">
-                        <div class="flex items-start gap-2.5">
-                            <svg class="w-4 h-4 text-[#0A3D29] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <div>
-                                <span class="font-bold text-xs text-[#20332A] block">Saluran Pengaduan Online (Grievance Redressal)</span>
-                                <a href="{{ route('warga.complaint.create') }}" class="text-[11px] text-[#0A3D29] font-semibold hover:underline">
-                                    Laporkan keluhan atau masukan pelayanan di sini →
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
 
 
             <!-- ================= RIGHT COLUMN ================= -->
             <div class="space-y-6">
 
-                <!-- 4. LATEST ANNOUNCEMENTS & NOTICES (Pengumuman & Maklumat) -->
+                <!-- 3. LATEST ANNOUNCEMENTS & NOTICES (Pengumuman & Maklumat) -->
                 <div class="bg-white border border-[#DCE6DA] rounded-sm p-6 shadow-2xs space-y-4">
                     <div class="flex items-center justify-between border-b border-[#DCE6DA] pb-3">
                         <h2 class="font-serif font-bold text-base sm:text-lg text-[#20332A] tracking-tight">
@@ -287,115 +249,41 @@
                     </div>
                 </div>
 
-                <!-- 5. GOVERNMENT SCHEMES & PROGRAMS (Program Bantuan & Skema Desa) -->
-                <div class="bg-white border border-[#DCE6DA] rounded-sm p-6 shadow-2xs space-y-4">
-                    <div class="flex items-center justify-between border-b border-[#DCE6DA] pb-3">
-                        <h2 class="font-serif font-bold text-base sm:text-lg text-[#20332A] tracking-tight">
-                            Program & Bantuan Pemerintah Desa
-                        </h2>
-                        <span class="text-[11px] font-semibold text-[#D9B85C] bg-[#20332A] px-2 py-0.5 rounded-sm">2026 Aktif</span>
-                    </div>
-
-                    <div class="space-y-3.5 pt-1">
-                        
-                        <!-- Program 1: BLT Dana Desa -->
-                        <div class="p-3.5 rounded-sm border border-[#DCE6DA] bg-[#F8FAF7] space-y-2">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="text-xs font-bold text-[#20332A] flex items-center gap-1.5">
-                                    <span>🏛️</span>
-                                    <span>Bantuan Langsung Tunai (BLT-DD)</span>
-                                </span>
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-sm bg-[#EAF1E8] text-[#0A3D29]">
-                                    Penyaluran Rutin
-                                </span>
-                            </div>
-                            <p class="text-[11px] text-[#6C7B72] leading-relaxed">
-                                Penyaluran bantuan bagi keluarga prasejahtera dan lansia rentan di seluruh 13 pedukuhan Desa Catur.
-                            </p>
-                        </div>
-
-                        <!-- Program 2: Bibit Padi Organik & Irigasi Wonotoro -->
-                        <div class="p-3.5 rounded-sm border border-[#DCE6DA] bg-[#F8FAF7] space-y-2">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="text-xs font-bold text-[#20332A] flex items-center gap-1.5">
-                                    <span>🌾</span>
-                                    <span>Subsidi Benih Padi & Irigasi Waduk</span>
-                                </span>
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-sm bg-[#EAF1E8] text-[#0A3D29]">
-                                    Kelompok Tani
-                                </span>
-                            </div>
-                            <p class="text-[11px] text-[#6C7B72] leading-relaxed">
-                                Alokasi ketahanan pangan terpadu untuk optimalisasi panen padi organik 3 kali setahun dari irigasi Wonotoro.
-                            </p>
-                        </div>
-
-                        <!-- Program 3: Bansos PKH & BPNT -->
-                        <div class="p-3.5 rounded-sm border border-[#DCE6DA] bg-[#F8FAF7] space-y-2">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="text-xs font-bold text-[#20332A] flex items-center gap-1.5">
-                                    <span>👨‍👩‍👧‍👦</span>
-                                    <span>Fasilitasi Bansos PKH & BPNT Catur</span>
-                                </span>
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-sm bg-[#EAF1E8] text-[#0A3D29]">
-                                    DTKS Kemensos
-                                </span>
-                            </div>
-                            <p class="text-[11px] text-[#6C7B72] leading-relaxed">
-                                Pendampingan verifikasi data penerima manfaat program perlindungan sosial Kemensos bagi warga.
-                            </p>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- 6. STATISTICS (Statistik Kinerja Pelayanan) -->
+                <!-- 4. CITIZEN SUPPORT (Bantuan & Kontak Pelayanan) -->
                 <div class="bg-white border border-[#DCE6DA] rounded-sm p-6 shadow-2xs space-y-4">
                     <div class="border-b border-[#DCE6DA] pb-3">
                         <h2 class="font-serif font-bold text-base sm:text-lg text-[#20332A] tracking-tight">
-                            Statistik Kinerja Pelayanan Warga
+                            Citizen Support • Bantuan Layanan Warga
                         </h2>
                     </div>
 
-                    <!-- 2x2 Clean Metric Grid Matching Mockup -->
-                    <div class="grid grid-cols-2 gap-4 pt-1">
-                        
-                        <!-- Metric 1: Surat Terbit -->
-                        <div class="p-3.5 rounded-sm bg-[#F8FAF7] border border-[#DCE6DA] space-y-1">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#6C7B72] block">Permohonan Surat</span>
-                            <div class="font-serif font-bold text-2xl sm:text-3xl text-[#0A3D29]">
-                                {{ number_format($totalLetters, 0, ',', '.') }}+
-                            </div>
-                            <span class="text-[10px] text-[#6C7B72] block">Surat Terbit Resmi</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 text-xs">
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#6C7B72] block">Hotline & WhatsApp</span>
+                            <p class="font-bold text-sm text-[#0A3D29] flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                                <span>{{ $contactPhone ?? '0812-3456-7890' }}</span>
+                            </p>
                         </div>
 
-                        <!-- Metric 2: Warga Terlayani -->
-                        <div class="p-3.5 rounded-sm bg-[#F8FAF7] border border-[#DCE6DA] space-y-1">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#6C7B72] block">Kepuasan Warga</span>
-                            <div class="font-serif font-bold text-2xl sm:text-3xl text-[#0A3D29]">
-                                98.6%
-                            </div>
-                            <span class="text-[10px] text-[#6C7B72] block">Indeks Kepuasan (IKM)</span>
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#6C7B72] block">Jam Kerja Balai Desa</span>
+                            <p class="font-medium text-xs text-[#20332A] leading-relaxed">
+                                {{ $officeHours ?? 'Senin - Jumat: 08:00 - 15:30 WIB' }}
+                            </p>
                         </div>
+                    </div>
 
-                        <!-- Metric 3: Pengaduan Tertangani -->
-                        <div class="p-3.5 rounded-sm bg-[#F8FAF7] border border-[#DCE6DA] space-y-1">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#6C7B72] block">Aspirasi Warga</span>
-                            <div class="font-serif font-bold text-2xl sm:text-3xl text-[#20332A]">
-                                {{ $totalComplaints }}+
+                    <div class="pt-3 border-t border-[#DCE6DA] space-y-2">
+                        <div class="flex items-start gap-2.5">
+                            <svg class="w-4 h-4 text-[#0A3D29] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <div>
+                                <span class="font-bold text-xs text-[#20332A] block">Saluran Pengaduan Online (Grievance Redressal)</span>
+                                <a href="{{ route('warga.complaint.create') }}" class="text-[11px] text-[#0A3D29] font-semibold hover:underline">
+                                    Laporkan keluhan atau masukan pelayanan di sini →
+                                </a>
                             </div>
-                            <span class="text-[10px] text-[#6C7B72] block">Laporan Ditindaklanjuti</span>
                         </div>
-
-                        <!-- Metric 4: Wilayah Pedukuhan -->
-                        <div class="p-3.5 rounded-sm bg-[#F8FAF7] border border-[#DCE6DA] space-y-1">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#6C7B72] block">Cakupan Wilayah</span>
-                            <div class="font-serif font-bold text-2xl sm:text-3xl text-[#20332A]">
-                                13
-                            </div>
-                            <span class="text-[10px] text-[#6C7B72] block">Pedukuhan Terjangkau</span>
-                        </div>
-
                     </div>
                 </div>
 

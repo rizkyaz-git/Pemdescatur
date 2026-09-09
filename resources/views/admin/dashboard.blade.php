@@ -76,15 +76,6 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-xs flex items-center gap-4">
-            <div class="w-12 h-12 bg-blue-100 text-blue-800 rounded-xl flex items-center justify-center text-2xl font-bold">
-                📊
-            </div>
-            <div>
-                <p class="text-xs text-gray-500 font-semibold uppercase">Item Statistik</p>
-                <h3 class="font-serif text-2xl font-bold text-gray-900">{{ $stats['statistics_count'] }}</h3>
-            </div>
-        </div>
 
         <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-xs flex items-center gap-4">
             <div class="w-12 h-12 bg-purple-100 text-purple-800 rounded-xl flex items-center justify-center text-2xl font-bold">

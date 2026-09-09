@@ -259,11 +259,11 @@
                             type="button"
                             class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1 rounded-lg transition-all duration-700 ease-in-out focus:outline-none"
                             :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) 
-                                    ? '{{ (request()->routeIs('public.news*') || request()->routeIs('public.statistics') || request()->routeIs('public.gallery')) ? 'text-[#0A3D29] font-extrabold text-sm hover:bg-[#EAF1E8]' : 'text-[#20332A] font-semibold hover:bg-[#EAF1E8] hover:text-[#0A3D29]' }}' 
-                                    : '{{ (request()->routeIs('public.news*') || request()->routeIs('public.statistics') || request()->routeIs('public.gallery')) ? 'text-white font-extrabold text-sm drop-shadow-md hover:bg-white/20' : 'text-white/90 font-semibold hover:bg-white/20 hover:text-white' }}'">
+                                    ? '{{ (request()->routeIs('public.news*') || request()->routeIs('public.gallery')) ? 'text-[#0A3D29] font-extrabold text-sm hover:bg-[#EAF1E8]' : 'text-[#20332A] font-semibold hover:bg-[#EAF1E8] hover:text-[#0A3D29]' }}' 
+                                    : '{{ (request()->routeIs('public.news*') || request()->routeIs('public.gallery')) ? 'text-white font-extrabold text-sm drop-shadow-md hover:bg-white/20' : 'text-white/90 font-semibold hover:bg-white/20 hover:text-white' }}'">
                             <span>Informasi</span>
                             <svg class="w-3.5 h-3.5 transition-transform duration-200"
-                                :class="[infoDropdown ? 'rotate-180' : '', ({{ $isHomePage ? 'isScrolled' : 'true' }}) ? ((request()->routeIs('public.news*') || request()->routeIs('public.statistics') || request()->routeIs('public.gallery')) ? 'text-[#0A3D29]' : 'text-[#6C7B72]') : 'text-white']"
+                                :class="[infoDropdown ? 'rotate-180' : '', ({{ $isHomePage ? 'isScrolled' : 'true' }}) ? ((request()->routeIs('public.news*') || request()->routeIs('public.gallery')) ? 'text-[#0A3D29]' : 'text-[#6C7B72]') : 'text-white']"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 9l-7 7-7-7" />
@@ -292,17 +292,6 @@
                                 <span>Berita & Pengumuman</span>
                             </a>
 
-                            <a href="{{ route('public.statistics') }}"
-                                class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
-                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
-                                <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
-                                    :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                </svg>
-                                <span>Statistik Desa</span>
-                            </a>
 
                             <a href="{{ route('public.gallery') }}"
                                 class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
@@ -831,10 +820,6 @@
                     <a href="{{ route('public.news.index') }}" @click="mobileMenuOpen = false"
                         class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.news*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
                         <span>Warta & Pengumuman</span>
-                    </a>
-                    <a href="{{ route('public.statistics') }}" @click="mobileMenuOpen = false"
-                        class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.statistics') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
-                        <span>Statistik Desa</span>
                     </a>
                     <a href="{{ route('public.gallery') }}" @click="mobileMenuOpen = false"
                         class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.gallery') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">

@@ -11,7 +11,6 @@ Route::get('/struktur', [PublicControllers\OfficialController::class, 'index'])-
 Route::get('/berita', [PublicControllers\NewsController::class, 'index'])->name('public.news.index');
 Route::get('/berita/{slug}', [PublicControllers\NewsController::class, 'show'])->name('public.news.show');
 Route::post('/berita/{slug}/like', [PublicControllers\NewsController::class, 'like'])->name('public.news.like');
-Route::get('/statistik', [PublicControllers\StatisticController::class, 'index'])->name('public.statistics');
 Route::get('/galeri', [PublicControllers\GalleryController::class, 'index'])->name('public.gallery');
 Route::get('/layanan', [PublicControllers\ServiceController::class, 'index'])->name('public.services.index');
 Route::get('/pencarian', [PublicControllers\SearchController::class, 'index'])->name('public.search');
@@ -35,11 +34,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Perangkat Desa CRUD
     Route::resource('officials', Admin\OfficialController::class)->except(['show']);
 
-    // Statistik CRUD
-    Route::resource('statistics', Admin\StatisticController::class)->except(['show']);
-
-    // Infografis Profil – Statistik Desa (Chart Data) CRUD
-    Route::resource('village-stats', Admin\VillageStatController::class)->except(['show']);
 
 
     // Galeri CRUD

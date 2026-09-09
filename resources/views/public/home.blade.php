@@ -45,9 +45,9 @@
 <!-- FLOATING SHORTCUT CARDS CONTAINER (Overlapping Hero Section Exactly at 50% Center on Desktop, Raised Inside Hero on Mobile) -->
 <div class="relative z-30 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 -mt-56 mb-28 sm:-mt-14 sm:mb-6 lg:-mt-16 lg:mb-10 fade-up-enter [animation-delay:250ms]">
     
-    <!-- A. MOBILE MODE ONLY (< sm): Single Unified Floating Card with 5 Side-by-Side Items & Elevation Shadow -->
+    <!-- A. MOBILE MODE ONLY (< sm): Single Unified Floating Card with 4 Side-by-Side Items & Elevation Shadow -->
     <div class="block sm:hidden bg-white rounded-2xl shadow-[0_12px_30px_-5px_rgba(0,0,0,0.22)] border border-slate-100 ring-1 ring-slate-900/5 py-3 px-1.5">
-        <div class="grid grid-cols-5 divide-x divide-slate-100 text-center">
+        <div class="grid grid-cols-4 divide-x divide-slate-100 text-center">
             
             <!-- 1. Berita & Kabar -->
             <a href="{{ route('public.news.index') }}" class="flex flex-col items-center justify-center px-1 py-1 group transition-colors">
@@ -65,16 +65,7 @@
                 <span class="block text-[11px] font-bold text-slate-800 group-hover:text-[#0A3D29] leading-tight truncate w-full">Layanan</span>
             </a>
 
-            <!-- 3. Statistik Desa -->
-            <a href="{{ route('public.statistics') }}" class="flex flex-col items-center justify-center px-1 py-1 group transition-colors">
-                <svg class="w-5 h-5 text-[#0A3D29] group-hover:scale-110 transition-transform mb-1 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
-                </svg>
-                <span class="block text-[11px] font-bold text-slate-800 group-hover:text-[#0A3D29] leading-tight truncate w-full">Statistik</span>
-            </a>
-
-            <!-- 4. Perpustakaan Digital -->
+            <!-- 3. Perpustakaan Digital -->
             <a href="{{ $globalLibraryUrl ?? 'https://desacaturbyl.perpustakaan.co.id/home.ks' }}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center px-1 py-1 group transition-colors">
                 <svg class="w-5 h-5 text-[#0A3D29] group-hover:scale-110 transition-transform mb-1 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -96,7 +87,7 @@
 
     <!-- B. TABLET/DESKTOP MODE (>= sm): Single Unified Bar Card Container with Thin Vertical Dividers & Clean Alignment -->
     <div class="hidden sm:block bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden">
-        <div class="grid grid-cols-2 lg:grid-cols-5 divide-y lg:divide-y-0 lg:divide-x divide-slate-100/90">
+        <div class="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-slate-100/90">
             
             <!-- Card 1: Berita & Kabar -->
             <a href="{{ route('public.news.index') }}" 
@@ -130,24 +121,7 @@
                 </p>
             </a>
 
-            <!-- Card 3: Statistik Desa -->
-            <a href="{{ route('public.statistics') }}" 
-               class="p-5 lg:p-6 flex flex-col space-y-2 hover:bg-slate-100/80 transition-colors">
-                <div class="flex items-center gap-2.5">
-                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
-                    </svg>
-                    <h3 class="font-serif text-base lg:text-lg font-bold text-slate-900 leading-snug">
-                        Statistik Desa
-                    </h3>
-                </div>
-                <p class="text-xs text-slate-500 font-medium leading-relaxed text-left">
-                    Lihat informasi seputar statistik desa selengkapnya.
-                </p>
-            </a>
-
-            <!-- Card 4: Perpustakaan Digital -->
+            <!-- Card 3: Perpustakaan Digital -->
             <a href="{{ $globalLibraryUrl ?? 'https://desacaturbyl.perpustakaan.co.id/home.ks' }}" 
                target="_blank" rel="noopener noreferrer"
                class="p-5 lg:p-6 flex flex-col space-y-2 hover:bg-slate-100/80 transition-colors">
@@ -618,7 +592,7 @@
 <!-- SECTION 3: PERPUSTAKAAN DIGITAL "REMEN MAOS DESA CATUR" -->
 <!-- ========================================================= -->
 <section id="perpustakaan-digital" 
-         class="w-full bg-[#f8fafc] py-16 sm:py-20 lg:py-24 border-b border-[#c5c6ce]/50 overflow-hidden flex items-center min-h-[580px] lg:min-h-[640px] fade-up-scroll">
+         class="w-full bg-[#0A3D29] text-white py-16 sm:py-20 lg:py-24 border-b border-[#072B1D] overflow-hidden flex items-center min-h-[580px] lg:min-h-[640px] fade-up-scroll">
     <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-center">
             
@@ -627,52 +601,57 @@
 
                 {{-- Headline & Description --}}
                 <div class="space-y-3.5">
-                    <h2 class="font-['Public_Sans',sans-serif] text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0A3D29] leading-tight tracking-tight">
-                        Perpustakaan Digital Remen Maos Desa Catur
+                    <h2 class="space-y-1 sm:space-y-2">
+                        <span class="block font-['Public_Sans',sans-serif] text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight">
+                            Remen Maos
+                        </span>
+                        <span class="block font-['Public_Sans',sans-serif] text-xl sm:text-2xl lg:text-3xl font-extrabold text-emerald-300 leading-tight tracking-tight">
+                            Perpustakaan Digital Desa Catur
+                        </span>
                     </h2>
                     
-                    <p class="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
+                    <p class="text-sm sm:text-base text-white/85 font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
                         Akses perpustakaan digital hanya dari genggaman anda, Jelajahi koleksi buku menarik dimanapun dan kapanpun.
                     </p>
                 </div>
 
-                {{-- 3 Bullet Points with Dark Green Circle Checkmarks --}}
+                {{-- 3 Bullet Points with Glowing Emerald Badges --}}
                 <div class="space-y-3.5 pt-1 inline-flex flex-col items-start text-left max-w-md mx-auto lg:mx-0">
                     <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-[#0A3D29] text-white flex items-center justify-center shrink-0 shadow-xs">
+                        <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 text-emerald-300 flex items-center justify-center shrink-0 shadow-xs">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="text-xs sm:text-sm font-bold text-slate-800">Beragam Judul Buku Digital menarik untuk dibaca</span>
+                        <span class="text-xs sm:text-sm font-semibold text-white/90">Beragam Judul Buku Digital menarik untuk dibaca</span>
                     </div>
 
                     <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-[#0A3D29] text-white flex items-center justify-center shrink-0 shadow-xs">
+                        <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 text-emerald-300 flex items-center justify-center shrink-0 shadow-xs">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="text-xs sm:text-sm font-bold text-slate-800">Akses Gratis 24 Jam Tanpa Batas dari semua perangkat anda</span>
+                        <span class="text-xs sm:text-sm font-semibold text-white/90">Akses Gratis 24 Jam Tanpa Batas dari semua perangkat anda</span>
                     </div>
 
                     <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-[#0A3D29] text-white flex items-center justify-center shrink-0 shadow-xs">
+                        <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 text-emerald-300 flex items-center justify-center shrink-0 shadow-xs">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="text-xs sm:text-sm font-bold text-slate-800">Dikelola oleh Perpustakaan Daerah Boyolali</span>
+                        <span class="text-xs sm:text-sm font-semibold text-white/90">Dikelola oleh Perpustakaan Daerah Boyolali</span>
                     </div>
                 </div>
 
-                {{-- Action Button: Buka Perpustakaan Digital ↗ --}}
+                {{-- Action Button: Kunjungi Remen Maos Catur --}}
                 <div class="pt-2 flex justify-center lg:justify-start">
                     <a href="{{ $libraryUrl ?? 'https://perpustakaan.boyolali.go.id' }}" 
                        target="_blank" rel="noopener noreferrer"
-                       class="inline-flex items-center justify-center gap-2.5 bg-[#0A3D29] hover:bg-[#062c1d] text-white font-extrabold text-sm sm:text-base px-8 py-3.5 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 group shrink-0">
+                       class="inline-flex items-center justify-center gap-2.5 bg-white hover:bg-emerald-50 text-[#0A3D29] font-extrabold text-sm sm:text-base px-8 py-3.5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 group shrink-0">
                         <span>Kunjungi Remen Maos Catur</span>
-                        <svg class="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-[#0A3D29] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                         </svg>
                     </a>
@@ -682,20 +661,26 @@
 
             {{-- Right Column: Transparent Seamless 3D Multi-Device Showcase Image (order-1 on mobile, order-2 on desktop) --}}
             <div class="order-1 lg:order-2 lg:col-span-7 flex items-center justify-center">
-                <div class="w-full max-w-[720px] mx-auto relative py-2"
+                <div class="w-full max-w-[720px] mx-auto relative py-4 sm:py-6"
                      x-data="{ loaded: false }"
                      x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
+                    
+                    {{-- Ambient Soft Glow / Spotlight behind mockup to soften cutout edges --}}
+                    <div class="absolute inset-0 m-auto w-[90%] h-[85%] rounded-full pointer-events-none -z-0 opacity-80"
+                         style="background: radial-gradient(ellipse at center, rgba(52, 211, 153, 0.28) 0%, rgba(16, 185, 129, 0.12) 45%, transparent 72%); filter: blur(40px); transform: translate3d(0, 0, 0);"></div>
+
                     <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none rounded-2xl"></div>
                     <img x-ref="img"
                          src="{{ asset('images/remen_maos_mockup.png') }}?v={{ file_exists(public_path('images/remen_maos_mockup.png')) ? filemtime(public_path('images/remen_maos_mockup.png')) : time() }}" 
                          alt="Perpustakaan Digital Remen Maos Desa Catur Multi-Device Mockup" 
-                         width="2848"
-                         height="1494"
+                         width="1181"
+                         height="619"
                          loading="eager"
                          decoding="async"
                          @load="loaded = true;"
                          x-on:error="loaded = true;"
-                         class="w-full h-auto object-contain drop-shadow-md hover:scale-[1.015] transition-all duration-700 pointer-events-auto"
+                         class="w-full h-auto object-contain hover:scale-[1.015] transition-all duration-700 pointer-events-auto relative z-10"
+                         style="filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.50)) drop-shadow(0 0 20px rgba(52, 211, 153, 0.25)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));"
                          :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
                 </div>
             </div>

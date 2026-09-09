@@ -9,7 +9,6 @@ use App\Models\News;
 use App\Models\Official;
 use App\Models\Partner;
 use App\Models\Setting;
-use App\Models\Statistic;
 use App\Models\VillageProfile;
 use Illuminate\View\View;
 
@@ -22,7 +21,6 @@ class HomeController extends Controller
             ->orderBy('published_at', 'desc')
             ->take(4)
             ->get();
-        $stats = Statistic::orderBy('category')->orderBy('order', 'asc')->take(6)->get();
         $galleries = Gallery::latest()->take(4)->get();
         $partners = Partner::where('is_active', true)->orderBy('order', 'asc')->get();
         $officials = Official::orderBy('order', 'asc')->take(8)->get();
@@ -33,6 +31,6 @@ class HomeController extends Controller
         $libraryTabletImage = Setting::get('library_tablet_image_path');
         $libraryMobileImage = Setting::get('library_mobile_image_path');
 
-        return view('public.home', compact('profile', 'latestNews', 'stats', 'galleries', 'partners', 'officials', 'locations', 'primaryLocation', 'libraryUrl', 'libraryDesktopImage', 'libraryTabletImage', 'libraryMobileImage'));
+        return view('public.home', compact('profile', 'latestNews', 'galleries', 'partners', 'officials', 'locations', 'primaryLocation', 'libraryUrl', 'libraryDesktopImage', 'libraryTabletImage', 'libraryMobileImage'));
     }
 }
