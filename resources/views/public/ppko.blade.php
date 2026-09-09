@@ -690,6 +690,7 @@
 
                     /* ─── Slider Frame: Pipih 16:9 pada Mobile, Tinggi Tetap pada Desktop ─── */
                     .pojok-slider-frame {
+                        position: relative;
                         width: 100%;
                         aspect-ratio: 16 / 9;
                         max-height: 250px;
@@ -713,12 +714,43 @@
                         }
                     }
 
-                    /* ─── Tombol Navigasi Slider: Hanya Tampil Saat Hover di Layar Desktop (768px+) ─── */
+                    /* ─── Tombol Navigasi Slider: Minimalis, Terpusat Vertikal, & Tampil Saat Hover di Desktop ─── */
                     .pojok-slider-btn {
+                        position: absolute;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        width: 34px;
+                        height: 34px;
+                        border-radius: 9999px;
                         display: none;
+                        align-items: center;
+                        justify-content: center;
                         opacity: 0;
                         pointer-events: none;
-                        transition: opacity 0.25s ease, transform 0.2s ease, background-color 0.2s ease;
+                        z-index: 20;
+                        cursor: pointer;
+                        background-color: rgba(0, 0, 0, 0.35);
+                        backdrop-filter: blur(4px);
+                        -webkit-backdrop-filter: blur(4px);
+                        border: 1px solid rgba(255, 255, 255, 0.22);
+                        color: rgba(255, 255, 255, 0.95);
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                        transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+                    }
+                    .pojok-slider-btn:hover {
+                        background-color: rgba(0, 0, 0, 0.7);
+                        color: #ffffff;
+                        border-color: rgba(255, 255, 255, 0.4);
+                        transform: translateY(-50%) scale(1.06);
+                    }
+                    .pojok-slider-btn:active {
+                        transform: translateY(-50%) scale(0.94);
+                    }
+                    .pojok-slider-prev {
+                        left: 12px;
+                    }
+                    .pojok-slider-next {
+                        right: 12px;
                     }
                     @media (min-width: 768px) {
                         .pojok-slider-btn {
@@ -728,6 +760,17 @@
                         .pojok-slider-btn:focus-visible {
                             opacity: 1;
                             pointer-events: auto;
+                        }
+                    }
+
+                    /* ─── Baris Deskripsi Slider: Spasi Aman Kebal Build ─── */
+                    .pojok-slider-desc-bar {
+                        margin-top: 18px;
+                        width: 100%;
+                    }
+                    @media (min-width: 640px) {
+                        .pojok-slider-desc-bar {
+                            margin-top: 22px;
                         }
                     }
 
@@ -1394,7 +1437,7 @@
 
                                                 <!-- Overlay Click-to-Slide Arrows on Desktop Only (Minimalis, Tampil Saat Hover di Desktop) -->
                                                 <button type="button" @click.stop="prev()"
-                                                    class="pojok-slider-btn absolute top-1/2 -translate-y-1/2 left-3 z-20 w-8 h-8 rounded-full bg-black/30 hover:bg-black/60 active:scale-90 text-white/90 hover:text-white backdrop-blur-sm border border-white/20 items-center justify-center cursor-pointer shadow-xs"
+                                                    class="pojok-slider-btn pojok-slider-prev"
                                                     title="Foto Sebelumnya" aria-label="Foto Sebelumnya">
                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -1402,7 +1445,7 @@
                                                 </button>
 
                                                 <button type="button" @click.stop="next()"
-                                                    class="pojok-slider-btn absolute top-1/2 -translate-y-1/2 right-3 z-20 w-8 h-8 rounded-full bg-black/30 hover:bg-black/60 active:scale-90 text-white/90 hover:text-white backdrop-blur-sm border border-white/20 items-center justify-center cursor-pointer shadow-xs"
+                                                    class="pojok-slider-btn pojok-slider-next"
                                                     title="Foto Berikutnya" aria-label="Foto Berikutnya">
                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -1411,7 +1454,7 @@
                                             </div>
 
                                             <!-- DESKRIPSI GAMBAR KECIL DENGAN ANIMASI FADE IN & FADE OUT HALUS & INDIKATOR SLIDING (TANPA PANAH BAWAH) -->
-                                            <div class="mt-5 sm:mt-6 lg:mt-5 w-full flex items-center justify-between gap-3.5 px-1.5">
+                                            <div class="pojok-slider-desc-bar flex items-center justify-between gap-3.5 px-1.5">
                                                 
                                                 <!-- Bagian Kiri: Teks Deskripsi Gambar (Fade In & Fade Out Halus Mengikuti Momentum Slider) -->
                                                 <div class="relative flex-1 min-h-[34px] sm:min-h-[38px] grid grid-cols-1 grid-rows-1 items-center overflow-hidden">
