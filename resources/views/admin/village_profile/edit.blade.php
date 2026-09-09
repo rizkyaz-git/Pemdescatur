@@ -10,17 +10,19 @@
         min-height: 280px;
         font-size: 14px;
         line-height: 1.6;
+        font-family: inherit;
     }
     .ql-toolbar.ql-snow {
         border-top-left-radius: 0.75rem;
         border-top-right-radius: 0.75rem;
-        border-color: #e5e7eb;
-        background-color: #f9fafb;
+        border-color: #E2E8F0;
+        background-color: #F8FAFC;
     }
     .ql-container.ql-snow {
         border-bottom-left-radius: 0.75rem;
         border-bottom-right-radius: 0.75rem;
-        border-color: #e5e7eb;
+        border-color: #E2E8F0;
+        font-family: inherit;
     }
     .ql-toolbar button svg,
     .ql-toolbar .ql-picker-label svg {
@@ -39,17 +41,17 @@
         float: left !important;
     }
     .ql-snow .ql-stroke {
-        stroke: #374151 !important;
+        stroke: #475569 !important;
         stroke-linecap: round;
         stroke-linejoin: round;
         stroke-width: 2;
         fill: none !important;
     }
     .ql-snow .ql-fill {
-        fill: #374151 !important;
+        fill: #475569 !important;
     }
     .ql-snow .ql-picker {
-        color: #374151 !important;
+        color: #475569 !important;
         float: left !important;
     }
 </style>
@@ -57,66 +59,79 @@
 
 @section('content')
 
-<div class="max-w-5xl bg-white rounded-xl border border-gray-200 shadow-xs p-6 sm:p-8 space-y-6">
-    <div class="border-b border-gray-200 pb-4">
-        <h3 class="font-serif font-bold text-xl text-gray-900">Kelola Profil, Narasi Sejarah, & Foto Desa Catur</h3>
-        <p class="text-xs text-gray-500 mt-1">Gunakan editor di bawah ini untuk memperbarui foto sampul dan teks narasi sejarah desa. Teks narasi sejarah akan langsung tampil di kolom tengah halaman publik profil desa.</p>
-    </div>
-
+<div class="max-w-5xl mx-auto space-y-6 font-sans">
+    
+    <!-- Flash Notification -->
     @if(session('success'))
-        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl text-sm font-semibold flex items-center justify-between">
-            <span>✅ {{ session('success') }}</span>
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-5 py-4 rounded-2xl flex items-center justify-between text-sm shadow-xs animate-fade-in">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <span class="font-medium">{{ session('success') }}</span>
+            </div>
+            <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 p-1">&times;</button>
         </div>
     @endif
 
-    <form action="{{ route('admin.village-profile.update') }}" method="POST" enctype="multipart/form-data" id="profile-form" class="space-y-8">
-        @csrf
-        @method('PUT')
+    <div class="bg-white rounded-[20px] border border-[#E2E8F0] shadow-xs p-6 sm:p-8 space-y-6">
+        <div class="border-b border-[#E2E8F0] pb-5">
+            <h1 class="font-jakarta font-extrabold text-2xl text-slate-900 tracking-tight">Kelola Profil & Narasi Sejarah Desa</h1>
+            <p class="text-xs text-slate-500 mt-1">Perbarui foto sampul lanskap utama dan teks narasi sejarah Desa Catur yang tampil pada halaman profil publik.</p>
+        </div>
 
-        <!-- 1. Foto Utama Profil Desa (Upload Image) -->
-        <div class="space-y-2">
-            <label class="block text-sm font-bold text-gray-800">Foto Utama Profil / Lanskap Desa</label>
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <div class="w-full sm:w-64 h-36 rounded-xl overflow-hidden bg-gray-100 border border-gray-300 relative shadow-xs shrink-0">
-                    <img id="image-preview" 
-                         src="{{ $profile->image ? asset('storage/' . $profile->image) : asset('images/hero_landscape.png') }}" 
-                         alt="Preview Foto Profil" 
-                         class="w-full h-full object-cover">
+        <form action="{{ route('admin.village-profile.update') }}" method="POST" enctype="multipart/form-data" id="profile-form" class="space-y-8">
+            @csrf
+            @method('PUT')
+
+            <!-- 1. Foto Utama Profil Desa (Upload Image) -->
+            <div class="space-y-3">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Foto Utama Profil / Lanskap Desa</label>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5 p-5 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0]">
+                    <div class="w-full sm:w-64 h-36 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 relative shadow-xs shrink-0 group">
+                        <img id="image-preview" 
+                             src="{{ $profile->image ? asset('storage/' . $profile->image) : asset('images/hero_landscape.png') }}" 
+                             alt="Preview Foto Profil" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    </div>
+                    <div class="space-y-2.5 flex-1">
+                        <input type="file" 
+                               name="image" 
+                               id="image-input" 
+                               accept="image/png,image/jpeg,image/jpg,image/webp" 
+                               class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#0F4C3A] file:text-white hover:file:bg-[#072C21] cursor-pointer bg-white p-1 rounded-xl border border-[#E2E8F0]">
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            📐 Rekomendasi Resolusi: <strong class="text-slate-800">1920 x 1080 px</strong> atau <strong class="text-slate-800">1280 x 720 px</strong> (Rasio 16:9 Landscape). Format JPG, PNG, WEBP. Maksimal 5 MB.
+                        </p>
+                    </div>
                 </div>
-                <div class="space-y-2 flex-1">
-                    <input type="file" 
-                           name="image" 
-                           id="image-input" 
-                           accept="image/png,image/jpeg,image/jpg,image/webp" 
-                           class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#0d631b] file:text-white hover:file:bg-emerald-800 cursor-pointer">
-                    <p class="text-xs text-emerald-900 font-medium">📐 Rekomendasi Resolusi: <strong>1920 x 1080 px</strong> atau <strong>1280 x 720 px</strong> (Rasio 16:9 Landscape). Format JPG, PNG, WEBP. Maksimal 5 MB.</p>
+                @error('image')
+                    <p class="text-xs text-rose-600 mt-1 font-medium">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- 2. Sejarah & Teks Tengah Profil Desa (Quill Rich Text Editor) -->
+            <div class="space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Teks Narasi & Sejarah Desa (Kolom Tengah Profil)</label>
+                    <span class="text-xs text-[#0F4C3A] font-semibold">Dukungan format lengkap: Heading, Bold, Paragraf, Kutipan, dsb.</span>
                 </div>
+                <div id="history-quill-editor" class="bg-white">{!! old('history', $profile->history) !!}</div>
+                <input type="hidden" name="history" id="history_input" value="{{ old('history', $profile->history) }}">
+                <p class="text-xs text-slate-400">Seluruh teks yang Anda tulis di sini akan diformat secara dinamis di kolom tengah halaman profil desa.</p>
+                @error('history')
+                    <p class="text-xs text-rose-600 mt-1 font-medium">{{ $message }}</p>
+                @enderror
             </div>
-            @error('image')
-                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-            @enderror
-        </div>
 
-        <!-- 2. Sejarah & Teks Tengah Profil Desa (Quill Rich Text Editor) -->
-        <div class="space-y-2">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                <label class="block text-sm font-bold text-gray-800">Teks Narasi & Sejarah Desa (Kolom Tengah Profil)</label>
-                <span class="text-xs text-emerald-700 font-medium">Dukungan format lengkap: Heading, Bold, Paragraf, Kutipan, dsb.</span>
+            <div class="pt-5 border-t border-[#E2E8F0] flex justify-end">
+                <button type="submit" class="inline-flex items-center gap-2 bg-[#0F4C3A] hover:bg-[#072C21] text-white font-jakarta font-bold text-xs px-6 py-2.5 rounded-xl shadow-xs transition cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span>Simpan Perubahan Profil</span>
+                </button>
             </div>
-            <div id="history-quill-editor" class="bg-white">{!! old('history', $profile->history) !!}</div>
-            <input type="hidden" name="history" id="history_input" value="{{ old('history', $profile->history) }}">
-            <p class="text-xs text-gray-500">Seluruh teks yang Anda tulis di sini akan ditampilkan secara dinamis di kolom tengah halaman profil desa.</p>
-            @error('history')
-                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div class="pt-4 border-t border-gray-200 flex justify-end">
-            <button type="submit" class="bg-[#0d631b] hover:bg-emerald-800 text-white font-bold text-sm px-6 py-2.5 rounded-lg shadow-md transition cursor-pointer flex items-center gap-2">
-                <span>💾 Simpan Perubahan Profil</span>
-            </button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 @endsection

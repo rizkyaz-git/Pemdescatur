@@ -597,7 +597,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-center">
             
             {{-- Left Column: Text & Bullet Points & Action Button (order-2 on mobile, order-1 on desktop) --}}
-            <div class="order-2 lg:order-1 lg:col-span-5 space-y-6 sm:space-y-7 text-center lg:text-left">
+            <div class="order-2 lg:order-1 lg:col-span-5 space-y-6 sm:space-y-7 text-left">
 
                 {{-- Headline & Description --}}
                 <div class="space-y-3.5">
@@ -610,46 +610,46 @@
                         </span>
                     </h2>
                     
-                    <p class="text-sm sm:text-base text-white/85 font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
+                    <p class="text-sm sm:text-base text-white/85 font-normal leading-relaxed max-w-xl">
                         Akses perpustakaan digital hanya dari genggaman anda, Jelajahi koleksi buku menarik dimanapun dan kapanpun.
                     </p>
                 </div>
 
                 {{-- 3 Bullet Points with Glowing Emerald Badges --}}
-                <div class="space-y-3.5 pt-1 inline-flex flex-col items-start text-left max-w-md mx-auto lg:mx-0">
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 text-emerald-300 flex items-center justify-center shrink-0 shadow-xs">
+                <div class="space-y-3.5 pt-1 flex flex-col items-start text-left max-w-lg w-full">
+                    <div class="flex items-start gap-3">
+                        <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 text-emerald-300 flex items-center justify-center shrink-0 shadow-xs mt-0.5">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="text-xs sm:text-sm font-semibold text-white/90">Beragam Judul Buku Digital menarik untuk dibaca</span>
+                        <span class="text-xs sm:text-sm font-semibold text-white/90 leading-snug">Beragam Judul Buku Digital menarik untuk dibaca</span>
                     </div>
 
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 text-emerald-300 flex items-center justify-center shrink-0 shadow-xs">
+                    <div class="flex items-start gap-3">
+                        <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 text-emerald-300 flex items-center justify-center shrink-0 shadow-xs mt-0.5">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="text-xs sm:text-sm font-semibold text-white/90">Akses Gratis 24 Jam Tanpa Batas dari semua perangkat anda</span>
+                        <span class="text-xs sm:text-sm font-semibold text-white/90 leading-snug">Akses Gratis 24 Jam Tanpa Batas dari semua perangkat anda</span>
                     </div>
 
-                    <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 text-emerald-300 flex items-center justify-center shrink-0 shadow-xs">
+                    <div class="flex items-start gap-3">
+                        <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 text-emerald-300 flex items-center justify-center shrink-0 shadow-xs mt-0.5">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <span class="text-xs sm:text-sm font-semibold text-white/90">Dikelola oleh Perpustakaan Daerah Boyolali</span>
+                        <span class="text-xs sm:text-sm font-semibold text-white/90 leading-snug">Dikelola oleh Perpustakaan Daerah Boyolali</span>
                     </div>
                 </div>
 
                 {{-- Action Button: Kunjungi Remen Maos Catur --}}
-                <div class="pt-2 flex justify-center lg:justify-start">
+                <div class="pt-2 flex justify-start">
                     <a href="{{ $libraryUrl ?? 'https://perpustakaan.boyolali.go.id' }}" 
                        target="_blank" rel="noopener noreferrer"
-                       class="inline-flex items-center justify-center gap-2.5 bg-white hover:bg-emerald-50 text-[#0A3D29] font-extrabold text-sm sm:text-base px-8 py-3.5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 group shrink-0">
+                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-white hover:bg-emerald-50 text-[#0A3D29] font-extrabold text-sm sm:text-base px-8 py-3.5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 group shrink-0">
                         <span>Kunjungi Remen Maos Catur</span>
                         <svg class="w-4 h-4 text-[#0A3D29] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
@@ -720,6 +720,8 @@
             timer: null,
             touchStartX: 0,
             touchEndX: 0,
+            touchStartY: 0,
+            touchEndY: 0,
             init() {
                 this.startAutoSlide();
             },
@@ -739,21 +741,27 @@
                 this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides;
             },
             handleTouchStart(e) {
-                this.touchStartX = e.changedTouches[0].screenX;
+                this.touchStartX = e.changedTouches[0].clientX;
+                this.touchStartY = e.changedTouches[0].clientY;
                 this.stopAutoSlide();
             },
             handleTouchEnd(e) {
-                this.touchEndX = e.changedTouches[0].screenX;
-                if (this.touchEndX < this.touchStartX - 40) {
-                    this.nextSlide();
-                } else if (this.touchEndX > this.touchStartX + 40) {
-                    this.prevSlide();
+                this.touchEndX = e.changedTouches[0].clientX;
+                this.touchEndY = e.changedTouches[0].clientY;
+                let diffX = this.touchEndX - this.touchStartX;
+                let diffY = this.touchEndY - this.touchStartY;
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 30) {
+                    if (diffX < 0) {
+                        this.nextSlide();
+                    } else {
+                        this.prevSlide();
+                    }
                 }
                 this.startAutoSlide();
             }
         }" @mouseenter="stopAutoSlide()" @mouseleave="startAutoSlide()">
             
-            <div class="relative overflow-hidden py-1">
+            <div class="relative overflow-hidden py-1 touch-pan-y">
                 <div class="flex transition-transform duration-500 ease-out" 
                      :style="`transform: translateX(-${activeSlide * 100}%);`"
                      @touchstart="handleTouchStart($event)"
@@ -761,12 +769,12 @@
                     
                     @if(isset($officials) && $officials->count() > 0)
                         @foreach($officials as $official)
-                            <div class="w-full shrink-0 flex justify-center px-4">
-                                {{-- Compact Minimalist Mobile Card --}}
-                                <div class="w-full max-w-[230px] p-3 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between text-center">
+                            <div class="w-full shrink-0 flex justify-center px-2">
+                                {{-- Full-Width Friendly Mobile Card --}}
+                                <div class="w-full max-w-[310px] p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-md flex flex-col justify-between text-center">
                                     <div>
                                         <!-- Photo Container (Compact with Sparkling Shimmer Skeleton) -->
-                                        <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-2.5 flex items-center justify-center shadow-2xs"
+                                        <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3 flex items-center justify-center shadow-2xs"
                                              x-data="{ loaded: false }"
                                              x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
                                             @if($official->photo_path)
@@ -780,8 +788,8 @@
                                                      class="relative z-10 w-full h-full object-cover object-top transition-all duration-700"
                                                      :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
                                             @else
-                                                <div class="w-12 h-12 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
-                                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <div class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
+                                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                                     </svg>
                                                 </div>
@@ -789,12 +797,12 @@
                                         </div>
 
                                         <!-- Position Text -->
-                                        <p class="text-[10px] font-semibold uppercase tracking-wider text-[#0A3D29] mb-0.5 line-clamp-1">
+                                        <p class="text-[11px] font-bold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
                                             {{ $official->position }}
                                         </p>
 
                                         <!-- Official Name -->
-                                        <h3 class="font-['Public_Sans',sans-serif] text-sm font-extrabold text-slate-800 leading-snug line-clamp-2">
+                                        <h3 class="font-['Public_Sans',sans-serif] text-sm sm:text-base font-extrabold text-slate-800 leading-snug line-clamp-2">
                                             {{ $official->name }}
                                         </h3>
                                     </div>
@@ -803,20 +811,20 @@
                         @endforeach
                     @else
                         <!-- Mobile Fallback Card 1: Kepala Desa -->
-                        <div class="w-full shrink-0 flex justify-center px-4">
-                            <div class="w-full max-w-[230px] p-3 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between text-center">
+                        <div class="w-full shrink-0 flex justify-center px-2">
+                            <div class="w-full max-w-[310px] p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-md flex flex-col justify-between text-center">
                                 <div>
-                                    <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-2.5 flex items-center justify-center shadow-2xs">
-                                        <div class="w-12 h-12 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
-                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3 flex items-center justify-center shadow-2xs">
+                                        <div class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
+                                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                             </svg>
                                         </div>
                                     </div>
-                                    <p class="text-[10px] font-semibold uppercase tracking-wider text-[#0A3D29] mb-0.5 line-clamp-1">
+                                    <p class="text-[11px] font-bold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
                                         Kepala Desa Catur
                                     </p>
-                                    <h3 class="font-['Public_Sans',sans-serif] text-sm font-extrabold text-slate-800 leading-snug">
+                                    <h3 class="font-['Public_Sans',sans-serif] text-sm sm:text-base font-extrabold text-slate-800 leading-snug">
                                         Dra. NUNIK S RAHAYU, M.Pd
                                     </h3>
                                 </div>
@@ -824,20 +832,20 @@
                         </div>
 
                         <!-- Mobile Fallback Card 2: Sekretaris Desa -->
-                        <div class="w-full shrink-0 flex justify-center px-4">
-                            <div class="w-full max-w-[230px] p-3 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between text-center">
+                        <div class="w-full shrink-0 flex justify-center px-2">
+                            <div class="w-full max-w-[310px] p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-md flex flex-col justify-between text-center">
                                 <div>
-                                    <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-2.5 flex items-center justify-center shadow-2xs">
-                                        <div class="w-12 h-12 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
-                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3 flex items-center justify-center shadow-2xs">
+                                        <div class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
+                                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                             </svg>
                                         </div>
                                     </div>
-                                    <p class="text-[10px] font-semibold uppercase tracking-wider text-[#0A3D29] mb-0.5 line-clamp-1">
+                                    <p class="text-[11px] font-bold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
                                         Sekretaris Desa
                                     </p>
-                                    <h3 class="font-['Public_Sans',sans-serif] text-sm font-extrabold text-slate-800 leading-snug">
+                                    <h3 class="font-['Public_Sans',sans-serif] text-sm sm:text-base font-extrabold text-slate-800 leading-snug">
                                         Bambang Sugeng, S.Sos.
                                     </h3>
                                 </div>
@@ -845,20 +853,20 @@
                         </div>
 
                         <!-- Mobile Fallback Card 3: Kaur Keuangan -->
-                        <div class="w-full shrink-0 flex justify-center px-4">
-                            <div class="w-full max-w-[230px] p-3 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between text-center">
+                        <div class="w-full shrink-0 flex justify-center px-2">
+                            <div class="w-full max-w-[310px] p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-md flex flex-col justify-between text-center">
                                 <div>
-                                    <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-2.5 flex items-center justify-center shadow-2xs">
-                                        <div class="w-12 h-12 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
-                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3 flex items-center justify-center shadow-2xs">
+                                        <div class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
+                                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                             </svg>
                                         </div>
                                     </div>
-                                    <p class="text-[10px] font-semibold uppercase tracking-wider text-[#0A3D29] mb-0.5 line-clamp-1">
+                                    <p class="text-[11px] font-bold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
                                         Kaur Keuangan
                                     </p>
-                                    <h3 class="font-['Public_Sans',sans-serif] text-sm font-extrabold text-slate-800 leading-snug">
+                                    <h3 class="font-['Public_Sans',sans-serif] text-sm sm:text-base font-extrabold text-slate-800 leading-snug">
                                         Siti Rahmawati, A.Md.
                                     </h3>
                                 </div>
@@ -866,20 +874,20 @@
                         </div>
 
                         <!-- Mobile Fallback Card 4: Kaur Perencanaan & Umum -->
-                        <div class="w-full shrink-0 flex justify-center px-4">
-                            <div class="w-full max-w-[230px] p-3 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between text-center">
+                        <div class="w-full shrink-0 flex justify-center px-2">
+                            <div class="w-full max-w-[310px] p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-md flex flex-col justify-between text-center">
                                 <div>
-                                    <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-2.5 flex items-center justify-center shadow-2xs">
-                                        <div class="w-12 h-12 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
-                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3 flex items-center justify-center shadow-2xs">
+                                        <div class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
+                                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                             </svg>
                                         </div>
                                     </div>
-                                    <p class="text-[10px] font-semibold uppercase tracking-wider text-[#0A3D29] mb-0.5 line-clamp-1">
+                                    <p class="text-[11px] font-bold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
                                         Kaur Perencanaan & Umum
                                     </p>
-                                    <h3 class="font-['Public_Sans',sans-serif] text-sm font-extrabold text-slate-800 leading-snug">
+                                    <h3 class="font-['Public_Sans',sans-serif] text-sm sm:text-base font-extrabold text-slate-800 leading-snug">
                                         Tri Santoso, S.T.
                                     </h3>
                                 </div>
@@ -887,23 +895,6 @@
                         </div>
                     @endif
                 </div>
-
-                <!-- Floating Navigation Arrow Buttons for Mobile Carousel -->
-                <button @click="prevSlide(); startAutoSlide()" 
-                        class="absolute left-1 top-[42%] -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/95 backdrop-blur-md shadow-md text-[#191c1e] hover:bg-[#0A3D29] hover:text-white flex items-center justify-center transition-all border border-[#c5c6ce]/60 active:scale-90"
-                        aria-label="Aparatur Sebelumnya">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                </button>
-
-                <button @click="nextSlide(); startAutoSlide()" 
-                        class="absolute right-1 top-[42%] -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/95 backdrop-blur-md shadow-md text-[#191c1e] hover:bg-[#0A3D29] hover:text-white flex items-center justify-center transition-all border border-[#c5c6ce]/60 active:scale-90"
-                        aria-label="Aparatur Selanjutnya">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </button>
             </div>
 
             {{-- Mobile Carousel Indicators (Dots) --}}
@@ -1042,7 +1033,7 @@
         <div class="block sm:hidden text-center pt-2">
             <a href="{{ route('public.officials') }}" 
                class="inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#062c1d] text-white font-bold text-xs px-6 py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 min-h-[44px]">
-                <span>Lihat Semua Aparatur</span>
+                <span>Lihat Semua Perangkat</span>
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                 </svg>

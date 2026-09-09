@@ -15,9 +15,9 @@ class PublicServicesTest extends TestCase
     {
         $response = $this->get('/layanan');
         $response->assertStatus(200);
-        $response->assertSee('Pusat Layanan Digital');
-        $response->assertSee('Surat Online Mandiri');
-        $response->assertSee('Pengaduan & Aspirasi');
+        $response->assertSee('Layanan Publik');
+        $response->assertSee('Akses Layanan Surat');
+        $response->assertSee('Sampaikan Pengaduan');
     }
 
     public function test_guest_unauthenticated_user_can_access_and_submit_services(): void

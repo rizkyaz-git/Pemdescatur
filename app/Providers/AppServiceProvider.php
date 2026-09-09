@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Menu;
 use App\Models\Setting;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
@@ -25,26 +24,17 @@ class AppServiceProvider extends ServiceProvider
 
             if ($globalData === null) {
                 try {
-                    if (Schema::hasTable('menus') && Schema::hasTable('settings')) {
-                        $allSettings = Setting::all()->pluck('value', 'key');
-
-                        $globalMenus = Menu::where('is_active', true)
-                            ->whereNull('parent_id')
-                            ->with(['children' => function ($q) {
-                                $q->where('is_active', true)->orderBy('order', 'asc');
-                            }])
-                            ->orderBy('order', 'asc')
-                            ->get();
+                    if (Schema::hasTable('settings')) {
+                        $allSettings = Setting::all()->pluck('value', 'key')->all();
 
                         $globalData = [
-                            'globalMenus' => $globalMenus,
-                            'globalLogo' => $allSettings->get('village_logo_path'),
-                            'globalHeroImage' => $allSettings->get('hero_image_path'),
-                            'globalVillageName' => $allSettings->get('village_name', 'Pemerintah Desa Catur'),
-                            'globalLibraryUrl' => $allSettings->get('library_url', 'https://perpustakaan.boyolali.go.id'),
-                            'globalPhone' => $allSettings->get('village_phone', '0812-3456-7890'),
-                            'globalEmail' => $allSettings->get('village_email', 'info@desacatur.id'),
-                            'globalAddress' => $allSettings->get('village_address', 'Jl. Raya Catur - Sambi, Desa Catur, Kec. Sambi, Kab. Boyolali, Jawa Tengah 57376'),
+                            'globalLogo' => $allSettings['village_logo_path'] ?? null,
+                            'globalHeroImage' => $allSettings['hero_image_path'] ?? null,
+                            'globalVillageName' => $allSettings['village_name'] ?? 'Pemerintah Desa Catur',
+                            'globalLibraryUrl' => $allSettings['library_url'] ?? 'https://perpustakaan.boyolali.go.id',
+                            'globalPhone' => $allSettings['village_phone'] ?? '0812-3456-7890',
+                            'globalEmail' => $allSettings['village_email'] ?? 'info@desacatur.id',
+                            'globalAddress' => $allSettings['village_address'] ?? 'Jl. Raya Catur - Sambi, Desa Catur, Kec. Sambi, Kab. Boyolali, Jawa Tengah 57376',
                         ];
                     } else {
                         $globalData = [];
@@ -60,4 +50,3 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 }
-

@@ -39,16 +39,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Galeri CRUD
     Route::resource('galleries', Admin\GalleryController::class)->except(['show']);
 
-    // Lokasi Peta CRUD
-    Route::resource('locations', Admin\LocationController::class)->except(['show']);
-
-    // Menus Navigasi CRUD
-    Route::resource('menus', Admin\MenuController::class)->except(['show']);
-    Route::patch('/menus/{menu}/toggle', [Admin\MenuController::class, 'toggleActive'])->name('menus.toggle');
-
-    // Logo Program / Partners CRUD
-    Route::resource('partners', Admin\PartnerController::class)->except(['show']);
-
     // Pengaturan Umum, Logo & Hero Background
     Route::get('/settings', [Admin\SettingController::class, 'edit'])->name('settings.edit');
     Route::put('/settings', [Admin\SettingController::class, 'update'])->name('settings.update');
@@ -58,12 +48,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::delete('/settings/library-desktop', [Admin\SettingController::class, 'deleteLibraryDesktopImage'])->name('settings.delete-library-desktop');
     Route::delete('/settings/library-tablet', [Admin\SettingController::class, 'deleteLibraryTabletImage'])->name('settings.delete-library-tablet');
     Route::delete('/settings/library-mobile', [Admin\SettingController::class, 'deleteLibraryMobileImage'])->name('settings.delete-library-mobile');
-
-    // ===== PHASE 1: DATABASE PENDUDUK =====
-    // Database Penduduk - Keluarga & Anggota
-    Route::resource('families', Admin\FamilyController::class)->except(['show']);
-    Route::resource('residents', Admin\ResidentController::class)->except(['show']);
-    Route::get('/api/residents/search', [Admin\ResidentController::class, 'search'])->name('residents.search');
 
     // ===== PHASE 1: PELAYANAN SURAT =====
     Route::resource('letter-templates', Admin\LetterTemplateController::class)->except(['show']);

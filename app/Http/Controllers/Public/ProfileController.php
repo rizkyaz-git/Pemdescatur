@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Official;
-use App\Models\Partner;
 use App\Models\StatCategory;
 use App\Models\VillageProfile;
 use App\Models\VillageRegion;
@@ -23,9 +22,6 @@ class ProfileController extends Controller
 
         // Load data dukuh, group per Kadus
         $regions = VillageRegion::orderBy('kadus')->orderBy('order')->get()->groupBy('kadus');
-
-        // Mitra / Lembaga
-        $partners = Partner::where('is_active', true)->orderBy('order')->get();
 
         // Pimpinan / Kepala Desa
         $kades = Official::where('order', 1)->first() ?? Official::first();
@@ -54,7 +50,6 @@ class ProfileController extends Controller
             'profile',
             'categories',
             'regions',
-            'partners',
             'kades',
             'apbdesYears',
             'apbdesPendapatan',

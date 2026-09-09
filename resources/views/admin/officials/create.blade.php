@@ -3,75 +3,150 @@
 @section('title', 'Tambah Perangkat Desa')
 
 @section('content')
-
-<div class="max-w-3xl bg-white rounded-xl border border-gray-200 shadow-xs p-6 sm:p-8 space-y-6">
-    <div class="border-b border-gray-200 pb-4 flex justify-between items-center">
-        <div>
-            <h3 class="font-serif font-bold text-xl text-gray-900">Tambah Data Perangkat Desa Baru</h3>
-            <p class="text-xs text-gray-500 mt-1">Masukkan nama, jabatan, posisi hierarki, dan foto perangkat desa.</p>
-        </div>
-        <a href="{{ route('admin.officials.index') }}" class="text-xs text-gray-600 hover:underline">← Kembali</a>
+<div class="max-w-3xl mx-auto space-y-6">
+    <!-- Header Page: Tombol kembali di kiri gaya ikon, header sederhana hanya judul -->
+    <div class="flex items-center gap-3.5">
+        <a href="{{ route('admin.officials.index') }}" 
+           class="w-10 h-10 rounded-xl bg-white border border-[#E2E8F0] hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs shrink-0"
+           title="Kembali"
+           aria-label="Kembali">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+        </a>
+        <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Tambah Perangkat Desa</h1>
     </div>
 
-    <form action="{{ route('admin.officials.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-        @csrf
+    <div class="bg-white rounded-[20px] border border-[#E2E8F0] shadow-xs p-6 sm:p-8">
+        <form action="{{ route('admin.officials.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            @csrf
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div class="space-y-1">
-                <label class="block text-sm font-semibold text-gray-700">Nama Lengkap & Gelar *</label>
-                <input type="text" name="name" value="{{ old('name') }}" required class="w-full rounded-lg border-gray-300 shadow-xs text-sm p-3" placeholder="Contoh: I Wayan Suardana, S.Pd.">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <label for="name" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
+                        Nama Lengkap & Gelar <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" name="name" id="name" value="{{ old('name') }}" required 
+                        placeholder="Contoh: I Wayan Suardana, S.Pd."
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-sm bg-[#F8FAFC]/40 text-slate-900 @error('name') border-rose-500 @enderror">
+                    @error('name')
+                        <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="position" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
+                        Jabatan <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" name="position" id="position" value="{{ old('position') }}" required 
+                        placeholder="Contoh: Kepala Desa / Sekretaris Desa"
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-sm bg-[#F8FAFC]/40 text-slate-900 @error('position') border-rose-500 @enderror">
+                    @error('position')
+                        <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
 
-            <div class="space-y-1">
-                <label class="block text-sm font-semibold text-gray-700">Jabatan *</label>
-                <input type="text" name="position" value="{{ old('position') }}" required class="w-full rounded-lg border-gray-300 shadow-xs text-sm p-3" placeholder="Contoh: Perbekel / Sekretaris Desa / Kaur">
-            </div>
-        </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div>
+                    <label for="order" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
+                        Urutan Tampil (Order) <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="number" name="order" id="order" value="{{ old('order', 1) }}" min="0" required 
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-sm tabular-nums bg-[#F8FAFC]/40 text-slate-900">
+                </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div class="space-y-1">
-                <label class="block text-sm font-semibold text-gray-700">Atasan (Hierarki Organisasi)</label>
-                <select name="parent_id" class="w-full rounded-lg border-gray-300 shadow-xs text-sm p-3">
-                    <option value="">-- Tidak ada (Posisi Teratas / Perbekel) --</option>
-                    @foreach($parents as $p)
-                        <option value="{{ $p->id }}" {{ old('parent_id') == $p->id ? 'selected' : '' }}>
-                            {{ $p->position }} — {{ $p->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                <div>
+                    <label for="phone" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
+                        Nomor Telepon / WhatsApp (Opsional)
+                    </label>
+                    <input type="text" name="phone" id="phone" value="{{ old('phone') }}" 
+                        placeholder="Contoh: 081234567890"
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-sm tabular-nums bg-[#F8FAFC]/40 text-slate-900">
+                </div>
 
-            <div class="space-y-1">
-                <label class="block text-sm font-semibold text-gray-700">Urutan Tampil (Order) *</label>
-                <input type="number" name="order" value="{{ old('order', 1) }}" min="0" required class="w-full rounded-lg border-gray-300 shadow-xs text-sm p-3">
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div class="space-y-1">
-                <label class="block text-sm font-semibold text-gray-700">Nomor Telepon / WA (Opsional)</label>
-                <input type="text" name="phone" value="{{ old('phone') }}" class="w-full rounded-lg border-gray-300 shadow-xs text-sm p-3" placeholder="081234567890">
+                <div>
+                    <label for="email" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
+                        Alamat Email (Opsional)
+                    </label>
+                    <input type="email" name="email" id="email" value="{{ old('email') }}" 
+                        placeholder="perangkat@desacatur.id"
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-sm bg-[#F8FAFC]/40 text-slate-900">
+                </div>
             </div>
 
-            <div class="space-y-1">
-                <label class="block text-sm font-semibold text-gray-700">Email (Opsional)</label>
-                <input type="email" name="email" value="{{ old('email') }}" class="w-full rounded-lg border-gray-300 shadow-xs text-sm p-3" placeholder="perangkat@desacatur.id">
+            <!-- Upload Foto Profil Section -->
+            <div class="p-5 sm:p-6 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0] space-y-4"
+                 x-data="{
+                    preview: null,
+                    fileChosen(event) {
+                        const file = event.target.files[0];
+                        if (file) {
+                            this.preview = URL.createObjectURL(file);
+                        }
+                    }
+                 }">
+                <div class="flex items-center justify-between">
+                    <label class="block text-[13px] font-semibold text-[#1E293B]">
+                        Foto Profil Resmi
+                    </label>
+                    <span class="text-[11px] font-medium text-slate-500">
+                        Format JPG, PNG, WEBP (Maks. 2MB)
+                    </span>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                    <!-- Avatar / Image Preview Container -->
+                    <div class="relative w-20 h-24 sm:w-24 sm:h-28 rounded-xl overflow-hidden bg-white border border-[#E2E8F0] shadow-xs flex items-center justify-center shrink-0">
+                        <template x-if="preview">
+                            <img :src="preview" alt="Preview Foto" class="w-full h-full object-cover object-top">
+                        </template>
+                        <div x-show="preview === null" class="w-full h-full flex flex-col items-center justify-center bg-slate-100 text-slate-400">
+                            <svg class="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                            <span class="text-[9px] font-medium mt-1">Belum ada</span>
+                        </div>
+                    </div>
+
+                    <!-- Upload Controls & Info -->
+                    <div class="flex-1 min-w-0 space-y-2">
+                        <div class="text-xs text-slate-600">
+                            <p class="font-medium text-slate-800" x-text="preview ? 'Foto baru siap diunggah' : 'Pilih berkas foto aparatur desa'"></p>
+                            <p class="text-[11px] text-slate-500 mt-0.5">Unggah foto resmi aparatur desa berseragam atau pakaian dinas rapi.</p>
+                        </div>
+
+                        <div>
+                            <input type="file" 
+                                   name="photo" 
+                                   id="photo" 
+                                   accept="image/*" 
+                                   @change="fileChosen"
+                                   class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-[#0F4C3A] hover:file:bg-emerald-100 file:cursor-pointer cursor-pointer border border-[#E2E8F0] rounded-xl bg-white p-1 focus:outline-hidden">
+                        </div>
+
+                        <p class="text-[11px] text-slate-500 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>Rekomendasi rasio pasfoto <strong>3:4</strong> (misal 600×800 px) atau kotak <strong>1:1</strong>.</span>
+                        </p>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="space-y-1">
-            <label class="block text-sm font-semibold text-gray-700">Foto Profil (Opsional)</label>
-            <input type="file" name="photo" accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-[#0d631b] hover:file:bg-emerald-100">
-            <p class="text-[11px] text-emerald-900 font-medium">📐 Rekomendasi Resolusi: <strong>600 x 800 px</strong> (Rasio 3:4 Portrait) atau <strong>512 x 512 px</strong> (Rasio 1:1 Pasfoto). Format JPG, PNG, WEBP. Maksimal 2 MB.</p>
-        </div>
-
-        <div class="pt-4 border-t border-gray-200 flex justify-end gap-3">
-            <a href="{{ route('admin.officials.index') }}" class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-600 text-sm font-semibold hover:bg-gray-50">Batal</a>
-            <button type="submit" class="bg-[#0d631b] hover:bg-emerald-800 text-white font-bold text-sm px-6 py-2.5 rounded-lg shadow-md transition">
-                💾 Simpan Perangkat Desa
-            </button>
-        </div>
-    </form>
+            <div class="pt-4 flex items-center justify-end gap-3 border-t border-[#F1F5F9]">
+                <a href="{{ route('admin.officials.index') }}" class="px-5 py-2.5 rounded-xl border border-[#E2E8F0] text-slate-700 text-xs font-semibold hover:bg-slate-50 transition">
+                    Batal
+                </a>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-bold shadow-xs transition inline-flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span>Simpan Perangkat Desa</span>
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
-
 @endsection

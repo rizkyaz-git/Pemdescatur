@@ -6,46 +6,55 @@
 <div class="max-w-4xl mx-auto space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="font-serif text-2xl font-bold text-gray-800">📄 Detail Permohonan Surat</h1>
-            <p class="text-xs text-gray-500 mt-1">Nomor Tiket: <strong class="font-mono text-emerald-800">{{ $request->ticket_number }}</strong></p>
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-[#0F4C3A] border border-emerald-100 mb-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span>Detail Berkas Surat</span>
+            </div>
+            <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Detail Permohonan Surat</h1>
+            <p class="text-xs text-[#64748B] mt-1">Nomor Tiket: <strong class="font-mono text-[#0F4C3A] font-bold tabular-nums">{{ $request->ticket_number }}</strong></p>
         </div>
-        <a href="{{ route('admin.letter-requests.index') }}" class="inline-flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold px-4 py-2.5 rounded-lg transition">
-            ⬅️ Kembali
+        <a href="{{ route('admin.letter-requests.index') }}" class="inline-flex items-center gap-1.5 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl border border-[#E2E8F0] transition shadow-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            <span>Kembali</span>
         </a>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Main Details -->
         <div class="lg:col-span-2 space-y-6">
-            <div class="bg-white rounded-xl border border-gray-200 shadow-xs p-6 space-y-4">
-                <h3 class="font-bold text-base text-gray-900 border-b border-gray-100 pb-3">Informasi Permohonan</h3>
+            <div class="bg-white rounded-[20px] border border-[#E2E8F0] shadow-xs p-6 space-y-5">
+                <h3 class="font-jakarta font-bold text-base text-[#0F172A] border-b border-[#F1F5F9] pb-3">Informasi Permohonan</h3>
                 
                 <div class="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Jenis Surat</p>
-                        <p class="font-bold text-gray-800">{{ $request->template ? ($request->template->title ?? $request->template->name) : '-' }}</p>
+                        <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Jenis Surat</p>
+                        <p class="font-semibold text-[#0F172A] mt-1">{{ $request->template ? ($request->template->title ?? $request->template->name) : '-' }}</p>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Tanggal Pengajuan</p>
-                        <p class="font-bold text-gray-800">{{ $request->created_at ? $request->created_at->format('d/m/Y H:i') : '-' }}</p>
+                        <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Tanggal Pengajuan</p>
+                        <p class="font-semibold text-[#0F172A] tabular-nums mt-1">{{ $request->created_at ? $request->created_at->format('d/m/Y H:i') : '-' }}</p>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Nama Pemohon</p>
-                        <p class="font-bold text-gray-800">{{ $request->user ? $request->user->name : '-' }}</p>
+                        <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Nama Pemohon</p>
+                        <p class="font-semibold text-[#0F172A] mt-1">{{ $request->user ? $request->user->name : '-' }}</p>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Email Pemohon</p>
-                        <p class="font-bold text-gray-800">{{ $request->user ? $request->user->email : '-' }}</p>
+                        <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Email Pemohon</p>
+                        <p class="font-mono text-xs text-slate-700 mt-1">{{ $request->user ? $request->user->email : '-' }}</p>
                     </div>
                 </div>
 
                 @if($request->form_data)
-                    <div class="pt-3 border-t border-gray-100">
-                        <p class="text-xs text-gray-500 font-semibold uppercase mb-2">Data Form Yang Diisi Pemohon</p>
-                        <div class="bg-gray-50 p-4 rounded-lg text-xs font-mono overflow-x-auto space-y-1">
+                    <div class="pt-4 border-t border-[#F1F5F9]">
+                        <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mb-2">Data Form Yang Diisi Pemohon</p>
+                        <div class="bg-[#F8FAFC] border border-[#E2E8F0] p-4 rounded-xl text-xs font-mono overflow-x-auto space-y-1.5">
                             @if(is_array($request->form_data))
                                 @foreach($request->form_data as $key => $val)
-                                    <p><strong class="text-gray-700">{{ $key }}:</strong> {{ is_array($val) ? json_encode($val) : $val }}</p>
+                                    <p><strong class="text-[#0F4C3A]">{{ $key }}:</strong> {{ is_array($val) ? json_encode($val) : $val }}</p>
                                 @endforeach
                             @else
                                 <pre>{{ json_encode($request->form_data, JSON_PRETTY_PRINT) }}</pre>
@@ -56,13 +65,19 @@
             </div>
 
             @if($request->result_file_path)
-                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 flex items-center justify-between">
+                <div class="bg-emerald-50/70 border border-emerald-200 rounded-[20px] p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <p class="text-sm font-bold text-emerald-900">📄 File Hasil Surat Telah Diunggah</p>
-                        <p class="text-xs text-emerald-700 mt-0.5">Surat hasil dalam format PDF siap diunduh warga.</p>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <p class="text-sm font-bold text-emerald-900">File Surat Hasil Telah Diterbitkan</p>
+                        </div>
+                        <p class="text-xs text-emerald-700 mt-1">Dokumen surat resmi (PDF) telah diunggah dan siap diunduh oleh warga pemohon.</p>
                     </div>
-                    <a href="{{ asset('storage/' . $request->result_file_path) }}" target="_blank" class="bg-[#0d631b] hover:bg-emerald-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
-                        ⬇️ Unduh PDF Surat
+                    <a href="{{ asset('storage/' . $request->result_file_path) }}" target="_blank" class="inline-flex items-center gap-2 bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xs transition shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Unduh PDF Surat</span>
                     </a>
                 </div>
             @endif
@@ -70,29 +85,41 @@
 
         <!-- Action Card -->
         <div class="space-y-6">
-            <div class="bg-white rounded-xl border border-gray-200 shadow-xs p-6 space-y-4">
-                <h3 class="font-bold text-base text-gray-900 border-b border-gray-100 pb-3">Status Permohonan</h3>
+            <div class="bg-white rounded-[20px] border border-[#E2E8F0] shadow-xs p-6 space-y-4">
+                <h3 class="font-jakarta font-bold text-base text-[#0F172A] border-b border-[#F1F5F9] pb-3">Status Verifikasi</h3>
                 
                 <div>
                     @if($request->status === 'pending')
-                        <span class="inline-block px-3 py-1.5 text-xs font-bold rounded-full bg-amber-100 text-amber-800">Menunggu Review Admin</span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full bg-amber-50 text-amber-800 border border-amber-200/60">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                            <span>Menunggu Review</span>
+                        </span>
                     @elseif($request->status === 'approved')
-                        <span class="inline-block px-3 py-1.5 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800">Disetujui</span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full bg-[#DCFCE7] text-[#15803D]">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+                            <span>Disetujui</span>
+                        </span>
                     @else
-                        <span class="inline-block px-3 py-1.5 text-xs font-bold rounded-full bg-red-100 text-red-800">Ditolak</span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full bg-rose-50 text-rose-700 border border-rose-200/60">
+                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                            <span>Ditolak</span>
+                        </span>
                     @endif
                 </div>
 
                 @if($request->admin_notes)
-                    <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 text-xs">
-                        <p class="font-bold text-gray-700 mb-1">Catatan Admin:</p>
-                        <p class="text-gray-600">{{ $request->admin_notes }}</p>
+                    <div class="bg-[#F8FAFC] p-3.5 rounded-xl border border-[#E2E8F0] text-xs">
+                        <p class="font-bold text-slate-700 mb-1">Catatan Verifikator:</p>
+                        <p class="text-slate-600 leading-relaxed">{{ $request->admin_notes }}</p>
                     </div>
                 @endif
 
                 <div class="pt-2">
-                    <a href="{{ route('admin.letter-requests.edit', $request->id) }}" class="block w-full text-center bg-[#0d631b] hover:bg-emerald-800 text-white text-xs font-bold py-2.5 rounded-lg shadow-sm transition">
-                        ⚡ Ubah Status / Upload Surat
+                    <a href="{{ route('admin.letter-requests.edit', $request->id) }}" class="inline-flex items-center justify-center gap-2 w-full bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-bold py-2.5 rounded-xl shadow-xs transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        <span>Ubah Status / Upload Surat</span>
                     </a>
                 </div>
             </div>

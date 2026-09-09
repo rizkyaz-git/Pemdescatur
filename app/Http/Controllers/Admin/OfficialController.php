@@ -14,14 +14,13 @@ class OfficialController extends Controller
 {
     public function index(): View
     {
-        $officials = Official::with('parent')->orderBy('order', 'asc')->get();
+        $officials = Official::orderBy('order', 'asc')->get();
         return view('admin.officials.index', compact('officials'));
     }
 
     public function create(): View
     {
-        $parents = Official::orderBy('name', 'asc')->get();
-        return view('admin.officials.create', compact('parents'));
+        return view('admin.officials.create');
     }
 
     public function store(StoreOfficialRequest $request): RedirectResponse
@@ -40,8 +39,7 @@ class OfficialController extends Controller
 
     public function edit(Official $official): View
     {
-        $parents = Official::where('id', '!=', $official->id)->orderBy('name', 'asc')->get();
-        return view('admin.officials.edit', compact('official', 'parents'));
+        return view('admin.officials.edit', compact('official'));
     }
 
     public function update(UpdateOfficialRequest $request, Official $official): RedirectResponse

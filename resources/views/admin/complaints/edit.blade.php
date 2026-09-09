@@ -6,20 +6,29 @@
 <div class="max-w-3xl mx-auto space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="font-serif text-2xl font-bold text-gray-800">💬 Tanggapi Pengaduan Warga</h1>
-            <p class="text-xs text-gray-500 mt-1">Tiket: <strong class="font-mono text-emerald-800">{{ $complaint->ticket_number }}</strong></p>
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/60 mb-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+                <span>Respons Aspirasi</span>
+            </div>
+            <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Tanggapi Pengaduan Warga</h1>
+            <p class="text-xs text-[#64748B] mt-1">Tiket: <strong class="font-mono text-[#0F4C3A] tabular-nums font-bold">{{ $complaint->ticket_number }}</strong></p>
         </div>
-        <a href="{{ route('admin.complaints.index') }}" class="inline-flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold px-4 py-2.5 rounded-lg transition">
-            ⬅️ Kembali
+        <a href="{{ route('admin.complaints.index') }}" class="inline-flex items-center gap-1.5 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl border border-[#E2E8F0] transition shadow-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            <span>Kembali</span>
         </a>
     </div>
 
-    <div class="bg-white rounded-xl border border-gray-200 shadow-xs p-6 sm:p-8">
+    <div class="bg-white rounded-[20px] border border-[#E2E8F0] shadow-xs p-6 sm:p-8">
         <!-- Summary of Complaint -->
-        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 space-y-2">
-            <span class="text-xs font-bold text-gray-500 uppercase">Subjek Pengaduan:</span>
-            <p class="font-bold text-base text-gray-900">{{ $complaint->title }}</p>
-            <p class="text-xs text-gray-600 line-clamp-3">{{ $complaint->description }}</p>
+        <div class="bg-[#F8FAFC] p-4 rounded-xl border border-[#E2E8F0] mb-6 space-y-2">
+            <span class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Subjek Pengaduan:</span>
+            <p class="font-bold text-base text-[#0F172A]">{{ $complaint->title }}</p>
+            <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed">{{ $complaint->description }}</p>
         </div>
 
         <form action="{{ route('admin.complaints.update', $complaint->id) }}" method="POST" class="space-y-6">
@@ -27,38 +36,41 @@
             @method('PUT')
 
             <div>
-                <label for="status" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                    Status Penanganan Pengaduan <span class="text-red-500">*</span>
+                <label for="status" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
+                    Status Penanganan Pengaduan <span class="text-rose-500">*</span>
                 </label>
                 <select name="status" id="status" required
-                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm font-semibold @error('status') border-red-500 @enderror">
-                    <option value="new" {{ old('status', $complaint->status) == 'new' ? 'selected' : '' }}>🔴 Baru / Belum Ditanggapi</option>
-                    <option value="processing" {{ old('status', $complaint->status) == 'processing' ? 'selected' : '' }}>🟡 Sedang Ditindaklanjuti (Processing)</option>
-                    <option value="resolved" {{ old('status', $complaint->status) == 'resolved' ? 'selected' : '' }}>🟢 Selesai Ditanggapi (Resolved)</option>
+                    class="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-sm bg-[#F8FAFC]/40 text-slate-900 font-semibold @error('status') border-rose-500 @enderror">
+                    <option value="new" {{ old('status', $complaint->status) == 'new' ? 'selected' : '' }}>Baru / Belum Ditanggapi</option>
+                    <option value="processing" {{ old('status', $complaint->status) == 'processing' ? 'selected' : '' }}>Sedang Ditindaklanjuti (Processing)</option>
+                    <option value="resolved" {{ old('status', $complaint->status) == 'resolved' ? 'selected' : '' }}>Selesai Ditanggapi (Resolved)</option>
                 </select>
                 @error('status')
-                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label for="admin_response" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                <label for="admin_response" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
                     Tanggapan / Jawaban Resmi Pemerintah Desa
                 </label>
                 <textarea name="admin_response" id="admin_response" rows="6"
                     placeholder="Tuliskan tindak lanjut atau tanggapan resmi dari Pemerintah Desa Catur..."
-                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm @error('admin_response') border-red-500 @enderror">{{ old('admin_response', $complaint->admin_response) }}</textarea>
+                    class="w-full px-4 py-3 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-sm bg-[#F8FAFC]/40 text-slate-900 leading-relaxed @error('admin_response') border-rose-500 @enderror">{{ old('admin_response', $complaint->admin_response) }}</textarea>
                 @error('admin_response')
-                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="pt-4 flex items-center justify-end gap-3 border-t border-gray-100">
-                <a href="{{ route('admin.complaints.index') }}" class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 text-xs font-semibold hover:bg-gray-50 transition">
+            <div class="pt-4 flex items-center justify-end gap-3 border-t border-[#F1F5F9]">
+                <a href="{{ route('admin.complaints.index') }}" class="px-5 py-2.5 rounded-xl border border-[#E2E8F0] text-slate-700 text-xs font-semibold hover:bg-slate-50 transition">
                     Batal
                 </a>
-                <button type="submit" class="px-5 py-2.5 rounded-lg bg-[#0d631b] hover:bg-emerald-800 text-white text-xs font-semibold shadow-sm transition">
-                    💾 Simpan Tanggapan
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-bold shadow-xs transition inline-flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span>Simpan Tanggapan</span>
                 </button>
             </div>
         </form>

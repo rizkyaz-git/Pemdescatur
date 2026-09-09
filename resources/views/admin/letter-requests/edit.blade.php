@@ -6,66 +6,84 @@
 <div class="max-w-3xl mx-auto space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="font-serif text-2xl font-bold text-gray-800">⚡ Proses Permohonan Surat</h1>
-            <p class="text-xs text-gray-500 mt-1">Tiket: <strong class="font-mono text-emerald-800">{{ $request->ticket_number }}</strong></p>
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-[#0F4C3A] border border-emerald-100 mb-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                <span>Proses Layanan Surat</span>
+            </div>
+            <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Proses Permohonan Surat</h1>
+            <p class="text-xs text-[#64748B] mt-1">Tiket Permohonan: <strong class="font-mono text-[#0F4C3A] tabular-nums font-bold">{{ $request->ticket_number }}</strong></p>
         </div>
-        <a href="{{ route('admin.letter-requests.index') }}" class="inline-flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold px-4 py-2.5 rounded-lg transition">
-            ⬅️ Kembali
+        <a href="{{ route('admin.letter-requests.index') }}" class="inline-flex items-center gap-1.5 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl border border-[#E2E8F0] transition shadow-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            <span>Kembali</span>
         </a>
     </div>
 
-    <div class="bg-white rounded-xl border border-gray-200 shadow-xs p-6 sm:p-8">
+    <div class="bg-white rounded-[20px] border border-[#E2E8F0] shadow-xs p-6 sm:p-8">
         <form action="{{ route('admin.letter-requests.update', $request->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT')
 
             <div>
-                <label for="status" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                    Keputusan Status Permohonan <span class="text-red-500">*</span>
+                <label for="status" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
+                    Keputusan Status Permohonan <span class="text-rose-500">*</span>
                 </label>
                 <select name="status" id="status" required
-                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm font-semibold @error('status') border-red-500 @enderror">
-                    <option value="approved" {{ old('status', $request->status) == 'approved' ? 'selected' : '' }}>✅ Setujui Permohonan (Approved)</option>
-                    <option value="rejected" {{ old('status', $request->status) == 'rejected' ? 'selected' : '' }}>❌ Tolak Permohonan (Rejected)</option>
+                    class="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-sm bg-[#F8FAFC]/40 text-slate-900 font-semibold @error('status') border-rose-500 @enderror">
+                    <option value="approved" {{ old('status', $request->status) == 'approved' ? 'selected' : '' }}>Setujui Permohonan (Approved)</option>
+                    <option value="rejected" {{ old('status', $request->status) == 'rejected' ? 'selected' : '' }}>Tolak Permohonan (Rejected)</option>
+                    <option value="pending" {{ old('status', $request->status) == 'pending' ? 'selected' : '' }}>Pending (Menunggu Review)</option>
                 </select>
                 @error('status')
-                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label for="admin_notes" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                    Catatan Admin / Pesan Keterangan Ke Warga
+                <label for="admin_notes" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
+                    Catatan Verifikator / Pesan Keterangan Ke Warga
                 </label>
                 <textarea name="admin_notes" id="admin_notes" rows="3"
-                    placeholder="Contoh: Surat telah ditandatangani Kepala Desa dan siap diunduh."
-                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm @error('admin_notes') border-red-500 @enderror">{{ old('admin_notes', $request->admin_notes) }}</textarea>
+                    placeholder="Contoh: Surat keterangan telah ditandatangani Kepala Desa dan siap diunduh."
+                    class="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-sm bg-[#F8FAFC]/40 text-slate-900 @error('admin_notes') border-rose-500 @enderror">{{ old('admin_notes', $request->admin_notes) }}</textarea>
                 @error('admin_notes')
-                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div>
-                <label for="result_file_path" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                    Upload File Surat Hasil / Ttd Digital (PDF)
+            <div class="space-y-2 p-5 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0]">
+                <label for="result_file_path" class="block text-[13px] font-semibold text-[#1E293B] mb-1">
+                    Upload Berkas Surat Hasil / TTD Resmi (PDF)
                 </label>
                 <input type="file" name="result_file_path" id="result_file_path" accept=".pdf"
-                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 text-sm bg-gray-50 @error('result_file_path') border-red-500 @enderror">
-                <p class="text-xs text-gray-500 mt-1">Format PDF, maksimal ukuran 5MB.</p>
+                    class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-[#0F4C3A] hover:file:bg-emerald-100 cursor-pointer @error('result_file_path') border-rose-500 @enderror">
+                <p class="text-[11px] text-slate-500">Format PDF, maksimal ukuran 5MB.</p>
                 @if($request->result_file_path)
-                    <p class="text-xs text-emerald-700 mt-1">✓ File saat ini: <code>{{ $request->result_file_path }}</code></p>
+                    <div class="mt-2 flex items-center gap-2 text-xs text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
+                        <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span>Berkas saat ini: <code class="font-mono text-[11px]">{{ basename($request->result_file_path) }}</code></span>
+                    </div>
                 @endif
                 @error('result_file_path')
-                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="pt-4 flex items-center justify-end gap-3 border-t border-gray-100">
-                <a href="{{ route('admin.letter-requests.index') }}" class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 text-xs font-semibold hover:bg-gray-50 transition">
+            <div class="pt-4 flex items-center justify-end gap-3 border-t border-[#F1F5F9]">
+                <a href="{{ route('admin.letter-requests.index') }}" class="px-5 py-2.5 rounded-xl border border-[#E2E8F0] text-slate-700 text-xs font-semibold hover:bg-slate-50 transition">
                     Batal
                 </a>
-                <button type="submit" class="px-5 py-2.5 rounded-lg bg-[#0d631b] hover:bg-emerald-800 text-white text-xs font-semibold shadow-sm transition">
-                    💾 Simpan Keputusan
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-bold shadow-xs transition inline-flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span>Simpan Keputusan</span>
                 </button>
             </div>
         </form>

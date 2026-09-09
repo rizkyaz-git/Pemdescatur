@@ -17,10 +17,6 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Leaflet CSS & JS for Interactive Map (FR-08) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-
     <style>
         /* Quill Alignment CSS Rules for Public Pages */
         .ql-align-justify {
@@ -146,10 +142,10 @@
                 <!-- 2. Scrolled Glassmorphism Layer (Fades in softly and smoothly when scrolled down) -->
                 <div class="absolute inset-0 bg-white/80 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.05)] transition-opacity ease-in-out pointer-events-none"
                     :class="(mobileMenuOpen || mobileSearchOpen) 
-                                                         ? 'opacity-100 duration-200' 
-                                                         : (isScrolled 
-                                                             ? 'opacity-100 duration-700' 
-                                                             : 'opacity-0 duration-700 delay-100')">
+                                                                     ? 'opacity-100 duration-200' 
+                                                                     : (isScrolled 
+                                                                         ? 'opacity-100 duration-700' 
+                                                                         : 'opacity-0 duration-700 delay-100')">
                 </div>
             @else
                 <!-- Non-homepage glassmorphism navbar background with scroll shadow -->
@@ -302,7 +298,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                <span>Galeri Foto</span>
+                                <span>Galeri</span>
                             </a>
                         </div>
                     </div>
@@ -785,7 +781,7 @@
                     class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                     <a href="{{ route('public.profile') }}" @click="mobileMenuOpen = false"
                         class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.profile') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
-                        <span>Tentang & Sejarah Desa Catur</span>
+                        <span>Tentang Desa Catur</span>
                     </a>
                     <a href="{{ route('public.officials') }}" @click="mobileMenuOpen = false"
                         class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.officials') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
@@ -823,7 +819,7 @@
                     </a>
                     <a href="{{ route('public.gallery') }}" @click="mobileMenuOpen = false"
                         class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.gallery') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
-                        <span>Galeri Desa</span>
+                        <span>Galeri</span>
                     </a>
                 </div>
             </div>

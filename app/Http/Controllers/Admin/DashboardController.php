@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Gallery;
 use App\Models\News;
 use App\Models\Official;
-use App\Models\Resident;
-use App\Models\Family;
 use App\Models\LetterRequest;
 use App\Models\Complaint;
 use Illuminate\View\View;
@@ -20,8 +18,6 @@ class DashboardController extends Controller
             'news_count' => News::count(),
             'officials_count' => Official::count(),
             'galleries_count' => Gallery::count(),
-            'residents_count' => Resident::count(),
-            'families_count' => Family::count(),
             'pending_letters_count' => LetterRequest::where('status', 'pending')->count(),
             'new_complaints_count' => Complaint::where('status', 'new')->count(),
         ];

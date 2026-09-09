@@ -17,7 +17,6 @@ class UpdateOfficialRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'position' => ['required', 'string', 'max:255'],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'parent_id' => ['nullable', 'exists:officials,id', 'different:id'],
             'order' => ['required', 'integer', 'min:0'],
             'phone' => ['nullable', 'string', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],

@@ -1126,9 +1126,9 @@
                                                     <div
                                                         class="flex flex-col gap-4 w-full pt-1">
                                                         
-                                                        {{-- Informasi Mitra Komunitas (Tampil Pertama di Mobile, Kedua di Desktop) --}}
+                                                        {{-- Informasi Mitra Komunitas (Tampil Pertama di Mobile & Desktop) --}}
                                                         @if(!empty($mitraKomunitas))
-                                                            <div class="w-full order-1 lg:order-2">
+                                                            <div class="w-full order-1">
                                                                 <!-- Horizontal Divider Line (Garis Tipis) -->
                                                                 <div
                                                                     class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }} mb-2.5">
@@ -1159,9 +1159,9 @@
                                                             </div>
                                                         @endif
 
-                                                        {{-- Modul Ajar / File Unduhan (Tampil Kedua di Mobile, Pertama di Desktop) --}}
+                                                        {{-- Modul Ajar / File Unduhan (Tampil Kedua di Mobile & Desktop) --}}
                                                         @if($pojok->kurikulums->isNotEmpty())
-                                                            <div class="w-full flex flex-col gap-4 order-2 lg:order-1">
+                                                            <div class="w-full flex flex-col gap-4 order-2">
                                                                 @foreach($pojok->kurikulums as $file)
                                                                     <div class="w-full">
                                                                         <!-- Horizontal Divider Line (Garis Tipis) -->

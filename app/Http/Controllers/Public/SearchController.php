@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Gallery;
-use App\Models\Location;
 use App\Models\News;
 use App\Models\Official;
 use App\Models\VillageProfile;

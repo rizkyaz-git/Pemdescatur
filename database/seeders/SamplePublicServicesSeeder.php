@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Family;
-use App\Models\Resident;
 use App\Models\LetterTemplate;
 use App\Models\LetterRequest;
 use App\Models\ComplaintCategory;
@@ -26,43 +24,6 @@ class SamplePublicServicesSeeder extends Seeder
         );
 
         $adminUser = User::where('email', 'admin@desacatur.id')->first() ?? $wargaUser;
-
-        // Sample Family
-        $family = Family::firstOrCreate(
-            ['kk_number' => '3309120101260001'],
-            [
-                'head_of_family' => 'Budi Santoso',
-                'address' => 'Dukuh Catur RT 02 / RW 01',
-                'total_members' => 2,
-            ]
-        );
-
-        // Sample Residents
-        Resident::firstOrCreate(
-            ['nik' => '3309121508850001'],
-            [
-                'family_id' => $family->id,
-                'name' => 'Budi Santoso',
-                'birth_place' => 'Boyolali',
-                'birth_date' => '1985-08-15',
-                'gender' => 'L',
-                'relationship_to_head' => 'Kepala Keluarga',
-                'status' => 'hidup',
-            ]
-        );
-
-        Resident::firstOrCreate(
-            ['nik' => '3309125204880002'],
-            [
-                'family_id' => $family->id,
-                'name' => 'Siti Rahmawati',
-                'birth_place' => 'Boyolali',
-                'birth_date' => '1988-04-12',
-                'gender' => 'P',
-                'relationship_to_head' => 'Istri',
-                'status' => 'hidup',
-            ]
-        );
 
         // Sample Letter Template (Ensure SKU exists)
         $skuTemplate = LetterTemplate::where('code', 'SKU')->first();

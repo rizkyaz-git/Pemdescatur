@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Gallery;
-use App\Models\Location;
-use App\Models\Menu;
 use App\Models\News;
 use App\Models\Official;
 use App\Models\Setting;
@@ -80,19 +78,6 @@ class AdminCrudTest extends TestCase
         $gallery = Gallery::where('title', 'Dokumentasi Panen Kopi Kintamani')->first();
         $this->assertNotNull($gallery);
         Storage::disk('public')->assertExists($gallery->image_path);
-    }
-
-    public function test_admin_can_toggle_menu_visibility(): void
-    {
-        $menu = Menu::first();
-        $initialState = $menu->is_active;
-
-        $response = $this->actingAs($this->admin)->patch("/admin/menus/{$menu->id}/toggle");
-        $response->assertRedirect('/admin/menus');
-        $this->assertDatabaseHas('menus', [
-            'id' => $menu->id,
-            'is_active' => !$initialState,
-        ]);
     }
 
     public function test_admin_can_update_settings_and_library_url(): void

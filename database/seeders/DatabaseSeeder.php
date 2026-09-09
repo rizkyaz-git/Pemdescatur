@@ -15,10 +15,7 @@ class DatabaseSeeder extends Seeder
             OfficialSeeder::class,
             NewsSeeder::class,
             GallerySeeder::class,
-            LocationSeeder::class,
-            MenuSeeder::class,
             SettingSeeder::class,
-            PartnerSeeder::class,
             // Phase 1 Seeders
             ComplaintCategorySeeder::class,
             LetterTemplateSeeder::class,

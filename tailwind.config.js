@@ -8,6 +8,17 @@ export default {
   theme: {
     extend: {
       colors: {
+        civic: {
+          primary: '#0F4C3A',
+          dark: '#072C21',
+          canvas: '#F4F6F5',
+          border: '#E2E8F0',
+          accent: '#22C55E',
+          mint: '#86EFAC',
+          amber: '#F59E0B',
+          slate: '#1E293B',
+          muted: '#64748B',
+        },
         forest: {
           DEFAULT: '#145C3B',
           deep: '#0A3D29',
@@ -33,6 +44,7 @@ export default {
       fontFamily: {
         serif: ['Merriweather', 'serif'],
         sans: ['Inter', 'sans-serif'],
+        jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
       },
       borderRadius: {
         'xl': '1rem',

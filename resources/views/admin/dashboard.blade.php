@@ -3,128 +3,285 @@
 @section('title', 'Dashboard Ringkasan Admin')
 
 @section('content')
-
 <div class="space-y-8">
     
-    <!-- Top Greeting Banner -->
-    <div class="bg-gradient-to-r from-[#0d631b] to-[#0a4f15] text-white p-6 sm:p-8 rounded-2xl shadow-md border-b-4 border-[#fea619]">
-        <h2 class="font-serif text-2xl sm:text-3xl font-bold">Selamat Datang, {{ Auth::user()->name }}! 👋</h2>
-        <p class="text-emerald-100 text-sm mt-1">
-            Panel Kelola Website Profil Desa Catur, Sambi, Boyolali. Gunakan menu sidebar untuk memperbarui data desa.
-        </p>
-    </div>
-
-    <!-- Quick Stats Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <a href="{{ route('admin.residents.index') }}" class="bg-white rounded-xl p-6 border border-gray-200 shadow-xs flex items-center gap-4 hover:border-emerald-500 transition">
-            <div class="w-12 h-12 bg-emerald-100 text-[#0d631b] rounded-xl flex items-center justify-center text-2xl font-bold">
-                👥
+    <!-- Top Executive Greeting Banner -->
+    <div class="relative overflow-hidden rounded-[22px] bg-gradient-to-br from-[#072C21] via-[#0F4C3A] to-[#08382A] text-white p-7 sm:p-9 shadow-sm border border-[#0F4C3A]/70">
+        <!-- Ambient Decorative Glows -->
+        <div class="absolute -right-12 -top-12 w-72 h-72 bg-[#22C55E]/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute right-1/4 -bottom-16 w-56 h-56 bg-emerald-400/10 rounded-full blur-2xl pointer-events-none"></div>
+        
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div class="max-w-2xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-xs border border-white/15 text-[11px] font-semibold text-emerald-200 uppercase tracking-wider mb-3">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</span>
+                    <span class="text-white/40">•</span>
+                    <span>Pusat Kendali Operasional</span>
+                </div>
+                <h2 class="font-jakarta text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+                    Selamat Datang, {{ Auth::user()->name }}!
+                </h2>
+                <p class="text-emerald-100/90 text-sm mt-2 leading-relaxed font-normal">
+                    Kelola data kependudukan, validasi permohonan surat administrasi warga, dan pantau publikasi profil Pemerintah Desa Catur, Kec. Sambi, Kab. Boyolali.
+                </p>
             </div>
-            <div>
-                <p class="text-xs text-gray-500 font-semibold uppercase">Total Penduduk</p>
-                <h3 class="font-serif text-2xl font-bold text-gray-900">{{ $stats['residents_count'] ?? 0 }} Jiwa</h3>
-            </div>
-        </a>
-
-        <a href="{{ route('admin.families.index') }}" class="bg-white rounded-xl p-6 border border-gray-200 shadow-xs flex items-center gap-4 hover:border-emerald-500 transition">
-            <div class="w-12 h-12 bg-teal-100 text-teal-800 rounded-xl flex items-center justify-center text-2xl font-bold">
-                👨‍👩‍👧‍👦
-            </div>
-            <div>
-                <p class="text-xs text-gray-500 font-semibold uppercase">Kartu Keluarga</p>
-                <h3 class="font-serif text-2xl font-bold text-gray-900">{{ $stats['families_count'] ?? 0 }} KK</h3>
-            </div>
-        </a>
-
-        <a href="{{ route('admin.letter-requests.index') }}" class="bg-white rounded-xl p-6 border border-gray-200 shadow-xs flex items-center gap-4 hover:border-emerald-500 transition">
-            <div class="w-12 h-12 bg-amber-100 text-amber-800 rounded-xl flex items-center justify-center text-2xl font-bold">
-                📨
-            </div>
-            <div>
-                <p class="text-xs text-gray-500 font-semibold uppercase">Surat Pending</p>
-                <h3 class="font-serif text-2xl font-bold text-gray-900">{{ $stats['pending_letters_count'] ?? 0 }} Permohonan</h3>
-            </div>
-        </a>
-
-        <a href="{{ route('admin.complaints.index') }}" class="bg-white rounded-xl p-6 border border-gray-200 shadow-xs flex items-center gap-4 hover:border-emerald-500 transition">
-            <div class="w-12 h-12 bg-rose-100 text-rose-800 rounded-xl flex items-center justify-center text-2xl font-bold">
-                📢
-            </div>
-            <div>
-                <p class="text-xs text-gray-500 font-semibold uppercase">Pengaduan Baru</p>
-                <h3 class="font-serif text-2xl font-bold text-gray-900">{{ $stats['new_complaints_count'] ?? 0 }} Laporan</h3>
-            </div>
-        </a>
-
-        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-xs flex items-center gap-4">
-            <div class="w-12 h-12 bg-emerald-100 text-[#0d631b] rounded-xl flex items-center justify-center text-2xl font-bold">
-                📰
-            </div>
-            <div>
-                <p class="text-xs text-gray-500 font-semibold uppercase">Total Berita</p>
-                <h3 class="font-serif text-2xl font-bold text-gray-900">{{ $stats['news_count'] }}</h3>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-xs flex items-center gap-4">
-            <div class="w-12 h-12 bg-amber-100 text-[#855300] rounded-xl flex items-center justify-center text-2xl font-bold">
-                🏛️
-            </div>
-            <div>
-                <p class="text-xs text-gray-500 font-semibold uppercase">Perangkat Desa</p>
-                <h3 class="font-serif text-2xl font-bold text-gray-900">{{ $stats['officials_count'] }}</h3>
-            </div>
-        </div>
-
-
-        <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-xs flex items-center gap-4">
-            <div class="w-12 h-12 bg-purple-100 text-purple-800 rounded-xl flex items-center justify-center text-2xl font-bold">
-                🖼️
-            </div>
-            <div>
-                <p class="text-xs text-gray-500 font-semibold uppercase">Foto Galeri</p>
-                <h3 class="font-serif text-2xl font-bold text-gray-900">{{ $stats['galleries_count'] }}</h3>
+            
+            <div class="flex flex-wrap items-center gap-3 shrink-0">
+                <a href="{{ route('admin.letter-requests.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-xs text-white text-xs font-semibold border border-white/20 transition-all duration-150">
+                    <svg class="w-4 h-4 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Cek Surat Warga</span>
+                    @if(($stats['pending_letters_count'] ?? 0) > 0)
+                        <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-amber-400 text-slate-900">{{ $stats['pending_letters_count'] }}</span>
+                    @endif
+                </a>
+                <a href="{{ route('admin.news.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-[#072C21] hover:bg-emerald-50 text-xs font-bold shadow-sm transition-all duration-150">
+                    <svg class="w-4 h-4 text-[#0F4C3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    <span>Tulis Warta Desa</span>
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Latest News Table -->
-    <div class="bg-white rounded-xl border border-gray-200 shadow-xs overflow-hidden">
-        <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-            <h3 class="font-serif text-lg font-bold text-gray-800">Berita Terbaru yang Diterbitkan</h3>
-            <a href="{{ route('admin.news.create') }}" class="bg-[#0d631b] hover:bg-emerald-800 text-white text-xs font-semibold px-3 py-2 rounded-lg transition">
-                + Tambah Berita Baru
+    <!-- Bento Grid KPI Architecture -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        <!-- Bento 1: Primary Highlight Card (Publikasi Warta) - Spans 2 cols on lg -->
+        <a href="{{ route('admin.news.index') }}" class="lg:col-span-2 bg-white rounded-[20px] p-6 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md hover:border-[#0F4C3A]/40 transition-all duration-200 flex flex-col justify-between group">
+            <div class="flex items-start justify-between">
+                <div>
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-[#0F4C3A] border border-emerald-100/80 mb-3">
+                        <svg class="w-3 h-3 text-[#0F4C3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Informasi Publik Desa
+                    </div>
+                    <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Total Publikasi Warta</p>
+                    <div class="flex items-baseline gap-2 mt-1">
+                        <h3 class="font-jakarta text-3xl sm:text-4xl font-extrabold text-[#0F172A] tabular-nums tracking-tight">
+                            {{ number_format($stats['news_count'] ?? 0, 0, ',', '.') }}
+                        </h3>
+                        <span class="text-sm font-semibold text-slate-500">Artikel & Pengumuman</span>
+                    </div>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-[#0F4C3A]/10 text-[#0F4C3A] flex items-center justify-center group-hover:scale-105 group-hover:bg-[#0F4C3A] group-hover:text-white transition-all duration-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="pt-4 mt-4 border-t border-[#F1F5F9] flex items-center justify-between text-xs text-slate-500 font-medium">
+                <span>Warta & Kabar Resmi Desa Catur</span>
+                <span class="text-[#0F4C3A] font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    Kelola Warta
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </span>
+            </div>
+        </a>
+
+        <!-- Bento 3: Surat Pending (Attention Card) -->
+        <a href="{{ route('admin.letter-requests.index') }}" class="bg-white rounded-[20px] p-6 border {{ ($stats['pending_letters_count'] ?? 0) > 0 ? 'border-amber-200 bg-gradient-to-b from-amber-50/20 to-white' : 'border-[#E2E8F0]' }} shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md hover:border-amber-400 transition-all duration-200 flex flex-col justify-between group">
+            <div class="flex items-start justify-between">
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Surat Pending</p>
+                        @if(($stats['pending_letters_count'] ?? 0) > 0)
+                            <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+                        @endif
+                    </div>
+                    <h3 class="font-jakarta text-2xl sm:text-3xl font-extrabold text-[#0F172A] tabular-nums tracking-tight mt-1.5">
+                        {{ $stats['pending_letters_count'] ?? 0 }}
+                    </h3>
+                    <span class="text-xs font-semibold {{ ($stats['pending_letters_count'] ?? 0) > 0 ? 'text-amber-700' : 'text-slate-400' }}">
+                        {{ ($stats['pending_letters_count'] ?? 0) > 0 ? 'Menunggu Validasi' : 'Semua Surat Diproses' }}
+                    </span>
+                </div>
+                <div class="w-11 h-11 rounded-2xl {{ ($stats['pending_letters_count'] ?? 0) > 0 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600' }} flex items-center justify-center group-hover:scale-105 transition-all duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#F1F5F9] flex items-center justify-between text-xs text-slate-500 font-medium">
+                <span>Pelayanan Dokumen</span>
+                <span class="text-amber-700 font-semibold group-hover:translate-x-1 transition-transform">Buka Antrean →</span>
+            </div>
+        </a>
+
+        <!-- Bento 4: Pengaduan Baru (Attention Card) -->
+        <a href="{{ route('admin.complaints.index') }}" class="bg-white rounded-[20px] p-6 border {{ ($stats['new_complaints_count'] ?? 0) > 0 ? 'border-rose-200 bg-gradient-to-b from-rose-50/20 to-white' : 'border-[#E2E8F0]' }} shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md hover:border-rose-400 transition-all duration-200 flex flex-col justify-between group">
+            <div class="flex items-start justify-between">
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Pengaduan Baru</p>
+                        @if(($stats['new_complaints_count'] ?? 0) > 0)
+                            <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                        @endif
+                    </div>
+                    <h3 class="font-jakarta text-2xl sm:text-3xl font-extrabold text-[#0F172A] tabular-nums tracking-tight mt-1.5">
+                        {{ $stats['new_complaints_count'] ?? 0 }}
+                    </h3>
+                    <span class="text-xs font-semibold {{ ($stats['new_complaints_count'] ?? 0) > 0 ? 'text-rose-700' : 'text-slate-400' }}">
+                        {{ ($stats['new_complaints_count'] ?? 0) > 0 ? 'Aspirasi Warga Masuk' : 'Tidak Ada Laporan Baru' }}
+                    </span>
+                </div>
+                <div class="w-11 h-11 rounded-2xl {{ ($stats['new_complaints_count'] ?? 0) > 0 ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-600' }} flex items-center justify-center group-hover:scale-105 transition-all duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#F1F5F9] flex items-center justify-between text-xs text-slate-500 font-medium">
+                <span>Kritik & Aspirasi</span>
+                <span class="text-rose-700 font-semibold group-hover:translate-x-1 transition-transform">Tanggapi →</span>
+            </div>
+        </a>
+
+        <!-- Bento 5: Total Berita -->
+        <a href="{{ route('admin.news.index') }}" class="bg-white rounded-[20px] p-6 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md hover:border-[#0F4C3A]/40 transition-all duration-200 flex flex-col justify-between group">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Publikasi Warta</p>
+                    <h3 class="font-jakarta text-2xl sm:text-3xl font-extrabold text-[#0F172A] tabular-nums tracking-tight mt-1.5">
+                        {{ $stats['news_count'] ?? 0 }}
+                    </h3>
+                    <span class="text-xs font-semibold text-slate-400">Artikel & Kabar</span>
+                </div>
+                <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-[#0F4C3A] flex items-center justify-center group-hover:scale-105 group-hover:bg-[#0F4C3A] group-hover:text-white transition-all duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#F1F5F9] flex items-center justify-between text-xs text-slate-500 font-medium">
+                <span>Warta Desa Catur</span>
+                <span class="text-[#0F4C3A] font-semibold group-hover:translate-x-1 transition-transform">Kelola Warta →</span>
+            </div>
+        </a>
+
+        <!-- Bento 6: Perangkat Desa -->
+        <a href="{{ route('admin.officials.index') }}" class="bg-white rounded-[20px] p-6 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md hover:border-[#0F4C3A]/40 transition-all duration-200 flex flex-col justify-between group">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Pemerintahan</p>
+                    <h3 class="font-jakarta text-2xl sm:text-3xl font-extrabold text-[#0F172A] tabular-nums tracking-tight mt-1.5">
+                        {{ $stats['officials_count'] ?? 0 }}
+                    </h3>
+                    <span class="text-xs font-semibold text-slate-400">Aparatur & Perangkat</span>
+                </div>
+                <div class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-800 flex items-center justify-center group-hover:scale-105 group-hover:bg-amber-600 group-hover:text-white transition-all duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#F1F5F9] flex items-center justify-between text-xs text-slate-500 font-medium">
+                <span>Struktur Organisasi</span>
+                <span class="text-[#0F4C3A] font-semibold group-hover:translate-x-1 transition-transform">Struktur Desa →</span>
+            </div>
+        </a>
+
+        <!-- Bento 7: Foto Galeri -->
+        <a href="{{ route('admin.galleries.index') }}" class="bg-white rounded-[20px] p-6 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md hover:border-[#0F4C3A]/40 transition-all duration-200 flex flex-col justify-between group">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Galeri Foto</p>
+                    <h3 class="font-jakarta text-2xl sm:text-3xl font-extrabold text-[#0F172A] tabular-nums tracking-tight mt-1.5">
+                        {{ $stats['galleries_count'] ?? 0 }}
+                    </h3>
+                    <span class="text-xs font-semibold text-slate-400">Dokumentasi Kegiatan</span>
+                </div>
+                <div class="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center group-hover:scale-105 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#F1F5F9] flex items-center justify-between text-xs text-slate-500 font-medium">
+                <span>Album Dokumentasi</span>
+                <span class="text-[#0F4C3A] font-semibold group-hover:translate-x-1 transition-transform">Lihat Galeri →</span>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- Bento Data Table: Berita Terbaru yang Diterbitkan -->
+    <div class="bg-white rounded-[20px] border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
+        <div class="p-6 border-b border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h3 class="font-jakarta text-lg font-bold text-[#0F172A]">Berita & Warta Terbaru Desa</h3>
+                <p class="text-xs text-[#64748B] mt-0.5">Daftar publikasi kabar, agenda, dan artikel resmi yang tayang pada portal publik Desa Catur.</p>
+            </div>
+            <a href="{{ route('admin.news.create') }}" class="inline-flex items-center gap-2 bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xs transition-colors shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span>Tambah Berita Baru</span>
             </a>
         </div>
+
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse text-sm">
                 <thead>
-                    <tr class="bg-gray-50 text-gray-600 text-xs uppercase border-b border-gray-200">
-                        <th class="p-4">Judul</th>
-                        <th class="p-4">Kategori</th>
-                        <th class="p-4">Status</th>
-                        <th class="p-4">Tanggal Publikasi</th>
-                        <th class="p-4 text-right">Aksi</th>
+                    <tr class="bg-[#F8FAFC] text-[#64748B] text-[11px] font-bold uppercase tracking-wider border-b border-[#E2E8F0]">
+                        <th class="px-6 py-3.5">Judul Warta</th>
+                        <th class="px-6 py-3.5">Kategori</th>
+                        <th class="px-6 py-3.5">Status Publikasi</th>
+                        <th class="px-6 py-3.5">Tanggal Terbit</th>
+                        <th class="px-6 py-3.5 text-right">Tindakan</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200">
+                <tbody class="divide-y divide-[#F1F5F9]">
                     @forelse($latestNews as $news)
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-4 font-semibold text-gray-900 max-w-xs truncate">{{ $news->title }}</td>
-                            <td class="p-4 text-xs font-medium text-gray-600">{{ $news->category }}</td>
-                            <td class="p-4">
-                                <span class="px-2.5 py-1 text-xs font-bold rounded-full {{ $news->status === 'published' ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-800' }}">
-                                    {{ ucfirst($news->status) }}
+                        <tr class="hover:bg-[#F8FAFC]/80 transition-colors">
+                            <td class="px-6 py-4">
+                                <p class="font-medium text-[#0F172A] max-w-md truncate">{{ $news->title }}</p>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-slate-100 text-slate-700">
+                                    {{ $news->category }}
                                 </span>
                             </td>
-                            <td class="p-4 text-xs text-gray-500">{{ $news->published_at ? $news->published_at->format('d/m/Y H:i') : '-' }}</td>
-                            <td class="p-4 text-right space-x-2">
-                                <a href="{{ route('admin.news.edit', $news->id) }}" class="text-blue-600 hover:underline font-semibold text-xs">Edit</a>
+                            <td class="px-6 py-4">
+                                @if($news->status === 'published')
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#DCFCE7] text-[#15803D]">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-pulse"></span>
+                                        <span>Tayang</span>
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                        <span>Draft</span>
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-xs text-slate-500 tabular-nums">
+                                {{ $news->published_at ? $news->published_at->format('d/m/Y H:i') : '-' }}
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a href="{{ route('admin.news.edit', $news->id) }}" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#E2E8F0] text-xs font-semibold text-[#0F4C3A] hover:bg-[#F4F6F5] hover:border-[#0F4C3A]/30 transition-all">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                    <span>Edit</span>
+                                </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="p-6 text-center text-gray-500">Belum ada data berita.</td>
+                            <td colspan="5" class="px-6 py-12 text-center text-slate-400">
+                                <svg class="w-10 h-10 mx-auto mb-2 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                                </svg>
+                                <p class="text-xs font-medium">Belum ada data berita yang dipublikasikan.</p>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -133,5 +290,4 @@
     </div>
 
 </div>
-
 @endsection
