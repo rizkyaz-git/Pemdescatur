@@ -384,9 +384,9 @@
                                 <div class="border-t border-[#DCE6DA] pt-3.5 sm:pt-4 space-y-2 sm:space-y-2.5">
                                     <h4 class="text-xs font-semibold text-slate-500 text-center tracking-wider uppercase">
                                         Mitra Program</h4>
-                                    <!-- Jajaran 7 Logo Lembaga Mitra Program (Sebaris di Mobile & Desktop) -->
+                                    <!-- Jajaran 7 Logo Lembaga Mitra Program (Sebaris Lebih Rapat di Mobile & Desktop) -->
                                     <div
-                                        class="flex items-center justify-between xs:justify-center gap-1.5 xs:gap-2 sm:gap-3.5 lg:gap-4.5 w-full flex-nowrap pt-1">
+                                        class="flex items-center justify-center gap-2 xs:gap-2.5 sm:gap-4 lg:gap-5 w-full flex-nowrap pt-1">
                                         <a href="https://kemdiktisaintek.go.id/" target="_blank" rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="Kemendiktisaintek">
@@ -926,7 +926,7 @@
 
                                                     // Jalankan loop animasi RAF dengan interpolasi kontinu easeOutCubic
                                                     const startTime = performance.now();
-                                                    const duration = 420; // 420ms untuk kehalusan maksimal yang mengalir alami
+                                                    const duration = 380;
 
                                                     const animateLoop = (now) => {
                                                         const elapsed = now - startTime;
@@ -938,11 +938,11 @@
 
                                                         box.style.height = currentH.toFixed(2) + 'px';
 
-                                                        // Kompensasi scroll layar: kunci posisi tombol di viewport persis pada targetTop
-                                                        if (btn && targetTop !== null) {
+                                                        // Kompensasi scroll layar: HANYA bila bertambah tinggi dan mendorong tombol ke bawah
+                                                        if (btn && targetTop !== null && this.expanded && endH > startH) {
                                                             const currentTop = btn.getBoundingClientRect().top;
                                                             const diff = currentTop - targetTop;
-                                                            if (Math.abs(diff) > 0.2) {
+                                                            if (diff > 0.5) {
                                                                 window.scrollBy(0, diff);
                                                             }
                                                         }
@@ -955,9 +955,9 @@
                                                             box.style.overflow = '';
 
                                                             // Penyesuaian akhir tombol
-                                                            if (btn && targetTop !== null) {
+                                                            if (btn && targetTop !== null && this.expanded && endH > startH) {
                                                                 const finalDiff = btn.getBoundingClientRect().top - targetTop;
-                                                                if (Math.abs(finalDiff) > 0.2) {
+                                                                if (finalDiff > 0.5) {
                                                                     window.scrollBy(0, finalDiff);
                                                                 }
                                                             }
@@ -998,12 +998,12 @@
                                             <!-- VIEW 1: TEKS DESKRIPSI POJOK (DEFAULT) -->
                                             <div x-ref="view1"
                                                 x-show="!expanded"
-                                                x-transition:enter="transition-all duration-350 ease-out transform"
-                                                x-transition:enter-start="opacity-0 translate-y-1.5"
-                                                x-transition:enter-end="opacity-100 translate-y-0"
-                                                x-transition:leave="transition-all duration-200 ease-in transform pointer-events-none"
-                                                x-transition:leave-start="opacity-100 translate-y-0"
-                                                x-transition:leave-end="opacity-0 -translate-y-1.5"
+                                                x-transition:enter="transition-opacity duration-300 ease-out"
+                                                x-transition:enter-start="opacity-0"
+                                                x-transition:enter-end="opacity-100"
+                                                x-transition:leave="transition-opacity duration-180 ease-in pointer-events-none"
+                                                x-transition:leave-start="opacity-100"
+                                                x-transition:leave-end="opacity-0"
                                                 class="col-start-1 row-start-1 w-full grid grid-cols-1 {{ !empty($detailKanan) ? 'md:grid-cols-2' : '' }} gap-7 lg:gap-10 pt-2">
                                                 <!-- Kolom Kiri: Narasi Asli dari Database -->
                                                 <div class="harmoni-desc-animate">
@@ -1027,12 +1027,12 @@
                                             <!-- VIEW 2: KONTEN MODUL AJAR & RINCIAN LENGKAP (EXPANDED) -->
                                             <div x-ref="view2"
                                                 x-show="expanded" x-cloak
-                                                x-transition:enter="transition-all duration-350 ease-out transform"
-                                                x-transition:enter-start="opacity-0 translate-y-1.5"
-                                                x-transition:enter-end="opacity-100 translate-y-0"
-                                                x-transition:leave="transition-all duration-200 ease-in transform pointer-events-none"
-                                                x-transition:leave-start="opacity-100 translate-y-0"
-                                                x-transition:leave-end="opacity-0 -translate-y-1.5"
+                                                x-transition:enter="transition-opacity duration-300 ease-out delay-100"
+                                                x-transition:enter-start="opacity-0"
+                                                x-transition:enter-end="opacity-100"
+                                                x-transition:leave="transition-opacity duration-180 ease-in pointer-events-none"
+                                                x-transition:leave-start="opacity-100"
+                                                x-transition:leave-end="opacity-0"
                                                 class="col-start-1 row-start-1 w-full pt-1 pb-2">
 
                                                 @if($pojok->kurikulums->isNotEmpty() || !empty($mitraKomunitas))
@@ -1192,8 +1192,10 @@
                                         class="lg:col-span-5 order-1 {{ $isEven ? 'lg:order-1' : 'lg:order-2' }} flex flex-col justify-center pt-0 sm:pt-2 lg:pt-0 pb-0 w-full">
 
                                         <div x-data="{
-                                                current: 0,
-                                                total: 3,
+                                                currentIndex: 1,
+                                                realIndex: 0,
+                                                enableTransition: true,
+                                                isTransitioning: false,
                                                 touchStartX: 0,
                                                 touchStartY: 0,
                                                 isPointerDown: false,
@@ -1216,13 +1218,58 @@
                                                     this.startAuto();
                                                 },
                                                 next() {
-                                                    this.current = (this.current + 1) % this.total;
+                                                    if (this.isTransitioning) return;
+                                                    this.isTransitioning = true;
+                                                    this.enableTransition = true;
+                                                    this.currentIndex++;
+                                                    this.realIndex = (this.currentIndex - 1) % 3;
+                                                    if (this.currentIndex === 4) {
+                                                        this.realIndex = 0;
+                                                        setTimeout(() => {
+                                                            this.enableTransition = false;
+                                                            this.currentIndex = 1;
+                                                            setTimeout(() => {
+                                                                this.enableTransition = true;
+                                                                this.isTransitioning = false;
+                                                            }, 50);
+                                                        }, 500);
+                                                    } else {
+                                                        setTimeout(() => {
+                                                            this.isTransitioning = false;
+                                                        }, 500);
+                                                    }
                                                 },
                                                 prev() {
-                                                    this.current = (this.current - 1 + this.total) % this.total;
+                                                    if (this.isTransitioning) return;
+                                                    this.isTransitioning = true;
+                                                    this.enableTransition = true;
+                                                    this.currentIndex--;
+                                                    this.realIndex = (this.currentIndex - 1 + 3) % 3;
+                                                    if (this.currentIndex === 0) {
+                                                        this.realIndex = 2;
+                                                        setTimeout(() => {
+                                                            this.enableTransition = false;
+                                                            this.currentIndex = 3;
+                                                            setTimeout(() => {
+                                                                this.enableTransition = true;
+                                                                this.isTransitioning = false;
+                                                            }, 50);
+                                                        }, 500);
+                                                    } else {
+                                                        setTimeout(() => {
+                                                            this.isTransitioning = false;
+                                                        }, 500);
+                                                    }
                                                 },
                                                 goTo(idx) {
-                                                    this.current = idx;
+                                                    if (this.isTransitioning) return;
+                                                    this.isTransitioning = true;
+                                                    this.enableTransition = true;
+                                                    this.currentIndex = idx + 1;
+                                                    this.realIndex = idx;
+                                                    setTimeout(() => {
+                                                        this.isTransitioning = false;
+                                                    }, 500);
                                                 },
                                                 handleTouchStart(e) {
                                                     this.pause();
@@ -1233,7 +1280,7 @@
                                                 handleTouchEnd(e) {
                                                     const diffX = e.changedTouches[0].clientX - this.touchStartX;
                                                     const diffY = e.changedTouches[0].clientY - this.touchStartY;
-                                                    if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
+                                                    if (Math.abs(diffX) > 30 && Math.abs(diffX) > Math.abs(diffY)) {
                                                         this.swiped = true;
                                                         if (diffX < 0) {
                                                             this.next();
@@ -1279,9 +1326,18 @@
                                                 @mousemove="handleMouseMove($event)"
                                                 @mouseup="handleMouseUp()">
 
-                                                <!-- Horizontal Track Sliding -->
-                                                <div class="flex h-full w-full transition-transform duration-500 ease-out"
-                                                    :style="'transform: translateX(-' + (current * 100) + '%);'">
+                                                <!-- Horizontal Track Sliding with Infinite Seamless Loop -->
+                                                <div class="flex h-full w-full ease-out"
+                                                    :class="enableTransition ? 'transition-transform duration-500' : ''"
+                                                    :style="'transform: translateX(-' + (currentIndex * 100) + '%);'">
+
+                                                    <!-- Slide Clone 3 (Prepend for seamless backward wrap) -->
+                                                    <div class="w-full h-full shrink-0 relative">
+                                                        <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}"
+                                                            class="w-full h-full object-cover select-none pointer-events-none"
+                                                            draggable="false">
+                                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                                                    </div>
 
                                                     <!-- Slide 1 -->
                                                     <div class="w-full h-full shrink-0 relative">
@@ -1302,6 +1358,14 @@
                                                     <!-- Slide 3 -->
                                                     <div class="w-full h-full shrink-0 relative">
                                                         <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}"
+                                                            class="w-full h-full object-cover select-none pointer-events-none"
+                                                            draggable="false">
+                                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                                                    </div>
+
+                                                    <!-- Slide Clone 1 (Append for seamless forward wrap) -->
+                                                    <div class="w-full h-full shrink-0 relative">
+                                                        <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}"
                                                             class="w-full h-full object-cover select-none pointer-events-none"
                                                             draggable="false">
                                                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
@@ -1327,12 +1391,12 @@
                                             </div>
 
                                             <!-- DESKRIPSI GAMBAR KECIL DENGAN ANIMASI FADE IN & FADE OUT HALUS & INDIKATOR SLIDING (TANPA PANAH BAWAH) -->
-                                            <div class="mt-2.5 sm:mt-3 w-full flex items-center justify-between gap-3 px-1">
+                                            <div class="mt-3.5 sm:mt-4 w-full flex items-center justify-between gap-3 px-1">
                                                 
                                                 <!-- Bagian Kiri: Teks Deskripsi Gambar (Fade In & Fade Out Halus Mengikuti Momentum Slider) -->
                                                 <div class="relative flex-1 min-h-[34px] sm:min-h-[38px] grid grid-cols-1 grid-rows-1 items-center overflow-hidden">
                                                     @foreach($cardDescs as $idx => $desc)
-                                                        <div x-show="current === {{ $idx }}"
+                                                        <div x-show="realIndex === {{ $idx }}"
                                                              x-transition:enter="transition-opacity duration-300 ease-out delay-150"
                                                              x-transition:enter-start="opacity-0"
                                                              x-transition:enter-end="opacity-100"
@@ -1352,9 +1416,9 @@
                                                 <div class="flex items-center gap-1.5 shrink-0 select-none py-1">
                                                     @foreach([0, 1, 2] as $idx)
                                                         <button type="button" @click.stop="goTo({{ $idx }})"
-                                                            class="h-1.5 rounded-sm transition-all duration-300"
-                                                            :class="current === {{ $idx }} ? '{{ $isDark ? 'w-5 bg-white' : 'w-5 bg-[#0A3D29]' }}' : '{{ $isDark ? 'w-1.5 bg-white/40 hover:bg-white/70' : 'w-1.5 bg-slate-300 hover:bg-slate-400' }}'"
-                                                            title="Foto {{ $idx + 1 }}">
+                                                             class="h-1.5 rounded-sm transition-all duration-300"
+                                                             :class="realIndex === {{ $idx }} ? '{{ $isDark ? 'w-5 bg-white' : 'w-5 bg-[#0A3D29]' }}' : '{{ $isDark ? 'w-1.5 bg-white/40 hover:bg-white/70' : 'w-1.5 bg-slate-300 hover:bg-slate-400' }}'"
+                                                             title="Foto {{ $idx + 1 }}">
                                                         </button>
                                                     @endforeach
                                                 </div>
