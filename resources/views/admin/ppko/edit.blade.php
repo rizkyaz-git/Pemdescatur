@@ -291,8 +291,9 @@
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                             Pilih Dokumen File <span class="text-rose-500">*</span>
                         </label>
-                        <input type="file" name="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar"
+                        <input type="file" name="file" id="dokumen-file-input" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar"
                             class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#0F4C3A] file:text-white hover:file:bg-[#072C21] cursor-pointer bg-white p-2 rounded-xl border border-[#E2E8F0] shadow-xs"
+                            onchange="validateDocumentFile(this)"
                             required>
                         <p class="text-[11px] text-slate-400 mt-1">Format PDF, DOCX, PPTX, XLSX, ZIP (Maksimal 50MB).</p>
                     </div>
@@ -489,6 +490,14 @@
 
             function previewCardImage(input, previewId) {
                 if (input.files && input.files[0]) {
+                    const file = input.files[0];
+                    const maxBytes = 5 * 1024 * 1024; // 5MB
+                    if (file.size > maxBytes) {
+                        const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+                        alert('Ukuran gambar melebihi batas 5MB (' + sizeMb + 'MB). Harap pilih gambar yang lebih kecil atau kompres gambar terlebih dahulu.');
+                        input.value = '';
+                        return;
+                    }
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         const preview = document.getElementById(previewId);
@@ -496,7 +505,20 @@
                             preview.src = e.target.result;
                         }
                     }
-                    reader.readAsDataURL(input.files[0]);
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            function validateDocumentFile(input) {
+                if (input.files && input.files[0]) {
+                    const file = input.files[0];
+                    const maxBytes = 50 * 1024 * 1024; // 50MB
+                    if (file.size > maxBytes) {
+                        const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+                        alert('Ukuran dokumen melebihi batas 50MB (' + sizeMb + 'MB). Harap pilih file yang lebih kecil atau kompres file terlebih dahulu.');
+                        input.value = '';
+                        return;
+                    }
                 }
             }
 
