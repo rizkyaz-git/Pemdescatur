@@ -30,7 +30,7 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
     Route::put('/profile', [Admin\ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/avatar', [Admin\ProfileController::class, 'destroyAvatar'])->name('profile.destroy-avatar');
 
-    // 3. Warta & Berita: Dapat diakses oleh Super Admin, Admin Pemdes, dan PPK Ormawa
+    // 3. Berita & Pengumuman: Dapat diakses oleh Super Admin, Admin Pemdes, dan PPK Ormawa
     Route::middleware(['role:super_admin,admin_pemdes,ppk_ormawa'])->group(function () {
         Route::resource('news', Admin\NewsController::class)->except(['show']);
     });
@@ -42,6 +42,7 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
         Route::put('/profil', [Admin\VillageProfileController::class, 'update'])->name('village-profile.update');
 
         // Perangkat Desa CRUD
+        Route::post('officials/reorder', [Admin\OfficialController::class, 'reorder'])->name('officials.reorder');
         Route::resource('officials', Admin\OfficialController::class)->except(['show']);
 
         // Galeri CRUD
@@ -62,9 +63,12 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
         Route::delete('/{pojok}/foto', [Admin\PpkoSettingController::class, 'deleteFoto'])->name('foto.delete');
         Route::post('/{pojok}/file', [Admin\PpkoSettingController::class, 'storeFile'])->name('file.store');
         Route::delete('/file/{kurikulum}', [Admin\PpkoSettingController::class, 'destroyFile'])->name('file.destroy');
-        Route::post('/detail-program', [Admin\PpkoSettingController::class, 'storeProgramDetail'])->name('detail-program.store');
-        Route::put('/detail-program/{detail}', [Admin\PpkoSettingController::class, 'updateProgramDetail'])->name('detail-program.update');
-        Route::delete('/detail-program/{detail}', [Admin\PpkoSettingController::class, 'destroyProgramDetail'])->name('detail-program.destroy');
+        // Pengeditan Tabel Detail Program PPKO: Eksklusif Super Admin
+        Route::middleware(['role:super_admin'])->group(function () {
+            Route::post('/detail-program', [Admin\PpkoSettingController::class, 'storeProgramDetail'])->name('detail-program.store');
+            Route::put('/detail-program/{detail}', [Admin\PpkoSettingController::class, 'updateProgramDetail'])->name('detail-program.update');
+            Route::delete('/detail-program/{detail}', [Admin\PpkoSettingController::class, 'destroyProgramDetail'])->name('detail-program.destroy');
+        });
     });
     Route::redirect('/pojoks', '/admin/ppko');
     Route::redirect('/kegiatans', '/admin/ppko');

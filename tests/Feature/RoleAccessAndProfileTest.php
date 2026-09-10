@@ -83,4 +83,56 @@ class RoleAccessAndProfileTest extends TestCase
         $this->actingAs($ppko)->get(route('admin.settings.edit'))->assertStatus(403);
         $this->actingAs($ppko)->get(route('admin.users.index'))->assertStatus(403);
     }
+
+    public function test_super_admin_can_manage_ppko_detail_program(): void
+    {
+        $superAdmin = User::factory()->create(['role' => 'super_admin']);
+
+        // Can view the editing section on admin.ppko.index
+        $response = $this->actingAs($superAdmin)->get(route('admin.ppko.index'));
+        $response->assertStatus(200);
+        $response->assertSee('kelola-detail-program');
+        $response->assertSee('Tambah Baris Detail');
+
+        // Can create a detail program
+        $storeResponse = $this->actingAs($superAdmin)->post(route('admin.ppko.detail-program.store'), [
+            'aspek' => 'Aspek Pengujian',
+            'keterangan' => 'Keterangan detail pengujian oleh super admin',
+            'urutan' => 1,
+        ]);
+        $storeResponse->assertRedirect();
+        $this->assertDatabaseHas('ppko_program_details', [
+            'aspek' => 'Aspek Pengujian',
+        ]);
+    }
+
+    public function test_non_super_admin_cannot_manage_ppko_detail_program(): void
+    {
+        $ppko = User::factory()->create(['role' => 'ppk_ormawa']);
+        $adminPemdes = User::factory()->create(['role' => 'admin_pemdes']);
+
+        // PPK Ormawa can visit admin.ppko.index, but does NOT see the detail program editing section
+        $response = $this->actingAs($ppko)->get(route('admin.ppko.index'));
+        $response->assertStatus(200);
+        $response->assertDontSee('kelola-detail-program');
+        $response->assertDontSee('Tambah Baris Detail');
+
+        // PPK Ormawa is forbidden from submitting to detail-program.store
+        $this->actingAs($ppko)->post(route('admin.ppko.detail-program.store'), [
+            'aspek' => 'Aspek Ilegal Ormawa',
+            'keterangan' => 'Harus ditolak',
+            'urutan' => 1,
+        ])->assertStatus(403);
+
+        // Admin Pemdes is also forbidden
+        $this->actingAs($adminPemdes)->post(route('admin.ppko.detail-program.store'), [
+            'aspek' => 'Aspek Ilegal Pemdes',
+            'keterangan' => 'Harus ditolak',
+            'urutan' => 1,
+        ])->assertStatus(403);
+
+        $this->assertDatabaseMissing('ppko_program_details', [
+            'aspek' => 'Aspek Ilegal Ormawa',
+        ]);
+    }
 }

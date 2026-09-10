@@ -14,10 +14,11 @@ class PublicServicesTest extends TestCase
     public function test_layanan_overview_page_can_be_accessed(): void
     {
         $response = $this->get('/layanan');
-        $response->assertStatus(200);
-        $response->assertSee('Layanan Publik');
-        $response->assertSee('Akses Layanan Surat');
-        $response->assertSee('Sampaikan Pengaduan');
+        $response->assertRedirect('/layanan/surat');
+
+        $responseSurat = $this->get('/layanan/surat');
+        $responseSurat->assertStatus(200);
+        $responseSurat->assertSee('Layanan Surat');
     }
 
     public function test_guest_unauthenticated_user_can_access_and_submit_services(): void

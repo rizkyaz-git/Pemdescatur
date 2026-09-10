@@ -17,8 +17,9 @@ class SettingController extends Controller
             'village_name' => Setting::get('village_name', 'Pemerintah Desa Catur'),
             'village_district' => Setting::get('village_district', 'Kecamatan Sambi, Kabupaten Boyolali, Jawa Tengah'),
             'village_address' => Setting::get('village_address', 'Jl. Raya Catur - Sambi, Desa Catur, Kec. Sambi, Kab. Boyolali, Jawa Tengah 57376'),
-            'village_phone' => Setting::get('village_phone', '0812-3456-7890'),
-            'village_email' => Setting::get('village_email', 'info@desacatur.id'),
+            'village_instagram' => Setting::get('village_instagram', Setting::get('village_phone', 'https://www.instagram.com/pemdescatur')),
+            'village_phone' => Setting::get('village_phone', ''),
+            'village_email' => Setting::get('village_email', 'pemerintahdesacatur@gmail.com'),
             'library_url' => Setting::get('library_url', 'https://perpustakaan.boyolali.go.id'),
             'village_logo_path' => Setting::get('village_logo_path'),
             'hero_image_path' => Setting::get('hero_image_path'),
@@ -39,7 +40,10 @@ class SettingController extends Controller
         Setting::set('village_name', $validated['village_name']);
         Setting::set('village_district', $validated['village_district'] ?? '');
         Setting::set('village_address', $validated['village_address'] ?? '');
-        Setting::set('village_phone', $validated['village_phone'] ?? '');
+        Setting::set('village_instagram', $validated['village_instagram'] ?? ($validated['village_phone'] ?? ''));
+        if (isset($validated['village_phone'])) {
+            Setting::set('village_phone', $validated['village_phone']);
+        }
         Setting::set('village_email', $validated['village_email'] ?? '');
         Setting::set('library_url', $validated['library_url']);
         Setting::set('hero_title', $validated['hero_title'] ?? '');

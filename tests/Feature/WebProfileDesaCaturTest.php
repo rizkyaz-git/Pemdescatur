@@ -19,7 +19,7 @@ class WebProfileDesaCaturTest extends TestCase
         $this->get('/struktur')->assertStatus(200)->assertSee('Struktur Organisasi');
         $this->get('/berita')->assertStatus(200)->assertSee('Berita & Pengumuman');
         $this->get('/galeri')->assertStatus(200)->assertSee('Galeri Foto');
-        $this->get('/layanan')->assertStatus(200);
+        $this->get('/layanan')->assertRedirect('/layanan/surat');
     }
 
     public function test_guest_cannot_access_admin_dashboard(): void

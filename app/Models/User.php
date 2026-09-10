@@ -124,6 +124,11 @@ class User extends Authenticatable
         return $this->isSuperAdmin() || $this->isPpkOrmawa();
     }
 
+    public function canManagePpkoProgramDetail(): bool
+    {
+        return $this->isSuperAdmin();
+    }
+
     public function canAccessNews(): bool
     {
         return $this->isSuperAdmin() || $this->isAdminPemdes() || $this->isPpkOrmawa();

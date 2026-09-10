@@ -794,7 +794,7 @@
                     class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                     <a href="{{ route('public.news.index') }}" @click="mobileMenuOpen = false"
                         class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.news*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
-                        <span>Warta & Pengumuman</span>
+                        <span>Berita & Pengumuman</span>
                     </a>
                     <a href="{{ route('public.gallery') }}" @click="mobileMenuOpen = false"
                         class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.gallery') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
@@ -966,12 +966,18 @@
                             <span>{{ $globalEmail ?? 'pemerintahdesacatur@gmail.com' }}</span>
                         </p>
                         <p class="flex items-center gap-2.5">
-                            <svg class="w-4 h-4 text-[#D9B85C] shrink-0" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            <svg class="w-4 h-4 text-[#D9B85C] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
                             </svg>
-                            <span>{{ $globalPhone ?? '(0276) 321-0988' }}</span>
+                            @php
+                                $rawIg = !empty($globalInstagram) ? $globalInstagram : 'https://www.instagram.com/pemerintahdesacatur';
+                                $igUrl = \Illuminate\Support\Str::startsWith($rawIg, ['http://', 'https://']) ? $rawIg : 'https://www.instagram.com/' . ltrim($rawIg, '@/');
+                            @endphp
+                            <a href="{{ $igUrl }}" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">
+                                <span>pemerintahdesacatur</span>
+                            </a>
                         </p>
                     </div>
                 </div>

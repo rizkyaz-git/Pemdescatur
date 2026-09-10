@@ -30,7 +30,7 @@
                     Galeri Foto Kegiatan
                 </h1>
                 <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
-                    Dokumentasi visual kegiatan, pembangunan, dan potensi kemasyarakatan Desa Catur dari warta berita resmi.
+                    Dokumentasi visual kegiatan, pembangunan, dan potensi kemasyarakatan Desa Catur dari berita resmi desa.
                 </p>
             </div>
 
@@ -127,7 +127,7 @@
                             activeTitle = '{{ addslashes($item->title) }}'; 
                             activeCaption = '{{ addslashes($item->image_caption ?? $item->excerpt ?? '') }}'; 
                             activeDate = '{{ $formattedDate }}'; 
-                            activeCategory = '{{ addslashes($item->category ?? 'Warta Desa') }}'; 
+                            activeCategory = '{{ addslashes($item->category ?? 'Berita Desa') }}'; 
                             activeUrl = '{{ $newsUrl }}';
                          ">
                         
@@ -141,7 +141,7 @@
                             <!-- Category Badge Overlay -->
                             <div class="absolute top-3 left-3 z-10">
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#0A3D29]/80 backdrop-blur-md text-white shadow-xs border border-white/20">
-                                    {{ $item->category ?? 'Warta' }}
+                                    {{ $item->category ?? 'Berita' }}
                                 </span>
                             </div>
 

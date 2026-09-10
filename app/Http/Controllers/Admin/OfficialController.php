@@ -18,6 +18,23 @@ class OfficialController extends Controller
         return view('admin.officials.index', compact('officials'));
     }
 
+    public function reorder(\Illuminate\Http\Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'order' => ['required', 'array'],
+            'order.*' => ['integer', 'exists:officials,id'],
+        ]);
+
+        foreach ($request->input('order') as $index => $id) {
+            Official::where('id', $id)->update(['order' => $index + 1]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Urutan susunan perangkat desa berhasil diperbarui.',
+        ]);
+    }
+
     public function create(): View
     {
         return view('admin.officials.create');
@@ -26,6 +43,10 @@ class OfficialController extends Controller
     public function store(StoreOfficialRequest $request): RedirectResponse
     {
         $data = $request->validated();
+
+        if (!isset($data['order']) || $data['order'] === null) {
+            $data['order'] = (Official::max('order') ?? 0) + 1;
+        }
 
         if ($request->hasFile('photo')) {
             $data['photo_path'] = $request->file('photo')->store('officials', 'public');

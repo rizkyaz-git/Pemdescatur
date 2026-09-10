@@ -17,6 +17,7 @@ class UpdateSettingsRequest extends FormRequest
             'village_name' => ['required', 'string', 'max:255'],
             'village_district' => ['nullable', 'string', 'max:255'],
             'village_address' => ['nullable', 'string', 'max:500'],
+            'village_instagram' => ['nullable', 'string', 'max:255'],
             'village_phone' => ['nullable', 'string', 'max:50'],
             'village_email' => ['nullable', 'email', 'max:255'],
             'library_url' => ['required', 'url', 'max:500'],

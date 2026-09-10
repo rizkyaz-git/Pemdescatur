@@ -46,15 +46,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div>
-                    <label for="order" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
-                        Urutan Tampil (Order) <span class="text-rose-500">*</span>
-                    </label>
-                    <input type="number" name="order" id="order" value="{{ old('order', $official->order) }}" min="0" required 
-                        class="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-sm tabular-nums bg-[#F8FAFC]/40 text-slate-900">
-                </div>
-
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <label for="phone" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
                         Nomor Telepon / WhatsApp

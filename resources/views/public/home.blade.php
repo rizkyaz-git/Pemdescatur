@@ -67,7 +67,7 @@
                             d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6" />
                     </svg>
                     <span
-                        class="block text-[10px] font-bold text-slate-800 group-hover:text-[#0A3D29] leading-tight truncate w-full">Warta</span>
+                        class="block text-[10px] font-bold text-slate-800 group-hover:text-[#0A3D29] leading-tight truncate w-full">Berita</span>
                 </a>
 
                 <!-- 2. Surat Mandiri -->
@@ -137,11 +137,11 @@
                                 d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6" />
                         </svg>
                         <h3 class="font-serif text-base font-bold text-slate-900 leading-snug">
-                            Warta Desa
+                            Berita Desa
                         </h3>
                     </div>
                     <p class="text-xs text-slate-500 font-medium leading-relaxed text-left">
-                        Informasi agenda, pengumuman, dan warta desa.
+                        Informasi agenda, pengumuman, dan berita desa.
                     </p>
                 </a>
 
@@ -236,7 +236,7 @@
                 class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200 text-center sm:text-left">
                 <h2
                     class="font-['Public_Sans',sans-serif] text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-800 leading-tight">
-                    Warta Terbaru
+                    Berita Terbaru
                 </h2>
 
                 <!-- Desktop Action Button (Right Aligned) -->

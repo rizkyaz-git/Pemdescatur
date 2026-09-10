@@ -305,9 +305,9 @@
                                         Detail Program
                                     </h3>
                                     @auth
-                                        @if(auth()->user()->isAdmin())
+                                        @if(auth()->user()->isSuperAdmin())
                                             <a href="{{ route('admin.ppko.index') }}#kelola-detail-program"
-                                                class="inline-flex items-center gap-1 text-xs font-semibold text-[#0A3D29] bg-[#EAF1E8] hover:bg-[#d5e5d1] px-2.5 py-1 rounded-md transition shadow-2xs"
+                                                class="inline-flex items-center gap-1 text-xs font-semibold text-[#0A3D29] bg-[#EAF1E8] hover:bg-[#d5e5d1] px-2.5 py-1 rounded-md transition shadow-xs"
                                                 title="Kelola detail program di Admin PPKO">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

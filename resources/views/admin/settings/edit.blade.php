@@ -180,11 +180,12 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Nomor Telepon /
-                                WhatsApp Desa</label>
-                            <input type="text" name="village_phone"
-                                value="{{ old('village_phone', $settings['village_phone']) }}"
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Link Akun Instagram Desa</label>
+                            <input type="text" name="village_instagram"
+                                value="{{ old('village_instagram', $settings['village_instagram']) }}"
+                                placeholder="https://www.instagram.com/pemdescatur atau @pemdescatur"
                                 class="w-full rounded-xl border-[#E2E8F0] focus:border-[#0F4C3A] focus:ring-[#0F4C3A] text-xs p-3 bg-white shadow-xs">
+                            <p class="text-[11px] text-slate-400">Masukkan link URL profil Instagram atau username akun desa (misal: @pemdescatur).</p>
                         </div>
 
                         <div class="space-y-1.5">

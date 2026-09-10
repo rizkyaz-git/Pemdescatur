@@ -31,13 +31,11 @@ class PpkoSettingController extends Controller
     }
 
     /**
-     * Show the management form for a specific Pojok (cover photo, downloadable files, details).
+     * Show the management form for a specific Pojok (redirects to tabbed index).
      */
-    public function edit(Pojok $pojok): View
+    public function edit(Pojok $pojok): RedirectResponse
     {
-        $pojok->load(['kurikulums' => fn($q) => $q->latest()]);
-
-        return view('admin.ppko.edit', compact('pojok'));
+        return redirect()->route('admin.ppko.index', ['tab' => $pojok->id]);
     }
 
     /**
@@ -55,7 +53,8 @@ class PpkoSettingController extends Controller
 
         $pojok->update($validated);
 
-        return back()->with('success', 'Informasi ' . $pojok->nama . ' berhasil diperbarui.');
+        return redirect()->route('admin.ppko.index', ['tab' => $pojok->id])
+            ->with('success', 'Informasi ' . $pojok->nama . ' berhasil diperbarui.');
     }
 
     /**
@@ -101,17 +100,19 @@ class PpkoSettingController extends Controller
         }
 
         if (empty($updates)) {
-            return back()->withErrors(['foto' => 'Silakan pilih file foto atau isi deskripsi gambar terlebih dahulu.']);
+            return redirect()->route('admin.ppko.index', ['tab' => $pojok->id])
+                ->withErrors(['foto' => 'Silakan pilih file foto atau isi deskripsi gambar terlebih dahulu.']);
         }
 
         $pojok->update($updates);
 
         $slotLabel = $slot > 1 ? " (Foto ke-{$slot})" : " (Foto ke-1)";
-        return back()->with('success', 'Foto dan deskripsi ' . $pojok->nama . $slotLabel . ' berhasil diperbarui.');
+        return redirect()->route('admin.ppko.index', ['tab' => $pojok->id])
+            ->with('success', 'Foto dan deskripsi ' . $pojok->nama . $slotLabel . ' berhasil disimpan.');
     }
 
     /**
-     * Delete the custom photo and revert to default.
+     * Delete the custom photo and set slot to empty.
      */
     public function deleteFoto(Request $request, Pojok $pojok): RedirectResponse
     {
@@ -137,7 +138,8 @@ class PpkoSettingController extends Controller
         ]);
 
         $slotLabel = $slot > 1 ? " foto ke-{$slot}" : " foto ke-1";
-        return back()->with('success', 'Foto ' . $pojok->nama . $slotLabel . ' berhasil direset ke foto & deskripsi bawaan.');
+        return redirect()->route('admin.ppko.index', ['tab' => $pojok->id])
+            ->with('success', 'Foto ' . $pojok->nama . $slotLabel . ' berhasil dihapus.');
     }
 
     /**
@@ -169,7 +171,8 @@ class PpkoSettingController extends Controller
             'uploaded_by' => auth()->id(),
         ]);
 
-        return back()->with('success', 'File unduhan "' . $validated['judul'] . '" berhasil ditambahkan ke ' . $pojok->nama . '.');
+        return redirect()->route('admin.ppko.index', ['tab' => $pojok->id])
+            ->with('success', 'File unduhan "' . $validated['judul'] . '" berhasil ditambahkan ke ' . $pojok->nama . '.');
     }
 
     /**
@@ -177,6 +180,7 @@ class PpkoSettingController extends Controller
      */
     public function destroyFile(Kurikulum $kurikulum): RedirectResponse
     {
+        $pojokId = $kurikulum->pojok_id;
         $pojokNama = $kurikulum->pojok->nama ?? 'Pojok';
         $judulFile = $kurikulum->judul;
 
@@ -186,14 +190,19 @@ class PpkoSettingController extends Controller
 
         $kurikulum->delete();
 
-        return back()->with('success', 'File unduhan "' . $judulFile . '" berhasil dihapus dari ' . $pojokNama . '.');
+        return redirect()->route('admin.ppko.index', ['tab' => $pojokId])
+            ->with('success', 'File unduhan "' . $judulFile . '" berhasil dihapus dari ' . $pojokNama . '.');
     }
 
     /**
-     * Store a new detail program entry.
+     * Store a new detail program entry (Super Admin only).
      */
     public function storeProgramDetail(Request $request): RedirectResponse
     {
+        if (!auth()->user()->isSuperAdmin()) {
+            abort(403, 'Bagian pengeditan Tabel Detail Program PPKO hanya dapat diakses oleh Super Admin.');
+        }
+
         $validated = $request->validate([
             'aspek' => ['required', 'string', 'max:150'],
             'keterangan' => ['required', 'string'],
@@ -215,10 +224,14 @@ class PpkoSettingController extends Controller
     }
 
     /**
-     * Update the specified detail program entry.
+     * Update the specified detail program entry (Super Admin only).
      */
     public function updateProgramDetail(Request $request, PpkoProgramDetail $detail): RedirectResponse
     {
+        if (!auth()->user()->isSuperAdmin()) {
+            abort(403, 'Bagian pengeditan Tabel Detail Program PPKO hanya dapat diakses oleh Super Admin.');
+        }
+
         $validated = $request->validate([
             'aspek' => ['required', 'string', 'max:150'],
             'keterangan' => ['required', 'string'],
@@ -241,10 +254,14 @@ class PpkoSettingController extends Controller
     }
 
     /**
-     * Remove the specified detail program entry.
+     * Remove the specified detail program entry (Super Admin only).
      */
     public function destroyProgramDetail(PpkoProgramDetail $detail): RedirectResponse
     {
+        if (!auth()->user()->isSuperAdmin()) {
+            abort(403, 'Bagian pengeditan Tabel Detail Program PPKO hanya dapat diakses oleh Super Admin.');
+        }
+
         $aspek = $detail->aspek;
         $detail->delete();
 

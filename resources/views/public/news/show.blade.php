@@ -27,6 +27,7 @@
         color: #334155;
         font-size: 1.0625rem;
         line-height: 1.8;
+        font-family: 'Public Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     .article-body-content p {
         margin-bottom: 1.25rem;
@@ -37,33 +38,33 @@
 
     /* Headings */
     .article-body-content h1 {
-        font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-        font-size: 2rem;
-        font-weight: 800;
+        font-family: 'Public Sans', 'Inter', sans-serif;
+        font-size: 1.875rem;
+        font-weight: 700;
         color: #0f172a;
         margin-top: 2rem;
         margin-bottom: 0.75rem;
-        line-height: 1.25;
+        line-height: 1.3;
         letter-spacing: -0.02em;
     }
     .article-body-content h2 {
-        font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+        font-family: 'Public Sans', 'Inter', sans-serif;
         font-size: 1.5rem;
         font-weight: 700;
         color: #0f172a;
         margin-top: 1.75rem;
         margin-bottom: 0.5rem;
-        line-height: 1.3;
+        line-height: 1.35;
         letter-spacing: -0.015em;
     }
     .article-body-content h3 {
-        font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+        font-family: 'Public Sans', 'Inter', sans-serif;
         font-size: 1.25rem;
         font-weight: 700;
         color: #0f172a;
         margin-top: 1.5rem;
         margin-bottom: 0.5rem;
-        line-height: 1.35;
+        line-height: 1.4;
     }
     .article-body-content h4 {
         font-size: 1.125rem;
@@ -132,13 +133,13 @@
 
     /* Blockquote */
     .article-body-content blockquote {
-        border-left: 4px solid #0A3D29;
-        background-color: rgba(234, 241, 232, 0.45);
-        padding: 0.85rem 1.25rem;
+        border-left: 3px solid #cbd5e1;
+        background-color: #f8fafc;
+        padding: 0.75rem 1.25rem;
         margin: 1.5rem 0;
         font-style: italic;
         border-radius: 0 0.5rem 0.5rem 0;
-        color: #1e293b;
+        color: #475569;
     }
 
     /* Links */
@@ -254,7 +255,7 @@
                     <div class="flex items-center gap-3 text-xs sm:text-sm text-slate-500 font-medium flex-wrap">
                         <!-- Profile Avatar & Name -->
                         <div class="flex items-center gap-2">
-                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden shadow-2xs">
+                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden shadow-xs">
                                 @if(file_exists(public_path('images/logo_catur.png')))
                                     <img src="{{ asset('images/logo_catur.png') }}" alt="Logo Pemdes Catur" class="w-full h-full object-contain p-0.5 bg-white">
                                 @else
@@ -267,7 +268,7 @@
                         <span class="text-slate-300">•</span>
 
                         <!-- Category -->
-                        <span class="text-[#0A3D29] font-semibold bg-[#EAF1E8] px-2.5 py-0.5 rounded-md text-xs">
+                        <span class="text-slate-600 font-medium text-xs">
                             {{ $news->category }}
                         </span>
 
@@ -347,17 +348,17 @@
                         <!-- WhatsApp -->
                         <a :href="'https://api.whatsapp.com/send?text=' + encodeURIComponent('{{ $news->title }} ' + window.location.href)" 
                            target="_blank" rel="noopener" 
-                           class="w-9 h-9 rounded-xl bg-slate-50 hover:bg-emerald-600 hover:text-white text-slate-600 flex items-center justify-center border border-slate-200/80 transition-all active:scale-95 shadow-2xs" 
+                           class="w-9 h-9 rounded-xl bg-slate-50 hover:bg-emerald-600 hover:text-white text-slate-600 flex items-center justify-center border border-slate-200/80 transition-all active:scale-95 shadow-xs" 
                            title="Bagikan ke WhatsApp">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+                                <path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.978-.276-.1-.477-.15-.678.15-.201.3-.777.978-.953 1.179-.176.2-.351.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.896-.799-1.5-1.786-1.676-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.176.201-.301.301-.502.101-.2.05-.376-.025-.527-.075-.15-.678-1.634-.929-2.238-.244-.588-.493-.509-.678-.518-.176-.009-.376-.011-.577-.011-.201 0-.527.075-.803.376-.276.301-1.054 1.03-1.054 2.512 0 1.482 1.079 2.912 1.23 3.113.15.2 2.124 3.243 5.145 4.548.719.311 1.28.497 1.718.636.722.23 1.379.197 1.9-.12.58-.354 1.78-1.066 2.03-1.758.251-.692.251-1.285.176-1.41-.075-.125-.276-.2-.577-.35zM12.004 2C6.48 2 2 6.48 2 12.004c0 1.91.536 3.693 1.464 5.216L2.1 22l4.908-1.328A9.957 9.957 0 0012.004 22C17.528 22 22 17.528 22 12.004 22 6.48 17.528 2 12.004 2zm0 18.292c-1.656 0-3.19-.504-4.475-1.368l-.321-.214-3.32.898.892-3.238-.235-.349A8.258 8.258 0 013.712 12c0-4.572 3.72-8.292 8.292-8.292 4.572 0 8.292 3.72 8.292 8.292 0 4.572-3.72 8.292-8.292 8.292z"/>
                             </svg>
                         </a>
 
                         <!-- Facebook -->
                         <a :href="'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href)" 
                            target="_blank" rel="noopener" 
-                           class="w-9 h-9 rounded-xl bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-600 flex items-center justify-center border border-slate-200/80 transition-all active:scale-95 shadow-2xs" 
+                           class="w-9 h-9 rounded-xl bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-600 flex items-center justify-center border border-slate-200/80 transition-all active:scale-95 shadow-xs" 
                            title="Bagikan ke Facebook">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -366,7 +367,7 @@
 
                         <!-- Salin Tautan (Copy Link with inline feedback) -->
                         <button @click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2500)" 
-                                class="inline-flex items-center gap-1.5 px-3 h-9 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200/80 transition-all active:scale-95 cursor-pointer shadow-2xs"
+                                class="inline-flex items-center gap-1.5 px-3 h-9 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200/80 transition-all active:scale-95 cursor-pointer shadow-xs"
                                 title="Salin Tautan">
                             <svg x-show="!copied" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
@@ -417,7 +418,7 @@
                                             {{ $item->title }}
                                         </h4>
                                         <div class="flex items-center gap-2 text-[11px] text-slate-400 font-medium pt-0.5">
-                                            <span class="uppercase tracking-wider font-semibold text-[10px] text-[#0A3D29]">
+                                            <span class="font-medium text-[11px] text-slate-500">
                                                 {{ $item->category }}
                                             </span>
                                             <span>•</span>

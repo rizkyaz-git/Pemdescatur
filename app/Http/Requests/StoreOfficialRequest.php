@@ -17,7 +17,7 @@ class StoreOfficialRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'position' => ['required', 'string', 'max:255'],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'order' => ['required', 'integer', 'min:0'],
+            'order' => ['nullable', 'integer', 'min:0'],
             'phone' => ['nullable', 'string', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],
         ];

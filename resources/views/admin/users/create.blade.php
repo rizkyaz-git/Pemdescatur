@@ -95,10 +95,10 @@
                         Super Admin — Akses seluruh menu, pengaturan website & kelola pengguna
                     </option>
                     <option value="admin_pemdes" {{ old('role') === 'admin_pemdes' ? 'selected' : '' }}>
-                        Admin Pemdes — Akses profil desa, warta berita, perangkat desa, galeri & layanan publik
+                        Admin Pemdes — Akses profil desa, berita, perangkat desa, galeri & layanan publik
                     </option>
                     <option value="ppk_ormawa" {{ old('role') === 'ppk_ormawa' ? 'selected' : '' }}>
-                        PPK Ormawa — Akses warta berita & modul kurikulum/kegiatan PPK Ormawa
+                        PPK Ormawa — Akses berita & modul kurikulum/kegiatan PPK Ormawa
                     </option>
                 </select>
                 @error('role')

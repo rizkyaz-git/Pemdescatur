@@ -85,7 +85,7 @@
             </div>
         </div>
 
-        <!-- Mobile Floating Bottom Capsule Bar (Frosted Glass Glassmorphism with Refraction) -->
+        <!-- Mobile Floating Bottom Capsule Bar -->
         <div class="sm:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[99999] pointer-events-auto"
              x-data="{ 
                  mobileTab: '{{ request('category') ? 'filter' : (request('sort') === 'latest' || !request('sort') ? 'latest' : 'filter') }}',
@@ -93,27 +93,27 @@
              }"
              @click.away="mobileFilterOpen = false">
             
-            <!-- Refracting Glass Capsule Outer Container -->
-            <div class="relative flex items-center h-11 bg-white/70 backdrop-blur-3xl backdrop-saturate-200 border-2 border-white/90 ring-1 ring-slate-900/10 shadow-2xl shadow-emerald-950/10 p-1 rounded-full w-[190px]">
+            <!-- Capsule Outer Container -->
+            <div class="relative flex items-center h-10 bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-lg p-1 rounded-full w-[190px]">
                 
-                <!-- Refracting Frosted Glass Flowing Indicator Pill -->
-                <div class="absolute top-1 bottom-1 rounded-full bg-[#0A3D29]/15 backdrop-blur-2xl backdrop-saturate-200 border border-[#0A3D29]/25 shadow-xs transition-all duration-300 ease-out pointer-events-none"
+                <!-- Flowing Indicator Pill: Sedikit menggelapkan latar saat aktif -->
+                <div class="absolute top-1 bottom-1 rounded-full bg-slate-200/80 transition-all duration-200 ease-out pointer-events-none"
                      :style="mobileTab === 'latest' ? 'left: 4px; width: calc(50% - 4px);' : 'left: 50%; width: calc(50% - 4px);'">
                 </div>
 
                 <!-- Button 1: Terbaru -->
                 <a href="{{ route('public.news.index', ['sort' => 'latest']) }}" 
                    @click="mobileTab = 'latest'; mobileFilterOpen = false"
-                   class="relative z-10 flex-1 h-full flex items-center justify-center rounded-full text-xs font-extrabold transition-colors duration-300 select-none"
-                   :class="mobileTab === 'latest' ? 'text-[#0A3D29]' : 'text-[#6C7B72] hover:text-[#20332A]'">
+                   class="relative z-10 flex-1 h-full flex items-center justify-center rounded-full text-xs transition-colors duration-200 select-none"
+                   :class="mobileTab === 'latest' ? 'text-[#0A3D29] font-bold' : 'text-slate-500 font-medium hover:text-slate-800'">
                     <span>Terbaru</span>
                 </a>
 
                 <!-- Button 2: Filter -->
                 <button type="button" 
                         @click="mobileTab = 'filter'; mobileFilterOpen = !mobileFilterOpen"
-                        class="relative z-10 flex-1 h-full flex items-center justify-center gap-1 rounded-full text-xs font-extrabold transition-colors duration-300 select-none cursor-pointer"
-                        :class="mobileTab === 'filter' ? 'text-[#0A3D29]' : 'text-[#6C7B72] hover:text-[#20332A]'">
+                        class="relative z-10 flex-1 h-full flex items-center justify-center gap-1 rounded-full text-xs transition-colors duration-200 select-none cursor-pointer"
+                        :class="mobileTab === 'filter' ? 'text-[#0A3D29] font-bold' : 'text-slate-500 font-medium hover:text-slate-800'">
                     <span>Filter</span>
                     <svg class="w-3 h-3 transition-transform duration-200" :class="mobileFilterOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
@@ -121,39 +121,39 @@
                 </button>
             </div>
 
-            <!-- Mobile Category Dropdown Popup (Frosted Glass Refraction) -->
+            <!-- Mobile Category Dropdown Popup -->
             <div x-show="mobileFilterOpen" 
-                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter="transition ease-out duration-150"
                  x-transition:enter-start="opacity-0 scale-95 translate-y-2"
                  x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave="transition ease-in duration-100"
                  x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                  x-transition:leave-end="opacity-0 scale-95 translate-y-2"
-                 class="absolute bottom-14 left-1/2 -translate-x-1/2 w-48 bg-white/90 backdrop-blur-3xl backdrop-saturate-200 rounded-2xl border border-white/90 shadow-2xl p-1.5 space-y-0.5 z-[999999]">
+                 class="absolute bottom-13 left-1/2 -translate-x-1/2 w-48 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/90 shadow-xl p-1.5 space-y-0.5 z-[999999]">
                 
                 <a href="{{ route('public.news.index') }}" 
-                   class="block px-3 py-1.5 rounded-xl text-[11px] font-bold transition {{ !request('category') ? 'bg-[#EAF1E8] text-[#0A3D29]' : 'text-slate-700 hover:bg-slate-50' }}">
+                   class="block px-3 py-1.5 rounded-xl text-[11px] transition {{ !request('category') ? 'bg-slate-100 text-[#0A3D29] font-bold' : 'text-slate-600 hover:bg-slate-50 font-medium' }}">
                     Semua Kategori
                 </a>
 
                 @if(isset($categories) && count($categories) > 0)
                     @foreach($categories as $cat)
                         <a href="{{ route('public.news.index', ['category' => $cat]) }}" 
-                           class="block px-3 py-1.5 rounded-xl text-[11px] font-semibold transition {{ request('category') === $cat ? 'bg-[#EAF1E8] text-[#0A3D29] font-bold' : 'text-slate-700 hover:bg-slate-50' }}">
+                           class="block px-3 py-1.5 rounded-xl text-[11px] transition {{ request('category') === $cat ? 'bg-slate-100 text-[#0A3D29] font-bold' : 'text-slate-600 hover:bg-slate-50 font-medium' }}">
                             {{ $cat }}
                         </a>
                     @endforeach
                 @else
                     <a href="{{ route('public.news.index', ['category' => 'Berita']) }}" 
-                       class="block px-3 py-1.5 rounded-xl text-[11px] font-semibold text-slate-700 hover:bg-slate-50">
+                       class="block px-3 py-1.5 rounded-xl text-[11px] font-medium text-slate-600 hover:bg-slate-50">
                         Berita
                     </a>
                     <a href="{{ route('public.news.index', ['category' => 'Pengumuman']) }}" 
-                       class="block px-3 py-1.5 rounded-xl text-[11px] font-semibold text-slate-700 hover:bg-slate-50">
+                       class="block px-3 py-1.5 rounded-xl text-[11px] font-medium text-slate-600 hover:bg-slate-50">
                         Pengumuman
                     </a>
                     <a href="{{ route('public.news.index', ['category' => 'Kegiatan']) }}" 
-                       class="block px-3 py-1.5 rounded-xl text-[11px] font-semibold text-slate-700 hover:bg-slate-50">
+                       class="block px-3 py-1.5 rounded-xl text-[11px] font-medium text-slate-600 hover:bg-slate-50">
                         Kegiatan
                     </a>
                 @endif

@@ -32,8 +32,9 @@ class AppServiceProvider extends ServiceProvider
                             'globalHeroImage' => $allSettings['hero_image_path'] ?? null,
                             'globalVillageName' => $allSettings['village_name'] ?? 'Pemerintah Desa Catur',
                             'globalLibraryUrl' => $allSettings['library_url'] ?? 'https://perpustakaan.boyolali.go.id',
+                            'globalInstagram' => $allSettings['village_instagram'] ?? 'https://www.instagram.com/pemerintahdesacatur',
                             'globalPhone' => $allSettings['village_phone'] ?? '0812-3456-7890',
-                            'globalEmail' => $allSettings['village_email'] ?? 'info@desacatur.id',
+                            'globalEmail' => $allSettings['village_email'] ?? 'pemerintahdesacatur@gmail.com',
                             'globalAddress' => $allSettings['village_address'] ?? 'Jl. Raya Catur - Sambi, Desa Catur, Kec. Sambi, Kab. Boyolali, Jawa Tengah 57376',
                         ];
                     } else {

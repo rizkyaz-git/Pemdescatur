@@ -20,8 +20,8 @@
               { title: 'Dashboard', category: 'Navigasi Utama', url: '{{ route('admin.dashboard') }}', keywords: 'home beranda ringkasan statistik metric kpi' },
               { title: 'Pengaturan Profil Saya', category: 'Pengaturan', url: '{{ route('admin.profile.edit') }}', keywords: 'profil saya foto profil nama sandi password akun' },
               @if(Auth::user()->canAccessNews())
-              { title: 'Berita & Pengumuman', category: 'Kelola Konten', url: '{{ route('admin.news.index') }}', keywords: 'berita warta pengumuman kabar publikasi artikel informasi' },
-              { title: 'Tambah Berita Baru', category: 'Kelola Konten', url: '{{ route('admin.news.create') }}', keywords: 'tambah berita buat warta tulis artikel baru' },
+              { title: 'Berita & Pengumuman', category: 'Kelola Konten', url: '{{ route('admin.news.index') }}', keywords: 'berita pengumuman kabar publikasi artikel informasi' },
+              { title: 'Tambah Berita Baru', category: 'Kelola Konten', url: '{{ route('admin.news.create') }}', keywords: 'tambah berita tulis artikel baru pengumuman' },
               @endif
               @if(Auth::user()->canAccessVillageProfile())
               { title: 'Profil Desa & Visi Misi', category: 'Kelola Konten', url: '{{ route('admin.village-profile.edit') }}', keywords: 'profil visi misi sejarah gambaran umum batas wilayah' },

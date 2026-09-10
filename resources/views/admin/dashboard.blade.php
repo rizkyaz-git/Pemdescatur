@@ -50,7 +50,7 @@
                     <svg class="w-4 h-4 text-[#0F4C3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
-                    <span>Tulis Warta Desa</span>
+                    <span>Tulis Berita Desa</span>
                 </a>
                 @endif
             </div>
@@ -60,7 +60,7 @@
     <!-- Bento Grid KPI Architecture -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
-        <!-- Bento 1: Primary Highlight Card (Publikasi Warta) -->
+        <!-- Bento 1: Primary Highlight Card (Publikasi Berita) -->
         @if(Auth::user()->canAccessNews())
         <a href="{{ route('admin.news.index') }}" class="lg:col-span-2 bg-white rounded-[20px] p-6 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md hover:border-[#0F4C3A]/40 transition-all duration-200 flex flex-col justify-between group">
             <div class="flex items-start justify-between">
@@ -71,7 +71,7 @@
                         </svg>
                         Informasi Publik Desa
                     </div>
-                    <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Total Publikasi Warta</p>
+                    <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Total Publikasi Berita</p>
                     <div class="flex items-baseline gap-2 mt-1">
                         <h3 class="font-jakarta text-3xl sm:text-4xl font-extrabold text-[#0F172A] tabular-nums tracking-tight">
                             {{ number_format($stats['news_count'] ?? 0, 0, ',', '.') }}
@@ -87,9 +87,9 @@
             </div>
             
             <div class="pt-4 mt-4 border-t border-[#F1F5F9] flex items-center justify-between text-xs text-slate-500 font-medium">
-                <span>Warta & Kabar Resmi Desa Catur</span>
+                <span>Berita & Kabar Resmi Desa Catur</span>
                 <span class="text-[#0F4C3A] font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    Kelola Warta
+                    Kelola Berita
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
@@ -255,7 +255,7 @@
     <div class="bg-white rounded-[20px] border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
         <div class="p-6 border-b border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-                <h3 class="font-jakarta text-lg font-bold text-[#0F172A]">Berita & Warta Terbaru Desa</h3>
+                <h3 class="font-jakarta text-lg font-bold text-[#0F172A]">Berita Terbaru Desa</h3>
                 <p class="text-xs text-[#64748B] mt-0.5">Daftar publikasi kabar, agenda, dan artikel resmi yang tayang pada portal publik Desa Catur.</p>
             </div>
             <a href="{{ route('admin.news.create') }}" class="inline-flex items-center gap-2 bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xs transition-colors shrink-0">
@@ -270,7 +270,7 @@
             <table class="w-full text-left border-collapse text-sm">
                 <thead>
                     <tr class="bg-[#F8FAFC] text-[#64748B] text-[11px] font-bold uppercase tracking-wider border-b border-[#E2E8F0]">
-                        <th class="px-6 py-3.5">Judul Warta</th>
+                        <th class="px-6 py-3.5">Judul Berita</th>
                         <th class="px-6 py-3.5">Kategori</th>
                         <th class="px-6 py-3.5">Status Publikasi</th>
                         <th class="px-6 py-3.5">Tanggal Terbit</th>

@@ -3,12 +3,29 @@
 @section('title', 'Kelola Perangkat Desa')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-6" x-data="{ toastMessage: '', showToast: false, triggerToast(msg) { this.toastMessage = msg; this.showToast = true; setTimeout(() => this.showToast = false, 3000); } }">
+    
+    <!-- Toast Feedback Message for Reorder -->
+    <div x-show="showToast" 
+         x-cloak
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 -translate-y-2"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 -translate-y-2"
+         class="fixed top-6 right-6 z-50 bg-emerald-700 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg flex items-center gap-2">
+        <svg class="w-4 h-4 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+        </svg>
+        <span x-text="toastMessage"></span>
+    </div>
+
     <!-- Header Page -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-[20px] border border-[#E2E8F0] shadow-xs">
         <div>
             <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Perangkat Desa</h1>
-            <p class="text-xs text-[#64748B] mt-1">Kelola daftar aparatur desa, jabatan, dan urutan tampilan.</p>
+            <p class="text-xs text-[#64748B] mt-1">Kelola daftar aparatur desa dan jabatan. Atur urutan tampilan struktur dengan menarik dan melepas (drag and drop) baris tabel.</p>
         </div>
         <a href="{{ route('admin.officials.create') }}" class="inline-flex items-center gap-2 bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xs transition shrink-0">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,16 +41,23 @@
             <table class="w-full text-left border-collapse text-sm">
                 <thead>
                     <tr class="bg-[#F8FAFC] text-[#64748B] text-[11px] font-bold uppercase tracking-wider border-b border-[#E2E8F0]">
+                        <th class="w-12 px-3 py-3.5 text-center">
+                            <span class="sr-only">Urutan</span>
+                        </th>
                         <th class="px-5 py-3.5">Foto</th>
                         <th class="px-5 py-3.5">Nama Lengkap & Gelar</th>
                         <th class="px-5 py-3.5">Jabatan</th>
-                        <th class="px-5 py-3.5">Urutan</th>
                         <th class="px-5 py-3.5 text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-[#F1F5F9]">
+                <tbody id="sortable-officials" class="divide-y divide-[#F1F5F9]">
                     @forelse($officials as $off)
-                        <tr class="hover:bg-[#F8FAFC]/80 transition-colors">
+                        <tr data-id="{{ $off->id }}" class="hover:bg-[#F8FAFC]/80 transition-colors group">
+                            <td class="w-12 px-3 py-4 text-center cursor-grab active:cursor-grabbing text-slate-300 group-hover:text-slate-500 drag-handle" title="Tarik untuk mengatur urutan">
+                                <svg class="w-4 h-4 mx-auto pointer-events-none" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-12a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"/>
+                                </svg>
+                            </td>
                             <td class="px-5 py-4">
                                 @if($off->photo_path)
                                     <img src="{{ asset('storage/' . $off->photo_path) }}" class="w-10 h-10 rounded-full object-cover border border-[#0F4C3A]/30">
@@ -50,9 +74,6 @@
                                 <span class="inline-flex items-center px-2.5 py-1 text-xs font-semibold rounded-md bg-amber-50 text-amber-800 border border-amber-200/70">
                                     {{ $off->position }}
                                 </span>
-                            </td>
-                            <td class="px-5 py-4 text-xs font-mono font-bold text-slate-700 tabular-nums">
-                                {{ $off->order }}
                             </td>
                             <td class="px-5 py-4 text-right space-x-1.5">
                                 <a href="{{ route('admin.officials.edit', $off->id) }}" class="inline-flex items-center gap-1 bg-white hover:bg-slate-50 text-slate-700 border border-[#E2E8F0] hover:border-[#0F4C3A]/30 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors">
@@ -89,3 +110,48 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const el = document.getElementById('sortable-officials');
+        if (el) {
+            Sortable.create(el, {
+                handle: '.drag-handle',
+                animation: 180,
+                ghostClass: 'bg-emerald-50/70',
+                chosenClass: 'bg-emerald-100/50',
+                onEnd: function () {
+                    const rows = Array.from(el.querySelectorAll('tr[data-id]'));
+                    const orderIds = rows.map(r => parseInt(r.getAttribute('data-id'))).filter(Boolean);
+                    
+                    if (orderIds.length > 0) {
+                        fetch('{{ route('admin.officials.reorder') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ order: orderIds })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const alpineData = Alpine.$data(document.querySelector('[x-data]'));
+                                if (alpineData && alpineData.triggerToast) {
+                                    alpineData.triggerToast(data.message || 'Urutan susunan perangkat desa berhasil diperbarui.');
+                                }
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Reorder error:', err);
+                        });
+                    }
+                }
+            });
+        }
+    });
+</script>
+@endpush

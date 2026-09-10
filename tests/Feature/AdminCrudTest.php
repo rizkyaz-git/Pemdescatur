@@ -37,29 +37,45 @@ class AdminCrudTest extends TestCase
 
     public function test_admin_can_crud_officials(): void
     {
-        // Store
+        // Store without order field (auto-increments order)
         $response = $this->actingAs($this->admin)->post('/admin/officials', [
             'name' => 'I Made Testing, S.T.',
             'position' => 'Kaur Keuangan Baru',
-            'order' => 5,
         ]);
         $response->assertRedirect('/admin/officials');
         $official = Official::where('name', 'I Made Testing, S.T.')->first();
         $this->assertNotNull($official);
+        $this->assertGreaterThan(0, $official->order);
 
         // Update
         $updateResponse = $this->actingAs($this->admin)->put("/admin/officials/{$official->id}", [
             'name' => 'I Made Testing, S.T.',
             'position' => 'Kaur Keuangan Diperbarui',
-            'order' => 2,
         ]);
         $updateResponse->assertRedirect('/admin/officials');
         $this->assertDatabaseHas('officials', ['position' => 'Kaur Keuangan Diperbarui']);
+
+        // Test Reorder via Drag and Drop Endpoint
+        $official2 = Official::create([
+            'name' => 'I Wayan Dua',
+            'position' => 'Kasi Pelayanan',
+            'order' => 10,
+        ]);
+
+        $reorderResponse = $this->actingAs($this->admin)->postJson('/admin/officials/reorder', [
+            'order' => [$official2->id, $official->id],
+        ]);
+        $reorderResponse->assertOk();
+        $reorderResponse->assertJson(['success' => true]);
+
+        $this->assertEquals(1, $official2->fresh()->order);
+        $this->assertEquals(2, $official->fresh()->order);
 
         // Destroy
         $deleteResponse = $this->actingAs($this->admin)->delete("/admin/officials/{$official->id}");
         $deleteResponse->assertRedirect('/admin/officials');
         $this->assertDatabaseMissing('officials', ['id' => $official->id]);
+        $official2->delete();
     }
 
 
