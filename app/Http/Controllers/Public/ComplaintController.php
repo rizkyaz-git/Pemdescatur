@@ -85,7 +85,7 @@ class ComplaintController extends Controller
         ]);
 
         return redirect()->route('warga.complaint.show', $complaint->id)
-                        ->with('success', "Pengaduan berhasil dikirim! Simpan Nomor Tiket Anda: {$complaint->ticket_number}");
+                        ->with('success', "Pengaduan berhasil dikirim! Laporan Anda telah tercatat dan akan segera ditindaklanjuti.");
     }
 
     /**

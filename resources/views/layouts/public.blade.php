@@ -142,10 +142,10 @@
                 <!-- 2. Scrolled Glassmorphism Layer (Fades in softly and smoothly when scrolled down) -->
                 <div class="absolute inset-0 bg-white/80 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.05)] transition-opacity ease-in-out pointer-events-none"
                     :class="(mobileMenuOpen || mobileSearchOpen) 
-                                                                                 ? 'opacity-100 duration-200' 
-                                                                                 : (isScrolled 
-                                                                                     ? 'opacity-100 duration-700' 
-                                                                                     : 'opacity-0 duration-700 delay-100')">
+                                                                                                     ? 'opacity-100 duration-200' 
+                                                                                                     : (isScrolled 
+                                                                                                         ? 'opacity-100 duration-700' 
+                                                                                                         : 'opacity-0 duration-700 delay-100')">
                 </div>
             @else
                 <!-- Non-homepage glassmorphism navbar background with scroll shadow -->
@@ -946,11 +946,6 @@
                         </div>
                     </div>
 
-                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-light">
-                        Portal informasi resmi dan layanan online mandiri Pemerintah Desa Catur, Kec. Sambi, Kab.
-                        Boyolali.
-                    </p>
-
                     <div class="space-y-2 text-xs sm:text-sm text-slate-300 font-light pt-1">
                         <p class="flex items-start gap-2.5">
                             <svg class="w-4 h-4 text-[#D9B85C] shrink-0 mt-0.5" fill="none" stroke="currentColor"
@@ -968,7 +963,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
-                            <span>{{ $globalEmail ?? 'pemdes@catur-boyolali.desa.id' }}</span>
+                            <span>{{ $globalEmail ?? 'pemerintahdesacatur@gmail.com' }}</span>
                         </p>
                         <p class="flex items-center gap-2.5">
                             <svg class="w-4 h-4 text-[#D9B85C] shrink-0" fill="none" stroke="currentColor"
@@ -1022,12 +1017,6 @@
                         <p class="font-medium text-white">Kantor Desa Catur</p>
                         <p class="text-xs text-slate-300">Senin - Jumat: 08.00 - 15.30 WIB</p>
                         <p class="text-xs text-slate-400">Sabtu, Minggu & Libur: Tutup</p>
-                        <div class="pt-2 border-t border-white/10 mt-3">
-                            <span
-                                class="block text-[11px] font-bold text-[#D9B85C] uppercase tracking-wider">NARAHUBUNG</span>
-                            <a href="tel:081234567890"
-                                class="block text-sm font-extrabold text-white hover:text-[#D9B85C] transition mt-0.5">0812-3456-7890</a>
-                        </div>
                     </div>
                 </div>
 

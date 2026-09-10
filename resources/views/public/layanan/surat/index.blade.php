@@ -1,80 +1,103 @@
 @extends('layouts.public')
 
-@section('title', 'Template Surat Siap Cetak - Pemerintah Desa Catur')
-@section('meta_description', 'Unduh resmi berkas template surat keterangan siap cetak Pemerintah Desa Catur, Kec. Sambi, Kab. Boyolali. Download template Word (.doc) dan lengkapi persyaratan sebelum legalisasi ke balai desa.')
+@section('title', 'Layanan Cetak Surat Mandiri - Pemerintah Desa Catur')
+@section('meta_description', 'Unduh resmi berkas template surat keterangan siap cetak Pemerintah Desa Catur, Kec. Sambi, Kab. Boyolali. Unduh template dokumen dan lengkapi persyaratan sebelum legalisasi ke balai desa.')
 
 @section('content')
 
-    <!-- ========================================================================= -->
-    <!-- 1. HERO HEADER: Template Surat Siap Cetak                                 -->
-    <!-- ========================================================================= -->
-    <!-- Session Flash Notifications -->
-    @if(session('success'))
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-            <div class="bg-emerald-50 border-l-4 border-[#0A3D29] p-3.5 rounded-lg shadow-2xs flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-emerald-900">
-                    <svg class="w-4 h-4 text-emerald-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    <span>{{ session('success') }}</span>
-                </div>
-            </div>
-        </div>
-    @endif
+    @php
+        $templatesData = $templates->map(function ($template) {
+            return [
+                'id' => $template->id,
+                'name' => $template->name,
+                'description' => $template->description ?: 'Format berkas surat resmi Pemerintah Desa Catur yang dapat dicetak mandiri oleh pemohon.',
+                'requirements' => !empty($template->requirements)
+                    ? array_values(array_filter(array_map('trim', explode("\n", $template->requirements))))
+                    : [],
+                'has_file' => (bool) $template->has_file,
+                'file_extension' => $template->file_extension,
+                'file_size' => $template->file_size_formatted,
+                'download_url' => route('warga.letter.download', $template->id),
+            ];
+        });
+    @endphp
 
-    @if(session('error'))
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-            <div class="bg-rose-50 border-l-4 border-rose-600 p-3.5 rounded-lg shadow-2xs flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-900">
-                    <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span>{{ session('error') }}</span>
-                </div>
-            </div>
-        </div>
-    @endif
-
-
-    <!-- ========================================================================= -->
-    <!-- 2. MAIN SECTION: KATALOG TEMPLATE SURAT SIAP CETAK (GRID)                 -->
-    <!-- ========================================================================= -->
-    <section id="katalog-surat" class="w-full bg-white py-8 sm:py-12 border-b border-slate-200"
-             x-data="{ 
-                 selectedTemplate: null, 
-                 modalOpen: false,
-                 searchKeyword: '{{ $search ?? '' }}'
+    <!-- Main Page Container (Clean Minimalist Canvas) -->
+    <div class="bg-white min-h-screen py-8 sm:py-10" x-data="{ 
+                 templates: {{ Js::from($templatesData) }},
+                 selectedTemplate: null,
+                 mobileView: 'menu',
+                 selectTemplate(item) {
+                     this.selectedTemplate = item;
+                     this.mobileView = 'detail';
+                     if (window.innerWidth < 1024) {
+                         const el = document.getElementById('katalog-surat');
+                         if (el) {
+                             el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                         }
+                     }
+                 },
+                 backToMenu() {
+                     this.mobileView = 'menu';
+                 }
              }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6" id="katalog-surat">
 
-            {{-- Top Filter & Search Bar (Minimalist Dark Green) --}}
-            <div class="bg-[#0A3D29] text-white rounded-xl p-5 sm:p-6 border border-[#072B1D] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <!-- Session Flash Notifications (Minimalist) -->
+            @if(session('success'))
+                <div
+                    class="bg-emerald-50/80 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-lg text-xs sm:text-sm flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-emerald-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>{{ session('success') }}</span>
+                    </div>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div
+                    class="bg-rose-50/80 border border-rose-200 text-rose-800 px-4 py-3 rounded-lg text-xs sm:text-sm flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>{{ session('error') }}</span>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Minimalist Header Title & Search Bar -->
+            <div
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 pb-6 border-b border-slate-200/80">
                 <div>
-                    <h2 class="font-serif text-lg sm:text-xl font-bold text-white tracking-tight">
-                        Pilih Berkas Template Surat
-                    </h2>
+                    <h1
+                        class="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#20332A] leading-tight tracking-tight">
+                        Layanan Cetak Surat Mandiri
+                    </h1>
                 </div>
 
-                {{-- Search Form --}}
-                <div class="w-full md:w-80">
+                <!-- Minimalist Search Input -->
+                <div class="w-full sm:w-72 md:w-80">
                     <form action="{{ route('warga.letter.index') }}#katalog-surat" method="GET" class="relative">
-                        <input type="text" 
-                               name="search" 
-                               value="{{ $search ?? '' }}" 
-                               placeholder="Cari surat..." 
-                               class="w-full pl-9 pr-20 py-2.5 rounded-lg border border-transparent focus:ring-2 focus:ring-emerald-400 focus:outline-none text-xs sm:text-sm bg-white text-slate-900 placeholder:text-slate-400 transition">
-                        <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari surat..."
+                            class="w-full pl-9 pr-16 py-2.5 rounded-lg border border-slate-200 text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 bg-white focus:outline-none focus:border-[#0A3D29] focus:ring-1 focus:ring-[#0A3D29]/30 transition shadow-xs">
+                        <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
-                        <div class="absolute right-1.5 top-1.5 flex items-center gap-1">
+                        <div class="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
                             @if(!empty($search))
-                                <a href="{{ route('warga.letter.index') }}#katalog-surat" 
-                                   class="text-xs text-slate-400 hover:text-slate-700 px-1.5 py-1">
+                                <a href="{{ route('warga.letter.index') }}#katalog-surat"
+                                    class="text-xs text-slate-400 hover:text-slate-600 px-1 py-0.5" title="Hapus pencarian">
                                     ✕
                                 </a>
                             @endif
-                            <button type="submit" 
-                                    class="bg-[#0A3D29] hover:bg-[#072B1D] text-white text-xs font-semibold px-3 py-1 rounded-md transition">
+                            <button type="submit"
+                                class="bg-[#0A3D29] hover:bg-[#072B1D] text-white text-xs font-semibold px-2.5 py-1.5 rounded-md transition cursor-pointer">
                                 Cari
                             </button>
                         </div>
@@ -82,235 +105,229 @@
                 </div>
             </div>
 
-            {{-- Template Cards Grid (Clickable Cards, No Code Badge) --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                @forelse($templates as $template)
-                    <div @click="selectedTemplate = {{ json_encode([
-                             'id' => $template->id,
-                             'name' => $template->name,
-                             'description' => $template->description,
-                             'requirements' => $template->requirements,
-                             'has_file' => $template->has_file,
-                             'file_extension' => $template->file_extension,
-                             'file_size' => $template->file_size_formatted,
-                             'download_url' => route('warga.letter.download', $template->id)
-                         ]) }}; modalOpen = true;"
-                         class="bg-white rounded-xl p-5 sm:p-6 border border-slate-200/90 hover:border-emerald-700/60 shadow-2xs hover:shadow-xs transition-colors flex flex-col justify-between cursor-pointer group">
-                        
-                        <div class="space-y-3.5">
-                            
-                            {{-- Header: File Format Info --}}
-                            <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
-                                @if($template->has_file)
-                                    <span class="text-xs text-slate-500 font-medium inline-flex items-center gap-1.5">
-                                        <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            <!-- ========================================================================= -->
+            <!-- KATALOG TEMPLATE SURAT: MASTER-DETAIL INTERAKTIF (RESPONSIF)              -->
+            <!-- ========================================================================= -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start pt-2">
+
+                <!-- Left Side: List Template Surat -->
+                <div class="lg:col-span-5" :class="mobileView === 'detail' ? 'hidden lg:block' : 'block'">
+                    <div class="bg-white rounded-xl border border-slate-200/90 overflow-hidden shadow-xs">
+                        <!-- Header Daftar Template -->
+                        <div
+                            class="px-4 py-3 bg-slate-50/70 border-b border-slate-200/80 flex items-center justify-between">
+                            <h2 class="text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                                Daftar Template ({{ count($templates) }})
+                            </h2>
+                            @if(!empty($search))
+                                <a href="{{ route('warga.letter.index') }}#katalog-surat"
+                                    class="text-xs text-[#0A3D29] hover:underline font-medium">
+                                    Reset filter
+                                </a>
+                            @endif
+                        </div>
+
+                        <div class="divide-y divide-slate-100 max-h-[640px] overflow-y-auto">
+                            <template x-for="item in templates" :key="item.id">
+                                <button type="button" @click="selectTemplate(item)"
+                                    class="w-full text-left p-4 transition-all flex items-center justify-between gap-4 group cursor-pointer"
+                                    :class="selectedTemplate && selectedTemplate.id === item.id 
+                                            ? 'bg-slate-100/90' 
+                                            : 'hover:bg-slate-50/80'">
+                                    <div class="space-y-1 flex-1 min-w-0">
+                                        <h3 class="font-serif text-sm font-bold text-slate-900 group-hover:text-slate-950 transition-colors truncate"
+                                            x-text="item.name"></h3>
+                                        <p class="text-xs text-slate-500 line-clamp-1" x-text="item.description"></p>
+                                        <div class="pt-0.5">
+                                            <span class="text-[11px] text-slate-400 font-medium"
+                                                x-text="item.has_file ? (item.file_extension + (item.file_size !== '-' ? ' • ' + item.file_size : '')) : 'Menunggu File'"></span>
+                                        </div>
+                                    </div>
+                                    <div class="shrink-0 text-slate-300 group-hover:text-slate-500 transition-colors"
+                                        :class="selectedTemplate && selectedTemplate.id === item.id ? 'text-slate-600' : ''">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7" />
                                         </svg>
-                                        <span class="font-semibold text-slate-700">Berkas {{ $template->file_extension }}</span>
-                                        @if($template->file_size_formatted)
-                                            <span class="text-slate-400 font-normal">({{ $template->file_size_formatted }})</span>
-                                        @endif
-                                    </span>
-                                @else
-                                    <span class="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                                        Menunggu File
-                                    </span>
-                                @endif
+                                    </div>
+                                </button>
+                            </template>
 
-                                <span class="text-[11px] text-emerald-700 group-hover:text-emerald-900 font-medium inline-flex items-center gap-0.5 transition-colors">
-                                    <span>Lihat Syarat</span>
-                                    <span>→</span>
-                                </span>
-                            </div>
-
-                            {{-- Title & Description --}}
-                            <div class="space-y-1.5">
-                                <h3 class="font-serif text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0A3D29] transition-colors leading-snug">
-                                    {{ $template->name }}
-                                </h3>
-                                <p class="text-xs text-slate-600 leading-relaxed line-clamp-2">
-                                    {{ $template->description ?: 'Format berkas surat resmi Pemerintah Desa Catur yang dapat dicetak mandiri oleh warga.' }}
-                                </p>
-                            </div>
-
-                            {{-- Requirements Checklist (Clean & Minimalist) --}}
-                            @if(!empty($template->requirements))
-                                <div class="pt-2.5 border-t border-slate-100 space-y-1.5">
-                                    <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">
-                                        Persyaratan Berkas:
-                                    </span>
-                                    <ul class="text-xs text-slate-600 space-y-1 leading-snug">
-                                        @foreach(array_slice(explode("\n", trim($template->requirements)), 0, 3) as $reqItem)
-                                            @if(trim($reqItem))
-                                                <li class="flex items-start gap-1.5">
-                                                    <span class="text-[#0A3D29] font-bold mt-0.5">•</span>
-                                                    <span class="line-clamp-1">{{ ltrim(trim($reqItem), '-*• ') }}</span>
-                                                </li>
-                                            @endif
-                                        @endforeach
-                                        @if(count(explode("\n", trim($template->requirements))) > 3)
-                                            <li class="text-[11px] text-emerald-800 font-medium pt-0.5">
-                                                + {{ count(explode("\n", trim($template->requirements))) - 3 }} persyaratan lainnya
-                                            </li>
-                                        @endif
-                                    </ul>
+                            @if(count($templates) === 0)
+                                <div class="p-8 text-center text-slate-500">
+                                    <p class="text-sm font-medium text-slate-700">Tidak ada template surat yang cocok</p>
+                                    @if(!empty($search))
+                                        <p class="text-xs text-slate-400 mt-1">Kata kunci penelusuran "{{ $search }}" tidak
+                                            ditemukan.</p>
+                                        <a href="{{ route('warga.letter.index') }}#katalog-surat"
+                                            class="inline-block mt-3 text-xs font-semibold text-[#0A3D29] hover:underline">
+                                            Tampilkan Semua Template
+                                        </a>
+                                    @endif
                                 </div>
                             @endif
-
-                        </div>
-
-                        {{-- Action Buttons --}}
-                        <div class="pt-4 mt-4 border-t border-slate-100">
-                            @if($template->has_file)
-                                <a href="{{ route('warga.letter.download', $template->id) }}" 
-                                   @click.stop
-                                   class="w-full inline-flex items-center justify-center gap-1.5 bg-[#0A3D29] hover:bg-[#072B1D] text-white font-semibold text-xs py-2.5 px-3 rounded-lg transition-colors text-center shadow-2xs">
-                                    <svg class="w-3.5 h-3.5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                    </svg>
-                                    <span>Unduh Berkas</span>
-                                </a>
-                            @else
-                                <button type="button" 
-                                        disabled 
-                                        @click.stop
-                                        class="w-full inline-flex items-center justify-center gap-1.5 bg-slate-100 text-slate-400 font-medium text-xs py-2.5 px-3 rounded-lg cursor-not-allowed">
-                                    <span>File Belum Siap</span>
-                                </button>
-                            @endif
-                        </div>
-
-                    </div>
-                @empty
-                    <div class="col-span-full py-12 text-center text-slate-500 bg-white rounded-xl border border-slate-200 p-6">
-                        <h4 class="text-base font-bold text-slate-800">Tidak ada template surat yang cocok</h4>
-                        <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                            Kata kunci penelusuran "{{ $search }}" tidak ditemukan.
-                        </p>
-                        <div class="pt-4">
-                            <a href="{{ route('warga.letter.index') }}" 
-                               class="inline-flex items-center gap-1.5 bg-[#0A3D29] text-white font-medium text-xs px-4 py-2 rounded-lg hover:bg-[#072B1D] transition">
-                                <span>Tampilkan Semua Template</span>
-                            </a>
                         </div>
                     </div>
-                @endforelse
-            </div>
+                </div>
 
-            {{-- Modal: Detail Persyaratan Berkas Template (Minimalist) --}}
-            <div x-show="modalOpen" 
-                 x-cloak
-                 class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-black/50"
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition ease-in duration-150"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0">
-                
-                <div class="bg-white rounded-xl max-w-xl w-full p-5 sm:p-6 shadow-xl border border-slate-200 space-y-4 relative text-left"
-                     @click.away="modalOpen = false">
-                    
-                    {{-- Modal Header --}}
-                    <div class="flex items-start justify-between border-b border-slate-100 pb-3">
-                        <div class="space-y-1">
-                            <h3 class="font-serif text-lg font-bold text-slate-900" 
+                <!-- Right Side: Rincian Template Surat (Sticky Detail Panel) -->
+                <div class="lg:col-span-7 lg:sticky lg:top-24" :class="mobileView === 'menu' ? 'hidden lg:block' : 'block'">
+
+                    <!-- Mobile Back Navigation -->
+                    <button type="button" @click="backToMenu()"
+                        class="lg:hidden inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 pb-2 mb-4 border-b border-slate-100 w-full transition-colors cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        <span>Kembali ke Daftar Surat</span>
+                    </button>
+
+                    <!-- Empty State: Ketika belum ada template yang dipilih -->
+                    <div x-show="!selectedTemplate"
+                        class="bg-white rounded-xl border border-dashed border-slate-300/80 p-12 text-center flex flex-col items-center justify-center min-h-[380px] shadow-xs space-y-3">
+                        <div
+                            class="w-12 h-12 rounded-full bg-slate-50 border border-slate-200/60 flex items-center justify-center text-slate-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-sm font-semibold text-slate-700">Pilih template untuk rincian</h3>
+                    </div>
+
+                    <!-- Active State: Rincian Lengkap Template Terpilih -->
+                    <div x-show="selectedTemplate" x-cloak
+                        class="bg-white rounded-xl border border-slate-200/90 p-6 sm:p-7 shadow-xs space-y-6">
+
+                        <!-- Detail Header -->
+                        <div class="pb-5 border-b border-slate-100 space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600"
+                                    x-text="selectedTemplate ? (selectedTemplate.has_file ? (selectedTemplate.file_extension + (selectedTemplate.file_size !== '-' ? ' • ' + selectedTemplate.file_size : '')) : 'Berkas Belum Tersedia') : ''"></span>
+                            </div>
+                            <h3 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 leading-tight"
                                 x-text="selectedTemplate ? selectedTemplate.name : ''"></h3>
-                            <span class="text-[11px] font-medium text-slate-500 block" 
-                                  x-text="selectedTemplate ? (selectedTemplate.has_file ? 'Berkas ' + selectedTemplate.file_extension + ' • Siap Cetak' : 'Template Desa') : ''"></span>
+                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed"
+                                x-text="selectedTemplate ? selectedTemplate.description : ''"></p>
                         </div>
-                        <button type="button" @click="modalOpen = false" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-md transition text-lg font-bold">
-                            ✕
-                        </button>
-                    </div>
 
-                    {{-- Description --}}
-                    <div class="space-y-1">
-                        <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">Keterangan:</span>
-                        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed" x-text="selectedTemplate ? selectedTemplate.description : ''"></p>
-                    </div>
+                        <!-- Persyaratan Berkas -->
+                        <div class="space-y-3">
+                            <span class="text-xs font-semibold text-slate-700 uppercase tracking-wider block">
+                                Persyaratan Berkas Pemohon:
+                            </span>
 
-                    {{-- Requirements Checklist in Modal --}}
-                    <div class="space-y-1.5" x-show="selectedTemplate && selectedTemplate.requirements">
-                        <span class="text-[11px] font-semibold text-[#0A3D29] uppercase tracking-wider block">Persyaratan Berkas Warga:</span>
-                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs text-slate-700 font-medium whitespace-pre-line leading-relaxed"
-                             x-text="selectedTemplate ? selectedTemplate.requirements : ''">
+                            <template
+                                x-if="selectedTemplate && selectedTemplate.requirements && selectedTemplate.requirements.length > 0">
+                                <ul class="space-y-2">
+                                    <template x-for="(req, idx) in selectedTemplate.requirements" :key="idx">
+                                        <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 leading-snug">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mt-2 shrink-0"></span>
+                                            <span x-text="req"></span>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </template>
+
+                            <template
+                                x-if="selectedTemplate && (!selectedTemplate.requirements || selectedTemplate.requirements.length === 0)">
+                                <p class="text-xs text-slate-400 italic">
+                                    Tidak ada persyaratan berkas khusus yang dicantumkan untuk template ini.
+                                </p>
+                            </template>
                         </div>
-                    </div>
 
-                    {{-- Modal Footer --}}
-                    <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
-                        <button type="button" @click="modalOpen = false" 
-                                class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 text-xs font-medium hover:bg-slate-50 transition">
-                            Tutup
-                        </button>
-                        <template x-if="selectedTemplate && selectedTemplate.has_file">
-                            <a :href="selectedTemplate.download_url" 
-                               class="inline-flex items-center justify-center gap-1.5 bg-[#0A3D29] hover:bg-[#072B1D] text-white font-medium text-xs px-4 py-2 rounded-lg transition">
-                                <svg class="w-3.5 h-3.5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                </svg>
-                                <span>Unduh Template</span>
-                            </a>
-                        </template>
+                        <!-- Tombol Unduh & Catatan -->
+                        <div class="pt-5 border-t border-slate-100 space-y-3">
+                            <template x-if="selectedTemplate && selectedTemplate.has_file">
+                                <a :href="selectedTemplate.download_url"
+                                    class="w-full inline-flex items-center justify-center gap-2 bg-[#0A3D29] hover:bg-[#072B1D] text-white font-semibold text-xs sm:text-sm py-2.5 px-4 rounded-lg transition-colors text-center cursor-pointer shadow-xs">
+                                    <svg class="w-4 h-4 text-white/80" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    <span x-text="'Unduh Berkas (' + selectedTemplate.file_extension + ')'"></span>
+                                </a>
+                            </template>
+
+                            <template x-if="selectedTemplate && !selectedTemplate.has_file">
+                                <button type="button" disabled
+                                    class="w-full inline-flex items-center justify-center gap-2 bg-slate-100 text-slate-400 font-medium text-xs sm:text-sm py-2.5 px-4 rounded-lg cursor-not-allowed">
+                                    <span>Berkas Template Belum Tersedia untuk Diunduh</span>
+                                </button>
+                            </template>
+
+                            <p class="text-[11px] text-slate-400 text-center leading-relaxed">
+                                Cetak mandiri berkas ini di atas kertas F4/A4, lengkapi data pemohon, lalu bawa ke Balai
+                                Desa Catur beserta berkas persyaratan untuk legalisasi.
+                            </p>
+                        </div>
+
                     </div>
 
                 </div>
+
             </div>
 
         </div>
-    </section>
-
+    </div>
 
     <!-- ========================================================================= -->
-    <!-- 3. ALUR PENGURUSAN MANDIRI (3 LANGKAH)                                    -->
+    <!-- 3. ALUR PENGURUSAN MANDIRI (MINIMALIS)                                    -->
     <!-- ========================================================================= -->
-    <section class="w-full bg-white py-10 sm:py-14 border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-            
-            <div class="text-center max-w-2xl mx-auto">
-                <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                    Alur Pengurusan Surat Cetak Mandiri
+    <section class="w-full bg-slate-50/70 py-10 sm:py-12 border-t border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+
+            <div class="text-center max-w-xl mx-auto space-y-1">
+                <h2 class="font-serif text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+                    Alur Pengurusan Surat Mandiri
                 </h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+
                 {{-- Step 1 --}}
-                <div class="p-5 sm:p-6 rounded-xl bg-[#0A3D29] text-white border border-[#072B1D] shadow-xs space-y-3">
-                    <div class="w-8 h-8 rounded-lg bg-white text-[#0A3D29] font-black text-xs flex items-center justify-center shadow-xs">
+                <div class="p-5 rounded-xl bg-white border border-slate-200/80 shadow-xs space-y-3">
+                    <div
+                        class="w-7 h-7 rounded-full border border-[#0A3D29]/20 bg-emerald-50 text-[#0A3D29] font-bold text-xs flex items-center justify-center">
                         1
                     </div>
                     <div class="space-y-1">
-                        <h3 class="font-serif font-bold text-base text-white">Unduh Template Berkas</h3>
-                        <p class="text-xs text-white/80 leading-relaxed">
-                            Cari jenis surat yang Anda perlukan pada katalog di atas, lalu klik <strong class="text-white font-semibold">Unduh Berkas</strong> untuk mengunduh template resmi Word (.doc) atau PDF.
+                        <h3 class="font-serif font-bold text-sm text-slate-900">Unduh Template Berkas</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Pilih template surat yang Anda butuhkan pada katalog di atas, lalu klik <strong>Unduh
+                                Berkas</strong>.
                         </p>
                     </div>
                 </div>
 
                 {{-- Step 2 --}}
-                <div class="p-5 sm:p-6 rounded-xl bg-[#0A3D29] text-white border border-[#072B1D] shadow-xs space-y-3">
-                    <div class="w-8 h-8 rounded-lg bg-white text-[#0A3D29] font-black text-xs flex items-center justify-center shadow-xs">
+                <div class="p-5 rounded-xl bg-white border border-slate-200/80 shadow-xs space-y-3">
+                    <div
+                        class="w-7 h-7 rounded-full border border-[#0A3D29]/20 bg-emerald-50 text-[#0A3D29] font-bold text-xs flex items-center justify-center">
                         2
                     </div>
                     <div class="space-y-1">
-                        <h3 class="font-serif font-bold text-base text-white">Isi Data &amp; Cetak Mandiri</h3>
-                        <p class="text-xs text-white/80 leading-relaxed">
-                            Buka berkas di komputer atau ponsel. Isi data pemohon dengan benar, lalu cetak (print) di atas kertas ukuran F4 / A4.
+                        <h3 class="font-serif font-bold text-sm text-slate-900">Isi Data &amp; Cetak Mandiri</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Buka berkas di komputer atau ponsel, isi formulir pemohon dengan benar, lalu cetak (print) di
+                            kertas F4 / A4.
                         </p>
                     </div>
                 </div>
 
                 {{-- Step 3 --}}
-                <div class="p-5 sm:p-6 rounded-xl bg-[#0A3D29] text-white border border-[#072B1D] shadow-xs space-y-3">
-                    <div class="w-8 h-8 rounded-lg bg-white text-[#0A3D29] font-black text-xs flex items-center justify-center shadow-xs">
+                <div class="p-5 rounded-xl bg-white border border-slate-200/80 shadow-xs space-y-3">
+                    <div
+                        class="w-7 h-7 rounded-full border border-[#0A3D29]/20 bg-emerald-50 text-[#0A3D29] font-bold text-xs flex items-center justify-center">
                         3
                     </div>
                     <div class="space-y-1">
-                        <h3 class="font-serif font-bold text-base text-white">Legalisasi di Balai Desa</h3>
-                        <p class="text-xs text-white/80 leading-relaxed">
-                            Bawa berkas hasil cetak bersama dokumen persyaratan (Fotokopi KTP, KK, Pengantar RT/RW) ke Balai Desa Catur untuk ditandatangani dan distempel resmi.
+                        <h3 class="font-serif font-bold text-sm text-slate-900">Legalisasi di Balai Desa</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Bawa berkas cetak beserta dokumen persyaratan (KTP, KK, dsb.) ke Balai Desa Catur untuk tanda
+                            tangan dan stempel resmi.
                         </p>
                     </div>
                 </div>

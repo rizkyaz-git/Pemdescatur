@@ -10,7 +10,7 @@
         {{-- Navigation Header --}}
         <div class="flex items-center gap-3.5">
             <a href="{{ route('warga.complaint.index') }}" 
-               class="w-10 h-10 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition shadow-2xs shrink-0"
+               class="w-10 h-10 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs shrink-0"
                title="Kembali ke Daftar Laporan"
                aria-label="Kembali">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +75,7 @@
                         Lampiran Foto Bukti (Opsional)
                     </label>
                     <input type="file" name="attachment" id="attachment" accept="image/png,image/jpeg,image/jpg"
-                        class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#0A3D29] file:text-white hover:file:bg-[#072B1D] cursor-pointer bg-slate-50/50 p-2 rounded-lg border border-slate-300 shadow-2xs @error('attachment') border-rose-500 @enderror">
+                        class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#0A3D29] file:text-white hover:file:bg-[#072B1D] cursor-pointer bg-slate-50/50 p-2 rounded-lg border border-slate-300 shadow-xs @error('attachment') border-rose-500 @enderror">
                     <p class="text-[11px] text-slate-400 mt-1">Format gambar: JPG, JPEG, PNG. Maksimal 2 MB.</p>
                     @error('attachment')
                         <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
@@ -88,8 +88,8 @@
                         Batal
                     </a>
                     <button type="submit" 
-                            class="inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#072B1D] text-white font-semibold text-xs py-2.5 px-6 rounded-lg transition shadow-2xs">
-                        <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            class="inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#072B1D] text-white font-semibold text-xs py-2.5 px-6 rounded-lg transition shadow-xs cursor-pointer">
+                        <svg class="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                         </svg>
                         <span>Kirim Laporan Pengaduan</span>
