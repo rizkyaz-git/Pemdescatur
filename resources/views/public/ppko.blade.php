@@ -135,7 +135,7 @@
                                                 if (idx < this.pojoks.length - 1) {
                                                     this.scrollToSlug(this.pojoks[idx + 1].id);
                                                 } else {
-                                                    const nextEl = document.getElementById('galeri') || document.querySelector('footer');
+                                                    const nextEl = document.getElementById('tentang-program') || document.getElementById('galeri') || document.querySelector('footer');
                                                     if (nextEl) {
                                                         nextEl.scrollIntoView({ behavior: 'smooth' });
                                                     }
@@ -193,6 +193,12 @@
                             $ppkoCoverMobileUrl = $ppkoCoverUrl;
                         }
                     @endphp
+                    <div class="text-left -mb-6 sm:-mb-8">
+                        <x-breadcrumbs :items="[
+                            ['label' => 'BERANDA', 'url' => route('home')],
+                            ['label' => 'PPK Ormawa']
+                        ]" />
+                    </div>
                     <div
                         class="relative w-full rounded-xl sm:rounded-2xl overflow-hidden shadow-xs border border-[#DCE6DA] bg-white group ppko-section-entrance">
                         <picture class="block w-full">
@@ -201,300 +207,6 @@
                                 class="w-full h-auto object-cover object-center group-hover:scale-[1.005] transition-transform duration-700 ease-out">
                         </picture>
                     </div>
-
-                    <!-- ========================================================================= -->
-                    <!-- 2. LATAR BELAKANG & POTENSI DESA (PRD Section 4.1 #2) -->
-                    <!-- ========================================================================= -->
-                    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start ppko-section-entrance">
-                        <div id="ppko-left-panel" class="lg:col-span-7 space-y-4">
-
-                            <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 leading-tight">
-                                Tentang Program
-                            </h2>
-
-                            <div class="space-y-4 text-sm sm:text-base text-slate-600 leading-relaxed font-normal"
-                                style="text-align: justify;">
-                                <div class="catur-cerdas space-y-4">
-                                    <div class="intro">
-                                        <p style="text-align: justify;">
-                                            <strong>Catur Cerdas</strong> merupakan program PPKO Ormawa oleh
-                                            <strong>IMM Al-Ghozali Fakultas Psikologi, Universitas Muhammadiyah
-                                                Surakarta</strong>
-                                            di Desa Catur, Kecamatan Sambi, Kabupaten Boyolali. Program ini hadir
-                                            untuk mendorong masyarakat menjadi lebih berdaya, mandiri, dan mampu
-                                            mengembangkan potensi desa secara berkelanjutan.
-                                        </p>
-                                    </div>
-
-                                    <div class="background">
-                                        <p style="text-align: justify;">
-                                            Desa Catur memiliki potensi besar sekaligus berbagai tantangan dalam
-                                            kesehatan mental keluarga, kapasitas anak dan remaja, digitalisasi UMKM,
-                                            pelestarian budaya, serta pengembangan pertanian. Catur Cerdas hadir
-                                            melalui lima pojok pemberdayaan yang dirancang sesuai kebutuhan masyarakat :
-                                        </p>
-                                    </div>
-
-                                    <div class="programs py-1">
-                                        <ol class="programs-list">
-                                            <li class="program-item">
-                                                <span class="program-num">1.</span>
-                                                <span class="program-name">Pojok Harmoni</span>
-                                                <span class="program-colon">:</span>
-                                                <span class="program-desc">Penguatan kesehatan mental keluarga melalui
-                                                    Psychological First Aid dan komunikasi keluarga.</span>
-                                            </li>
-                                            <li class="program-item">
-                                                <span class="program-num">2.</span>
-                                                <span class="program-name">Pojok Ceria</span>
-                                                <span class="program-colon">:</span>
-                                                <span class="program-desc">Ruang belajar dan literasi kreatif bagi anak-anak
-                                                    komunitas TPA.</span>
-                                            </li>
-                                            <li class="program-item">
-                                                <span class="program-num">3.</span>
-                                                <span class="program-name">Pojok UMKM Go Digital</span>
-                                                <span class="program-colon">:</span>
-                                                <span class="program-desc">Pendampingan pemanfaatan WhatsApp Business dan
-                                                    teknologi digital untuk pengembangan usaha.</span>
-                                            </li>
-                                            <li class="program-item">
-                                                <span class="program-num">4.</span>
-                                                <span class="program-name">Pojok Budaya</span>
-                                                <span class="program-colon">:</span>
-                                                <span class="program-desc">Penguatan peran remaja dan Karang Taruna dalam
-                                                    mengenal serta mengembangkan budaya lokal.</span>
-                                            </li>
-                                            <li class="program-item">
-                                                <span class="program-num">5.</span>
-                                                <span class="program-name">Pojok Tani</span>
-                                                <span class="program-colon">:</span>
-                                                <span class="program-desc">Penguatan pengetahuan dan optimalisasi potensi
-                                                    pertanian bersama kelompok tani.</span>
-                                            </li>
-                                        </ol>
-                                    </div>
-
-                                    <div class="impact pt-1">
-                                        <p style="text-align: justify;">
-                                            Catur Cerdas tidak sekadar memberikan program, tetapi membangun
-                                            pengetahuan, keterampilan, dan jejaring yang dapat terus dikembangkan
-                                            masyarakat. Dukungan Pemerintah Desa Catur, Universitas Muhammadiyah
-                                            Surakarta, dosen pendamping, mitra, dan komunitas menjadi bagian penting
-                                            dalam mewujudkan keberlanjutan program.
-                                        </p>
-                                    </div>
-
-                                    <div class="closing pt-1">
-                                        <p style="text-align: justify;">
-                                            Catur Cerdas percaya bahwa desa yang mandiri adalah desa yang mampu
-                                            mengenali potensi, menghadapi tantangan, dan bergerak bersama.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Panel Kanan: Detail Program, Mitra Program & Instagram Feed -->
-                        <div class="lg:col-span-5 flex flex-col space-y-6">
-                            <!-- Kartu 1: Detail Program & Mitra Program -->
-                            <div id="ppko-detail-card"
-                                class="bg-white rounded-xl border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-3 shrink-0">
-                                <div class="flex items-center justify-between pb-3 border-b border-[#DCE6DA]">
-                                    <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-900 leading-tight">
-                                        Detail Program
-                                    </h3>
-                                    @auth
-                                        @if(auth()->user()->isSuperAdmin())
-                                            <a href="{{ route('admin.ppko.index') }}#kelola-detail-program"
-                                                class="inline-flex items-center gap-1 text-xs font-semibold text-[#0A3D29] bg-[#EAF1E8] hover:bg-[#d5e5d1] px-2.5 py-1 rounded-md transition shadow-xs"
-                                                title="Kelola detail program di Admin PPKO">
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
-                                                <span>Kelola</span>
-                                            </a>
-                                        @endif
-                                    @endauth
-                                </div>
-
-                                <div class="overflow-x-auto">
-                                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
-                                        <tbody class="text-slate-700">
-                                            @forelse($programDetails ?? [] as $index => $detail)
-                                                <tr
-                                                    class="border-b border-[#DCE6DA] last:border-b-0 hover:bg-slate-50/60 transition-colors">
-                                                    <td
-                                                        class="py-3 pr-3 pl-0 font-bold text-slate-900 align-top w-[36%] sm:w-[32%] leading-relaxed">
-                                                        {{ $detail->aspek }}
-                                                    </td>
-                                                    <td class="py-3 pl-2 pr-0 leading-relaxed align-top text-slate-700">
-                                                        @php
-                                                            $rawKeterangan = trim($detail->keterangan ?? '');
-                                                            $lines = preg_split('/\r\n|\r|\n/', $rawKeterangan);
-                                                            $hasNumberPrefix = false;
-                                                            foreach ($lines as $line) {
-                                                                if (preg_match('/^\s*(\d+)[\.\)]\s*(.+)$/', trim($line))) {
-                                                                    $hasNumberPrefix = true;
-                                                                    break;
-                                                                }
-                                                            }
-                                                        @endphp
-
-                                                        @if($hasNumberPrefix)
-                                                            <div class="space-y-2">
-                                                                @foreach($lines as $line)
-                                                                    @php
-                                                                        $trimmed = trim($line);
-                                                                    @endphp
-                                                                    @if(preg_match('/^\s*(\d+)[\.\)]\s*(.+)$/', $trimmed, $m))
-                                                                        <div class="grid grid-cols-[auto_1fr] gap-x-2.5 items-baseline">
-                                                                            <span
-                                                                                class="font-bold text-[#0A3D29] select-none text-xs sm:text-sm shrink-0 leading-relaxed">{{ $m[1] }}.</span>
-                                                                            <span
-                                                                                class="text-justify text-slate-700 leading-relaxed">{{ $m[2] }}</span>
-                                                                        </div>
-                                                                    @elseif(!empty($trimmed))
-                                                                        <p class="text-justify text-slate-700 leading-relaxed">
-                                                                            {{ $trimmed }}
-                                                                        </p>
-                                                                    @endif
-                                                                @endforeach
-                                                            </div>
-                                                        @else
-                                                            <div class="text-justify text-slate-700 leading-relaxed">
-                                                                {!! nl2br(e($rawKeterangan)) !!}
-                                                            </div>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                                <tr>
-                                                    <td colspan="2" class="py-6 px-0 text-center text-slate-400 italic">
-                                                        Belum ada data detail program yang ditambahkan.
-                                                    </td>
-                                                </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <!-- Lembaga Mitra Program -->
-                                <div class="border-t border-[#DCE6DA] pt-3.5 sm:pt-4 space-y-2 sm:space-y-2.5">
-                                    <h4 class="text-xs font-semibold text-slate-500 text-center tracking-wider uppercase">
-                                        Mitra Program</h4>
-                                    <!-- Jajaran 7 Logo Lembaga Mitra Program (Sebaris Lebih Rapat di Mobile & Desktop) -->
-                                    <div
-                                        class="flex items-center justify-center gap-2 xs:gap-2.5 sm:gap-4 lg:gap-5 w-full flex-nowrap pt-1">
-                                        <a href="https://kemdiktisaintek.go.id/" target="_blank" rel="noopener noreferrer"
-                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                                            title="Kemendiktisaintek">
-                                            <img src="{{ asset('images/TUTWURI.png') }}" alt="Tut Wuri Handayani"
-                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
-                                        </a>
-                                        <a href="https://kemdiktisaintek.go.id/en" target="_blank" rel="noopener noreferrer"
-                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                                            title="Diktisaintek Berdampak">
-                                            <img src="{{ asset('images/DIKTISAINTEK.png') }}" alt="Diktisaintek"
-                                                class="h-4 xs:h-4.5 sm:h-7 lg:h-7.5 w-auto max-w-[42px] xs:max-w-[48px] sm:max-w-[88px] object-contain">
-                                        </a>
-                                        <a href="https://ppkormawa.kemdiktisaintek.go.id/" target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                                            title="PPK Ormawa">
-                                            <img src="{{ asset('images/PPK_ORMAWA.png') }}" alt="PPK Ormawa"
-                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
-                                        </a>
-                                        <a href="https://www.ums.ac.id/" target="_blank" rel="noopener noreferrer"
-                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                                            title="Universitas Muhammadiyah Surakarta">
-                                            <img src="{{ asset('images/UMS.png') }}"
-                                                alt="Universitas Muhammadiyah Surakarta"
-                                                class="h-4 xs:h-4.5 sm:h-7 lg:h-7.5 w-auto max-w-[42px] xs:max-w-[48px] sm:max-w-[88px] object-contain">
-                                        </a>
-                                        <a href="https://www.instagram.com/imm_alghozali/" target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                                            title="Ikatan Mahasiswa Muhammadiyah Al-Ghozali Fakultas Psikologi UMS">
-                                            <img src="{{ asset('images/IMMALGHO.png') }}" alt="IMM Al-Ghozali"
-                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
-                                        </a>
-                                        <a href="https://www.instagram.com/ppko_caturcerdas/" target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                                            title="PPK Ormawa Catur Cerdas UMS 2026">
-                                            <img src="{{ asset('images/CATURCERDAS.png') }}" alt="Catur Cerdas"
-                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[34px] xs:max-w-[40px] sm:max-w-[70px] object-contain">
-                                        </a>
-                                        <a href="https://boyolali.go.id/" target="_blank" rel="noopener noreferrer"
-                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                                            title="Pemerintah Kabupaten Boyolali">
-                                            <img src="{{ asset('images/PEMKABBYL.png') }}" alt="Pemkab Boyolali"
-                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Kartu 2: Profil Instagram PPKO Catur Cerdas (Clean & Minimalis, Pas Sejajar Panel Kiri pada Desktop) -->
-                            <div id="ppko-ig-card"
-                                class="relative bg-white rounded-xl border border-[#DCE6DA] shadow-xs hover:shadow-md hover:border-[#0A3D29]/40 transition-all duration-300 overflow-hidden flex flex-col min-h-[126px] group">
-                                <!-- Aksen Garis Minimalis Gradient Instagram di Sisi Atas -->
-                                <div
-                                    class="ig-accent-line h-0.5 w-full bg-linear-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] shrink-0">
-                                </div>
-
-                                <!-- Iframe Embed Instagram (Seamless & Frameless) -->
-                                <div id="ppko-ig-frame-container"
-                                    class="relative w-full h-[126px] overflow-hidden bg-white">
-                                    <!-- Skeleton Placeholder Halus Saat Loading -->
-                                    <div
-                                        class="absolute inset-0 flex items-center justify-center bg-slate-50/70 -z-10 animate-pulse">
-                                        <div class="flex items-center gap-2 text-slate-400 text-xs font-medium">
-                                            <svg class="w-3.5 h-3.5 animate-spin text-[#0A3D29]" fill="none"
-                                                viewBox="0 0 24 24">
-                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                                    stroke-width="4"></circle>
-                                                <path class="opacity-75" fill="currentColor"
-                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                                </path>
-                                            </svg>
-                                            <span>Memuat Instagram...</span>
-                                        </div>
-                                    </div>
-
-                                    <iframe src="https://www.instagram.com/ppko_caturcerdas/embed"
-                                        class="w-full h-[450px] border-0 -mt-1" frameborder="0" scrolling="no"
-                                        allowtransparency="true" allow="encrypted-media" loading="lazy"
-                                        title="Profil Instagram PPKO Catur Cerdas">
-                                    </iframe>
-                                </div>
-
-                                <!-- Masking Gradient Halus di Bagian Bawah (Meniadakan Cutoff Kasar) -->
-                                <div
-                                    class="pointer-events-none absolute bottom-0 inset-x-0 h-5 bg-linear-to-t from-white via-white/80 to-transparent">
-                                </div>
-
-                                <!-- Pill Minimalis: Buka Profil Instagram -->
-                                <a href="https://www.instagram.com/ppko_caturcerdas/" target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="absolute bottom-2 right-2.5 z-10 inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[11px] font-medium text-slate-600 hover:text-slate-900 bg-white/90 hover:bg-white backdrop-blur-xs border border-slate-200/90 hover:border-[#0A3D29]/40 rounded-full shadow-2xs hover:shadow-xs transition-all duration-200 group/pill"
-                                    title="Buka Profil Instagram @ppko_caturcerdas">
-                                    <svg class="w-3 h-3 text-[#E1306C] shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                                        <path
-                                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                                    </svg>
-                                    <span>Buka Profil</span>
-                                    <svg class="w-2.5 h-2.5 text-slate-400 group-hover/pill:text-[#0A3D29] group-hover/pill:translate-x-0.5 transition-all"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </section>
                 </div>
                 <!-- ===================================================================== -->
                 <!-- 3. SECTION DEDIKASI PER-POJOK (BERGAYA KARTU) -->
@@ -792,7 +504,7 @@
                 <!-- PEMISAH PERSEGI PANJANG: 5 POJOK PEMBERDAYAAN                      -->
                 <!-- ===================================================================== -->
                 <div id="lima-pilar-separator"
-                    class="w-full bg-[#0A3D29] text-white py-3.5 sm:py-4.5 md:py-5 relative overflow-hidden flex items-center justify-center border-y border-[#072B1D] shadow-inner mt-12 sm:mt-16 lg:mt-24">
+                    class="w-full bg-[#0A3D29] text-white py-3.5 sm:py-4.5 md:py-5 relative overflow-hidden flex items-center justify-center border-y border-[#072B1D] shadow-inner mt-8 sm:mt-10 lg:mt-12">
                     <!-- Aksen Glow Radial Halus di Latar Belakang -->
                     <div
                         class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.12),transparent_70%)] pointer-events-none">
@@ -1508,6 +1220,303 @@
                             </div>
                         </section>
                     @endforeach
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- 2. LATAR BELAKANG & POTENSI DESA (PRD Section 4.1 #2)                     -->
+                <!-- TENTANG PROGRAM, DETAIL PROGRAM & INSTAGRAM (DI BAWAH POJOK TANI)         -->
+                <!-- ========================================================================= -->
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 lg:pt-16 pb-6 sm:pb-10">
+                    <section id="tentang-program" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start ppko-section-entrance">
+                        <div id="ppko-left-panel" class="lg:col-span-7 space-y-4">
+
+                            <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 leading-tight">
+                                Tentang Program
+                            </h2>
+
+                            <div class="space-y-4 text-sm sm:text-base text-slate-600 leading-relaxed font-normal"
+                                style="text-align: justify;">
+                                <div class="catur-cerdas space-y-4">
+                                    <div class="intro">
+                                        <p style="text-align: justify;">
+                                            <strong>Catur Cerdas</strong> merupakan program PPKO Ormawa oleh
+                                            <strong>IMM Al-Ghozali Fakultas Psikologi, Universitas Muhammadiyah
+                                                Surakarta</strong>
+                                            di Desa Catur, Kecamatan Sambi, Kabupaten Boyolali. Program ini hadir
+                                            untuk mendorong masyarakat menjadi lebih berdaya, mandiri, dan mampu
+                                            mengembangkan potensi desa secara berkelanjutan.
+                                        </p>
+                                    </div>
+
+                                    <div class="background">
+                                        <p style="text-align: justify;">
+                                            Desa Catur memiliki potensi besar sekaligus berbagai tantangan dalam
+                                            kesehatan mental keluarga, kapasitas anak dan remaja, digitalisasi UMKM,
+                                            pelestarian budaya, serta pengembangan pertanian. Catur Cerdas hadir
+                                            melalui lima pojok pemberdayaan yang dirancang sesuai kebutuhan masyarakat :
+                                        </p>
+                                    </div>
+
+                                    <div class="programs py-1">
+                                        <ol class="programs-list">
+                                            <li class="program-item">
+                                                <span class="program-num">1.</span>
+                                                <span class="program-name">Pojok Harmoni</span>
+                                                <span class="program-colon">:</span>
+                                                <span class="program-desc">Penguatan kesehatan mental keluarga melalui
+                                                    Psychological First Aid dan komunikasi keluarga.</span>
+                                            </li>
+                                            <li class="program-item">
+                                                <span class="program-num">2.</span>
+                                                <span class="program-name">Pojok Ceria</span>
+                                                <span class="program-colon">:</span>
+                                                <span class="program-desc">Ruang belajar dan literasi kreatif bagi anak-anak
+                                                    komunitas TPA.</span>
+                                            </li>
+                                            <li class="program-item">
+                                                <span class="program-num">3.</span>
+                                                <span class="program-name">Pojok UMKM Go Digital</span>
+                                                <span class="program-colon">:</span>
+                                                <span class="program-desc">Pendampingan pemanfaatan WhatsApp Business dan
+                                                    teknologi digital untuk pengembangan usaha.</span>
+                                            </li>
+                                            <li class="program-item">
+                                                <span class="program-num">4.</span>
+                                                <span class="program-name">Pojok Budaya</span>
+                                                <span class="program-colon">:</span>
+                                                <span class="program-desc">Penguatan peran remaja dan Karang Taruna dalam
+                                                    mengenal serta mengembangkan budaya lokal.</span>
+                                            </li>
+                                            <li class="program-item">
+                                                <span class="program-num">5.</span>
+                                                <span class="program-name">Pojok Tani</span>
+                                                <span class="program-colon">:</span>
+                                                <span class="program-desc">Penguatan pengetahuan dan optimalisasi potensi
+                                                    pertanian bersama kelompok tani.</span>
+                                            </li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="impact pt-1">
+                                        <p style="text-align: justify;">
+                                            Catur Cerdas tidak sekadar memberikan program, tetapi membangun
+                                            pengetahuan, keterampilan, dan jejaring yang dapat terus dikembangkan
+                                            masyarakat. Dukungan Pemerintah Desa Catur, Universitas Muhammadiyah
+                                            Surakarta, dosen pendamping, mitra, dan komunitas menjadi bagian penting
+                                            dalam mewujudkan keberlanjutan program.
+                                        </p>
+                                    </div>
+
+                                    <div class="closing pt-1">
+                                        <p style="text-align: justify;">
+                                            Catur Cerdas percaya bahwa desa yang mandiri adalah desa yang mampu
+                                            mengenali potensi, menghadapi tantangan, dan bergerak bersama.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel Kanan: Detail Program, Mitra Program & Instagram Feed -->
+                        <div class="lg:col-span-5 flex flex-col space-y-6">
+                            <!-- Kartu 1: Detail Program & Mitra Program -->
+                            <div id="ppko-detail-card"
+                                class="bg-white rounded-xl border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-3 shrink-0">
+                                <div class="flex items-center justify-between pb-3 border-b border-[#DCE6DA]">
+                                    <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-900 leading-tight">
+                                        Detail Program
+                                    </h3>
+                                    @auth
+                                        @if(auth()->user()->isSuperAdmin())
+                                            <a href="{{ route('admin.ppko.index') }}#kelola-detail-program"
+                                                class="inline-flex items-center gap-1 text-xs font-semibold text-[#0A3D29] bg-[#EAF1E8] hover:bg-[#d5e5d1] px-2.5 py-1 rounded-md transition shadow-xs"
+                                                title="Kelola detail program di Admin PPKO">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                                <span>Kelola</span>
+                                            </a>
+                                        @endif
+                                    @endauth
+                                </div>
+
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                                        <tbody class="text-slate-700">
+                                            @forelse($programDetails ?? [] as $index => $detail)
+                                                <tr
+                                                    class="border-b border-[#DCE6DA] last:border-b-0 hover:bg-slate-50/60 transition-colors">
+                                                    <td
+                                                        class="py-3 pr-3 pl-0 font-bold text-slate-900 align-top w-[36%] sm:w-[32%] leading-relaxed">
+                                                        {{ $detail->aspek }}
+                                                    </td>
+                                                    <td class="py-3 pl-2 pr-0 leading-relaxed align-top text-slate-700">
+                                                        @php
+                                                            $rawKeterangan = trim($detail->keterangan ?? '');
+                                                            $lines = preg_split('/\r\n|\r|\n/', $rawKeterangan);
+                                                            $hasNumberPrefix = false;
+                                                            foreach ($lines as $line) {
+                                                                if (preg_match('/^\s*(\d+)[\.\)]\s*(.+)$/', trim($line))) {
+                                                                    $hasNumberPrefix = true;
+                                                                    break;
+                                                                }
+                                                            }
+                                                        @endphp
+
+                                                        @if($hasNumberPrefix)
+                                                            <div class="space-y-2">
+                                                                @foreach($lines as $line)
+                                                                    @php
+                                                                        $trimmed = trim($line);
+                                                                    @endphp
+                                                                    @if(preg_match('/^\s*(\d+)[\.\)]\s*(.+)$/', $trimmed, $m))
+                                                                        <div class="grid grid-cols-[auto_1fr] gap-x-2.5 items-baseline">
+                                                                            <span
+                                                                                class="font-bold text-[#0A3D29] select-none text-xs sm:text-sm shrink-0 leading-relaxed">{{ $m[1] }}.</span>
+                                                                            <span
+                                                                                class="text-justify text-slate-700 leading-relaxed">{{ $m[2] }}</span>
+                                                                        </div>
+                                                                    @elseif(!empty($trimmed))
+                                                                        <p class="text-justify text-slate-700 leading-relaxed">
+                                                                            {{ $trimmed }}
+                                                                        </p>
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                        @else
+                                                            <div class="text-justify text-slate-700 leading-relaxed">
+                                                                {!! nl2br(e($rawKeterangan)) !!}
+                                                            </div>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="2" class="py-6 px-0 text-center text-slate-400 italic">
+                                                        Belum ada data detail program yang ditambahkan.
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Lembaga Mitra Program -->
+                                <div class="border-t border-[#DCE6DA] pt-3.5 sm:pt-4 space-y-2 sm:space-y-2.5">
+                                    <h4 class="text-xs font-semibold text-slate-500 text-center tracking-wider uppercase">
+                                        Mitra Program</h4>
+                                    <!-- Jajaran 7 Logo Lembaga Mitra Program (Sebaris Lebih Rapat di Mobile & Desktop) -->
+                                    <div
+                                        class="flex items-center justify-center gap-2 xs:gap-2.5 sm:gap-4 lg:gap-5 w-full flex-nowrap pt-1">
+                                        <a href="https://kemdiktisaintek.go.id/" target="_blank" rel="noopener noreferrer"
+                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+                                            title="Kemendiktisaintek">
+                                            <img src="{{ asset('images/TUTWURI.png') }}" alt="Tut Wuri Handayani"
+                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
+                                        </a>
+                                        <a href="https://kemdiktisaintek.go.id/en" target="_blank" rel="noopener noreferrer"
+                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+                                            title="Diktisaintek Berdampak">
+                                            <img src="{{ asset('images/DIKTISAINTEK.png') }}" alt="Diktisaintek"
+                                                class="h-4 xs:h-4.5 sm:h-7 lg:h-7.5 w-auto max-w-[42px] xs:max-w-[48px] sm:max-w-[88px] object-contain">
+                                        </a>
+                                        <a href="https://ppkormawa.kemdiktisaintek.go.id/" target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+                                            title="PPK Ormawa">
+                                            <img src="{{ asset('images/PPK_ORMAWA.png') }}" alt="PPK Ormawa"
+                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
+                                        </a>
+                                        <a href="https://www.ums.ac.id/" target="_blank" rel="noopener noreferrer"
+                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+                                            title="Universitas Muhammadiyah Surakarta">
+                                            <img src="{{ asset('images/UMS.png') }}"
+                                                alt="Universitas Muhammadiyah Surakarta"
+                                                class="h-4 xs:h-4.5 sm:h-7 lg:h-7.5 w-auto max-w-[42px] xs:max-w-[48px] sm:max-w-[88px] object-contain">
+                                        </a>
+                                        <a href="https://www.instagram.com/imm_alghozali/" target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+                                            title="Ikatan Mahasiswa Muhammadiyah Al-Ghozali Fakultas Psikologi UMS">
+                                            <img src="{{ asset('images/IMMALGHO.png') }}" alt="IMM Al-Ghozali"
+                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
+                                        </a>
+                                        <a href="https://www.instagram.com/ppko_caturcerdas/" target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+                                            title="PPK Ormawa Catur Cerdas UMS 2026">
+                                            <img src="{{ asset('images/CATURCERDAS.png') }}" alt="Catur Cerdas"
+                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[34px] xs:max-w-[40px] sm:max-w-[70px] object-contain">
+                                        </a>
+                                        <a href="https://boyolali.go.id/" target="_blank" rel="noopener noreferrer"
+                                            class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+                                            title="Pemerintah Kabupaten Boyolali">
+                                            <img src="{{ asset('images/PEMKABBYL.png') }}" alt="Pemkab Boyolali"
+                                                class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Kartu 2: Profil Instagram PPKO Catur Cerdas (Clean & Minimalis, Pas Sejajar Panel Kiri pada Desktop) -->
+                            <div id="ppko-ig-card"
+                                class="relative bg-white rounded-xl border border-[#DCE6DA] shadow-xs hover:shadow-md hover:border-[#0A3D29]/40 transition-all duration-300 overflow-hidden flex flex-col min-h-[126px] group">
+                                <!-- Aksen Garis Minimalis Gradient Instagram di Sisi Atas -->
+                                <div
+                                    class="ig-accent-line h-0.5 w-full bg-linear-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] shrink-0">
+                                </div>
+
+                                <!-- Iframe Embed Instagram (Seamless & Frameless) -->
+                                <div id="ppko-ig-frame-container"
+                                    class="relative w-full h-[126px] overflow-hidden bg-white">
+                                    <!-- Skeleton Placeholder Halus Saat Loading -->
+                                    <div
+                                        class="absolute inset-0 flex items-center justify-center bg-slate-50/70 -z-10 animate-pulse">
+                                        <div class="flex items-center gap-2 text-slate-400 text-xs font-medium">
+                                            <svg class="w-3.5 h-3.5 animate-spin text-[#0A3D29]" fill="none"
+                                                viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                    stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                </path>
+                                            </svg>
+                                            <span>Memuat Instagram...</span>
+                                        </div>
+                                    </div>
+
+                                    <iframe src="https://www.instagram.com/ppko_caturcerdas/embed"
+                                        class="w-full h-[450px] border-0 -mt-1" frameborder="0" scrolling="no"
+                                        allowtransparency="true" allow="encrypted-media" loading="lazy"
+                                        title="Profil Instagram PPKO Catur Cerdas">
+                                    </iframe>
+                                </div>
+
+                                <!-- Masking Gradient Halus di Bagian Bawah (Meniadakan Cutoff Kasar) -->
+                                <div
+                                    class="pointer-events-none absolute bottom-0 inset-x-0 h-5 bg-linear-to-t from-white via-white/80 to-transparent">
+                                </div>
+
+                                <!-- Pill Minimalis: Buka Profil Instagram -->
+                                <a href="https://www.instagram.com/ppko_caturcerdas/" target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="absolute bottom-2 right-2.5 z-10 inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[11px] font-medium text-slate-600 hover:text-slate-900 bg-white/90 hover:bg-white backdrop-blur-xs border border-slate-200/90 hover:border-[#0A3D29]/40 rounded-full shadow-2xs hover:shadow-xs transition-all duration-200 group/pill"
+                                    title="Buka Profil Instagram @ppko_caturcerdas">
+                                    <svg class="w-3 h-3 text-[#E1306C] shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                                    </svg>
+                                    <span>Buka Profil</span>
+                                    <svg class="w-2.5 h-2.5 text-slate-400 group-hover/pill:text-[#0A3D29] group-hover/pill:translate-x-0.5 transition-all"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>

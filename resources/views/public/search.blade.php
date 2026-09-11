@@ -7,11 +7,12 @@
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-12">
 
     <!-- Minimalist Search Header -->
-    <div class="space-y-6 max-w-3xl">
+    <div class="space-y-6 max-w-3xl text-left">
         <div class="space-y-2">
-            <p class="text-[11px] font-semibold tracking-widest text-[#0A3D29] uppercase">
-                Pusat Pencarian Informasi
-            </p>
+            <x-breadcrumbs :items="[
+                ['label' => 'BERANDA', 'url' => route('home')],
+                ['label' => 'Pencarian']
+            ]" />
             <h1 class="font-serif text-3xl sm:text-4xl text-slate-900 font-bold tracking-tight">
                 Cari Data & Layanan Desa
             </h1>

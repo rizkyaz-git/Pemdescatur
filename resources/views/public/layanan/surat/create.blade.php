@@ -6,13 +6,17 @@
 <div class="bg-gray-50 min-h-screen py-12">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
-        <div class="flex items-center justify-between">
+        <div class="flex items-start justify-between text-left">
             <div>
-                <h1 class="font-serif text-2xl font-bold text-gray-900">✍️ Buat Permohonan Surat Baru</h1>
+                <x-breadcrumbs :items="[
+                    ['label' => 'SURAT', 'url' => route('warga.letter.index')],
+                    ['label' => 'Buat Permohonan']
+                ]" />
+                <h1 class="font-serif text-2xl font-bold text-gray-900">Buat Permohonan Surat Baru</h1>
                 <p class="text-xs text-gray-500 mt-1">Pilih jenis surat dan lengkapi data permohonan Anda.</p>
             </div>
-            <a href="{{ route('warga.letter.index') }}" class="inline-flex items-center gap-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold px-4 py-2 rounded-xl transition">
-                ⬅️ Kembali
+            <a href="{{ route('warga.letter.index') }}" class="inline-flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold px-4 py-2 rounded-xl transition shrink-0">
+                Kembali
             </a>
         </div>
 

@@ -77,8 +77,12 @@
 
             <!-- Minimalist Header Title & Search Bar -->
             <div
-                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 pb-6 border-b border-slate-200/80">
+                class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 pb-6 border-b border-slate-200/80 text-left">
                 <div>
+                    <x-breadcrumbs :items="[
+                        ['label' => 'BERANDA', 'url' => route('home')],
+                        ['label' => 'Surat Mandiri']
+                    ]" />
                     <h1
                         class="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#20332A] leading-tight tracking-tight">
                         Layanan Cetak Surat Mandiri

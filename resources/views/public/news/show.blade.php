@@ -245,7 +245,13 @@
             <article class="lg:col-span-8 space-y-6">
 
                 <!-- 1. Header Title & Meta Info Section -->
-                <div class="space-y-4">
+                <div class="space-y-4 text-left">
+                    <!-- Route Breadcrumb (BERITA / Kategori) -->
+                    <x-breadcrumbs :items="[
+                        ['label' => 'BERITA', 'url' => route('public.news.index')],
+                        ['label' => $news->category ?? 'Kabar Desa']
+                    ]" />
+
                     <!-- Title -->
                     <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 leading-tight tracking-tight">
                         {{ $news->title }}

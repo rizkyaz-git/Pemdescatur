@@ -8,18 +8,24 @@
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
         {{-- Navigation Header --}}
-        <div class="flex items-center gap-3.5">
-            <a href="{{ route('warga.complaint.index') }}" 
-               class="w-10 h-10 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs shrink-0"
-               title="Kembali ke Daftar Laporan"
-               aria-label="Kembali">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                </svg>
-            </a>
-            <div>
-                <h1 class="font-serif text-2xl font-bold text-slate-900 tracking-tight">Tulis Laporan &amp; Aspirasi Warga</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Sampaikan laporan permasalahan atau masukan fasilitas untuk Desa Catur.</p>
+        <div class="text-left space-y-2">
+            <x-breadcrumbs :items="[
+                ['label' => 'PENGADUAN', 'url' => route('warga.complaint.index')],
+                ['label' => 'Tulis Laporan']
+            ]" />
+            <div class="flex items-center gap-3.5">
+                <a href="{{ route('warga.complaint.index') }}" 
+                   class="w-10 h-10 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs shrink-0"
+                   title="Kembali ke Daftar Laporan"
+                   aria-label="Kembali">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="font-serif text-2xl font-bold text-slate-900 tracking-tight">Tulis Laporan &amp; Aspirasi Warga</h1>
+                    <p class="text-xs text-slate-500 mt-0.5">Sampaikan laporan permasalahan atau masukan fasilitas untuk Desa Catur.</p>
+                </div>
             </div>
         </div>
 

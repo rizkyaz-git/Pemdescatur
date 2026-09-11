@@ -17,9 +17,13 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- ========================================================================= --}}
-            {{-- 1. CENTERED TOP HEADER (Tanpa garis bawah) --}}
+            {{-- 1. TOP HEADER (Rata Kiri dengan Navigasi Breadcrumb)                      --}}
             {{-- ========================================================================= --}}
-            <header class="text-center pb-8 sm:pb-10 max-w-4xl mx-auto">
+            <header class="text-left pb-8 sm:pb-10">
+                <x-breadcrumbs :items="[
+                    ['label' => 'BERANDA', 'url' => route('home')],
+                    ['label' => 'Profil Desa']
+                ]" />
                 <h1
                     class="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#20332A] tracking-tight leading-tight">
                     Profil Desa Catur

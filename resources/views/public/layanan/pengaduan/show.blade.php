@@ -8,30 +8,36 @@
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
         {{-- Navigation Header --}}
-        <div class="flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3.5">
-                <a href="{{ route('warga.complaint.index') }}" 
-                   class="w-10 h-10 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs shrink-0"
-                   title="Kembali ke Daftar Pengaduan"
-                   aria-label="Kembali">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                    </svg>
-                </a>
-                <div>
-                    <h1 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Detail Laporan &amp; Tanggapan</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">Informasi rincian dan tindak lanjut laporan pengaduan warga.</p>
+        <div class="text-left space-y-2">
+            <x-breadcrumbs :items="[
+                ['label' => 'PENGADUAN', 'url' => route('warga.complaint.index')],
+                ['label' => 'Detail Laporan']
+            ]" />
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5">
+                    <a href="{{ route('warga.complaint.index') }}" 
+                       class="w-10 h-10 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs shrink-0"
+                       title="Kembali ke Daftar Pengaduan"
+                       aria-label="Kembali">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                    </a>
+                    <div>
+                        <h1 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Detail Laporan &amp; Tanggapan</h1>
+                        <p class="text-xs text-slate-500 mt-0.5">Informasi rincian dan tindak lanjut laporan pengaduan warga.</p>
+                    </div>
                 </div>
-            </div>
 
-            <a href="{{ route('warga.complaint.create') }}" 
-               class="inline-flex items-center gap-1.5 bg-[#0A3D29] hover:bg-[#072B1D] text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition shadow-xs shrink-0">
-                <svg class="w-3.5 h-3.5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                <span class="hidden sm:inline">Tulis Laporan Baru</span>
-                <span class="sm:hidden">Baru</span>
-            </a>
+                <a href="{{ route('warga.complaint.create') }}" 
+                   class="inline-flex items-center gap-1.5 bg-[#0A3D29] hover:bg-[#072B1D] text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition shadow-xs shrink-0">
+                    <svg class="w-3.5 h-3.5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    <span class="hidden sm:inline">Tulis Laporan Baru</span>
+                    <span class="sm:hidden">Baru</span>
+                </a>
+            </div>
         </div>
 
         {{-- Main Detail Card --}}

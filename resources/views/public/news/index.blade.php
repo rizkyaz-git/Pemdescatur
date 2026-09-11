@@ -9,12 +9,18 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         <!-- Header Title & Action Buttons (Terbaru & Filter) -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 pb-6 border-b border-slate-200/80">
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 pb-6 border-b border-slate-200/80 text-left">
             
-            <!-- Clean Title Only -->
-            <h1 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#20332A] leading-tight tracking-tight">
-                Berita & Pengumuman
-            </h1>
+            <!-- Clean Title with Route Breadcrumbs -->
+            <div>
+                <x-breadcrumbs :items="[
+                    ['label' => 'BERANDA', 'url' => route('home')],
+                    ['label' => 'Berita']
+                ]" />
+                <h1 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#20332A] leading-tight tracking-tight">
+                    Berita & Pengumuman
+                </h1>
+            </div>
 
             <!-- Desktop Only Action Buttons: Terbaru & Filter (hidden sm:flex) -->
             <div class="hidden sm:flex items-center gap-2.5 relative">
