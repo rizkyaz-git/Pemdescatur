@@ -33,7 +33,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0]">
             <div class="flex items-center gap-4">
                 <!-- Avatar Circle / Initials -->
-                <div class="relative w-16 h-16 rounded-2xl overflow-hidden bg-[#0F4C3A] text-white flex items-center justify-center font-jakarta font-bold text-xl shadow-xs border border-white shrink-0">
+                <div class="relative w-16 h-16 rounded-full overflow-hidden bg-[#0F4C3A] text-white flex items-center justify-center font-jakarta font-bold text-xl shadow-xs border border-white shrink-0">
                     <template x-if="avatarPreview">
                         <img :src="avatarPreview" alt="Foto Profil" class="w-full h-full object-cover">
                     </template>

@@ -34,7 +34,7 @@
             <div class="space-y-3 pb-6 border-b border-[#F1F5F9]">
                 <label class="block text-[13px] font-semibold text-[#1E293B]">Foto Profil (Opsional)</label>
                 <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 rounded-2xl overflow-hidden bg-slate-100 border border-[#E2E8F0] flex items-center justify-center text-slate-400 shrink-0">
+                    <div class="w-14 h-14 rounded-full overflow-hidden bg-slate-100 border border-[#E2E8F0] flex items-center justify-center text-slate-400 shrink-0">
                         <template x-if="avatarPreview">
                             <img :src="avatarPreview" alt="Preview" class="w-full h-full object-cover">
                         </template>

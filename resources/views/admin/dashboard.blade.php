@@ -3,7 +3,7 @@
 @section('title', 'Dashboard Ringkasan Admin')
 
 @section('content')
-<div class="space-y-8">
+<div class="space-y-8" x-data="{ isReady: false }" x-init="$nextTick(() => { setTimeout(() => { isReady = true; }, 120); })">
     
     <!-- Top Executive Greeting Banner -->
     <div class="relative overflow-hidden rounded-[22px] bg-gradient-to-br from-[#072C21] via-[#0F4C3A] to-[#08382A] text-white p-7 sm:p-9 shadow-sm border border-[#0F4C3A]/70">
@@ -58,7 +58,27 @@
     </div>
 
     <!-- Bento Grid KPI Architecture -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="relative min-h-[160px]" :aria-busy="!isReady">
+        <!-- Skeleton Bento Grid (Initial Loading State) -->
+        <div x-show="!isReady" 
+             x-transition:leave="transition-opacity duration-300"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+             aria-hidden="true">
+            <x-skeleton.stat-card class="lg:col-span-2" />
+            <x-skeleton.stat-card />
+            <x-skeleton.stat-card />
+            <x-skeleton.stat-card />
+        </div>
+
+        <!-- Real Bento Grid (Fades in smoothly) -->
+        <div x-show="isReady" 
+             x-cloak
+             x-transition:enter="transition-opacity duration-300 ease-out"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
         <!-- Bento 1: Primary Highlight Card (Publikasi Berita) -->
         @if(Auth::user()->canAccessNews())
@@ -249,6 +269,7 @@
         </a>
         @endif
 
+        </div>
     </div>
 
     <!-- Bento Data Table: Berita Terbaru yang Diterbitkan -->
@@ -277,9 +298,15 @@
                         <th class="px-6 py-3.5 text-right">Tindakan</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-[#F1F5F9]">
+                <tbody class="divide-y divide-[#F1F5F9]" :aria-busy="!isReady">
+                    <!-- Skeleton Rows While Initializing -->
+                    @for($i = 0; $i < 4; $i++)
+                        <x-skeleton.table-row />
+                    @endfor
+
+                    <!-- Real Data Rows -->
                     @forelse($latestNews as $news)
-                        <tr class="hover:bg-[#F8FAFC]/80 transition-colors">
+                        <tr x-show="isReady" x-cloak class="hover:bg-[#F8FAFC]/80 transition-colors">
                             <td class="px-6 py-4">
                                 <p class="font-medium text-[#0F172A] max-w-md truncate">{{ $news->title }}</p>
                             </td>
@@ -314,7 +341,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
+                        <tr x-show="isReady" x-cloak>
                             <td colspan="5" class="px-6 py-12 text-center text-slate-400">
                                 <svg class="w-10 h-10 mx-auto mb-2 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>

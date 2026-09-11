@@ -29,3 +29,5 @@ Thumbs.db
 /database/database.sqlite
 /database/*.sqlite
 /database/*.sqlite3
+Admin_DESIGN.md
+DESIGN.md

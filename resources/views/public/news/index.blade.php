@@ -93,11 +93,11 @@
              }"
              @click.away="mobileFilterOpen = false">
             
-            <!-- Capsule Outer Container -->
-            <div class="relative flex items-center h-10 bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-lg p-1 rounded-full w-[190px]">
+            <!-- Capsule Outer Container (Matching Glassmorphism) -->
+            <div class="relative flex items-center h-11 bg-white/75 hover:bg-white/95 backdrop-blur-3xl backdrop-saturate-200 border-2 border-white ring-1 ring-[#0A3D29]/25 shadow-2xl p-1 rounded-full w-[205px] transition-all duration-300">
                 
-                <!-- Flowing Indicator Pill: Sedikit menggelapkan latar saat aktif -->
-                <div class="absolute top-1 bottom-1 rounded-full bg-slate-200/80 transition-all duration-200 ease-out pointer-events-none"
+                <!-- Flowing Indicator Pill -->
+                <div class="absolute top-1 bottom-1 rounded-full bg-[#0A3D29]/10 transition-all duration-200 ease-out pointer-events-none"
                      :style="mobileTab === 'latest' ? 'left: 4px; width: calc(50% - 4px);' : 'left: 50%; width: calc(50% - 4px);'">
                 </div>
 
@@ -105,7 +105,7 @@
                 <a href="{{ route('public.news.index', ['sort' => 'latest']) }}" 
                    @click="mobileTab = 'latest'; mobileFilterOpen = false"
                    class="relative z-10 flex-1 h-full flex items-center justify-center rounded-full text-xs transition-colors duration-200 select-none"
-                   :class="mobileTab === 'latest' ? 'text-[#0A3D29] font-bold' : 'text-slate-500 font-medium hover:text-slate-800'">
+                   :class="mobileTab === 'latest' ? 'text-[#0A3D29] font-bold' : 'text-slate-600 font-medium hover:text-slate-900'">
                     <span>Terbaru</span>
                 </a>
 
@@ -113,47 +113,48 @@
                 <button type="button" 
                         @click="mobileTab = 'filter'; mobileFilterOpen = !mobileFilterOpen"
                         class="relative z-10 flex-1 h-full flex items-center justify-center gap-1 rounded-full text-xs transition-colors duration-200 select-none cursor-pointer"
-                        :class="mobileTab === 'filter' ? 'text-[#0A3D29] font-bold' : 'text-slate-500 font-medium hover:text-slate-800'">
+                        :class="mobileTab === 'filter' ? 'text-[#0A3D29] font-bold' : 'text-slate-600 font-medium hover:text-slate-900'">
                     <span>Filter</span>
-                    <svg class="w-3 h-3 transition-transform duration-200" :class="mobileFilterOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                    <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="mobileFilterOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/>
                     </svg>
                 </button>
             </div>
 
-            <!-- Mobile Category Dropdown Popup -->
+            <!-- Mobile Category Dropdown Popup (Muncul di Atas / Drop-Up) -->
             <div x-show="mobileFilterOpen" 
-                 x-transition:enter="transition ease-out duration-150"
-                 x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                 x-cloak
+                 x-transition:enter="transition ease-out duration-200 transform"
+                 x-transition:enter-start="opacity-0 scale-95 translate-y-3"
                  x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave="transition ease-in duration-150 transform"
                  x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-                 x-transition:leave-end="opacity-0 scale-95 translate-y-2"
-                 class="absolute bottom-13 left-1/2 -translate-x-1/2 w-48 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/90 shadow-xl p-1.5 space-y-0.5 z-[999999]">
+                 x-transition:leave-end="opacity-0 scale-95 translate-y-3"
+                 class="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-52 bg-white/80 hover:bg-white/95 backdrop-blur-3xl backdrop-saturate-200 rounded-2xl border-2 border-white ring-1 ring-[#0A3D29]/25 shadow-2xl p-1.5 space-y-0.5 z-[999999]">
                 
                 <a href="{{ route('public.news.index') }}" 
-                   class="block px-3 py-1.5 rounded-xl text-[11px] transition {{ !request('category') ? 'bg-slate-100 text-[#0A3D29] font-bold' : 'text-slate-600 hover:bg-slate-50 font-medium' }}">
+                   class="block px-3 py-2 rounded-xl text-xs transition {{ !request('category') ? 'bg-[#0A3D29]/10 text-[#0A3D29] font-bold' : 'text-slate-700 hover:bg-white/60 font-medium' }}">
                     Semua Kategori
                 </a>
 
                 @if(isset($categories) && count($categories) > 0)
                     @foreach($categories as $cat)
                         <a href="{{ route('public.news.index', ['category' => $cat]) }}" 
-                           class="block px-3 py-1.5 rounded-xl text-[11px] transition {{ request('category') === $cat ? 'bg-slate-100 text-[#0A3D29] font-bold' : 'text-slate-600 hover:bg-slate-50 font-medium' }}">
+                           class="block px-3 py-2 rounded-xl text-xs transition {{ request('category') === $cat ? 'bg-[#0A3D29]/10 text-[#0A3D29] font-bold' : 'text-slate-700 hover:bg-white/60 font-medium' }}">
                             {{ $cat }}
                         </a>
                     @endforeach
                 @else
                     <a href="{{ route('public.news.index', ['category' => 'Berita']) }}" 
-                       class="block px-3 py-1.5 rounded-xl text-[11px] font-medium text-slate-600 hover:bg-slate-50">
+                       class="block px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:bg-white/60">
                         Berita
                     </a>
                     <a href="{{ route('public.news.index', ['category' => 'Pengumuman']) }}" 
-                       class="block px-3 py-1.5 rounded-xl text-[11px] font-medium text-slate-600 hover:bg-slate-50">
+                       class="block px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:bg-white/60">
                         Pengumuman
                     </a>
                     <a href="{{ route('public.news.index', ['category' => 'Kegiatan']) }}" 
-                       class="block px-3 py-1.5 rounded-xl text-[11px] font-medium text-slate-600 hover:bg-slate-50">
+                       class="block px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:bg-white/60">
                         Kegiatan
                     </a>
                 @endif
@@ -173,61 +174,77 @@
                 ];
             @endphp
 
-            <!-- Frameless 4-Column Editorial Magazine Grid (Matching User's Screenshot Design) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 pb-4">
-                @foreach($newsList as $index => $news)
-                    @php
-                        $imageExists = $news->image_path && (file_exists(public_path('storage/' . $news->image_path)) || file_exists(storage_path('app/public/' . $news->image_path)));
-                        $fallbackImg = asset($defaultImages[$index % count($defaultImages)]);
-                        $imageSrc = $imageExists ? asset('storage/' . $news->image_path) : $fallbackImg;
-                        $formattedDate = $news->published_at ? $news->published_at->format('d M Y') : $news->created_at->format('d M Y');
-                        $authorName = $news->author->name ?? 'Admin Desa';
-                    @endphp
+            <div x-data="{ isReady: false }" x-init="$nextTick(() => { setTimeout(() => { isReady = true; }, 120); })" class="relative">
+                <!-- 1. Skeleton Screen Loading State (Exact 1:1 Matching Grid & Dimensions) -->
+                <div x-show="!isReady" 
+                     aria-busy="true"
+                     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 pb-4">
+                    @for($i = 0; $i < min(8, max(4, $newsList->count())); $i++)
+                        <x-skeleton.news-card />
+                    @endfor
+                </div>
 
-                    <article class="group block space-y-2.5">
-                        <!-- Top Image Banner with Sparkling Shimmer Preloader (Active only while loading) -->
-                        <a href="{{ route('public.news.show', $news->slug) }}" class="block relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-200/80 shadow-2xs focus:outline-none"
-                             x-data="{ loaded: false }"
-                             x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
-                            <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
-                            <img x-ref="img"
-                                 src="{{ $imageSrc }}" 
-                                 alt="{{ $news->title }}" 
-                                 loading="lazy"
-                                 @load="loaded = true;"
-                                 x-on:error="loaded = true; $el.src = '{{ $fallbackImg }}';"
-                                 class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                                 :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
-                        </a>
+                <!-- 2. Real Content Grid (Progressively Revealed with Zero Layout Shift) -->
+                <div x-show="isReady"
+                     x-cloak
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0"
+                     x-transition:enter-end="opacity-100"
+                     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 pb-4">
+                    @foreach($newsList as $index => $news)
+                        @php
+                            $imageExists = $news->image_path && (file_exists(public_path('storage/' . $news->image_path)) || file_exists(storage_path('app/public/' . $news->image_path)));
+                            $fallbackImg = asset($defaultImages[$index % count($defaultImages)]);
+                            $imageSrc = $imageExists ? asset('storage/' . $news->image_path) : $fallbackImg;
+                            $formattedDate = $news->published_at ? $news->published_at->format('d M Y') : $news->created_at->format('d M Y');
+                            $authorName = $news->author->name ?? 'Admin Desa';
+                        @endphp
 
-                        <!-- Card Details Directly Under Image (Frameless Minimalist Editorial) -->
-                        <div class="space-y-1.5">
-                            <!-- Category Tag (Uppercase Green) -->
-                            <span class="text-[11px] font-bold text-[#0A3D29] uppercase tracking-wider block font-['Inter',sans-serif]">
-                                {{ $news->category }}
-                            </span>
+                        <article class="group block space-y-2.5">
+                            <!-- Top Image Banner with Shimmer Preloader (Active only while loading) -->
+                            <a href="{{ route('public.news.show', $news->slug) }}" class="block relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-200/80 shadow-2xs focus:outline-none"
+                                 x-data="{ loaded: false }"
+                                 x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
+                                <div x-show="!loaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
+                                <img x-ref="img"
+                                     src="{{ $imageSrc }}" 
+                                     alt="{{ $news->title }}" 
+                                     loading="lazy"
+                                     @load="loaded = true;"
+                                     x-on:error="loaded = true; $el.src = '{{ $fallbackImg }}';"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+                                     :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
+                            </a>
 
-                            <!-- News Title -->
-                            <h3 class="font-['Public_Sans',sans-serif] text-base sm:text-lg font-extrabold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
-                                <a href="{{ route('public.news.show', $news->slug) }}" class="focus:outline-none">
-                                    {{ $news->title }}
-                                </a>
-                            </h3>
+                            <!-- Card Details Directly Under Image (Frameless Minimalist Editorial) -->
+                            <div class="space-y-1.5">
+                                <!-- Category Tag (Uppercase Green) -->
+                                <span class="text-[11px] font-bold text-[#0A3D29] uppercase tracking-wider block font-['Inter',sans-serif]">
+                                    {{ $news->category }}
+                                </span>
 
-                            <!-- Meta Date & Author -->
-                            <div class="flex items-center gap-2 text-xs text-[#75777e] font-medium">
-                                <span>{{ $formattedDate }}</span>
-                                <span>•</span>
-                                <span>{{ $authorName }}</span>
+                                <!-- News Title -->
+                                <h3 class="font-['Public_Sans',sans-serif] text-base sm:text-lg font-extrabold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                    <a href="{{ route('public.news.show', $news->slug) }}" class="focus:outline-none">
+                                        {{ $news->title }}
+                                    </a>
+                                </h3>
+
+                                <!-- Meta Date & Author -->
+                                <div class="flex items-center gap-2 text-xs text-[#75777e] font-medium">
+                                    <span>{{ $formattedDate }}</span>
+                                    <span>•</span>
+                                    <span>{{ $authorName }}</span>
+                                </div>
+
+                                <!-- News Excerpt -->
+                                <p class="text-xs text-[#44474e] leading-relaxed font-normal line-clamp-3 pt-0.5">
+                                    {{ $news->excerpt ?? Str::limit(strip_tags($news->content), 120) }}
+                                </p>
                             </div>
-
-                            <!-- News Excerpt -->
-                            <p class="text-xs text-[#44474e] leading-relaxed font-normal line-clamp-3 pt-0.5">
-                                {{ $news->excerpt ?? Str::limit(strip_tags($news->content), 120) }}
-                            </p>
-                        </div>
-                    </article>
-                @endforeach
+                        </article>
+                    @endforeach
+                </div>
             </div>
 
             <!-- Pagination -->

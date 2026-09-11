@@ -24,23 +24,29 @@
 
     <!-- Main Page Container (Clean Minimalist Canvas) -->
     <div class="bg-white min-h-screen py-8 sm:py-10" x-data="{ 
-                 templates: {{ Js::from($templatesData) }},
-                 selectedTemplate: null,
-                 mobileView: 'menu',
-                 selectTemplate(item) {
-                     this.selectedTemplate = item;
-                     this.mobileView = 'detail';
-                     if (window.innerWidth < 1024) {
-                         const el = document.getElementById('katalog-surat');
-                         if (el) {
-                             el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                     templates: {{ Js::from($templatesData) }},
+                     selectedTemplate: null,
+                     mobileView: 'menu',
+                     isReady: false,
+                     init() {
+                         this.$nextTick(() => {
+                             setTimeout(() => { this.isReady = true; }, 100);
+                         });
+                     },
+                     selectTemplate(item) {
+                         this.selectedTemplate = item;
+                         this.mobileView = 'detail';
+                         if (window.innerWidth < 1024) {
+                             const el = document.getElementById('katalog-surat');
+                             if (el) {
+                                 el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                             }
                          }
+                     },
+                     backToMenu() {
+                         this.mobileView = 'menu';
                      }
-                 },
-                 backToMenu() {
-                     this.mobileView = 'menu';
-                 }
-             }">
+                 }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6" id="katalog-surat">
 
             <!-- Session Flash Notifications (Minimalist) -->
@@ -117,7 +123,7 @@
                         <div
                             class="px-4 py-3 bg-slate-50/70 border-b border-slate-200/80 flex items-center justify-between">
                             <h2 class="text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                                Daftar Template ({{ count($templates) }})
+                                Template Surat Tersedia ({{ count($templates) }})
                             </h2>
                             @if(!empty($search))
                                 <a href="{{ route('warga.letter.index') }}#katalog-surat"
@@ -127,45 +133,55 @@
                             @endif
                         </div>
 
-                        <div class="divide-y divide-slate-100 max-h-[640px] overflow-y-auto">
-                            <template x-for="item in templates" :key="item.id">
-                                <button type="button" @click="selectTemplate(item)"
-                                    class="w-full text-left p-4 transition-all flex items-center justify-between gap-4 group cursor-pointer"
-                                    :class="selectedTemplate && selectedTemplate.id === item.id 
-                                            ? 'bg-slate-100/90' 
-                                            : 'hover:bg-slate-50/80'">
-                                    <div class="space-y-1 flex-1 min-w-0">
-                                        <h3 class="font-serif text-sm font-bold text-slate-900 group-hover:text-slate-950 transition-colors truncate"
-                                            x-text="item.name"></h3>
-                                        <p class="text-xs text-slate-500 line-clamp-1" x-text="item.description"></p>
-                                        <div class="pt-0.5">
-                                            <span class="text-[11px] text-slate-400 font-medium"
-                                                x-text="item.has_file ? (item.file_extension + (item.file_size !== '-' ? ' • ' + item.file_size : '')) : 'Menunggu File'"></span>
-                                        </div>
-                                    </div>
-                                    <div class="shrink-0 text-slate-300 group-hover:text-slate-500 transition-colors"
-                                        :class="selectedTemplate && selectedTemplate.id === item.id ? 'text-slate-600' : ''">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </div>
-                                </button>
-                            </template>
+                        <div class="divide-y divide-slate-100 max-h-[640px] overflow-y-auto" :aria-busy="!isReady">
+                            <!-- Skeleton List Items While Initializing -->
+                            <div x-show="!isReady" class="divide-y divide-slate-100" aria-hidden="true">
+                                @for($i = 0; $i < 5; $i++)
+                                    <x-skeleton.surat-item />
+                                @endfor
+                            </div>
 
-                            @if(count($templates) === 0)
-                                <div class="p-8 text-center text-slate-500">
-                                    <p class="text-sm font-medium text-slate-700">Tidak ada template surat yang cocok</p>
-                                    @if(!empty($search))
-                                        <p class="text-xs text-slate-400 mt-1">Kata kunci penelusuran "{{ $search }}" tidak
-                                            ditemukan.</p>
-                                        <a href="{{ route('warga.letter.index') }}#katalog-surat"
-                                            class="inline-block mt-3 text-xs font-semibold text-[#0A3D29] hover:underline">
-                                            Tampilkan Semua Template
-                                        </a>
-                                    @endif
-                                </div>
-                            @endif
+                            <!-- Real Template List -->
+                            <div x-show="isReady" x-cloak class="divide-y divide-slate-100">
+                                <template x-for="item in templates" :key="item.id">
+                                    <button type="button" @click="selectTemplate(item)"
+                                        class="w-full text-left p-4 transition-all flex items-center justify-between gap-4 group cursor-pointer"
+                                        :class="selectedTemplate && selectedTemplate.id === item.id 
+                                                    ? 'bg-slate-100/90' 
+                                                    : 'hover:bg-slate-50/80'">
+                                        <div class="space-y-1 flex-1 min-w-0">
+                                            <h3 class="font-serif text-sm font-bold text-slate-900 group-hover:text-slate-950 transition-colors truncate"
+                                                x-text="item.name"></h3>
+                                            <p class="text-xs text-slate-500 line-clamp-1" x-text="item.description"></p>
+                                            <div class="pt-0.5">
+                                                <span class="text-[11px] text-slate-400 font-medium"
+                                                    x-text="item.has_file ? (item.file_extension + (item.file_size !== '-' ? ' • ' + item.file_size : '')) : 'Menunggu File'"></span>
+                                            </div>
+                                        </div>
+                                        <div class="shrink-0 text-slate-300 group-hover:text-slate-500 transition-colors"
+                                            :class="selectedTemplate && selectedTemplate.id === item.id ? 'text-slate-600' : ''">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </template>
+
+                                @if(count($templates) === 0)
+                                    <div class="p-8 text-center text-slate-500">
+                                        <p class="text-sm font-medium text-slate-700">Tidak ada template surat yang cocok</p>
+                                        @if(!empty($search))
+                                            <p class="text-xs text-slate-400 mt-1">Kata kunci penelusuran "{{ $search }}" tidak
+                                                ditemukan.</p>
+                                            <a href="{{ route('warga.letter.index') }}#katalog-surat"
+                                                class="inline-block mt-3 text-xs font-semibold text-[#0A3D29] hover:underline">
+                                                Tampilkan Semua Template
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -202,7 +218,8 @@
                         <!-- Detail Header -->
                         <div class="pb-5 border-b border-slate-100 space-y-2">
                             <div class="flex items-center gap-2">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600"
+                                <span
+                                    class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600"
                                     x-text="selectedTemplate ? (selectedTemplate.has_file ? (selectedTemplate.file_extension + (selectedTemplate.file_size !== '-' ? ' • ' + selectedTemplate.file_size : '')) : 'Berkas Belum Tersedia') : ''"></span>
                             </div>
                             <h3 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 leading-tight"

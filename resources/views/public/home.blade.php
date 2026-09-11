@@ -378,7 +378,7 @@
                                             x-data="{ loaded: false }"
                                             x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
                                             <div x-show="!loaded"
-                                                class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
+                                                class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
                                             <img x-ref="img" src="{{ $cNews['image'] }}" alt="{{ $cNews['title'] }}" loading="lazy"
                                                 @load="loaded = true;"
                                                 x-on:error="loaded = true; $el.src = '{{ asset('images/sawah_irigasi.png') }}';"
@@ -445,7 +445,7 @@
                         <a href="{{ route('public.news.show', $firstNews->slug) }}" class="group block space-y-2.5">
                             <div class="relative w-full h-56 rounded-xl overflow-hidden bg-slate-100 shadow-2xs group-hover:shadow-md transition-all duration-500"
                                 x-data="{ loaded: false }" x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
-                                <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none">
+                                <div x-show="!loaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none">
                                 </div>
                                 <img x-ref="img" src="{{ $firstImageSrc }}" alt="{{ $firstNews->title }}" loading="lazy"
                                     @load="loaded = true;"
@@ -484,7 +484,7 @@
                                 class="group flex items-start gap-4 p-2 -mx-2 rounded-xl hover:bg-white border border-transparent hover:border-[#c5c6ce]/60 hover:shadow-2xs transition-all duration-300">
                                 <div class="relative w-28 md:w-32 aspect-[4/3] rounded-lg overflow-hidden bg-slate-100 shrink-0 shadow-2xs group-hover:shadow-xs transition-all duration-300"
                                     x-data="{ loaded: false }" x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
-                                    <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none">
+                                    <div x-show="!loaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none">
                                     </div>
                                     <img x-ref="img" src="{{ $sNews['image'] }}" alt="{{ $sNews['title'] }}" loading="lazy"
                                         @load="loaded = true;"

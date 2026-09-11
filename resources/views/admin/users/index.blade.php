@@ -36,7 +36,7 @@
                         <tr class="hover:bg-[#F8FAFC]/80 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-xl overflow-hidden bg-[#0F4C3A] text-white font-bold text-xs flex items-center justify-center shrink-0 border border-[#E2E8F0]">
+                                    <div class="w-10 h-10 rounded-full overflow-hidden bg-[#0F4C3A] text-white font-bold text-xs flex items-center justify-center shrink-0 border border-[#E2E8F0]">
                                         @if($u->avatar_url)
                                             <img src="{{ $u->avatar_url }}" alt="{{ $u->name }}" class="w-full h-full object-cover">
                                         @else

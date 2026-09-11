@@ -142,10 +142,10 @@
                 <!-- 2. Scrolled Glassmorphism Layer (Fades in softly and smoothly when scrolled down) -->
                 <div class="absolute inset-0 bg-white/80 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.05)] transition-opacity ease-in-out pointer-events-none"
                     :class="(mobileMenuOpen || mobileSearchOpen) 
-                                                                                                     ? 'opacity-100 duration-200' 
-                                                                                                     : (isScrolled 
-                                                                                                         ? 'opacity-100 duration-700' 
-                                                                                                         : 'opacity-0 duration-700 delay-100')">
+                                                                                                             ? 'opacity-100 duration-200' 
+                                                                                                             : (isScrolled 
+                                                                                                                 ? 'opacity-100 duration-700' 
+                                                                                                                 : 'opacity-0 duration-700 delay-100')">
                 </div>
             @else
                 <!-- Non-homepage glassmorphism navbar background with scroll shadow -->
@@ -394,7 +394,7 @@
 
                     <!-- SEARCH FIELD (Pill Shape) -->
                     <div class="relative shrink-0" @click.away="searchOpen = false">
-                        <form action="{{ route('public.search') }}" method="GET" @submit="searchOpen = false">
+                        <form action="{{ url('/pencarian') }}" method="GET" @submit="searchOpen = false">
                             <div class="relative flex items-center">
                                 <input type="text" name="q" x-model="searchQuery"
                                     @input.debounce.300ms="fetchSuggestions()"
@@ -439,20 +439,11 @@
                             class="absolute right-0 mt-2 w-80 lg:w-96 rounded-md py-1.5 z-50 overflow-hidden transition-all duration-300 shadow-xl"
                             :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'bg-white/95 backdrop-blur-2xl border border-slate-200/90 text-[#20332A]' : 'bg-[#061C12]/95 backdrop-blur-2xl border border-white/20 text-white'">
 
-                            <!-- Loading State -->
-                            <div x-show="searchLoading"
-                                class="p-4 text-center text-xs flex items-center justify-center gap-2"
-                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#6C7B72]' : 'text-slate-300'">
-                                <svg class="animate-spin w-4 h-4"
-                                    :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
-                                    fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                        stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                    </path>
-                                </svg>
-                                <span>Mencari informasi...</span>
+                            <!-- Loading Skeleton State -->
+                            <div x-show="searchLoading" aria-busy="true" class="p-2 space-y-1 divide-y divide-slate-100/60">
+                                <x-skeleton.search-item />
+                                <x-skeleton.search-item />
+                                <x-skeleton.search-item />
                             </div>
 
                             <!-- No Results State -->
@@ -471,18 +462,18 @@
                                     <a :href="item.url"
                                         class="block px-4 py-2.5 w-full transition-colors text-left group"
                                         :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'hover:bg-black/[0.05]' : 'hover:bg-black/35'">
-                                        <div class="flex items-center justify-between gap-1 mb-1">
-                                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md transition"
-                                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29] bg-[#EAF1E8] group-hover:bg-[#0A3D29] group-hover:text-white' : 'text-[#D9B85C] bg-white/10 group-hover:bg-[#D9B85C] group-hover:text-[#061C12]'"
+                                        <div class="flex items-center gap-1.5 mb-1">
+                                            <span
+                                                class="text-[10px] font-semibold uppercase tracking-wider text-[#0A3D29]"
                                                 x-text="item.badge"></span>
-                                            <span class="text-[9px] uppercase font-semibold"
-                                                :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#6C7B72]' : 'text-slate-300/80'"
-                                                x-text="item.type"></span>
+                                            <span class="text-[10px] text-slate-300 font-light">/</span>
+                                            <span class="text-[10px] font-light text-slate-400"
+                                                x-text="item.category"></span>
                                         </div>
-                                        <span class="block text-xs font-bold transition line-clamp-1"
+                                        <span class="block text-xs font-semibold transition line-clamp-1"
                                             :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] group-hover:text-[#0A3D29]' : 'text-white group-hover:text-[#D9B85C]'"
                                             x-text="item.title"></span>
-                                        <span class="block text-[10px] font-normal line-clamp-1 mt-0.5"
+                                        <span class="block text-[11px] font-light line-clamp-1 mt-0.5"
                                             :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#6C7B72]' : 'text-slate-300'"
                                             x-text="item.snippet"></span>
                                     </a>
@@ -501,18 +492,6 @@
                         </div>
                     </div>
 
-                    <!-- Admin Access Button (Icon Only) -->
-                    <a href="{{ auth()->check() ? route('admin.dashboard') : route('login') }}"
-                        class="h-9 w-9 inline-flex items-center justify-center rounded-full transition-all duration-500 focus:outline-none"
-                        :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) 
-                           ? 'text-[#20332A] hover:bg-[#EAF1E8] hover:text-[#0A3D29]' 
-                           : 'text-white/90 hover:bg-white/20 hover:text-white'"
-                        title="{{ auth()->check() ? 'Dashboard Admin (' . Auth::user()->name . ')' : 'Akses Admin (Login)' }}">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                    </a>
 
                 </div>
 
@@ -593,115 +572,116 @@
             </div>
         </div>
 
-        <!-- Backdrop Scrim for Mobile Search -->
+        <!-- Backdrop Scrim for Mobile Search (Same style as Mobile Menu) -->
         <div x-show="mobileSearchOpen" x-cloak x-transition:enter="transition-opacity ease-out duration-200"
             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
             x-transition:leave="transition-opacity ease-in duration-150" x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0" @click="mobileSearchOpen = false"
-            class="fixed inset-0 top-20 bg-black/40 backdrop-blur-xs z-40 lg:hidden" aria-hidden="true">
+            class="fixed inset-0 top-20 bg-black/30 backdrop-blur-xs z-40 lg:hidden" aria-hidden="true">
         </div>
 
-        <!-- Mobile Search Popup (Refracting Frosted Glass Glassmorphism) -->
-        <div x-show="mobileSearchOpen" x-cloak x-transition:enter="transition ease-out duration-250"
-            x-transition:enter-start="opacity-0 -translate-y-3 scale-[0.98]"
-            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-            x-transition:leave="transition ease-in duration-150"
-            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-            x-transition:leave-end="opacity-0 -translate-y-3 scale-[0.98]" @click.away="mobileSearchOpen = false"
-            class="fixed top-20 inset-x-0 z-50 px-4 pt-3 pb-6 max-w-lg mx-auto lg:hidden pointer-events-auto">
+        <!-- Mobile Search Dropdown Menu (Glassmorphism Frosted Glass Style matching Hamburger Menu) -->
+        <div x-show="mobileSearchOpen" x-cloak x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-y-3" x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 -translate-y-3" @click.away="mobileSearchOpen = false" @click.stop
+            class="absolute top-full inset-x-0 z-50 lg:hidden bg-white/85 backdrop-blur-2xl backdrop-saturate-150 border-b border-x border-slate-200/80 rounded-b-3xl text-[#20332A] shadow-2xl shadow-slate-900/10 max-h-[calc(100dvh-5rem)] overflow-y-auto overflow-x-hidden p-4 sm:p-5 space-y-3">
 
-            <div
-                class="relative bg-white/80 backdrop-blur-3xl backdrop-saturate-200 border-2 border-white/90 ring-1 ring-slate-900/10 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_10px_25px_rgba(10,61,41,0.1)] rounded-3xl p-4 sm:p-5 space-y-3 text-[#20332A]">
+            <!-- Search Input Form with Clean Minimalist Styling -->
+            <form action="{{ url('/pencarian') }}" method="GET" @submit="mobileSearchOpen = false" class="relative">
+                <div class="relative flex items-center">
+                    <input type="text" name="q" x-ref="mobileHeaderSearchInput" x-model="searchQuery"
+                        @input.debounce.300ms="fetchSuggestions()" @keydown.escape="mobileSearchOpen = false"
+                        placeholder="Ketik kata kunci pencarian..." aria-label="Cari informasi di Desa Catur"
+                        class="w-full h-11 pl-10 pr-20 rounded-xl text-xs sm:text-sm font-normal bg-white/70 hover:bg-white/90 focus:bg-white/95 backdrop-blur-xl text-slate-900 placeholder:text-slate-400 border border-slate-200/80 focus:border-[#0A3D29] focus:outline-none focus:ring-1 focus:ring-[#0A3D29] shadow-inner transition-all">
 
-                <!-- Search Bar Form -->
-                <form action="{{ route('public.search') }}" method="GET" @submit="mobileSearchOpen = false">
-                    <div class="relative flex items-center">
-                        <input type="text" name="q" x-ref="mobileHeaderSearchInput" x-model="searchQuery"
-                            @input.debounce.300ms="fetchSuggestions()" @keydown.escape="mobileSearchOpen = false"
-                            placeholder="Cari informasi di Desa Catur..." aria-label="Cari informasi di Desa Catur"
-                            class="w-full h-12 pl-11 pr-10 rounded-2xl text-xs sm:text-sm font-semibold bg-white/70 backdrop-blur-xl text-[#20332A] placeholder-[#6C7B72] border border-[#DCE6DA] focus:outline-none focus:ring-2 focus:ring-[#0A3D29] focus:bg-white shadow-inner transition-all">
+                    <!-- Search Icon (Left) -->
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
 
-                        <!-- Search Icon (Left) -->
-                        <svg class="w-5 h-5 text-[#0A3D29] absolute left-3.5 pointer-events-none" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-
-                        <!-- Clear Button (Right) -->
+                    <div class="absolute right-1 flex items-center gap-1">
+                        <!-- Clear Button -->
                         <button type="button" x-show="searchQuery.length > 0"
                             @click="searchQuery = ''; searchResults = []; $refs.mobileHeaderSearchInput.focus()"
-                            class="absolute right-3 p-1 rounded-full text-[#6C7B72] hover:text-[#20332A] active:bg-slate-100 transition-colors"
+                            class="p-1 rounded-lg text-slate-400 hover:text-slate-600 transition-colors"
                             aria-label="Hapus kata kunci">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
+                        <!-- Submit Search Button -->
+                        <button type="submit"
+                            class="h-8 px-3 rounded-lg bg-[#0A3D29] hover:bg-[#145C3B] text-white text-xs font-medium transition-colors">
+                            Cari
+                        </button>
                     </div>
-                </form>
+                </div>
+            </form>
 
-                <!-- Search Results Underneath Search Bar -->
-                <div x-show="searchQuery.length >= 2" class="space-y-2 pt-1 border-t border-slate-200/60">
-                    <!-- Loading State -->
-                    <div x-show="searchLoading"
-                        class="py-4 text-center text-xs font-semibold text-[#6C7B72] flex items-center justify-center gap-2">
-                        <svg class="animate-spin w-4 h-4 text-[#0A3D29]" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                            </circle>
-                            <path class="opacity-75" fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                            </path>
-                        </svg>
-                        <span>Mencari informasi...</span>
+            <!-- Search Content -->
+            <div>
+                <!-- Loading Skeleton State -->
+                <div x-show="searchLoading" aria-busy="true" class="py-2 space-y-1 divide-y divide-slate-200/50">
+                    <x-skeleton.search-item />
+                    <x-skeleton.search-item />
+                    <x-skeleton.search-item />
+                </div>
+
+                <!-- Empty State -->
+                <div x-show="!searchLoading && searchQuery.length >= 2 && searchResults.length === 0"
+                    class="py-6 text-center text-xs space-y-1">
+                    <p class="font-medium text-slate-800">Tidak ada hasil ditemukan</p>
+                    <p class="font-light text-slate-400">Tidak ditemukan data yang cocok untuk “<span
+                            class="font-normal text-slate-600" x-text="searchQuery"></span>”.</p>
+                </div>
+
+                <!-- Live Results List -->
+                <div x-show="!searchLoading && searchResults.length > 0" class="space-y-3">
+                    <div class="flex items-center justify-between text-[11px] px-0.5">
+                        <span class="font-light text-slate-400">Hasil pencarian</span>
+                        <span class="font-medium text-slate-500" x-text="searchResults.length + ' item'"></span>
                     </div>
 
-                    <!-- Empty State -->
-                    <div x-show="!searchLoading && searchResults.length === 0"
-                        class="py-4 text-center text-xs text-[#6C7B72]">
-                        <p>Tidak ada hasil untuk "<span class="font-bold text-[#20332A]" x-text="searchQuery"></span>"
-                        </p>
-                    </div>
-
-                    <!-- Result Items List -->
-                    <div x-show="!searchLoading && searchResults.length > 0"
-                        class="divide-y divide-slate-200/60 max-h-64 overflow-y-auto pr-1">
+                    <div class="divide-y divide-slate-200/50 max-h-72 overflow-y-auto pr-1">
                         <template x-for="item in searchResults" :key="item.url + item.title">
-                            <a :href="item.url"
-                                class="block p-2.5 rounded-xl hover:bg-white/90 active:bg-[#EAF1E8] transition text-left group">
-                                <div class="flex items-center justify-between gap-1 mb-1">
-                                    <span
-                                        class="text-[10px] font-bold px-2 py-0.5 rounded-md text-[#0A3D29] bg-[#EAF1E8] group-hover:bg-[#0A3D29] group-hover:text-white transition"
+                            <a :href="item.url" @click="mobileSearchOpen = false"
+                                class="block py-2.5 px-2 rounded-xl hover:bg-white/70 active:bg-[#EAF1E8]/80 transition-colors text-left group">
+                                <div class="flex items-center gap-1.5 mb-1">
+                                    <span class="text-[10px] font-semibold uppercase tracking-wider text-[#0A3D29]"
                                         x-text="item.badge"></span>
-                                    <span class="text-[9px] uppercase font-semibold text-slate-400"
-                                        x-text="item.type"></span>
+                                    <span class="text-[10px] text-slate-300 font-light">/</span>
+                                    <span class="text-[10px] font-light text-slate-400" x-text="item.category"></span>
                                 </div>
                                 <span
-                                    class="block text-xs font-bold text-[#20332A] group-hover:text-[#0A3D29] line-clamp-1 transition"
+                                    class="block text-xs font-semibold text-slate-900 group-hover:text-[#0A3D29] line-clamp-1 transition-colors"
                                     x-text="item.title"></span>
-                                <span class="block text-[10px] font-normal text-[#6C7B72] line-clamp-1 mt-0.5"
+                                <span
+                                    class="block text-[11px] font-light text-slate-500 line-clamp-2 mt-0.5 leading-relaxed"
                                     x-text="item.snippet"></span>
                             </a>
                         </template>
                     </div>
 
-                    <!-- View All Results Button -->
-                    <div x-show="!searchLoading && searchResults.length > 0"
-                        class="pt-2 border-t border-slate-200/60 text-center">
-                        <a :href="'{{ route('public.search') }}?q=' + encodeURIComponent(searchQuery)"
-                            class="block py-2 text-xs font-bold text-[#0A3D29] bg-[#EAF1E8] hover:bg-[#0A3D29] hover:text-white active:scale-[0.99] rounded-xl transition-all shadow-2xs">
+                    <!-- Full Results Link -->
+                    <div class="pt-1">
+                        <a :href="'{{ url('/pencarian') }}?q=' + encodeURIComponent(searchQuery)"
+                            @click="mobileSearchOpen = false"
+                            class="block w-full py-2 px-3 text-xs font-medium text-center text-[#0A3D29] hover:text-white hover:bg-[#0A3D29] border border-[#0A3D29]/30 rounded-xl transition-colors">
                             Lihat semua hasil pencarian →
                         </a>
                     </div>
                 </div>
 
-                <!-- Helper Hint When Query < 2 Characters -->
-                <div x-show="searchQuery.length < 2" class="pt-1 text-center">
-                    <p class="text-[11px] text-[#6C7B72] font-medium">Ketik minimal 2 karakter untuk mencari informasi
-                        desa</p>
+                <!-- Subtle Empty Prompt When < 2 characters -->
+                <div x-show="searchQuery.length < 2" class="py-4 text-center">
+                    <p class="text-xs font-light text-slate-400">Cari informasi atau berita di website</p>
                 </div>
-
             </div>
+
         </div>
 
         <!-- Backdrop Scrim for Mobile Drawer -->
@@ -876,37 +856,6 @@
                 </a>
             </div>
 
-            <!-- 7. Mobile Admin Access -->
-            <div>
-                @auth
-                    <a href="{{ route('admin.dashboard') }}"
-                        class="w-full flex items-center justify-between px-5 py-3.5 text-xs font-semibold transition-colors text-slate-800 active:bg-black/[0.08]">
-                        <div class="flex items-center gap-3.5">
-                            <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            <span>Dashboard Admin</span>
-                        </div>
-                        <span
-                            class="text-[10px] px-2 py-0.5 rounded-md bg-black/[0.05] font-medium text-slate-700">{{ Auth::user()->name }}</span>
-                    </a>
-                @else
-                    <a href="{{ route('login') }}"
-                        class="w-full flex items-center justify-between px-5 py-3.5 text-xs font-semibold transition-colors text-slate-700 active:bg-black/[0.08]">
-                        <div class="flex items-center gap-3.5">
-                            <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                            </svg>
-                            <span>Akses Login Admin</span>
-                        </div>
-                        <span class="text-xs text-slate-400">→</span>
-                    </a>
-                @endauth
-            </div>
         </div>
     </header>
 
@@ -966,16 +915,18 @@
                             <span>{{ $globalEmail ?? 'pemerintahdesacatur@gmail.com' }}</span>
                         </p>
                         <p class="flex items-center gap-2.5">
-                            <svg class="w-4 h-4 text-[#D9B85C] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
-                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                            <svg class="w-4 h-4 text-[#D9B85C] shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                             </svg>
                             @php
                                 $rawIg = !empty($globalInstagram) ? $globalInstagram : 'https://www.instagram.com/pemerintahdesacatur';
                                 $igUrl = \Illuminate\Support\Str::startsWith($rawIg, ['http://', 'https://']) ? $rawIg : 'https://www.instagram.com/' . ltrim($rawIg, '@/');
                             @endphp
-                            <a href="{{ $igUrl }}" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">
+                            <a href="{{ $igUrl }}" target="_blank" rel="noopener noreferrer"
+                                class="hover:text-white transition">
                                 <span>pemerintahdesacatur</span>
                             </a>
                         </p>
@@ -986,33 +937,37 @@
                 <div class="lg:col-span-3 space-y-3">
                     <h4 class="text-xs font-bold text-[#D9B85C] uppercase tracking-wider">TAUTAN CEPAT</h4>
                     <ul class="space-y-2 text-xs sm:text-sm text-slate-300 font-light">
-                        <li><a href="{{ route('public.officials') }}" class="hover:text-white transition">Struktur
-                                Perangkat Desa</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Layanan
-                                Surat Mandiri</a></li>
-                        <li><a href="{{ route('public.profile') }}" class="hover:text-white transition">Regulasi &
-                                Produk Hukum Desa</a></li>
-                        <li><a href="{{ route('public.news.index') }}" class="hover:text-white transition">PPID &
-                                Informasi Publik</a></li>
-                        <li><a href="{{ route('public.profile') }}" class="hover:text-white transition">Peta & Batas
-                                Wilayah Desa</a></li>
+                        <li><a href="{{ route('public.profile') }}" class="hover:text-white transition">Profil Desa</a></li>
+                        <li><a href="{{ route('public.officials') }}" class="hover:text-white transition">Struktur Pemerintahan</a></li>
+                        <li><a href="{{ route('public.news.index') }}" class="hover:text-white transition">Berita & Pengumuman</a></li>
+                        <li><a href="{{ route('public.gallery') }}" class="hover:text-white transition">Galeri Kegiatan</a></li>
+                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Cetak Surat Mandiri</a></li>
+                        <li><a href="{{ route('warga.complaint.index') }}" class="hover:text-white transition">Laporan & Pengaduan</a></li>
+                        <li><a href="{{ route('public.ppko') }}" class="hover:text-white transition">PPKO Catur Cerdas</a></li>
                     </ul>
                 </div>
 
                 <!-- Col 3: Layanan Surat Online (3 cols) -->
                 <div class="lg:col-span-3 space-y-3">
                     <h4 class="text-xs font-bold text-[#D9B85C] uppercase tracking-wider">LAYANAN SURAT ONLINE</h4>
+                    @php
+                        $footerLetterTemplates = \App\Models\LetterTemplate::select('id', 'name', 'code')->orderBy('name')->get();
+                    @endphp
                     <ul class="space-y-2 text-xs sm:text-sm text-slate-300 font-light">
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat
-                                Keterangan Usaha (SKU)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat
-                                Keterangan Domisili</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Pengantar
-                                SKCK Kepolisian</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat
-                                Keterangan Tidak Mampu (SKTM)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat
-                                Keterangan Kelahiran / Kematian</a></li>
+                        @forelse($footerLetterTemplates as $tpl)
+                            <li>
+                                <a href="{{ route('warga.letter.index', ['search' => $tpl->name]) }}#katalog-surat" class="hover:text-white transition">
+                                    {{ $tpl->name }} {{ $tpl->code ? "({$tpl->code})" : '' }}
+                                </a>
+                            </li>
+                        @empty
+                            <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan Usaha (SKU)</a></li>
+                            <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan Domisili (SKD)</a></li>
+                            <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan Tidak Mampu (SKTM)</a></li>
+                            <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Pengantar Nikah (SPN)</a></li>
+                            <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan Kelahiran (SKK)</a></li>
+                            <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan Kematian (SKKM)</a></li>
+                        @endforelse
                     </ul>
                 </div>
 
@@ -1032,10 +987,10 @@
             <div
                 class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400 font-semibold tracking-wider uppercase">
                 <p>&copy; {{ date('Y') }} PEMERINTAH DESA CATUR | TIM PPK ORMAWA CATUR CERDAS</p>
-                <div class="flex items-center gap-6">
-                    <a href="#" class="hover:text-white transition">KEBIJAKAN PRIVASI</a>
-                    <a href="#" class="hover:text-white transition">SYARAT & KETENTUAN</a>
-                    <a href="#" class="hover:text-white transition">PETA SITUS</a>
+                <div class="flex items-center gap-4 sm:gap-6">
+                    <a href="{{ route('home') }}" class="hover:text-white transition">BERANDA</a>
+                    <a href="{{ route('public.profile') }}" class="hover:text-white transition">PROFIL</a>
+                    <a href="{{ route('warga.complaint.index') }}" class="hover:text-white transition">PENGADUAN</a>
                 </div>
             </div>
         </div>
@@ -1045,7 +1000,18 @@
 
 
     <!-- FLOATING SCROLL TO TOP BUTTON (RIGHT SIDE) -->
-    <div class="fixed bottom-6 right-6 z-[99999] lg:hidden font-sans pointer-events-auto">
+    <div x-data="{ showScrollTop: false }"
+         x-init="showScrollTop = (window.pageYOffset || document.documentElement.scrollTop) > 200"
+         @scroll.window.passive="showScrollTop = (window.pageYOffset || document.documentElement.scrollTop) > 200"
+         x-show="showScrollTop"
+         x-cloak
+         x-transition:enter="transition ease-out duration-300 transform"
+         x-transition:enter-start="opacity-0 translate-y-6 scale-75"
+         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+         x-transition:leave="transition ease-in duration-200 transform"
+         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+         x-transition:leave-end="opacity-0 translate-y-6 scale-75"
+         class="fixed bottom-6 right-6 z-[99999] font-sans pointer-events-auto">
         <button type="button" @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
             class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/75 hover:bg-white/95 backdrop-blur-3xl backdrop-saturate-200 border-2 border-white ring-1 ring-[#0A3D29]/25 shadow-2xl text-[#0A3D29] flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300 group shrink-0"
             aria-label="Kembali ke Atas" title="Kembali ke Atas">
@@ -1070,27 +1036,40 @@
                 searchLoading: false,
                 searchOpen: false,
                 isScrolled: false,
+                showScrollTop: false,
                 init() {
                     this.isScrolled = window.scrollY > 15;
+                    this.showScrollTop = window.scrollY > 200;
                     window.addEventListener('scroll', () => {
                         this.isScrolled = window.scrollY > 15;
+                        this.showScrollTop = window.scrollY > 200;
                     }, { passive: true });
                 },
                 fetchSuggestions() {
-                    if (this.searchQuery.trim().length < 2) {
+                    const query = this.searchQuery.trim();
+                    if (query.length < 2) {
                         this.searchResults = [];
                         this.searchOpen = false;
                         return;
                     }
                     this.searchLoading = true;
                     this.searchOpen = true;
-                    fetch('{{ route("api.search") }}?q=' + encodeURIComponent(this.searchQuery))
-                        .then(res => res.json())
+                    fetch('/api/search?q=' + encodeURIComponent(query), {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                        .then(res => {
+                            if (!res.ok) throw new Error('Network response was not ok');
+                            return res.json();
+                        })
                         .then(data => {
                             this.searchResults = data.results || [];
                             this.searchLoading = false;
                         })
                         .catch(err => {
+                            console.error('Search fetch error:', err);
                             this.searchLoading = false;
                             this.searchResults = [];
                         });
