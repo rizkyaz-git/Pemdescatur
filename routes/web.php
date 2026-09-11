@@ -30,6 +30,20 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
     Route::put('/profile', [Admin\ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/avatar', [Admin\ProfileController::class, 'destroyAvatar'])->name('profile.destroy-avatar');
 
+    // Utility: Bersihkan cache rute/aplikasi langsung dari web
+    Route::get('/clear-cache', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+            $routeCache = app()->bootstrapPath('cache/routes-v7.php');
+            if (file_exists($routeCache)) {
+                @unlink($routeCache);
+            }
+            return redirect()->back()->with('success', 'Semua cache (route, view, config) berhasil dibersihkan!');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Gagal membersihkan cache: ' . $e->getMessage());
+        }
+    })->name('clear-cache');
+
     // 3. Berita & Pengumuman: Dapat diakses oleh Super Admin, Admin Pemdes, dan PPK Ormawa
     Route::middleware(['role:super_admin,admin_pemdes,ppk_ormawa'])->group(function () {
         Route::resource('news', Admin\NewsController::class)->except(['show']);
@@ -42,8 +56,8 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
         Route::put('/profil', [Admin\VillageProfileController::class, 'update'])->name('village-profile.update');
 
         // Perangkat Desa CRUD
-        Route::post('officials/reorder', [Admin\OfficialController::class, 'reorder'])->name('officials.reorder');
-        Route::resource('officials', Admin\OfficialController::class)->except(['show']);
+        Route::match(['post', 'put', 'patch'], 'officials/reorder', [Admin\OfficialController::class, 'reorder'])->name('officials.reorder');
+        Route::resource('officials', Admin\OfficialController::class)->except(['show'])->whereNumber('official');
 
         // Galeri CRUD
         Route::resource('galleries', Admin\GalleryController::class)->except(['show']);

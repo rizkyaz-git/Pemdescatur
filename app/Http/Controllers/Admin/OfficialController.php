@@ -14,6 +14,18 @@ class OfficialController extends Controller
 {
     public function index(): View
     {
+        // Otomatis bersihkan cache rute lama jika server deploy belum mengenali rute reorder
+        if (!\Illuminate\Support\Facades\Route::has('admin.officials.reorder')) {
+            try {
+                \Illuminate\Support\Facades\Artisan::call('route:clear');
+            } catch (\Throwable $e) {}
+
+            $routeCache = app()->bootstrapPath('cache/routes-v7.php');
+            if (file_exists($routeCache)) {
+                @unlink($routeCache);
+            }
+        }
+
         $officials = Official::orderBy('order', 'asc')->orderBy('id', 'asc')->get();
         return view('admin.officials.index', compact('officials'));
     }
