@@ -37,17 +37,11 @@ class OfficialController extends Controller
             ]);
         }
 
-        // Identify Head Official (Sekretaris Desa or Kepala Desa)
-        $headOfficial = $officials->first(function ($official) {
-            return str_contains(strtolower($official->position), 'sekretaris') ||
-                   str_contains(strtolower($official->position), 'kepala') || 
-                   str_contains(strtolower($official->position), 'perbekel');
-        }) ?? $officials->first();
+        // Pimpinan / Pejabat Utama di urutan teratas (#1) sesuai urutan admin
+        $headOfficial = $officials->first();
 
-        // Other officials excluding the head official
-        $otherOfficials = $headOfficial 
-            ? $officials->reject(fn($o) => $o->id === $headOfficial->id) 
-            : $officials;
+        // Perangkat desa lainnya mengikuti urutan berikutnya (#2, #3, dst)
+        $otherOfficials = $officials->slice(1);
 
         return view('public.officials', compact('officials', 'headOfficial', 'otherOfficials'));
     }

@@ -14,11 +14,11 @@ class OfficialController extends Controller
 {
     public function index(): View
     {
-        $officials = Official::orderBy('order', 'asc')->get();
+        $officials = Official::orderBy('order', 'asc')->orderBy('id', 'asc')->get();
         return view('admin.officials.index', compact('officials'));
     }
 
-    public function reorder(\Illuminate\Http\Request $request): \Illuminate\Http\JsonResponse
+    public function reorder(\Illuminate\Http\Request $request)
     {
         $request->validate([
             'order' => ['required', 'array'],
@@ -29,10 +29,15 @@ class OfficialController extends Controller
             Official::where('id', $id)->update(['order' => $index + 1]);
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Urutan susunan perangkat desa berhasil diperbarui.',
-        ]);
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Urutan susunan perangkat desa berhasil diperbarui.',
+            ]);
+        }
+
+        return redirect()->route('admin.officials.index')
+            ->with('success', 'Urutan susunan perangkat desa berhasil diperbarui!');
     }
 
     public function create(): View
