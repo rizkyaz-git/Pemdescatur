@@ -127,7 +127,7 @@
                     const orderIds = rows.map(r => parseInt(r.getAttribute('data-id'))).filter(Boolean);
                     
                     if (orderIds.length > 0) {
-                        fetch('{{ route('admin.officials.reorder') }}', {
+                        fetch('{{ Route::has('admin.officials.reorder') ? route('admin.officials.reorder') : url('/admin/officials/reorder') }}', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
