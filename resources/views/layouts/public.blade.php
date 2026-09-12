@@ -808,7 +808,7 @@
                     class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                     <a href="{{ route('warga.letter.index') }}" @click="mobileMenuOpen = false"
                         class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.letter*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
-                        <span>Permohonan Surat Online Mandiri</span>
+                        <span>Cetak Surat Mandiri</span>
                     </a>
                     <a href="{{ route('warga.complaint.index') }}" @click="mobileMenuOpen = false"
                         class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.complaint*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">

@@ -12,7 +12,7 @@ Route::get('/berita', [PublicControllers\NewsController::class, 'index'])->name(
 Route::get('/berita/{slug}', [PublicControllers\NewsController::class, 'show'])->name('public.news.show');
 Route::post('/berita/{slug}/like', [PublicControllers\NewsController::class, 'like'])->name('public.news.like');
 Route::get('/galeri', [PublicControllers\GalleryController::class, 'index'])->name('public.gallery');
-Route::redirect('/layanan', '/layanan/surat');
+Route::redirect('/layanan', '/layanan/cetak-surat-mandiri');
 Route::get('/pencarian', [PublicControllers\SearchController::class, 'index'])->name('public.search');
 Route::get('/api/search', [PublicControllers\SearchController::class, 'api'])->name('api.search');
 Route::get('/ppko-catur-cerdas', [PublicControllers\PpkoController::class, 'index'])->name('public.ppko');
@@ -107,7 +107,8 @@ Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->middlewar
 
 // ===== PORTAL LAYANAN PUBLIK WARGA & GUEST =====
 // Pengajuan & Unduh Template Surat
-Route::get('/layanan/surat', [PublicControllers\LetterRequestController::class, 'index'])->name('warga.letter.index');
+Route::redirect('/layanan/surat', '/layanan/cetak-surat-mandiri');
+Route::get('/layanan/cetak-surat-mandiri', [PublicControllers\LetterRequestController::class, 'index'])->name('warga.letter.index');
 Route::get('/layanan/surat/template/{letterTemplate}/download', [PublicControllers\LetterRequestController::class, 'downloadTemplate'])->name('warga.letter.download');
 Route::get('/layanan/surat/buat', [PublicControllers\LetterRequestController::class, 'create'])->name('warga.letter.create');
 Route::post('/layanan/surat', [PublicControllers\LetterRequestController::class, 'store'])->name('warga.letter.store');
