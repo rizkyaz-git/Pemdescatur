@@ -227,7 +227,7 @@
 
                             <!-- Kartu Pembungkus Tentang Program -->
                             <div id="ppko-tentang-card"
-                                class="bg-white rounded-xl sm:rounded-2xl border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-4 shrink-0">
+                                class="bg-white rounded-xl border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-4 shrink-0">
                                 <div class="flex items-center justify-between pb-3 border-b border-[#DCE6DA]">
                                     <div class="flex items-center gap-2.5">
                                         <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
@@ -330,7 +330,7 @@
 
                             <!-- Banner Showcase PPKO Card -->
                             <div
-                                class="rounded-xl sm:rounded-2xl overflow-hidden border border-[#DCE6DA] shadow-xs bg-slate-50 group shrink-0">
+                                class="rounded-xl overflow-hidden border border-[#DCE6DA] shadow-xs bg-slate-50 group shrink-0">
                                 <img src="{{ $ppkoCoverMobile }}" alt="PPKO Catur Cerdas Display Banner"
                                     loading="eager" fetchpriority="high" decoding="async" width="1920" height="1080"
                                     class="w-full h-auto aspect-video object-cover object-center group-hover:scale-[1.01] transition-transform duration-500">
@@ -338,7 +338,7 @@
 
                             <!-- Kartu 1: Detail Program & Mitra Program -->
                             <div id="ppko-detail-card"
-                                class="bg-white rounded-xl sm:rounded-2xl border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-3 shrink-0">
+                                class="bg-white rounded-xl border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-3 shrink-0">
                                 <div class="flex items-center justify-between pb-3 border-b border-[#DCE6DA]">
                                     <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-900 leading-tight">
                                         Detail Program
@@ -578,16 +578,14 @@
                         }
                     }
 
-                    /* ─── Entrance Animation: Sederhana Fade Pop-Up Ringan ─── */
+                    /* ─── Entrance Animation: Pure Fade (GPU-Lite) ─── */
                     .ppko-section-entrance {
                         opacity: 0;
-                        transform: translateY(14px) scale(0.99);
-                        transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+                        transition: opacity 0.4s ease-out;
                     }
 
                     .ppko-section-entrance.is-revealed {
                         opacity: 1;
-                        transform: translateY(0) scale(1);
                     }
 
                     /* Tampil serempak tanpa delay bertingkat yang berat */
@@ -1316,7 +1314,7 @@
                                             @mouseleave="resume()" class="harmoni-cards-animate w-full">
 
                                             <!-- RECTANGULAR SLIDER FRAME (16:9 Pipih pada Mobile, Tetap pada Desktop) -->
-                                            <div class="pojok-slider-frame relative overflow-hidden bg-slate-900/10 select-none touch-pan-y group shadow-md rounded-xl sm:rounded-2xl border border-black/5 {{ $isDark ? 'border-white/10' : 'border-slate-200' }}"
+                                            <div class="pojok-slider-frame relative overflow-hidden bg-slate-900/10 select-none touch-pan-y group shadow-md rounded-xl border border-black/5 {{ $isDark ? 'border-white/10' : 'border-slate-200' }}"
                                                 @touchstart.passive="handleTouchStart($event)"
                                                 @touchend="handleTouchEnd($event)">
 

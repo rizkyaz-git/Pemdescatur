@@ -1,4 +1,4 @@
-<div {{ $attributes->merge(['class' => 'bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-xs flex flex-col']) }} aria-hidden="true">
+<div {{ $attributes->merge(['class' => 'bg-white rounded-xl overflow-hidden border border-slate-200/90 shadow-xs flex flex-col']) }} aria-hidden="true">
     <!-- Image Box Skeleton with Badge Placeholder -->
     <div class="relative aspect-[16/10] w-full skeleton-shimmer">
         <div class="absolute top-3 left-3 w-16 h-5 rounded-full bg-white/70"></div>

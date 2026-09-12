@@ -128,7 +128,7 @@
                         </div>
 
                         <!-- Clean Embedded Map -->
-                        <div class="w-full h-36 overflow-hidden border border-[#DCE6DA] rounded-md mt-2">
+                        <div class="w-full h-80 sm:h-96 lg:h-[420px] overflow-hidden border border-[#DCE6DA] rounded-md mt-2">
                             <iframe src="https://maps.google.com/maps?q=Catur%2C+Sambi%2C+Boyolali&t=h&z=14&output=embed"
                                 class="w-full h-full border-0" loading="lazy" title="Peta Satelit Wilayah Desa Catur"
                                 allowfullscreen>

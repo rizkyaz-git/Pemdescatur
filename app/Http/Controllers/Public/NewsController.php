@@ -34,7 +34,7 @@ class NewsController extends Controller
             $query->orderBy('published_at', 'desc');
         }
 
-        $newsList = $query->paginate(6)->withQueryString();
+        $newsList = $query->paginate(12)->withQueryString();
         $categories = News::where('status', 'published')->distinct()->pluck('category')->filter()->values();
 
         return view('public.news.index', compact('newsList', 'categories'));

@@ -8,12 +8,19 @@
     <meta name="description"
         content="@yield('meta_description', 'Portal Resmi Pemerintah Desa Catur, Sambi, Boyolali, Jawa Tengah. Pusat informasi publik, Desa Wisata, Desa Cerdas Kemendes, pertanian padi organik, dan pelayanan desa.')">
 
-    <!-- Google Fonts: Public Sans & Inter (DESIGN.md Civic Clarity System) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- DNS Prefetch & Preconnect for critical external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <!-- Non-blocking font load: 'media=print' loads async, onload switches to 'all' -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
-        rel="stylesheet">
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+        rel="stylesheet"
+        media="print"
+        onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    </noscript>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -585,7 +592,7 @@
             x-transition:enter-start="opacity-0 -translate-y-3" x-transition:enter-end="opacity-100 translate-y-0"
             x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 -translate-y-3" @click.away="mobileSearchOpen = false" @click.stop
-            class="absolute top-full inset-x-0 z-50 lg:hidden bg-white/85 backdrop-blur-2xl backdrop-saturate-150 border-b border-x border-slate-200/80 rounded-b-3xl text-[#20332A] shadow-2xl shadow-slate-900/10 max-h-[calc(100dvh-5rem)] overflow-y-auto overflow-x-hidden p-4 sm:p-5 space-y-3">
+            class="absolute top-full inset-x-0 z-50 lg:hidden bg-white/85 backdrop-blur-2xl backdrop-saturate-150 border-b border-x border-slate-200/80 rounded-b-2xl text-[#20332A] shadow-2xl shadow-slate-900/10 max-h-[calc(100dvh-5rem)] overflow-y-auto overflow-x-hidden p-4 sm:p-5 space-y-3">
 
             <!-- Search Input Form with Clean Minimalist Styling -->
             <form action="{{ url('/pencarian') }}" method="GET" @submit="mobileSearchOpen = false" class="relative">
@@ -698,7 +705,7 @@
             x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-3"
             @click.away="mobileMenuOpen = false" @click.stop
-            class="absolute top-full inset-x-0 z-50 lg:hidden bg-white/85 backdrop-blur-2xl backdrop-saturate-150 border-b border-x border-slate-200/80 rounded-b-3xl text-[#20332A] shadow-2xl shadow-slate-900/10 max-h-[calc(100dvh-5rem)] overflow-y-auto overflow-x-hidden divide-y divide-slate-200/50">
+            class="absolute top-full inset-x-0 z-50 lg:hidden bg-white/85 backdrop-blur-2xl backdrop-saturate-150 border-b border-x border-slate-200/80 rounded-b-2xl text-[#20332A] shadow-2xl shadow-slate-900/10 max-h-[calc(100dvh-5rem)] overflow-y-auto overflow-x-hidden divide-y divide-slate-200/50">
 
             <!-- 1. Beranda (Direct Clean Link) -->
             <div class="nav-cascade-1">

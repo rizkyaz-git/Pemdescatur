@@ -298,12 +298,15 @@
 
                 <!-- 2. Featured Image Card & Caption -->
                 <figure class="space-y-2">
-                    <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 shadow-xs relative"
+                    <div class="rounded-xl overflow-hidden border border-slate-100 bg-slate-50 shadow-xs relative"
                          x-data="{ loaded: false }"
                          x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
                         <img x-ref="img"
                              src="{{ $mainImageSrc }}" 
                              alt="{{ $news->title }}" 
+                             fetchpriority="high"
+                             loading="eager"
+                             decoding="async"
                              @load="loaded = true;"
                              class="w-full h-auto max-h-[460px] object-cover transition-opacity duration-300"
                              :class="loaded ? 'opacity-100' : 'opacity-0'">
@@ -335,27 +338,28 @@
                     @endif
                 </div>
 
-                <!-- 5. Bottom Action Bar (Like & Streamlined Social Share) -->
-                <div class="pt-6 mt-8 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <!-- Interactive Like Button -->
+                <!-- 5. Bottom Action Bar (Icon-Only Like & Social Share) -->
+                <div class="pt-6 mt-8 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <!-- Interactive Like Button (Icon + Counter) -->
                     <button @click="toggleLike()" 
-                            class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl border transition-all cursor-pointer active:scale-95 w-fit"
-                            :class="isLiked ? 'bg-[#0A3D29] text-white border-[#0A3D29] shadow-xs' : 'bg-slate-50 text-slate-700 border-slate-200/80 hover:bg-slate-100'">
-                        <svg class="w-4 h-4 transition-transform" :class="isLiked ? 'fill-current text-white scale-110' : 'fill-none stroke-current text-slate-600'" viewBox="0 0 24 24" stroke-width="2">
+                            class="inline-flex items-center gap-1.5 h-9 px-3 rounded-xl border transition-all cursor-pointer active:scale-95 text-xs font-semibold shadow-xs"
+                            :class="isLiked ? 'bg-[#0A3D29] text-white border-[#0A3D29]' : 'bg-slate-50 text-slate-700 border-slate-200/80 hover:bg-slate-100 hover:text-[#0A3D29]'"
+                            :title="isLiked ? 'Batal menyukai berita ini' : 'Sukai berita ini'"
+                            aria-label="Sukai berita">
+                        <svg class="w-4 h-4 transition-transform" :class="isLiked ? 'fill-current text-white scale-110' : 'fill-none stroke-current'" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 001.99-1.68l1.54-9A2 2 0 0017.72 9H14zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
                         </svg>
-                        <span><span x-text="likesCount">{{ number_format($news->likes_count ?? 0) }}</span> Menyukai</span>
+                        <span x-text="likesCount" class="font-bold">{{ number_format($news->likes_count ?? 0) }}</span>
                     </button>
 
-                    <!-- Streamlined Social Share Actions -->
+                    <!-- Streamlined Social Share Icons -->
                     <div class="flex items-center gap-2">
-                        <span class="text-xs font-semibold text-slate-400 mr-1">Bagikan:</span>
-                        
                         <!-- WhatsApp -->
                         <a :href="'https://api.whatsapp.com/send?text=' + encodeURIComponent('{{ $news->title }} ' + window.location.href)" 
                            target="_blank" rel="noopener" 
                            class="w-9 h-9 rounded-xl bg-slate-50 hover:bg-emerald-600 hover:text-white text-slate-600 flex items-center justify-center border border-slate-200/80 transition-all active:scale-95 shadow-xs" 
-                           title="Bagikan ke WhatsApp">
+                           title="Bagikan ke WhatsApp"
+                           aria-label="Bagikan ke WhatsApp">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.978-.276-.1-.477-.15-.678.15-.201.3-.777.978-.953 1.179-.176.2-.351.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.896-.799-1.5-1.786-1.676-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.176.201-.301.301-.502.101-.2.05-.376-.025-.527-.075-.15-.678-1.634-.929-2.238-.244-.588-.493-.509-.678-.518-.176-.009-.376-.011-.577-.011-.201 0-.527.075-.803.376-.276.301-1.054 1.03-1.054 2.512 0 1.482 1.079 2.912 1.23 3.113.15.2 2.124 3.243 5.145 4.548.719.311 1.28.497 1.718.636.722.23 1.379.197 1.9-.12.58-.354 1.78-1.066 2.03-1.758.251-.692.251-1.285.176-1.41-.075-.125-.276-.2-.577-.35zM12.004 2C6.48 2 2 6.48 2 12.004c0 1.91.536 3.693 1.464 5.216L2.1 22l4.908-1.328A9.957 9.957 0 0012.004 22C17.528 22 22 17.528 22 12.004 22 6.48 17.528 2 12.004 2zm0 18.292c-1.656 0-3.19-.504-4.475-1.368l-.321-.214-3.32.898.892-3.238-.235-.349A8.258 8.258 0 013.712 12c0-4.572 3.72-8.292 8.292-8.292 4.572 0 8.292 3.72 8.292 8.292 0 4.572-3.72 8.292-8.292 8.292z"/>
                             </svg>
@@ -365,24 +369,33 @@
                         <a :href="'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href)" 
                            target="_blank" rel="noopener" 
                            class="w-9 h-9 rounded-xl bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-600 flex items-center justify-center border border-slate-200/80 transition-all active:scale-95 shadow-xs" 
-                           title="Bagikan ke Facebook">
+                           title="Bagikan ke Facebook"
+                           aria-label="Bagikan ke Facebook">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                             </svg>
                         </a>
 
-                        <!-- Salin Tautan (Copy Link with inline feedback) -->
-                        <button @click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2500)" 
-                                class="inline-flex items-center gap-1.5 px-3 h-9 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200/80 transition-all active:scale-95 cursor-pointer shadow-xs"
-                                title="Salin Tautan">
-                            <svg x-show="!copied" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                            </svg>
-                            <svg x-show="copied" class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            <span x-text="copied ? 'Tersalin!' : 'Salin Tautan'">Salin Tautan</span>
-                        </button>
+                        <!-- Salin Tautan (Copy Link Icon Button) -->
+                        <div class="relative">
+                            <button @click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2500)" 
+                                    class="w-9 h-9 rounded-xl flex items-center justify-center border transition-all active:scale-95 cursor-pointer shadow-xs"
+                                    :class="copied ? 'bg-emerald-50 text-emerald-600 border-emerald-300' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border-slate-200/80'"
+                                    :title="copied ? 'Tautan berhasil disalin!' : 'Salin Tautan'"
+                                    aria-label="Salin Tautan">
+                                <svg x-show="!copied" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                                </svg>
+                                <svg x-show="copied" x-cloak class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </button>
+                            <!-- Mini floating notification when copied -->
+                            <div x-show="copied" x-cloak x-transition.opacity 
+                                 class="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-slate-900 text-white text-[10px] font-medium rounded shadow-md whitespace-nowrap pointer-events-none">
+                                Tersalin!
+                            </div>
+                        </div>
                     </div>
                 </div>
 

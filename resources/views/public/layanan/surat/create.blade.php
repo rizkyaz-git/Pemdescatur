@@ -20,7 +20,7 @@
             </a>
         </div>
 
-        <div class="bg-white rounded-2xl border border-gray-200 shadow-xs p-6 sm:p-8">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-xs p-6 sm:p-8">
             <form action="{{ route('warga.letter.store') }}" method="POST" class="space-y-6">
                 @csrf
 

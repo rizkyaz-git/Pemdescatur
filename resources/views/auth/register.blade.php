@@ -27,7 +27,7 @@
 
         <!-- Kartu Register Minimalis -->
         <div class="relative z-10 w-full max-w-sm">
-            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 sm:p-8">
+            <div class="bg-white rounded-xl shadow-xl border border-slate-100 p-6 sm:p-8">
 
                 <!-- Header Brand & Judul -->
                 <div class="text-center mb-6">

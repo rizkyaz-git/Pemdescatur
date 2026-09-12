@@ -15,9 +15,12 @@
                 ? asset('storage/' . $globalHeroImage)
                 : asset('images/hero_landscape.png');
         @endphp
-        <!-- Hero Background Image - Clear Scenic View with Soft Gradient Overlay -->
+        <!-- Hero Background Image - LCP optimized (eager + fetchpriority=high) -->
         <div class="absolute inset-0 z-0">
             <img src="{{ $heroImageSrc }}" alt="Pemerintah Desa Catur Sambi Boyolali"
+                fetchpriority="high"
+                loading="eager"
+                decoding="async"
                 class="w-full h-full object-cover object-center brightness-[0.58] [mask-image:linear-gradient(to_bottom,black_85%,transparent_100%)] -webkit-[mask-image:linear-gradient(to_bottom,black_85%,transparent_100%)]">
             <!-- Soft Green Gradient Overlay for Text Contrast & High Image Visibility -->
             <div
@@ -31,15 +34,15 @@
             <div
                 class="max-w-xl sm:max-w-3xl lg:max-w-4xl mx-auto space-y-3 sm:space-y-6 flex flex-col items-center pt-0 sm:pt-8 lg:pt-10">
 
-                <!-- 1. Headline (Fade Up Entrance Animation) -->
+                <!-- 1. Headline -->
                 <h1
-                    class="font-serif text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white leading-[1.2] sm:leading-[1.16] tracking-tight text-center max-w-4xl mx-auto drop-shadow-md fade-up-enter">
+                    class="font-serif text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white leading-[1.2] sm:leading-[1.16] tracking-tight text-center max-w-4xl mx-auto drop-shadow-md fade-in-up">
                     Selamat Datang di Website Resmi Pemerintah Desa Catur
                 </h1>
 
-                <!-- 2. Location Address Text (Clean, Unwrapped Text Under Headline) -->
+                <!-- 2. Location Address Text -->
                 <p
-                    class="text-xs sm:text-sm lg:text-base font-medium text-white/90 tracking-wide flex items-center justify-center gap-1.5 drop-shadow-sm mx-auto fade-up-enter [animation-delay:150ms]">
+                    class="text-xs sm:text-sm lg:text-base font-medium text-white/90 tracking-wide flex items-center justify-center gap-1.5 drop-shadow-sm mx-auto fade-in-up fade-in-up-d1">
                     <span class="whitespace-normal sm:whitespace-nowrap">Jl. Raya Catur - Sambi, Desa Catur, Kec. Sambi,
                         Kab. Boyolali, Jawa Tengah 57376</span>
                 </p>
@@ -49,13 +52,13 @@
 
     </section>
 
-    <!-- FLOATING SHORTCUT CARDS CONTAINER (Overlapping Hero Section Exactly at 50% Center on Desktop, Raised Inside Hero on Mobile) -->
+    <!-- FLOATING SHORTCUT CARDS CONTAINER -->
     <div
-        class="relative z-30 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 -mt-56 mb-28 sm:-mt-14 sm:mb-6 lg:-mt-16 lg:mb-10 fade-up-enter [animation-delay:250ms]">
+        class="relative z-30 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 -mt-56 mb-28 sm:-mt-14 sm:mb-6 lg:-mt-16 lg:mb-10 fade-in-up fade-in-up-d3">
 
         <!-- A. MOBILE MODE ONLY (< sm): Single Unified Floating Card with 5 Side-by-Side Items & Elevation Shadow -->
         <div
-            class="block sm:hidden bg-white rounded-2xl shadow-[0_12px_30px_-5px_rgba(0,0,0,0.22)] border border-slate-100 ring-1 ring-slate-900/5 py-3 px-1">
+            class="block sm:hidden bg-white rounded-xl shadow-[0_12px_30px_-5px_rgba(0,0,0,0.22)] border border-slate-100 ring-1 ring-slate-900/5 py-3 px-1">
             <div class="grid grid-cols-5 divide-x divide-slate-100 text-center">
 
                 <!-- 1. Berita & Kabar -->
@@ -124,7 +127,7 @@
         </div>
 
         <!-- B. TABLET/DESKTOP MODE (>= sm): Single Unified Bar Card Container with Thin Vertical Dividers & Clean Alignment -->
-        <div class="hidden sm:block bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden">
+        <div class="hidden sm:block bg-white rounded-xl shadow-2xl border border-slate-200/80 overflow-hidden">
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-slate-100/90">
 
                 <!-- Card 1: Berita & Kabar -->
@@ -228,7 +231,7 @@
     <!-- SECTION 2: BERITA TERKINI (FEATURED & EDITORIAL MAGAZINE LAYOUT) -->
     <!-- ========================================================= -->
     <section id="berita-terkini"
-        class="w-full bg-white py-10 sm:py-16 lg:py-20 border-b border-[#c5c6ce]/50 flex flex-col justify-center min-h-0 lg:min-h-[600px] fade-up-scroll">
+        class="w-full bg-white py-10 sm:py-16 lg:py-20 border-b border-[#c5c6ce]/50 flex flex-col justify-center min-h-0 lg:min-h-[600px] scroll-reveal">
         <div class="w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
 
             <!-- Header Title -->
@@ -385,23 +388,17 @@
                                                 class="w-full h-full object-cover transition-all duration-700"
                                                 :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
                                         </div>
-                                        <div class="space-y-1.5">
-                                            <span
-                                                class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">
-                                                {{ $cNews['category'] }}
-                                            </span>
+                                        <div class="space-y-1.5 pt-0.5">
                                             <h3
-                                                class="font-['Public_Sans',sans-serif] text-base sm:text-lg font-extrabold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug line-clamp-2">
+                                                class="font-['Public_Sans',sans-serif] text-base sm:text-lg font-extrabold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug">
                                                 {{ $cNews['title'] }}
                                             </h3>
-                                            <div class="flex items-center gap-2 text-xs text-[#75777e] font-medium">
+                                            <div class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                                                <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                </svg>
                                                 <span>{{ $cNews['date'] }}</span>
-                                                <span>•</span>
-                                                <span>{{ $cNews['author'] }}</span>
                                             </div>
-                                            <p class="text-xs text-[#44474e] leading-relaxed font-normal line-clamp-2">
-                                                {{ $cNews['excerpt'] }}
-                                            </p>
                                         </div>
                                     </a>
                                 </div>
@@ -454,26 +451,18 @@
                                     :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
                             </div>
 
-                            <div class="space-y-1.5">
-                                <span
-                                    class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">
-                                    {{ $firstNews->category }}
-                                </span>
-
+                            <div class="space-y-2 pt-0.5">
                                 <h3
-                                    class="font-['Public_Sans',sans-serif] text-xl lg:text-2xl font-extrabold text-slate-800 group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                    class="font-['Public_Sans',sans-serif] text-xl lg:text-2xl font-extrabold text-slate-800 group-hover:text-[#0A3D29] leading-snug transition-colors">
                                     {{ $firstNews->title }}
                                 </h3>
 
-                                <div class="flex items-center gap-2 text-xs text-[#75777e] font-medium">
+                                <div class="flex items-center gap-1.5 text-xs sm:text-sm text-slate-500 font-medium">
+                                    <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
                                     <span>{{ $firstFormattedDate }}</span>
-                                    <span>•</span>
-                                    <span>{{ $firstAuthorName }}</span>
                                 </div>
-
-                                <p class="text-xs sm:text-sm text-[#44474e] leading-relaxed font-normal line-clamp-2">
-                                    {{ $firstNews->excerpt ?? Str::limit(strip_tags($firstNews->content), 140) }}
-                                </p>
                             </div>
                         </a>
                     </div>
@@ -494,19 +483,17 @@
                                 </div>
 
                                 <div class="space-y-1 flex-1 min-w-0">
-                                    <span
-                                        class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">
-                                        {{ $sNews['category'] }}
-                                    </span>
-
                                     <h4
-                                        class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                        class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors">
                                         {{ $sNews['title'] }}
                                     </h4>
 
-                                    <p class="text-[11px] text-[#75777e] font-medium">
-                                        {{ $sNews['date'] }}
-                                    </p>
+                                    <div class="flex items-center gap-1 text-[11px] text-slate-400 font-medium pt-0.5">
+                                        <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                        <span>{{ $sNews['date'] }}</span>
+                                    </div>
                                 </div>
                             </a>
                         @endforeach
@@ -537,19 +524,17 @@
                                         <img src="{{ asset('images/sawah_irigasi.png') }}" alt="Panen Padi"
                                             class="w-full h-full object-cover">
                                     </div>
-                                    <div class="space-y-1.5">
-                                        <span
-                                            class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">Kegiatan</span>
+                                    <div class="space-y-1.5 pt-0.5">
                                         <h3
                                             class="font-['Public_Sans',sans-serif] text-lg font-extrabold text-[#191c1e] leading-snug">
                                             Panen Padi Organik Melimpah 3 Kali Setahun Didukung Irigasi Desa Catur
                                         </h3>
-                                        <div class="flex items-center gap-2 text-xs text-[#75777e] font-medium">
-                                            <span>02 Sep 2026</span> • <span>Admin Desa</span>
+                                        <div class="flex items-center gap-1 text-xs text-slate-400 font-medium">
+                                            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                            <span>02 Sep 2026</span>
                                         </div>
-                                        <p class="text-xs text-[#44474e] leading-relaxed font-normal">
-                                            Sektor pertanian Desa Catur, Kecamatan Sambi Boyolali tergolong sangat produktif...
-                                        </p>
                                     </div>
                                 </a>
                             </div>
@@ -565,21 +550,17 @@
                                 <img src="{{ asset('images/sawah_irigasi.png') }}" alt="Kerja Bakti"
                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                             </div>
-                            <div class="space-y-1.5">
-                                <span
-                                    class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">Kegiatan
-                                    Desa</span>
+                            <div class="space-y-2 pt-0.5">
                                 <h3
-                                    class="font-['Public_Sans',sans-serif] text-xl lg:text-2xl font-extrabold text-slate-800 group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                    class="font-['Public_Sans',sans-serif] text-xl lg:text-2xl font-extrabold text-slate-800 group-hover:text-[#0A3D29] leading-snug transition-colors">
                                     Kerja Bakti Rutin Bersihkan Saluran Irigasi Jelang Musim Tanam Padi
                                 </h3>
-                                <div class="flex items-center gap-2 text-xs text-[#75777e] font-medium">
-                                    <span>12 Okt 2023</span> • <span>Admin Desa</span>
+                                <div class="flex items-center gap-1 text-xs sm:text-sm text-slate-500 font-medium">
+                                    <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                    <span>12 Okt 2023</span>
                                 </div>
-                                <p class="text-xs sm:text-sm text-[#44474e] leading-relaxed font-normal line-clamp-2">
-                                    Warga Desa Catur bergotong royong membersihkan saluran irigasi utama untuk menyambut musim
-                                    tanam padi...
-                                </p>
                             </div>
                         </a>
                     </div>
@@ -593,13 +574,11 @@
                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                             </div>
                             <div class="space-y-1 flex-1 min-w-0">
-                                <span
-                                    class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">Pembangunan</span>
                                 <h4
-                                    class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                    class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors">
                                     Peningkatan Kualitas Jalan Poros Dusun I Selesai Dikerjakan
                                 </h4>
-                                <p class="text-[11px] text-[#75777e] font-medium">10 Okt 2023 • Admin Desa</p>
+                                <p class="text-[11px] text-slate-400 font-medium">10 Okt 2023</p>
                             </div>
                         </a>
 
@@ -611,13 +590,11 @@
                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                             </div>
                             <div class="space-y-1 flex-1 min-w-0">
-                                <span
-                                    class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">Pemberdayaan</span>
                                 <h4
-                                    class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                    class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors">
                                     Pelatihan Pengolahan Hasil Pertanian bagi Kelompok Tani & UMKM
                                 </h4>
-                                <p class="text-[11px] text-[#75777e] font-medium">08 Okt 2023 • Admin Desa</p>
+                                <p class="text-[11px] text-slate-400 font-medium">08 Okt 2023</p>
                             </div>
                         </a>
 
@@ -629,13 +606,11 @@
                                     class="w-full h-full object-contain p-2.5 bg-[#f2f4f6]">
                             </div>
                             <div class="space-y-1 flex-1 min-w-0">
-                                <span
-                                    class="text-xs font-bold text-[#0A3D29] uppercase tracking-wide block font-['Inter',sans-serif]">Pengumuman</span>
                                 <h4
-                                    class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                    class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors">
                                     Penyesuaian Jam Pelayanan Kantor Desa Catur Selama Bulan Ini
                                 </h4>
-                                <p class="text-[11px] text-[#75777e] font-medium">05 Okt 2023 • Sekretariat Desa</p>
+                                <p class="text-[11px] text-slate-400 font-medium">05 Okt 2023</p>
                             </div>
                         </a>
                     </div>
@@ -658,34 +633,8 @@
 
     @push('styles')
         <style>
-            /* Subtle Fade-Up Entrance Animations for Home Page */
-            @keyframes fadeUpSubtle {
-                from {
-                    opacity: 0;
-                    transform: translateY(18px);
-                }
-
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            .fade-up-enter {
-                animation: fadeUpSubtle 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            }
-
-            .fade-up-scroll {
-                opacity: 0;
-                transform: translateY(18px);
-                transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-                will-change: opacity, transform;
-            }
-
-            .fade-up-scroll.is-visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            /* [LEGACY COMPAT] - Now using global .fade-in-up and .scroll-reveal in app.css */
+            /* Kept as an empty block to avoid Blade template errors if referenced elsewhere */
         </style>
     @endpush
 
@@ -693,7 +642,7 @@
     <!-- SECTION 3: PERPUSTAKAAN DIGITAL "REMEN MAOS DESA CATUR" -->
     <!-- ========================================================= -->
     <section id="perpustakaan-digital"
-        class="w-full bg-[#0A3D29] text-white py-16 sm:py-20 lg:py-24 border-b border-[#072B1D] overflow-hidden flex items-center min-h-[580px] lg:min-h-[640px] fade-up-scroll">
+        class="w-full bg-[#0A3D29] text-white py-16 sm:py-20 lg:py-24 border-b border-[#072B1D] overflow-hidden flex items-center min-h-[580px] lg:min-h-[640px] scroll-reveal">
         <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-center">
 
@@ -786,7 +735,7 @@
                         </div>
 
                         <div x-show="!loaded"
-                            class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none rounded-2xl"></div>
+                            class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none rounded-xl"></div>
                         <img x-ref="img"
                             src="{{ asset('images/remen_maos_mockup.png') }}?v={{ file_exists(public_path('images/remen_maos_mockup.png')) ? filemtime(public_path('images/remen_maos_mockup.png')) : time() }}"
                             alt="Perpustakaan Digital Remen Maos Desa Catur Multi-Device Mockup" width="1181" height="619"
@@ -806,7 +755,7 @@
 
     <!-- MAIN CONTAINER FOR LOWER SECTIONS (Aparatur Desa, Peta) -->
     <div class="w-full bg-[#F8FAF7] border-b border-[#DCE6DA]">
-        <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-16 fade-up-scroll">
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-16 scroll-reveal">
 
             <!-- ========================================================= -->
             <!-- SECTION 4: APARATUR DESA (PERANGKAT DESA CATUR)             -->
@@ -1007,7 +956,7 @@
                              :style="`transform: translateX(${getTransform()}px); transition: ${withTransition ? 'transform 360ms cubic-bezier(0.25, 1, 0.5, 1)' : 'none'};`">
                             @foreach($allCards as $index => $card)
                                 <div @click="goTo({{ $index }})"
-                                     class="shrink-0 group flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl bg-white border transition-all duration-300 ease-out cursor-pointer overflow-hidden transform"
+                                     class="shrink-0 group flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-white border transition-all duration-300 ease-out cursor-pointer overflow-hidden transform"
                                      :style="`width: ${cardWidth}px; margin-right: ${gap}px;`"
                                      :class="{
                                          'filter-none opacity-100 scale-100 z-20 shadow-xl border-[#0A3D29]/40 ring-2 ring-[#0A3D29]/15': 
@@ -1084,21 +1033,26 @@
 
     @push('scripts')
         <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
+            // Scroll reveal using IntersectionObserver — fires global .scroll-reveal elements
+            (function () {
+                if (!('IntersectionObserver' in window)) {
+                    document.querySelectorAll('.scroll-reveal').forEach(function (el) {
+                        el.classList.add('is-visible');
+                    });
+                    return;
+                }
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
                         if (entry.isIntersecting) {
                             entry.target.classList.add('is-visible');
                             observer.unobserve(entry.target);
                         }
                     });
-                }, {
-                    threshold: 0.05,
-                    rootMargin: '0px 0px -30px 0px'
+                }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+                document.querySelectorAll('.scroll-reveal').forEach(function (el) {
+                    observer.observe(el);
                 });
-
-                document.querySelectorAll('.fade-up-scroll').forEach(el => observer.observe(el));
-            });
+            })();
         </script>
     @endpush
 

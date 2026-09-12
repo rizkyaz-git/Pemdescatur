@@ -45,7 +45,7 @@
                 
                 <!-- Tombol Terbaru -->
                 <a href="{{ route('public.gallery', array_merge(request()->except(['sort', 'page']), ['sort' => 'latest'])) }}" 
-                   class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all backdrop-blur-xl {{ (!request('sort') || request('sort') === 'latest') ? 'bg-[#0A3D29]/15 text-[#0A3D29] border border-[#0A3D29]/30 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 shadow-2xs' }}">
+                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all backdrop-blur-xl {{ (!request('sort') || request('sort') === 'latest') ? 'bg-[#0A3D29]/15 text-[#0A3D29] border border-[#0A3D29]/30 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 shadow-2xs' }}">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
@@ -54,7 +54,7 @@
 
                 <!-- Tombol Populer -->
                 <a href="{{ route('public.gallery', array_merge(request()->except(['sort', 'page']), ['sort' => 'popular'])) }}" 
-                   class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all backdrop-blur-xl {{ (request('sort') === 'popular') ? 'bg-[#0A3D29]/15 text-[#0A3D29] border border-[#0A3D29]/30 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 shadow-2xs' }}">
+                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all backdrop-blur-xl {{ (request('sort') === 'popular') ? 'bg-[#0A3D29]/15 text-[#0A3D29] border border-[#0A3D29]/30 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 shadow-2xs' }}">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -66,7 +66,7 @@
                 <div class="relative">
                     <button type="button" 
                             @click="filterOpen = !filterOpen" 
-                            class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer {{ request('category') ? 'bg-[#0A3D29]/15 text-[#0A3D29] border border-[#0A3D29]/30 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 shadow-2xs' }}">
+                            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer {{ request('category') ? 'bg-[#0A3D29]/15 text-[#0A3D29] border border-[#0A3D29]/30 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 shadow-2xs' }}">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                         </svg>
@@ -85,7 +85,7 @@
                          x-transition:leave="transition ease-in duration-150"
                          x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                          x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
-                         class="absolute right-0 mt-2 w-56 bg-white rounded-2xl border border-slate-200 shadow-2xl z-50 p-2 space-y-1">
+                         class="absolute right-0 mt-2 w-56 bg-white rounded-xl border border-slate-200 shadow-2xl z-50 p-2 space-y-1">
                         
                         <a href="{{ route('public.gallery', request()->except(['category', 'page'])) }}" 
                            class="block px-3.5 py-2 rounded-xl text-xs font-bold transition {{ !request('category') ? 'bg-[#0A3D29]/15 text-[#0A3D29]' : 'text-slate-700 hover:bg-slate-100/70' }}">
@@ -145,7 +145,7 @@
                                 $newsUrl = route('public.news.show', $item->slug);
                             @endphp
 
-                            <div class="group bg-white rounded-2xl border border-slate-200/90 hover:border-[#0A3D29]/40 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
+                            <div class="group bg-white rounded-xl border border-slate-200/90 hover:border-[#0A3D29]/40 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
                                  @click="
                                     activeModal = true; 
                                     activeImage = '{{ $imgUrl }}'; 
@@ -227,8 +227,8 @@
 
                 @else
                     <!-- Empty State -->
-                    <div class="text-center py-20 bg-slate-50/80 rounded-3xl border border-slate-200/80 max-w-2xl mx-auto px-6 space-y-4">
-                        <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-[#0A3D29] flex items-center justify-center mx-auto shadow-xs">
+                    <div class="text-center py-20 bg-slate-50/80 rounded-xl border border-slate-200/80 max-w-2xl mx-auto px-6 space-y-4">
+                        <div class="w-16 h-16 rounded-xl bg-emerald-50 text-[#0A3D29] flex items-center justify-center mx-auto shadow-xs">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
@@ -266,7 +266,7 @@
          x-transition:leave-end="opacity-0"
          @click="activeModal = false">
         
-        <div class="relative max-w-4xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl border border-white/20 flex flex-col max-h-[90vh]" 
+        <div class="relative max-w-4xl w-full bg-white rounded-xl overflow-hidden shadow-2xl border border-white/20 flex flex-col max-h-[90vh]" 
              @click.stop
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0 scale-95"

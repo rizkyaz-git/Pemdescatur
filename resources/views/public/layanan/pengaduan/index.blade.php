@@ -126,19 +126,19 @@
             <div class="flex items-center gap-1.5 overflow-x-auto text-xs py-1">
                 <span class="text-slate-400 font-medium mr-1 text-[11px]">Status:</span>
                 <a href="{{ route('warga.complaint.index', array_filter(['search' => $search])) }}#katalog-pengaduan"
-                   class="px-3 py-1 rounded-full text-xs transition {{ empty($selectedStatus) ? 'bg-[#0A3D29] text-white font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium' }}">
+                   class="px-3 py-1.5 rounded-lg text-xs transition {{ empty($selectedStatus) ? 'bg-[#0A3D29] text-white font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium' }}">
                     Semua
                 </a>
                 <a href="{{ route('warga.complaint.index', array_filter(['search' => $search, 'status' => 'new'])) }}#katalog-pengaduan"
-                   class="px-3 py-1 rounded-full text-xs transition {{ $selectedStatus === 'new' ? 'bg-[#0A3D29] text-white font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium' }}">
+                   class="px-3 py-1.5 rounded-lg text-xs transition {{ $selectedStatus === 'new' ? 'bg-[#0A3D29] text-white font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium' }}">
                     Menunggu
                 </a>
                 <a href="{{ route('warga.complaint.index', array_filter(['search' => $search, 'status' => 'processing'])) }}#katalog-pengaduan"
-                   class="px-3 py-1 rounded-full text-xs transition {{ $selectedStatus === 'processing' ? 'bg-[#0A3D29] text-white font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium' }}">
+                   class="px-3 py-1.5 rounded-lg text-xs transition {{ $selectedStatus === 'processing' ? 'bg-[#0A3D29] text-white font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium' }}">
                     Diproses
                 </a>
                 <a href="{{ route('warga.complaint.index', array_filter(['search' => $search, 'status' => 'resolved'])) }}#katalog-pengaduan"
-                   class="px-3 py-1 rounded-full text-xs transition {{ $selectedStatus === 'resolved' ? 'bg-[#0A3D29] text-white font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium' }}">
+                   class="px-3 py-1.5 rounded-lg text-xs transition {{ $selectedStatus === 'resolved' ? 'bg-[#0A3D29] text-white font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium' }}">
                     Selesai
                 </a>
             </div>

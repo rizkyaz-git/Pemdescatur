@@ -20,7 +20,7 @@
             </a>
         </div>
 
-        <div class="bg-white rounded-2xl border border-gray-200 shadow-xs p-6 sm:p-8 space-y-6">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-xs p-6 sm:p-8 space-y-6">
             <!-- Progress Tracker -->
             <div class="border-b border-gray-200 pb-6">
                 <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Proses Verifikasi Tiket</p>

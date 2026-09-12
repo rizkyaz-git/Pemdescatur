@@ -22,11 +22,63 @@
         });
     @endphp
 
+    <style>
+        /* Scoped Slider Track for Rock-Solid Mobile Slide Transition on Deploy */
+        .surat-slider-container {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        @media (max-width: 1023px) {
+            .surat-slider-track {
+                display: flex !important;
+                width: 200% !important;
+                transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                will-change: transform;
+            }
+            .surat-slider-track.is-detail {
+                transform: translateX(-50%) !important;
+            }
+            .surat-slider-track.is-menu {
+                transform: translateX(0%) !important;
+            }
+            .surat-slider-pane {
+                width: 50% !important;
+                flex-shrink: 0 !important;
+                min-width: 0 !important;
+                box-sizing: border-box !important;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .surat-slider-container {
+                overflow: visible !important;
+            }
+            .surat-slider-track {
+                display: grid !important;
+                grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+                column-gap: 2rem !important;
+                width: 100% !important;
+                transform: none !important;
+                transition: none !important;
+            }
+            .surat-slider-pane-left {
+                grid-column: span 5 / span 5 !important;
+                width: 100% !important;
+            }
+            .surat-slider-pane-right {
+                grid-column: span 7 / span 7 !important;
+                width: 100% !important;
+            }
+        }
+    </style>
+
     <!-- Main Page Container (Clean Minimalist Canvas) -->
     <div class="bg-white min-h-screen py-8 sm:py-10" x-data="{ 
                      templates: {{ Js::from($templatesData) }},
                      selectedTemplate: null,
                      mobileView: 'menu',
+                     mobileSearchOpen: {{ !empty($search) ? 'true' : 'false' }},
                      alurModalOpen: false,
                      isReady: false,
                      init() {
@@ -91,9 +143,9 @@
                 </div>
             @endif
 
-            <!-- Minimalist Header Title, Alur Button & Search Bar -->
+            <!-- Minimalist Header Title, Search Bar & Tombol Alur -->
             <div
-                class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 sm:gap-6 pb-6 border-b border-slate-200/80 text-left">
+                class="pb-6 border-b border-slate-200/80 text-left space-y-3.5 md:space-y-0 md:flex md:items-center md:justify-between md:gap-6">
                 <div class="space-y-1">
                     <x-breadcrumbs :items="[
                         ['label' => 'BERANDA', 'url' => route('home')],
@@ -105,55 +157,132 @@
                     </h1>
                 </div>
 
-                <!-- Action Controls: Search Bar di Kiri & Tombol Alur di Kanan (Sejajar) -->
-                <div class="w-full md:w-auto flex items-center gap-2 sm:gap-3">
-                    <!-- Search Bar di Kiri -->
-                    <div class="flex-1 sm:w-64 md:w-72">
-                        <form action="{{ route('warga.letter.index') }}#katalog-surat" method="GET" class="relative">
-                            <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari template surat..."
-                                class="w-full pl-9 pr-16 py-2 rounded-lg border border-slate-200 text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 bg-white focus:outline-none focus:border-[#0A3D29] focus:ring-1 focus:ring-[#0A3D29]/30 transition shadow-xs">
-                            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <!-- Action Controls: Mobile & Desktop -->
+                <div class="w-full md:w-auto">
+                    
+                    <!-- A. TAMPILAN MOBILE (< md): Memenuhi Lebar Halaman dengan Animasi Mengembang & Menyusut Mulus -->
+                    <div class="md:hidden w-full flex items-center gap-2.5">
+                        
+                        <!-- 1. Tombol Alur Pengurusan (KIRI, Fill Solid, Menyusut Jadi Ikon saat Search Aktif) -->
+                        <button type="button" 
+                            @click="if (mobileSearchOpen) { mobileSearchOpen = false; } openAlurModal()"
+                            class="h-10 rounded-xl bg-[#0A3D29] hover:bg-[#072B1D] text-white shadow-xs flex items-center justify-center gap-2 transition-all duration-300 ease-in-out cursor-pointer active:scale-[0.98] shrink-0"
+                            :class="mobileSearchOpen ? 'w-10 px-0' : 'flex-1 px-4'"
+                            title="Alur Pengurusan Surat">
+                            <svg class="w-4 h-4 shrink-0 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                             </svg>
-                            <div class="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                                @if(!empty($search))
-                                    <a href="{{ route('warga.letter.index') }}#katalog-surat"
-                                        class="text-xs text-slate-400 hover:text-slate-600 px-1 py-0.5" title="Hapus pencarian">
-                                        ✕
-                                    </a>
-                                @endif
-                                <button type="submit"
-                                    class="bg-[#0A3D29] hover:bg-[#072B1D] text-white text-xs font-semibold px-2.5 py-1 rounded-md transition cursor-pointer">
-                                    Cari
+                            <span class="text-xs font-bold whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+                                  :class="mobileSearchOpen ? 'max-w-0 opacity-0 -ml-1' : 'max-w-[180px] opacity-100'">
+                                Alur Pengurusan
+                            </span>
+                        </button>
+
+                        <!-- 2. Search Area (KANAN: Ikon yang Mengembang Menjadi Search Bar & Menyusut Kembali) -->
+                        <div class="h-10 transition-all duration-300 ease-in-out flex items-center"
+                             :class="mobileSearchOpen ? 'flex-1' : 'w-10 shrink-0'">
+                            
+                            <!-- Kondisi Menyusut: Tombol Ikon Search -->
+                            <button x-show="!mobileSearchOpen" type="button"
+                                @click="mobileSearchOpen = true; $nextTick(() => $refs.mobileSearchInput?.focus())"
+                                class="w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-xs flex items-center justify-center transition-all duration-200 active:scale-95 cursor-pointer shrink-0"
+                                title="Buka Pencarian Surat">
+                                <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+
+                            <!-- Kondisi Mengembang: Form Input Aktif -->
+                            <div x-show="mobileSearchOpen" x-cloak
+                                x-transition:enter="transition ease-out duration-300"
+                                x-transition:enter-start="opacity-0 scale-95 origin-right"
+                                x-transition:enter-end="opacity-100 scale-100 origin-right"
+                                x-transition:leave="transition ease-in duration-200"
+                                x-transition:leave-start="opacity-100 scale-100 origin-right"
+                                x-transition:leave-end="opacity-0 scale-95 origin-right"
+                                @click.outside="if (!$refs.mobileSearchInput?.value) mobileSearchOpen = false"
+                                class="w-full flex items-center gap-1.5 h-full">
+                                <form action="{{ route('warga.letter.index') }}#katalog-surat" method="GET" class="relative flex-1 h-full flex items-center">
+                                    <input type="text" name="search" x-ref="mobileSearchInput" value="{{ $search ?? '' }}"
+                                        placeholder="Cari surat..."
+                                        class="w-full h-full pl-8 pr-14 py-2 rounded-xl border border-[#0A3D29] text-xs text-slate-800 placeholder:text-slate-400 bg-white focus:outline-none ring-2 ring-[#0A3D29]/20 transition shadow-xs">
+                                    <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                    <button type="submit"
+                                        class="absolute right-1 top-1/2 -translate-y-1/2 bg-[#0A3D29] hover:bg-[#072B1D] text-white text-[11px] font-semibold px-2 py-1 rounded-lg transition cursor-pointer">
+                                        Cari
+                                    </button>
+                                </form>
+
+                                <!-- Tombol Menyusut Kembali (Ikon ✕) -->
+                                <button type="button" @click="mobileSearchOpen = false"
+                                    class="w-10 h-10 rounded-xl border border-slate-200 bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center shrink-0 transition active:scale-95 cursor-pointer"
+                                    title="Tutup Pencarian">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
                                 </button>
                             </div>
-                        </form>
+
+                        </div>
                     </div>
 
-                    <!-- Tombol Alur di Kanan -->
-                    <button type="button" @click="openAlurModal()"
-                        class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-[#0A3D29] hover:text-[#072B1D] font-semibold text-xs sm:text-sm shadow-xs transition-all shrink-0 cursor-pointer active:scale-95"
-                        title="Buka Alur Pengurusan Surat">
-                        <svg class="w-4 h-4 text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                        <span>Alur Pengurusan</span>
-                    </button>
+                    <!-- B. TAMPILAN DESKTOP (>= md): Tombol Alur (Fill Solid di Kiri) + Search Bar (di Kanan) -->
+                    <div class="hidden md:flex items-center gap-3">
+                        <!-- Tombol Alur di Kiri Desktop (Fill Solid) -->
+                        <button type="button" @click="openAlurModal()"
+                            class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#0A3D29] hover:bg-[#072B1D] text-white font-semibold text-xs sm:text-sm shadow-xs transition-all shrink-0 cursor-pointer active:scale-95"
+                            title="Buka Alur Pengurusan Surat">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
+                            <span>Alur Pengurusan</span>
+                        </button>
+
+                        <!-- Search Bar di Kanan Desktop -->
+                        <div class="w-64 lg:w-72">
+                            <form action="{{ route('warga.letter.index') }}#katalog-surat" method="GET" class="relative">
+                                <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari template surat..."
+                                    class="w-full pl-9 pr-16 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 bg-white focus:outline-none focus:border-[#0A3D29] focus:ring-1 focus:ring-[#0A3D29]/30 transition shadow-xs">
+                                <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                                <div class="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                                    @if(!empty($search))
+                                        <a href="{{ route('warga.letter.index') }}#katalog-surat"
+                                            class="text-xs text-slate-400 hover:text-slate-600 px-1 py-0.5" title="Hapus pencarian">
+                                            ✕
+                                        </a>
+                                    @endif
+                                    <button type="submit"
+                                        class="bg-[#0A3D29] hover:bg-[#072B1D] text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition cursor-pointer">
+                                        Cari
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
             <!-- ========================================================================= -->
             <!-- KATALOG TEMPLATE SURAT: MASTER-DETAIL INTERAKTIF (RESPONSIF & ANIMASI)     -->
             <!-- ========================================================================= -->
-            <div class="overflow-hidden lg:overflow-visible w-full pt-2">
-                <div class="flex lg:grid lg:grid-cols-12 gap-0 lg:gap-8 items-start w-[200%] lg:w-full transition-transform duration-300 ease-in-out"
-                    :class="mobileView === 'detail' ? '-translate-x-1/2 lg:translate-x-0' : 'translate-x-0'">
+            <div class="surat-slider-container pt-2">
+                <div class="surat-slider-track items-start"
+                    :class="mobileView === 'detail' ? 'is-detail' : 'is-menu'">
 
                     <!-- Left Side: List Template Surat -->
-                    <div class="w-1/2 lg:w-auto lg:col-span-5 shrink-0 px-0.5 sm:px-0">
+                    <div class="surat-slider-pane surat-slider-pane-left px-0.5 sm:px-0">
                         <div class="bg-white rounded-xl border border-slate-200/90 overflow-hidden shadow-xs">
                             <!-- Header Daftar Template -->
                             <div
@@ -223,7 +352,7 @@
                     </div>
 
                     <!-- Right Side: Rincian Template Surat (Sticky Detail Panel) -->
-                    <div class="w-1/2 lg:w-auto lg:col-span-7 shrink-0 px-0.5 sm:px-0 lg:sticky lg:top-24">
+                    <div class="surat-slider-pane surat-slider-pane-right px-0.5 sm:px-0 lg:sticky lg:top-24">
 
                         <!-- Mobile Back Navigation Button -->
                         <button type="button" @click="backToMenu()"
@@ -352,7 +481,7 @@
                 x-transition:leave="ease-in duration-150"
                 x-transition:leave-start="opacity-100 scale-100"
                 x-transition:leave-end="opacity-0 scale-95"
-                class="relative bg-white rounded-2xl max-w-md w-full border border-slate-200/90 shadow-2xl overflow-hidden z-[1000000] my-auto">
+                class="relative bg-white rounded-xl max-w-md w-full border border-slate-200/90 shadow-2xl overflow-hidden z-[1000000] my-auto">
 
                 <!-- Header Minimalis -->
                 <div class="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
