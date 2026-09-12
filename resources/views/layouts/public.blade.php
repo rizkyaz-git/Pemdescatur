@@ -354,7 +354,7 @@
                                     :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#0A3D29]' : 'text-[#D9B85C]'"
                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.684A1.76 1.76 0 013 12c0-.97.784-1.76 1.75-1.76l6.25 1.05M18 13l2.25 3.5" />
+                                        d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.01 5.395m-1.01-5.395c.379 1.764.575 3.567.575 5.395 0 1.828-.196 3.631-.575 5.395m0 0a23.909 23.909 0 01-1.01 5.395m1.01-5.395A23.74 23.74 0 0118.795 21" />
                                 </svg>
                                 <div>
                                     <span class="block font-bold">Laporan & Pengaduan</span>
@@ -363,13 +363,13 @@
                         </div>
                     </div>
 
-                    <!-- PPKO Catur Cerdas UMS Direct Link -->
+                    <!-- Catur Cerdas Direct Link -->
                     <a href="{{ route('public.ppko') }}"
                         class="h-9 sm:h-10 px-3.5 inline-flex items-center rounded-lg transition-all duration-700 ease-in-out"
                         :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) 
                            ? '{{ request()->routeIs('public.ppko') ? 'text-[#0A3D29] font-extrabold text-sm hover:bg-[#EAF1E8]' : 'text-[#20332A] font-semibold hover:bg-[#EAF1E8] hover:text-[#0A3D29]' }}' 
                            : '{{ request()->routeIs('public.ppko') ? 'text-white font-extrabold text-sm drop-shadow-md hover:bg-white/20' : 'text-white/90 font-semibold hover:bg-white/20 hover:text-white' }}'">
-                        <span>PPKO UMS</span>
+                        <span>Catur Cerdas</span>
                     </a>
 
                     <!-- Perpustakaan Button -->
@@ -817,7 +817,7 @@
                 </div>
             </div>
 
-            <!-- 5. PPKO Catur Cerdas UMS (Direct Standalone Link) -->
+            <!-- 5. Catur Cerdas (Direct Standalone Link) -->
             <div class="nav-cascade-5">
                 <a href="{{ route('public.ppko') }}" @click="mobileMenuOpen = false"
                     class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors {{ request()->routeIs('public.ppko') ? 'bg-black/[0.06] text-[#0A3D29] font-bold' : 'text-slate-800 active:bg-black/[0.08]' }}">
@@ -829,7 +829,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                         </svg>
-                        <span>PPKO Catur Cerdas UMS 2026</span>
+                        <span>Catur Cerdas</span>
                     </div>
                 </a>
             </div>

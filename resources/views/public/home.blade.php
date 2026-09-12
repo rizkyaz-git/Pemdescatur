@@ -88,7 +88,7 @@
                     <svg class="w-5 h-5 text-[#0A3D29] group-hover:scale-110 transition-transform mb-1 shrink-0" fill="none"
                         stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.684A1.76 1.76 0 013 12c0-.97.784-1.76 1.75-1.76l6.25 1.05M18 13l2.25 3.5" />
+                            d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.01 5.395m-1.01-5.395c.379 1.764.575 3.567.575 5.395 0 1.828-.196 3.631-.575 5.395m0 0a23.909 23.909 0 01-1.01 5.395m1.01-5.395A23.74 23.74 0 0118.795 21" />
                     </svg>
                     <span
                         class="block text-[10px] font-bold text-slate-800 group-hover:text-[#0A3D29] leading-tight truncate w-full">Aduan</span>
@@ -170,7 +170,7 @@
                         <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor"
                             stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.684A1.76 1.76 0 013 12c0-.97.784-1.76 1.75-1.76l6.25 1.05M18 13l2.25 3.5" />
+                                d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.01 5.395m-1.01-5.395c.379 1.764.575 3.567.575 5.395 0 1.828-.196 3.631-.575 5.395m0 0a23.909 23.909 0 01-1.01 5.395m1.01-5.395A23.74 23.74 0 0118.795 21" />
                         </svg>
                         <h3 class="font-serif text-base font-bold text-slate-900 leading-snug">
                             Pengaduan
@@ -811,395 +811,259 @@
             <!-- ========================================================= -->
             <!-- SECTION 4: APARATUR DESA (PERANGKAT DESA CATUR)             -->
             <!-- ========================================================= -->
-            <section class="py-4 space-y-6 lg:space-y-8">
+            @php
+                $officialList = [];
+                if(isset($officials) && $officials->count() > 0) {
+                    foreach($officials as $off) {
+                        $officialList[] = [
+                            'name' => $off->name,
+                            'position' => $off->position,
+                            'photo' => $off->photo_path ? asset('storage/' . $off->photo_path) : null,
+                        ];
+                    }
+                } else {
+                    $officialList = [
+                        ['name' => 'Dra. NUNIK S RAHAYU, M.Pd', 'position' => 'Kepala Desa Catur', 'photo' => null],
+                        ['name' => 'Bambang Sugeng, S.Sos.', 'position' => 'Sekretaris Desa', 'photo' => null],
+                        ['name' => 'Siti Rahmawati, A.Md.', 'position' => 'Kaur Keuangan', 'photo' => null],
+                        ['name' => 'Tri Santoso, S.T.', 'position' => 'Kaur Perencanaan & Umum', 'photo' => null],
+                        ['name' => 'Joko Widodo, S.P.', 'position' => 'Kasi Pelayanan', 'photo' => null],
+                    ];
+                }
+                $totalUnique = count($officialList);
+                // Repeat 5 sets for infinite seamless sliding
+                $allCards = [];
+                for ($r = 0; $r < 5; $r++) {
+                    foreach ($officialList as $item) {
+                        $allCards[] = $item;
+                    }
+                }
+                $initialIndex = $totalUnique * 2; // Start in middle set (Set 2)
+            @endphp
+
+            <section class="py-4 space-y-6 lg:space-y-8" 
+                     x-data="{
+                         totalUnique: {{ $totalUnique }},
+                         totalCards: {{ count($allCards) }},
+                         currentIndex: {{ $initialIndex }},
+                         cardWidth: 240,
+                         gap: 20,
+                         containerWidth: 1000,
+                         isDesktop: window.innerWidth >= 640,
+                         isDragging: false,
+                         dragStartX: 0,
+                         dragOffset: 0,
+                         withTransition: true,
+
+                         init() {
+                             this.updateDimensions();
+                             window.addEventListener('resize', () => {
+                                 this.updateDimensions();
+                             });
+                         },
+
+                         updateDimensions() {
+                             if (this.$refs.container) {
+                                 this.containerWidth = this.$refs.container.clientWidth;
+                             }
+                             this.isDesktop = window.innerWidth >= 640;
+                             this.cardWidth = this.isDesktop ? 240 : 210;
+                             this.gap = this.isDesktop ? 20 : 12;
+                         },
+
+                         getStep() {
+                             return this.cardWidth + this.gap;
+                         },
+
+                         getTransform() {
+                             const step = this.getStep();
+                             const centerPos = (this.containerWidth / 2) - (this.currentIndex * step + this.cardWidth / 2);
+                             return centerPos + this.dragOffset;
+                         },
+
+                         next() {
+                             this.goTo(this.currentIndex + 1);
+                         },
+
+                         prev() {
+                             this.goTo(this.currentIndex - 1);
+                         },
+
+                         goTo(index) {
+                             this.withTransition = true;
+                             this.currentIndex = index;
+                             this.checkWrap();
+                         },
+
+                         checkWrap() {
+                             setTimeout(() => {
+                                 const minBoundary = this.totalUnique;
+                                 const maxBoundary = this.totalUnique * 3;
+                                 if (this.currentIndex < minBoundary || this.currentIndex >= maxBoundary) {
+                                     this.withTransition = false;
+                                     const offsetInSet = ((this.currentIndex % this.totalUnique) + this.totalUnique) % this.totalUnique;
+                                     this.currentIndex = this.totalUnique * 2 + offsetInSet;
+                                 }
+                             }, 360);
+                         },
+
+                         handleTouchStart(e) {
+                             this.isDragging = true;
+                             this.dragStartX = e.touches[0].clientX;
+                             this.dragOffset = 0;
+                         },
+
+                         handleTouchMove(e) {
+                             if (!this.isDragging) return;
+                             this.dragOffset = e.touches[0].clientX - this.dragStartX;
+                         },
+
+                         handleTouchEnd() {
+                             if (!this.isDragging) return;
+                             this.isDragging = false;
+                             if (this.dragOffset < -35) {
+                                 this.next();
+                             } else if (this.dragOffset > 35) {
+                                 this.prev();
+                             }
+                             this.dragOffset = 0;
+                         },
+
+                         handleMouseDown(e) {
+                             this.isDragging = true;
+                             this.dragStartX = e.clientX;
+                             this.dragOffset = 0;
+                         },
+
+                         handleMouseMove(e) {
+                             if (!this.isDragging) return;
+                             this.dragOffset = e.clientX - this.dragStartX;
+                         },
+
+                         handleMouseUp() {
+                             if (!this.isDragging) return;
+                             this.isDragging = false;
+                             if (this.dragOffset < -35) {
+                                 this.next();
+                             } else if (this.dragOffset > 35) {
+                                 this.prev();
+                             }
+                             this.dragOffset = 0;
+                         }
+                     }">
 
                 <!-- Header Title -->
-                <div
-                    class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200 text-center sm:text-left">
-                    <h2
-                        class="font-['Public_Sans',sans-serif] text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-800 leading-tight">
-                        Perangkat Desa Catur
-                    </h2>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200 text-center sm:text-left">
+                    <div>
+                        <h2 class="font-['Public_Sans',sans-serif] text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-800 leading-tight">
+                            Perangkat Desa Catur
+                        </h2>
+                    </div>
 
                     <!-- Desktop Action Button (Right Aligned) -->
                     <a href="{{ route('public.officials') }}"
                         class="hidden sm:inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#062c1d] text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 shrink-0">
                         <span>Lihat Semua Aparatur</span>
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
                     </a>
                 </div>
 
-                {{-- 1. MOBILE ONLY SINGLE-CARD AUTO-SLIDING & SWIPEABLE CAROUSEL (sm:hidden) --}}
-                <div class="block sm:hidden relative" x-data="{ 
-                                                                                    activeSlide: 0, 
-                                                                                    totalSlides: {{ (isset($officials) && $officials->count() > 0) ? min($officials->count(), 8) : 4 }},
-                                                                                    timer: null,
-                                                                                    touchStartX: 0,
-                                                                                    touchEndX: 0,
-                                                                                    touchStartY: 0,
-                                                                                    touchEndY: 0,
-                                                                                    init() {
-                                                                                        this.startAutoSlide();
-                                                                                    },
-                                                                                    startAutoSlide() {
-                                                                                        this.stopAutoSlide();
-                                                                                        this.timer = setInterval(() => {
-                                                                                            this.nextSlide();
-                                                                                        }, 3500);
-                                                                                    },
-                                                                                    stopAutoSlide() {
-                                                                                        if (this.timer) clearInterval(this.timer);
-                                                                                    },
-                                                                                    nextSlide() {
-                                                                                        this.activeSlide = (this.activeSlide + 1) % this.totalSlides;
-                                                                                    },
-                                                                                    prevSlide() {
-                                                                                        this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides;
-                                                                                    },
-                                                                                    handleTouchStart(e) {
-                                                                                        this.touchStartX = e.changedTouches[0].clientX;
-                                                                                        this.touchStartY = e.changedTouches[0].clientY;
-                                                                                        this.stopAutoSlide();
-                                                                                    },
-                                                                                    handleTouchEnd(e) {
-                                                                                        this.touchEndX = e.changedTouches[0].clientX;
-                                                                                        this.touchEndY = e.changedTouches[0].clientY;
-                                                                                        let diffX = this.touchEndX - this.touchStartX;
-                                                                                        let diffY = this.touchEndY - this.touchStartY;
-                                                                                        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 30) {
-                                                                                            if (diffX < 0) {
-                                                                                                this.nextSlide();
-                                                                                            } else {
-                                                                                                this.prevSlide();
-                                                                                            }
-                                                                                        }
-                                                                                        this.startAutoSlide();
-                                                                                    }
-                                                                                }" @mouseenter="stopAutoSlide()"
-                    @mouseleave="startAutoSlide()">
+                <!-- Carousel Stage Container with Floating Glassmorphism Navigation Buttons -->
+                <div class="relative group/stage">
 
-                    <div class="relative overflow-hidden py-1 touch-pan-y">
-                        <div class="flex transition-transform duration-500 ease-out"
-                            :style="`transform: translateX(-${activeSlide * 100}%);`" @touchstart="handleTouchStart($event)"
-                            @touchend="handleTouchEnd($event)">
+                    <!-- Floating Glassmorphism Button: Kiri -->
+                    <button type="button" @click="prev()"
+                        class="absolute left-1 sm:left-3 md:left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/70 hover:bg-white/95 active:scale-90 backdrop-blur-md border border-white/80 text-[#0A3D29] flex items-center justify-center transition-all duration-200 shadow-[0_8px_22px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.18)] cursor-pointer group"
+                        aria-label="Aparatur Sebelumnya">
+                        <svg class="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
 
-                            @if(isset($officials) && $officials->count() > 0)
-                                @foreach($officials as $official)
-                                    <div class="w-full shrink-0 flex justify-center px-2">
-                                        {{-- Full-Width Friendly Mobile Card --}}
-                                        <div
-                                            class="w-full max-w-[310px] p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-md flex flex-col justify-between text-center">
-                                            <div>
-                                                <!-- Photo Container (Compact with Sparkling Shimmer Skeleton) -->
-                                                <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3 flex items-center justify-center shadow-2xs"
-                                                    x-data="{ loaded: false }"
-                                                    x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
-                                                    @if($official->photo_path)
-                                                        <!-- Shimmer Skeleton Glow (Active only while loading) -->
-                                                        <div x-show="!loaded"
-                                                            class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none">
-                                                        </div>
-                                                        <img x-ref="img" src="{{ asset('storage/' . $official->photo_path) }}"
-                                                            alt="{{ $official->name }}" loading="lazy" @load="loaded = true;"
-                                                            class="relative z-10 w-full h-full object-cover object-top transition-all duration-700"
-                                                            :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
-                                                    @else
-                                                        <div
-                                                            class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
-                                                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                            </svg>
-                                                        </div>
-                                                    @endif
-                                                </div>
+                    <!-- Floating Glassmorphism Button: Kanan -->
+                    <button type="button" @click="next()"
+                        class="absolute right-1 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/70 hover:bg-white/95 active:scale-90 backdrop-blur-md border border-white/80 text-[#0A3D29] flex items-center justify-center transition-all duration-200 shadow-[0_8px_22px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.18)] cursor-pointer group"
+                        aria-label="Aparatur Selanjutnya">
+                        <svg class="w-5 h-5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
 
-                                                <!-- Position Text -->
-                                                <p
-                                                    class="text-[11px] font-bold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
-                                                    {{ $official->position }}
-                                                </p>
+                    <!-- Carousel Stage (Overflow Hidden, Centered Track) -->
+                    <div x-ref="container" 
+                         class="relative overflow-hidden py-4 select-none touch-pan-y"
+                         @touchstart="handleTouchStart($event)"
+                         @touchmove="handleTouchMove($event)"
+                         @touchend="handleTouchEnd()"
+                         @mousedown="handleMouseDown($event)"
+                         @mousemove="handleMouseMove($event)"
+                         @mouseup="handleMouseUp()"
+                         @mouseleave="handleMouseUp()">
 
-                                                <!-- Official Name -->
-                                                <h3
-                                                    class="font-['Public_Sans',sans-serif] text-sm sm:text-base font-extrabold text-slate-800 leading-snug line-clamp-2">
-                                                    {{ $official->name }}
-                                                </h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <!-- Mobile Fallback Card 1: Kepala Desa -->
-                                <div class="w-full shrink-0 flex justify-center px-2">
-                                    <div
-                                        class="w-full max-w-[310px] p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-md flex flex-col justify-between text-center">
-                                        <div>
-                                            <div
-                                                class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3 flex items-center justify-center shadow-2xs">
-                                                <div
-                                                    class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
+                        <!-- Sliding Track -->
+                        <div class="flex items-center"
+                             :style="`transform: translateX(${getTransform()}px); transition: ${withTransition ? 'transform 360ms cubic-bezier(0.25, 1, 0.5, 1)' : 'none'};`">
+                            @foreach($allCards as $index => $card)
+                                <div @click="goTo({{ $index }})"
+                                     class="shrink-0 group flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl bg-white border transition-all duration-300 ease-out cursor-pointer overflow-hidden transform"
+                                     :style="`width: ${cardWidth}px; margin-right: ${gap}px;`"
+                                     :class="{
+                                         'filter-none opacity-100 scale-100 z-20 shadow-xl border-[#0A3D29]/40 ring-2 ring-[#0A3D29]/15': 
+                                             (isDesktop && Math.abs({{ $index }} - currentIndex) <= 1) || (!isDesktop && {{ $index }} === currentIndex),
+                                         'filter blur-[2px] opacity-50 scale-95 z-10 cursor-pointer hover:opacity-80': 
+                                             (isDesktop && Math.abs({{ $index }} - currentIndex) === 2) || (!isDesktop && Math.abs({{ $index }} - currentIndex) === 1),
+                                         'filter blur-[4px] opacity-10 scale-90 pointer-events-none z-0': 
+                                             (isDesktop && Math.abs({{ $index }} - currentIndex) > 2) || (!isDesktop && Math.abs({{ $index }} - currentIndex) > 1)
+                                     }">
+                                    <div>
+                                        <!-- Photo Container (Original Compact Card Style) -->
+                                        <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3 sm:mb-3.5 flex items-center justify-center shadow-2xs"
+                                            x-data="{ loaded: false }" x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
+                                            @if($card['photo'])
+                                                <div x-show="!loaded" class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
+                                                <img x-ref="img" src="{{ $card['photo'] }}"
+                                                    alt="{{ $card['name'] }}" loading="lazy" @load="loaded = true;"
+                                                    class="relative z-10 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                                    :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
+                                            @else
+                                                <div class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400 group-hover:text-[#0A3D29] group-hover:bg-emerald-50 transition-colors">
                                                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                                     </svg>
                                                 </div>
-                                            </div>
-                                            <p
-                                                class="text-[11px] font-bold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
-                                                Kepala Desa Catur
-                                            </p>
-                                            <h3
-                                                class="font-['Public_Sans',sans-serif] text-sm sm:text-base font-extrabold text-slate-800 leading-snug">
-                                                Dra. NUNIK S RAHAYU, M.Pd
-                                            </h3>
+                                            @endif
                                         </div>
-                                    </div>
-                                </div>
 
-                                <!-- Mobile Fallback Card 2: Sekretaris Desa -->
-                                <div class="w-full shrink-0 flex justify-center px-2">
-                                    <div
-                                        class="w-full max-w-[310px] p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-md flex flex-col justify-between text-center">
-                                        <div>
-                                            <div
-                                                class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3 flex items-center justify-center shadow-2xs">
-                                                <div
-                                                    class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
-                                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                            <p
-                                                class="text-[11px] font-bold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
-                                                Sekretaris Desa
-                                            </p>
-                                            <h3
-                                                class="font-['Public_Sans',sans-serif] text-sm sm:text-base font-extrabold text-slate-800 leading-snug">
-                                                Bambang Sugeng, S.Sos.
-                                            </h3>
-                                        </div>
-                                    </div>
-                                </div>
+                                        <!-- Position Text (Original Minimalist Typography) -->
+                                        <p class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
+                                            {{ $card['position'] }}
+                                        </p>
 
-                                <!-- Mobile Fallback Card 3: Kaur Keuangan -->
-                                <div class="w-full shrink-0 flex justify-center px-2">
-                                    <div
-                                        class="w-full max-w-[310px] p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-md flex flex-col justify-between text-center">
-                                        <div>
-                                            <div
-                                                class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3 flex items-center justify-center shadow-2xs">
-                                                <div
-                                                    class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
-                                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                            <p
-                                                class="text-[11px] font-bold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
-                                                Kaur Keuangan
-                                            </p>
-                                            <h3
-                                                class="font-['Public_Sans',sans-serif] text-sm sm:text-base font-extrabold text-slate-800 leading-snug">
-                                                Siti Rahmawati, A.Md.
-                                            </h3>
-                                        </div>
+                                        <!-- Official Name (Original Bold Typography) -->
+                                        <h3 class="font-['Public_Sans',sans-serif] text-sm sm:text-base font-extrabold text-slate-800 group-hover:text-[#0A3D29] transition-colors leading-snug line-clamp-2">
+                                            {{ $card['name'] }}
+                                        </h3>
                                     </div>
                                 </div>
-
-                                <!-- Mobile Fallback Card 4: Kaur Perencanaan & Umum -->
-                                <div class="w-full shrink-0 flex justify-center px-2">
-                                    <div
-                                        class="w-full max-w-[310px] p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-md flex flex-col justify-between text-center">
-                                        <div>
-                                            <div
-                                                class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3 flex items-center justify-center shadow-2xs">
-                                                <div
-                                                    class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400">
-                                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                            <p
-                                                class="text-[11px] font-bold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
-                                                Kaur Perencanaan & Umum
-                                            </p>
-                                            <h3
-                                                class="font-['Public_Sans',sans-serif] text-sm sm:text-base font-extrabold text-slate-800 leading-snug">
-                                                Tri Santoso, S.T.
-                                            </h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
+                            @endforeach
                         </div>
-                    </div>
-
-                    {{-- Mobile Carousel Indicators (Dots) --}}
-                    <div class="flex justify-center items-center gap-1.5 pt-3">
-                        <template x-for="i in totalSlides" :key="i">
-                            <button @click="activeSlide = i - 1; startAutoSlide()"
-                                class="h-1.5 rounded-full transition-all duration-300"
-                                :class="activeSlide === (i - 1) ? 'w-5 bg-[#0A3D29]' : 'w-1.5 bg-slate-300'"
-                                :aria-label="'Slide ' + i">
-                            </button>
-                        </template>
                     </div>
                 </div>
 
-                {{-- 2. DESKTOP/TABLET GRID (hidden sm:grid) --}}
-                <div class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    @if(isset($officials) && $officials->count() > 0)
-                        @foreach($officials->take(4) as $official)
-                            <div
-                                class="group flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[#0A3D29]/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                                <div>
-                                    <!-- Photo Container with Sparkling Shimmer Skeleton Glow -->
-                                    <div class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3.5 flex items-center justify-center shadow-2xs"
-                                        x-data="{ loaded: false }" x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
-                                        @if($official->photo_path)
-                                            <!-- Shimmer Skeleton Glow (Active only while loading) -->
-                                            <div x-show="!loaded"
-                                                class="absolute inset-0 animate-shimmer-glow z-10 pointer-events-none"></div>
-                                            <img x-ref="img" src="{{ asset('storage/' . $official->photo_path) }}"
-                                                alt="{{ $official->name }}" loading="lazy" @load="loaded = true;"
-                                                class="relative z-10 w-full h-full object-cover object-top group-hover:scale-105 transition-all duration-700"
-                                                :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
-                                        @else
-                                            <div
-                                                class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400 group-hover:text-[#0A3D29] group-hover:bg-emerald-50 transition-colors">
-                                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                </svg>
-                                            </div>
-                                        @endif
-                                    </div>
-
-                                    <!-- Position Text (Minimalist Typography, No Wrapper) -->
-                                    <p
-                                        class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
-                                        {{ $official->position }}
-                                    </p>
-
-                                    <!-- Official Name (Bold Contrast) -->
-                                    <h3
-                                        class="font-['Public_Sans',sans-serif] text-base sm:text-lg font-extrabold text-slate-800 group-hover:text-[#0A3D29] transition-colors leading-snug line-clamp-2">
-                                        {{ $official->name }}
-                                    </h3>
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <!-- Mockup Card 1: Kepala Desa -->
-                        <div
-                            class="group flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[#0A3D29]/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                            <div>
-                                <div
-                                    class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3.5 flex items-center justify-center shadow-2xs">
-                                    <div
-                                        class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400 group-hover:text-[#0A3D29] transition-colors">
-                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <p
-                                    class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
-                                    Kepala Desa Catur
-                                </p>
-                                <h3
-                                    class="font-['Public_Sans',sans-serif] text-base sm:text-lg font-extrabold text-slate-800 leading-snug">
-                                    Dra. NUNIK S RAHAYU, M.Pd
-                                </h3>
-                            </div>
-                        </div>
-
-                        <!-- Mockup Card 2: Sekretaris Desa -->
-                        <div
-                            class="group flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[#0A3D29]/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                            <div>
-                                <div
-                                    class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3.5 flex items-center justify-center shadow-2xs">
-                                    <div
-                                        class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400 group-hover:text-[#0A3D29] transition-colors">
-                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <p
-                                    class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
-                                    Sekretaris Desa
-                                </p>
-                                <h3
-                                    class="font-['Public_Sans',sans-serif] text-base sm:text-lg font-extrabold text-slate-800 leading-snug">
-                                    Bambang Sugeng, S.Sos.
-                                </h3>
-                            </div>
-                        </div>
-
-                        <!-- Mockup Card 3: Kaur Keuangan -->
-                        <div
-                            class="group flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[#0A3D29]/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                            <div>
-                                <div
-                                    class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3.5 flex items-center justify-center shadow-2xs">
-                                    <div
-                                        class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400 group-hover:text-[#0A3D29] transition-colors">
-                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <p
-                                    class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
-                                    Kaur Keuangan
-                                </p>
-                                <h3
-                                    class="font-['Public_Sans',sans-serif] text-base sm:text-lg font-extrabold text-slate-800 leading-snug">
-                                    Siti Rahmawati, A.Md.
-                                </h3>
-                            </div>
-                        </div>
-
-                        <!-- Mockup Card 4: Kaur Perencanaan & Umum -->
-                        <div
-                            class="group flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[#0A3D29]/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                            <div>
-                                <div
-                                    class="relative rounded-xl overflow-hidden aspect-[3/4] w-full bg-slate-100 mb-3.5 flex items-center justify-center shadow-2xs">
-                                    <div
-                                        class="w-14 h-14 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-400 group-hover:text-[#0A3D29] transition-colors">
-                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <p
-                                    class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#0A3D29] mb-1 line-clamp-1">
-                                    Kaur Perencanaan & Umum
-                                </p>
-                                <h3
-                                    class="font-['Public_Sans',sans-serif] text-base sm:text-lg font-extrabold text-slate-800 leading-snug">
-                                    Tri Santoso, S.T.
-                                </h3>
-                            </div>
-                        </div>
-                    @endif
+                <!-- Carousel Navigation Dots / Indicator -->
+                <div class="flex justify-center items-center gap-1.5 pt-2">
+                    <template x-for="i in totalUnique" :key="i">
+                        <button @click="goTo(totalUnique * 2 + (i - 1))"
+                            class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
+                            :class="(((currentIndex % totalUnique) + totalUnique) % totalUnique) === (i - 1) 
+                                ? 'w-6 bg-[#0A3D29]' 
+                                : 'w-1.5 bg-slate-300 hover:bg-slate-400'"
+                            :aria-label="'Perangkat ' + i">
+                        </button>
+                    </template>
                 </div>
 
                 <!-- Mobile Bottom Action Button: Lihat Semua Aparatur (block sm:hidden) -->

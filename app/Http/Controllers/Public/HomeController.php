@@ -20,7 +20,7 @@ class HomeController extends Controller
             ->take(4)
             ->get();
         $galleries = Gallery::latest()->take(4)->get();
-        $officials = Official::orderBy('order', 'asc')->take(8)->get();
+        $officials = Official::orderBy('order', 'asc')->get();
         $libraryUrl = Setting::get('library_url', 'https://perpustakaan.boyolali.go.id');
         $libraryDesktopImage = Setting::get('library_desktop_image_path');
         $libraryTabletImage = Setting::get('library_tablet_image_path');

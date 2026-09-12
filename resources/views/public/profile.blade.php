@@ -31,68 +31,12 @@
             </header>
 
             {{-- ========================================================================= --}}
-            {{-- 2. 3-COLUMN EDITORIAL GRID (Left Sidebar + Center Story + Right Sidebar) --}}
+            {{-- 2. EDITORIAL GRID (Main Story & Photo + Sidebar Data Wilayah)             --}}
             {{-- ========================================================================= --}}
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start mt-2 sm:mt-4">
 
-                {{-- ================= LEFT COLUMN: ~3 COLS (Card Panel Kiri) ================= --}}
-                <aside class="lg:col-span-3 space-y-6 order-2 lg:order-1">
-
-                    <!-- Kartu 1: Pimpinan Desa -->
-                    <div class="bg-white border border-[#DCE6DA] rounded-lg p-5 shadow-xs space-y-3.5">
-                        <h3
-                            class="font-serif font-bold text-xs uppercase tracking-widest text-[#0A3D29] border-b border-[#DCE6DA] pb-2">
-                            Pimpinan Desa
-                        </h3>
-
-                        <!-- Portrait Photo -->
-                        <div
-                            class="w-full max-w-[210px] aspect-[4/5] bg-[#EAF1E8]/40 overflow-hidden border border-[#DCE6DA] rounded-md">
-                            @if($kades && $kades->photo_path)
-                                <img src="{{ asset('storage/' . $kades->photo_path) }}" alt="{{ $kades->name }}"
-                                    class="w-full h-full object-cover object-top">
-                            @else
-                                <div
-                                    class="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-white text-slate-400">
-                                    @if(file_exists(public_path('images/logo_catur.png')))
-                                        <img src="{{ asset('images/logo_catur.png') }}" alt="Logo Pemdes Catur"
-                                            class="w-20 h-20 object-contain mb-2">
-                                    @else
-                                        <span class="text-3xl font-serif text-[#0A3D29] font-bold">C</span>
-                                    @endif
-                                    <span class="text-[11px] font-bold text-[#20332A] mt-1">Pemdes Catur</span>
-                                </div>
-                            @endif
-                        </div>
-
-                        <!-- Bio Text -->
-                        <div class="space-y-1.5 text-xs text-[#4B5851] leading-relaxed pt-1">
-                            <p class="font-bold text-[#20332A] text-sm font-serif">
-                                {{ $kades->name ?? 'Dra. NUNIK S RAHAYU, M.Pd' }}
-                            </p>
-                            <p class="text-[11px] text-[#0A3D29] uppercase tracking-wider font-bold">
-                                {{ $kades->position ?? 'Kepala Desa Catur' }}
-                            </p>
-                        </div>
-
-                        <!-- Kontak / Alamat Kantor -->
-                        <div class="pt-3 border-t border-[#DCE6DA] space-y-1.5 text-xs text-[#4B5851]">
-                            <h4 class="font-serif font-bold text-[10px] uppercase tracking-widest text-[#0A3D29] mb-1">
-                                Kantor Desa
-                            </h4>
-                            <p class="leading-relaxed">Jl. Raya Catur - Sambi, Boyolali, Jawa Tengah 57376</p>
-                            <p class="text-[11px]">Email: <a href="mailto:pemdes@catur.desa.id"
-                                    class="text-[#0A3D29] hover:underline font-medium">pemdes@catur.desa.id</a></p>
-                            <p class="text-[11px]">Telepon: <span class="text-[#20332A] font-semibold">0812-3456-7890</span>
-                            </p>
-                        </div>
-                    </div>
-
-                </aside>
-
-
-                {{-- ================= CENTER COLUMN: ~6 COLS (Main Story & Photo) ================= --}}
-                <main class="lg:col-span-6 space-y-6 order-1 lg:order-2">
+                {{-- ================= MAIN COLUMN: ~8 COLS (Main Story & Photo) ================= --}}
+                <main class="lg:col-span-8 space-y-6">
 
                     <!-- Featured Large Landscape Photo -->
                     <div class="w-full aspect-[16/10] overflow-hidden bg-slate-100 border border-[#DCE6DA] rounded-lg">
@@ -120,8 +64,8 @@
                 </main>
 
 
-                {{-- ================= RIGHT COLUMN: ~3 COLS (Card Panel Kanan) ================= --}}
-                <aside class="lg:col-span-3 space-y-6 order-3">
+                {{-- ================= RIGHT COLUMN: ~4 COLS (Card Panel Kanan) ================= --}}
+                <aside class="lg:col-span-4 space-y-6">
 
                     <!-- Kartu: Data Geografis Ringkas (Dipindahkan di atas Batas Wilayah) -->
                     <div class="bg-white border border-[#DCE6DA] rounded-lg p-5 shadow-xs space-y-3">
