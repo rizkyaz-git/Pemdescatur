@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Struktur Organisasi Perangkat Desa - Web Profile Desa Catur')
+@section('title', 'Struktur Organisasi Perangkat Desa Catur')
 
 @section('content')
 

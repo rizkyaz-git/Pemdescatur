@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'PPKO Catur Cerdas UMS 2026 – Program Pemberdayaan Desa Catur')
+@section('title', 'PPKO Catur Cerdas UMS 2026 – PPK Ormawa Imm Al-Ghozali Fakultas Psikologi UMS')
 
 @section('meta_description', 'Dokumentasi dan profil resmi Program Penguatan Kapasitas Organisasi Kemahasiswaan (PPK Ormawa) Catur Cerdas UMS di Desa Catur, Sambi, Boyolali.')
 
@@ -8,153 +8,153 @@
 
     <!-- Alpine Lightbox Modal & Floating Pojok Navigation Scope -->
     <div x-data="{
-                                                                    lightboxOpen: false,
-                                                                    activeImg: '',
-                                                                    activeTitle: '',
-                                                                    activePojok: '',
-                                                                    activeCaption: '',
-                                                                    activeDate: '',
-                                                                    openLightbox(img, title, pojok, caption, date) {
-                                                                        this.activeImg = img;
-                                                                        this.activeTitle = title;
-                                                                        this.activePojok = pojok;
-                                                                        this.activeCaption = caption;
-                                                                        this.activeDate = date;
-                                                                        this.lightboxOpen = true;
-                                                                        document.body.style.overflow = 'hidden';
-                                                                    },
-                                                                    closeLightbox() {
-                                                                        this.lightboxOpen = false;
-                                                                        document.body.style.overflow = 'auto';
-                                                                    },
+                                                                        lightboxOpen: false,
+                                                                        activeImg: '',
+                                                                        activeTitle: '',
+                                                                        activePojok: '',
+                                                                        activeCaption: '',
+                                                                        activeDate: '',
+                                                                        openLightbox(img, title, pojok, caption, date) {
+                                                                            this.activeImg = img;
+                                                                            this.activeTitle = title;
+                                                                            this.activePojok = pojok;
+                                                                            this.activeCaption = caption;
+                                                                            this.activeDate = date;
+                                                                            this.lightboxOpen = true;
+                                                                            document.body.style.overflow = 'hidden';
+                                                                        },
+                                                                        closeLightbox() {
+                                                                            this.lightboxOpen = false;
+                                                                            document.body.style.overflow = 'auto';
+                                                                        },
 
-                                                                    // Floating Pojok Navigation State (Mobile)
-                                                                    pojoks: [
-                                                                        @foreach($pojoks as $p)
-                                                                            {
-                                                                                id: '{{ Str::slug(str_replace('Pojok ', '', $p->nama)) }}',
-                                                                                nama: '{{ $p->nama }}'
-                                                                            },
-                                                                        @endforeach
-                                                                    ],
-                                                                    activeSlug: 'harmoni',
-                                                                    activeName: 'Pojok Harmoni',
-                                                                    inPojokSection: false,
+                                                                        // Floating Pojok Navigation State (Mobile)
+                                                                        pojoks: [
+                                                                            @foreach($pojoks as $p)
+                                                                                {
+                                                                                    id: '{{ Str::slug(str_replace('Pojok ', '', $p->nama)) }}',
+                                                                                    nama: '{{ $p->nama }}'
+                                                                                },
+                                                                            @endforeach
+                                                                        ],
+                                                                        activeSlug: 'harmoni',
+                                                                        activeName: 'Pojok Harmoni',
+                                                                        inPojokSection: false,
 
-                                                                    init() {
-                                                                        this.updatePojokState();
-                                                                        window.addEventListener('scroll', () => {
+                                                                        init() {
                                                                             this.updatePojokState();
-                                                                        }, { passive: true });
+                                                                            window.addEventListener('scroll', () => {
+                                                                                this.updatePojokState();
+                                                                            }, { passive: true });
 
-                                                                        this.$nextTick(() => {
-                                                                            const sections = document.querySelectorAll('.ppko-section-entrance');
-                                                                            if ('IntersectionObserver' in window) {
-                                                                                const observer = new IntersectionObserver((entries, obs) => {
-                                                                                    entries.forEach(entry => {
-                                                                                        if (entry.isIntersecting) {
-                                                                                            entry.target.classList.add('is-revealed');
-                                                                                            obs.unobserve(entry.target);
-                                                                                        }
+                                                                            this.$nextTick(() => {
+                                                                                const sections = document.querySelectorAll('.ppko-section-entrance');
+                                                                                if ('IntersectionObserver' in window) {
+                                                                                    const observer = new IntersectionObserver((entries, obs) => {
+                                                                                        entries.forEach(entry => {
+                                                                                            if (entry.isIntersecting) {
+                                                                                                entry.target.classList.add('is-revealed');
+                                                                                                obs.unobserve(entry.target);
+                                                                                            }
+                                                                                        });
+                                                                                    }, {
+                                                                                        root: null,
+                                                                                        rootMargin: '0px 0px 80px 0px',
+                                                                                        threshold: 0.02
                                                                                     });
-                                                                                }, {
-                                                                                    root: null,
-                                                                                    rootMargin: '0px 0px 80px 0px',
-                                                                                    threshold: 0.02
-                                                                                });
-                                                                                sections.forEach(sec => observer.observe(sec));
-                                                                            } else {
-                                                                                sections.forEach(sec => sec.classList.add('is-revealed'));
-                                                                            }
-                                                                        });
-                                                                    },
-
-                                                                    updatePojokState() {
-                                                                        const container = document.getElementById('katalog-pojok-container');
-                                                                        if (!container) return;
-
-                                                                        const rect = container.getBoundingClientRect();
-                                                                        const vh = window.innerHeight || document.documentElement.clientHeight;
-
-                                                                        // Aktif jika viewport sedang berada di dalam lingkup seksi katalog pojok
-                                                                        this.inPojokSection = (rect.top <= vh * 0.75 && rect.bottom >= vh * 0.25);
-
-                                                                        if (this.inPojokSection) {
-                                                                            let closestSlug = this.pojoks[0]?.id || 'harmoni';
-                                                                            let minDistance = Infinity;
-
-                                                                            this.pojoks.forEach(p => {
-                                                                                const el = document.getElementById(p.id);
-                                                                                if (el) {
-                                                                                    const elRect = el.getBoundingClientRect();
-                                                                                    const distance = Math.abs(elRect.top - 80);
-                                                                                    if (distance < minDistance) {
-                                                                                        minDistance = distance;
-                                                                                        closestSlug = p.id;
-                                                                                    }
+                                                                                    sections.forEach(sec => observer.observe(sec));
+                                                                                } else {
+                                                                                    sections.forEach(sec => sec.classList.add('is-revealed'));
                                                                                 }
                                                                             });
+                                                                        },
 
-                                                                            this.activeSlug = closestSlug;
-                                                                            const currentPojok = this.pojoks.find(p => p.id === this.activeSlug);
+                                                                        updatePojokState() {
+                                                                            const container = document.getElementById('katalog-pojok-container');
+                                                                            if (!container) return;
+
+                                                                            const rect = container.getBoundingClientRect();
+                                                                            const vh = window.innerHeight || document.documentElement.clientHeight;
+
+                                                                            // Aktif jika viewport sedang berada di dalam lingkup seksi katalog pojok
+                                                                            this.inPojokSection = (rect.top <= vh * 0.75 && rect.bottom >= vh * 0.25);
+
+                                                                            if (this.inPojokSection) {
+                                                                                let closestSlug = this.pojoks[0]?.id || 'harmoni';
+                                                                                let minDistance = Infinity;
+
+                                                                                this.pojoks.forEach(p => {
+                                                                                    const el = document.getElementById(p.id);
+                                                                                    if (el) {
+                                                                                        const elRect = el.getBoundingClientRect();
+                                                                                        const distance = Math.abs(elRect.top - 80);
+                                                                                        if (distance < minDistance) {
+                                                                                            minDistance = distance;
+                                                                                            closestSlug = p.id;
+                                                                                        }
+                                                                                    }
+                                                                                });
+
+                                                                                this.activeSlug = closestSlug;
+                                                                                const currentPojok = this.pojoks.find(p => p.id === this.activeSlug);
+                                                                                if (currentPojok) {
+                                                                                    this.activeName = currentPojok.nama;
+                                                                                }
+                                                                            }
+                                                                        },
+
+                                                                        getCurrentIndex() {
+                                                                            const idx = this.pojoks.findIndex(p => p.id === this.activeSlug);
+                                                                            return idx !== -1 ? idx : 0;
+                                                                        },
+
+                                                                        scrollToSlug(slug) {
+                                                                            this.activeSlug = slug;
+                                                                            const currentPojok = this.pojoks.find(p => p.id === slug);
                                                                             if (currentPojok) {
                                                                                 this.activeName = currentPojok.nama;
                                                                             }
-                                                                        }
-                                                                    },
+                                                                            const el = document.getElementById(slug);
+                                                                            if (el) {
+                                                                                const headerOffset = 70;
+                                                                                const elementPosition = el.getBoundingClientRect().top;
+                                                                                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                                                                                window.scrollTo({
+                                                                                    top: offsetPosition,
+                                                                                    behavior: 'smooth'
+                                                                                });
+                                                                            }
+                                                                        },
 
-                                                                    getCurrentIndex() {
-                                                                        const idx = this.pojoks.findIndex(p => p.id === this.activeSlug);
-                                                                        return idx !== -1 ? idx : 0;
-                                                                    },
+                                                                        nextPojok() {
+                                                                            if (!this.inPojokSection) {
+                                                                                this.scrollToSlug(this.pojoks[0].id);
+                                                                                return;
+                                                                            }
+                                                                            const idx = this.getCurrentIndex();
+                                                                            if (idx < this.pojoks.length - 1) {
+                                                                                this.scrollToSlug(this.pojoks[idx + 1].id);
+                                                                            } else {
+                                                                                const nextEl = document.getElementById('tentang-program') || document.getElementById('galeri') || document.querySelector('footer');
+                                                                                if (nextEl) {
+                                                                                    nextEl.scrollIntoView({ behavior: 'smooth' });
+                                                                                }
+                                                                            }
+                                                                        },
 
-                                                                    scrollToSlug(slug) {
-                                                                        this.activeSlug = slug;
-                                                                        const currentPojok = this.pojoks.find(p => p.id === slug);
-                                                                        if (currentPojok) {
-                                                                            this.activeName = currentPojok.nama;
-                                                                        }
-                                                                        const el = document.getElementById(slug);
-                                                                        if (el) {
-                                                                            const headerOffset = 70;
-                                                                            const elementPosition = el.getBoundingClientRect().top;
-                                                                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                                                                            window.scrollTo({
-                                                                                top: offsetPosition,
-                                                                                behavior: 'smooth'
-                                                                            });
-                                                                        }
-                                                                    },
-
-                                                                    nextPojok() {
-                                                                        if (!this.inPojokSection) {
-                                                                            this.scrollToSlug(this.pojoks[0].id);
-                                                                            return;
-                                                                        }
-                                                                        const idx = this.getCurrentIndex();
-                                                                        if (idx < this.pojoks.length - 1) {
-                                                                            this.scrollToSlug(this.pojoks[idx + 1].id);
-                                                                        } else {
-                                                                            const nextEl = document.getElementById('tentang-program') || document.getElementById('galeri') || document.querySelector('footer');
-                                                                            if (nextEl) {
-                                                                                nextEl.scrollIntoView({ behavior: 'smooth' });
+                                                                        prevPojok() {
+                                                                            if (!this.inPojokSection) {
+                                                                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                                                return;
+                                                                            }
+                                                                            const idx = this.getCurrentIndex();
+                                                                            if (idx > 0) {
+                                                                                this.scrollToSlug(this.pojoks[idx - 1].id);
+                                                                            } else {
+                                                                                window.scrollTo({ top: 0, behavior: 'smooth' });
                                                                             }
                                                                         }
-                                                                    },
-
-                                                                    prevPojok() {
-                                                                        if (!this.inPojokSection) {
-                                                                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                                                                            return;
-                                                                        }
-                                                                        const idx = this.getCurrentIndex();
-                                                                        if (idx > 0) {
-                                                                            this.scrollToSlug(this.pojoks[idx - 1].id);
-                                                                        } else {
-                                                                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                                                                        }
-                                                                    }
-                                                                }" @keydown.escape.window="closeLightbox()">
+                                                                    }" @keydown.escape.window="closeLightbox()">
 
         <!-- Main Container: Clean White Background with subtle sage accents (#DCE6DA) -->
         <div class="bg-white min-h-screen">
@@ -331,8 +331,8 @@
                             <!-- Banner Showcase PPKO Card -->
                             <div
                                 class="rounded-xl overflow-hidden border border-[#DCE6DA] shadow-xs bg-slate-50 group shrink-0">
-                                <img src="{{ $ppkoCoverMobile }}" alt="PPKO Catur Cerdas Display Banner"
-                                    loading="eager" fetchpriority="high" decoding="async" width="1920" height="1080"
+                                <img src="{{ $ppkoCoverMobile }}" alt="PPKO Catur Cerdas Display Banner" loading="eager"
+                                    fetchpriority="high" decoding="async" width="1920" height="1080"
                                     class="w-full h-auto aspect-video object-cover object-center group-hover:scale-[1.01] transition-transform duration-500">
                             </div>
 
@@ -430,20 +430,23 @@
                                         <a href="https://kemdiktisaintek.go.id/" target="_blank" rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="Kemendiktisaintek">
-                                            <img src="{{ asset('images/TUTWURI.png') }}" alt="Tut Wuri Handayani" loading="lazy" decoding="async"
+                                            <img src="{{ asset('images/TUTWURI.png') }}" alt="Tut Wuri Handayani"
+                                                loading="lazy" decoding="async"
                                                 class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
                                         </a>
                                         <a href="https://kemdiktisaintek.go.id/en" target="_blank" rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="Diktisaintek Berdampak">
-                                            <img src="{{ asset('images/DIKTISAINTEK.png') }}" alt="Diktisaintek" loading="lazy" decoding="async"
+                                            <img src="{{ asset('images/DIKTISAINTEK.png') }}" alt="Diktisaintek"
+                                                loading="lazy" decoding="async"
                                                 class="h-4 xs:h-4.5 sm:h-7 lg:h-7.5 w-auto max-w-[42px] xs:max-w-[48px] sm:max-w-[88px] object-contain">
                                         </a>
                                         <a href="https://ppkormawa.kemdiktisaintek.go.id/" target="_blank"
                                             rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="PPK Ormawa">
-                                            <img src="{{ asset('images/PPK_ORMAWA.png') }}" alt="PPK Ormawa" loading="lazy" decoding="async"
+                                            <img src="{{ asset('images/PPK_ORMAWA.png') }}" alt="PPK Ormawa" loading="lazy"
+                                                decoding="async"
                                                 class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
                                         </a>
                                         <a href="https://www.ums.ac.id/" target="_blank" rel="noopener noreferrer"
@@ -457,20 +460,23 @@
                                             rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="Ikatan Mahasiswa Muhammadiyah Al-Ghozali Fakultas Psikologi UMS">
-                                            <img src="{{ asset('images/IMMALGHO.png') }}" alt="IMM Al-Ghozali" loading="lazy" decoding="async"
+                                            <img src="{{ asset('images/IMMALGHO.png') }}" alt="IMM Al-Ghozali"
+                                                loading="lazy" decoding="async"
                                                 class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
                                         </a>
                                         <a href="https://www.instagram.com/ppko_caturcerdas/" target="_blank"
                                             rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="PPK Ormawa Catur Cerdas UMS 2026">
-                                            <img src="{{ asset('images/CATURCERDAS.png') }}" alt="Catur Cerdas" loading="lazy" decoding="async"
+                                            <img src="{{ asset('images/CATURCERDAS.png') }}" alt="Catur Cerdas"
+                                                loading="lazy" decoding="async"
                                                 class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[34px] xs:max-w-[40px] sm:max-w-[70px] object-contain">
                                         </a>
                                         <a href="https://boyolali.go.id/" target="_blank" rel="noopener noreferrer"
                                             class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                                             title="Pemerintah Kabupaten Boyolali">
-                                            <img src="{{ asset('images/PEMKABBYL.png') }}" alt="Pemkab Boyolali" loading="lazy" decoding="async"
+                                            <img src="{{ asset('images/PEMKABBYL.png') }}" alt="Pemkab Boyolali"
+                                                loading="lazy" decoding="async"
                                                 class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
                                         </a>
                                     </div>
@@ -855,145 +861,145 @@
 
                                     <!-- TEXT & INTERACTION COLUMN (Order-2 di Mobile agar Teks Berada di Bawah Gambar) -->
                                     <div x-data="{
-                                                                                            expanded: false,
-                                                                                            pinRafId: null,
-                                                                                            isAnimating: false,
-                                                                                            closeDropdown() {
-                                                                                                if (!this.expanded || this.isAnimating) return;
-                                                                                                this.isAnimating = true;
-                                                                                                const box = this.$refs.contentBox;
-                                                                                                const startH = box ? box.offsetHeight : 0;
-                                                                                                if (box && startH > 0) {
-                                                                                                    box.style.height = startH + 'px';
-                                                                                                    box.style.overflow = 'hidden';
-                                                                                                }
-                                                                                                this.expanded = false;
-                                                                                                this.$nextTick(() => {
-                                                                                                    if (!box) {
-                                                                                                        this.isAnimating = false;
-                                                                                                        return;
-                                                                                                    }
-                                                                                                    const targetView = this.$refs.view1;
-                                                                                                    let endH = targetView ? Math.max(targetView.offsetHeight, targetView.scrollHeight) : 0;
-                                                                                                    const computedMinH = parseFloat(window.getComputedStyle(box).minHeight) || 0;
-                                                                                                    if (computedMinH > endH) endH = computedMinH;
-
-                                                                                                    const startTime = performance.now();
-                                                                                                    const duration = 380;
-                                                                                                    const animateClose = (now) => {
-                                                                                                        const elapsed = now - startTime;
-                                                                                                        const progress = Math.min(elapsed / duration, 1);
-                                                                                                        const ease = 1 - Math.pow(1 - progress, 3);
-                                                                                                        const currentH = startH + (endH - startH) * ease;
-                                                                                                        box.style.height = currentH.toFixed(2) + 'px';
-                                                                                                        if (progress < 1) {
-                                                                                                            requestAnimationFrame(animateClose);
-                                                                                                        } else {
-                                                                                                            box.style.height = '';
-                                                                                                            box.style.overflow = '';
-                                                                                                            this.isAnimating = false;
+                                                                                                    expanded: false,
+                                                                                                    pinRafId: null,
+                                                                                                    isAnimating: false,
+                                                                                                    closeDropdown() {
+                                                                                                        if (!this.expanded || this.isAnimating) return;
+                                                                                                        this.isAnimating = true;
+                                                                                                        const box = this.$refs.contentBox;
+                                                                                                        const startH = box ? box.offsetHeight : 0;
+                                                                                                        if (box && startH > 0) {
+                                                                                                            box.style.height = startH + 'px';
+                                                                                                            box.style.overflow = 'hidden';
                                                                                                         }
-                                                                                                    };
-                                                                                                    requestAnimationFrame(animateClose);
-                                                                                                });
-                                                                                            },
-                                                                                            toggleExpanded(btnEl) {
-                                                                                                if (this.isAnimating) return;
-                                                                                                this.isAnimating = true;
-
-                                                                                                const box = this.$refs.contentBox;
-                                                                                                const btn = btnEl;
-                                                                                                const targetTop = btn ? btn.getBoundingClientRect().top : null;
-
-                                                                                                // 1. Dapatkan tinggi awal kontainer yang sedang tampil
-                                                                                                const startH = box ? box.offsetHeight : 0;
-
-                                                                                                // 2. Kunci tinggi saat ini agar tidak melompat ketika state Alpine berubah
-                                                                                                if (box && startH > 0) {
-                                                                                                    box.style.height = startH + 'px';
-                                                                                                    box.style.overflow = 'hidden';
-                                                                                                }
-
-                                                                                                // 3. Nonaktifkan scroll-smooth bawaan sementara agar scrollBy sinkron instan per frame
-                                                                                                const htmlEl = document.documentElement;
-                                                                                                const hadScrollSmooth = htmlEl.classList.contains('scroll-smooth');
-                                                                                                if (hadScrollSmooth) htmlEl.classList.remove('scroll-smooth');
-
-                                                                                                // 4. Ubah state Alpine
-                                                                                                this.expanded = !this.expanded;
-
-                                                                                                // Bila dibuka, beritahu dropdown pojok lainnya agar otomatis tertutup
-                                                                                                if (this.expanded) {
-                                                                                                    window.dispatchEvent(new CustomEvent('close-other-pojoks', { detail: { id: {{ $pojok->id }} } }));
-                                                                                                }
-
-                                                                                                // 5. Tunggu $nextTick agar view target dirender di DOM (display:none diangkat oleh Alpine)
-                                                                                                this.$nextTick(() => {
-                                                                                                    if (!box) {
-                                                                                                        this.isAnimating = false;
-                                                                                                        return;
-                                                                                                    }
-
-                                                                                                    const targetView = this.expanded ? this.$refs.view2 : this.$refs.view1;
-                                                                                                    let endH = targetView ? Math.max(targetView.offsetHeight, targetView.scrollHeight) : startH;
-
-                                                                                                    // Hormati min-height desktop jika ada
-                                                                                                    const computedMinH = parseFloat(window.getComputedStyle(box).minHeight) || 0;
-                                                                                                    if (computedMinH > endH) {
-                                                                                                        endH = computedMinH;
-                                                                                                    }
-
-                                                                                                    // Jalankan loop animasi RAF dengan interpolasi kontinu easeOutCubic
-                                                                                                    const startTime = performance.now();
-                                                                                                    const duration = 380;
-
-                                                                                                    const animateLoop = (now) => {
-                                                                                                        const elapsed = now - startTime;
-                                                                                                        const progress = Math.min(elapsed / duration, 1);
-
-                                                                                                        // Kurva cubic-bezier / easeOutCubic halus: 1 - (1 - progress)^3
-                                                                                                        const ease = 1 - Math.pow(1 - progress, 3);
-                                                                                                        const currentH = startH + (endH - startH) * ease;
-
-                                                                                                        box.style.height = currentH.toFixed(2) + 'px';
-
-                                                                                                        // Kompensasi scroll layar: kunci posisi tombol di viewport persis pada targetTop
-                                                                                                        if (btn && targetTop !== null) {
-                                                                                                            const currentTop = btn.getBoundingClientRect().top;
-                                                                                                            const diff = currentTop - targetTop;
-                                                                                                            if (Math.abs(diff) > 0.2) {
-                                                                                                                window.scrollBy(0, diff);
+                                                                                                        this.expanded = false;
+                                                                                                        this.$nextTick(() => {
+                                                                                                            if (!box) {
+                                                                                                                this.isAnimating = false;
+                                                                                                                return;
                                                                                                             }
-                                                                                                        }
+                                                                                                            const targetView = this.$refs.view1;
+                                                                                                            let endH = targetView ? Math.max(targetView.offsetHeight, targetView.scrollHeight) : 0;
+                                                                                                            const computedMinH = parseFloat(window.getComputedStyle(box).minHeight) || 0;
+                                                                                                            if (computedMinH > endH) endH = computedMinH;
 
-                                                                                                        if (progress < 1) {
-                                                                                                            this.pinRafId = requestAnimationFrame(animateLoop);
-                                                                                                        } else {
-                                                                                                            // Selesai: kembalikan ke tinggi alami/otomatis
-                                                                                                            box.style.height = '';
-                                                                                                            box.style.overflow = '';
-
-                                                                                                            // Penyesuaian akhir tombol agar posisi targetTop terkunci sempurna
-                                                                                                            if (btn && targetTop !== null) {
-                                                                                                                const finalDiff = btn.getBoundingClientRect().top - targetTop;
-                                                                                                                if (Math.abs(finalDiff) > 0.2) {
-                                                                                                                    window.scrollBy(0, finalDiff);
+                                                                                                            const startTime = performance.now();
+                                                                                                            const duration = 380;
+                                                                                                            const animateClose = (now) => {
+                                                                                                                const elapsed = now - startTime;
+                                                                                                                const progress = Math.min(elapsed / duration, 1);
+                                                                                                                const ease = 1 - Math.pow(1 - progress, 3);
+                                                                                                                const currentH = startH + (endH - startH) * ease;
+                                                                                                                box.style.height = currentH.toFixed(2) + 'px';
+                                                                                                                if (progress < 1) {
+                                                                                                                    requestAnimationFrame(animateClose);
+                                                                                                                } else {
+                                                                                                                    box.style.height = '';
+                                                                                                                    box.style.overflow = '';
+                                                                                                                    this.isAnimating = false;
                                                                                                                 }
-                                                                                                            }
+                                                                                                            };
+                                                                                                            requestAnimationFrame(animateClose);
+                                                                                                        });
+                                                                                                    },
+                                                                                                    toggleExpanded(btnEl) {
+                                                                                                        if (this.isAnimating) return;
+                                                                                                        this.isAnimating = true;
 
-                                                                                                            if (hadScrollSmooth) {
-                                                                                                                htmlEl.classList.add('scroll-smooth');
-                                                                                                            }
+                                                                                                        const box = this.$refs.contentBox;
+                                                                                                        const btn = btnEl;
+                                                                                                        const targetTop = btn ? btn.getBoundingClientRect().top : null;
 
-                                                                                                            this.pinRafId = null;
-                                                                                                            this.isAnimating = false;
+                                                                                                        // 1. Dapatkan tinggi awal kontainer yang sedang tampil
+                                                                                                        const startH = box ? box.offsetHeight : 0;
+
+                                                                                                        // 2. Kunci tinggi saat ini agar tidak melompat ketika state Alpine berubah
+                                                                                                        if (box && startH > 0) {
+                                                                                                            box.style.height = startH + 'px';
+                                                                                                            box.style.overflow = 'hidden';
                                                                                                         }
-                                                                                                    };
 
-                                                                                                    this.pinRafId = requestAnimationFrame(animateLoop);
-                                                                                                });
-                                                                                            }
-                                                                                        }"
+                                                                                                        // 3. Nonaktifkan scroll-smooth bawaan sementara agar scrollBy sinkron instan per frame
+                                                                                                        const htmlEl = document.documentElement;
+                                                                                                        const hadScrollSmooth = htmlEl.classList.contains('scroll-smooth');
+                                                                                                        if (hadScrollSmooth) htmlEl.classList.remove('scroll-smooth');
+
+                                                                                                        // 4. Ubah state Alpine
+                                                                                                        this.expanded = !this.expanded;
+
+                                                                                                        // Bila dibuka, beritahu dropdown pojok lainnya agar otomatis tertutup
+                                                                                                        if (this.expanded) {
+                                                                                                            window.dispatchEvent(new CustomEvent('close-other-pojoks', { detail: { id: {{ $pojok->id }} } }));
+                                                                                                        }
+
+                                                                                                        // 5. Tunggu $nextTick agar view target dirender di DOM (display:none diangkat oleh Alpine)
+                                                                                                        this.$nextTick(() => {
+                                                                                                            if (!box) {
+                                                                                                                this.isAnimating = false;
+                                                                                                                return;
+                                                                                                            }
+
+                                                                                                            const targetView = this.expanded ? this.$refs.view2 : this.$refs.view1;
+                                                                                                            let endH = targetView ? Math.max(targetView.offsetHeight, targetView.scrollHeight) : startH;
+
+                                                                                                            // Hormati min-height desktop jika ada
+                                                                                                            const computedMinH = parseFloat(window.getComputedStyle(box).minHeight) || 0;
+                                                                                                            if (computedMinH > endH) {
+                                                                                                                endH = computedMinH;
+                                                                                                            }
+
+                                                                                                            // Jalankan loop animasi RAF dengan interpolasi kontinu easeOutCubic
+                                                                                                            const startTime = performance.now();
+                                                                                                            const duration = 380;
+
+                                                                                                            const animateLoop = (now) => {
+                                                                                                                const elapsed = now - startTime;
+                                                                                                                const progress = Math.min(elapsed / duration, 1);
+
+                                                                                                                // Kurva cubic-bezier / easeOutCubic halus: 1 - (1 - progress)^3
+                                                                                                                const ease = 1 - Math.pow(1 - progress, 3);
+                                                                                                                const currentH = startH + (endH - startH) * ease;
+
+                                                                                                                box.style.height = currentH.toFixed(2) + 'px';
+
+                                                                                                                // Kompensasi scroll layar: kunci posisi tombol di viewport persis pada targetTop
+                                                                                                                if (btn && targetTop !== null) {
+                                                                                                                    const currentTop = btn.getBoundingClientRect().top;
+                                                                                                                    const diff = currentTop - targetTop;
+                                                                                                                    if (Math.abs(diff) > 0.2) {
+                                                                                                                        window.scrollBy(0, diff);
+                                                                                                                    }
+                                                                                                                }
+
+                                                                                                                if (progress < 1) {
+                                                                                                                    this.pinRafId = requestAnimationFrame(animateLoop);
+                                                                                                                } else {
+                                                                                                                    // Selesai: kembalikan ke tinggi alami/otomatis
+                                                                                                                    box.style.height = '';
+                                                                                                                    box.style.overflow = '';
+
+                                                                                                                    // Penyesuaian akhir tombol agar posisi targetTop terkunci sempurna
+                                                                                                                    if (btn && targetTop !== null) {
+                                                                                                                        const finalDiff = btn.getBoundingClientRect().top - targetTop;
+                                                                                                                        if (Math.abs(finalDiff) > 0.2) {
+                                                                                                                            window.scrollBy(0, finalDiff);
+                                                                                                                        }
+                                                                                                                    }
+
+                                                                                                                    if (hadScrollSmooth) {
+                                                                                                                        htmlEl.classList.add('scroll-smooth');
+                                                                                                                    }
+
+                                                                                                                    this.pinRafId = null;
+                                                                                                                    this.isAnimating = false;
+                                                                                                                }
+                                                                                                            };
+
+                                                                                                            this.pinRafId = requestAnimationFrame(animateLoop);
+                                                                                                        });
+                                                                                                    }
+                                                                                                }"
                                         @close-other-pojoks.window="if ($event.detail.id !== {{ $pojok->id }} && expanded) closeDropdown()"
                                         class="lg:col-span-7 order-2 {{ $isEven ? 'lg:order-2' : 'lg:order-1' }} flex flex-col justify-start space-y-3 sm:space-y-6">
 
@@ -1214,103 +1220,103 @@
                                         class="lg:col-span-5 order-1 {{ $isEven ? 'lg:order-1' : 'lg:order-2' }} flex flex-col justify-center pt-0 sm:pt-2 lg:pt-0 pb-0 w-full">
 
                                         <div x-data="{
-                                                                                                currentIndex: 1,
-                                                                                                realIndex: 0,
-                                                                                                enableTransition: true,
-                                                                                                isTransitioning: false,
-                                                                                                touchStartX: 0,
-                                                                                                touchStartY: 0,
-                                                                                                swiped: false,
-                                                                                                timer: null,
-                                                                                                init() {
-                                                                                                    this.startAuto();
-                                                                                                },
-                                                                                                startAuto() {
-                                                                                                    if (this.timer) clearInterval(this.timer);
-                                                                                                    this.timer = setInterval(() => {
-                                                                                                        this.next();
-                                                                                                    }, 4500);
-                                                                                                },
-                                                                                                pause() {
-                                                                                                    if (this.timer) clearInterval(this.timer);
-                                                                                                },
-                                                                                                resume() {
-                                                                                                    this.startAuto();
-                                                                                                },
-                                                                                                next() {
-                                                                                                    if (this.isTransitioning) return;
-                                                                                                    this.isTransitioning = true;
-                                                                                                    this.enableTransition = true;
-                                                                                                    this.currentIndex++;
-                                                                                                    this.realIndex = (this.currentIndex - 1) % 3;
-                                                                                                    if (this.currentIndex === 4) {
-                                                                                                        this.realIndex = 0;
-                                                                                                        setTimeout(() => {
-                                                                                                            this.enableTransition = false;
-                                                                                                            this.currentIndex = 1;
+                                                                                                        currentIndex: 1,
+                                                                                                        realIndex: 0,
+                                                                                                        enableTransition: true,
+                                                                                                        isTransitioning: false,
+                                                                                                        touchStartX: 0,
+                                                                                                        touchStartY: 0,
+                                                                                                        swiped: false,
+                                                                                                        timer: null,
+                                                                                                        init() {
+                                                                                                            this.startAuto();
+                                                                                                        },
+                                                                                                        startAuto() {
+                                                                                                            if (this.timer) clearInterval(this.timer);
+                                                                                                            this.timer = setInterval(() => {
+                                                                                                                this.next();
+                                                                                                            }, 4500);
+                                                                                                        },
+                                                                                                        pause() {
+                                                                                                            if (this.timer) clearInterval(this.timer);
+                                                                                                        },
+                                                                                                        resume() {
+                                                                                                            this.startAuto();
+                                                                                                        },
+                                                                                                        next() {
+                                                                                                            if (this.isTransitioning) return;
+                                                                                                            this.isTransitioning = true;
+                                                                                                            this.enableTransition = true;
+                                                                                                            this.currentIndex++;
+                                                                                                            this.realIndex = (this.currentIndex - 1) % 3;
+                                                                                                            if (this.currentIndex === 4) {
+                                                                                                                this.realIndex = 0;
+                                                                                                                setTimeout(() => {
+                                                                                                                    this.enableTransition = false;
+                                                                                                                    this.currentIndex = 1;
+                                                                                                                    setTimeout(() => {
+                                                                                                                        this.enableTransition = true;
+                                                                                                                        this.isTransitioning = false;
+                                                                                                                    }, 50);
+                                                                                                                }, 500);
+                                                                                                            } else {
+                                                                                                                setTimeout(() => {
+                                                                                                                    this.isTransitioning = false;
+                                                                                                                }, 500);
+                                                                                                            }
+                                                                                                        },
+                                                                                                        prev() {
+                                                                                                            if (this.isTransitioning) return;
+                                                                                                            this.isTransitioning = true;
+                                                                                                            this.enableTransition = true;
+                                                                                                            this.currentIndex--;
+                                                                                                            this.realIndex = (this.currentIndex - 1 + 3) % 3;
+                                                                                                            if (this.currentIndex === 0) {
+                                                                                                                this.realIndex = 2;
+                                                                                                                setTimeout(() => {
+                                                                                                                    this.enableTransition = false;
+                                                                                                                    this.currentIndex = 3;
+                                                                                                                    setTimeout(() => {
+                                                                                                                        this.enableTransition = true;
+                                                                                                                        this.isTransitioning = false;
+                                                                                                                    }, 50);
+                                                                                                                }, 500);
+                                                                                                            } else {
+                                                                                                                setTimeout(() => {
+                                                                                                                    this.isTransitioning = false;
+                                                                                                                }, 500);
+                                                                                                            }
+                                                                                                        },
+                                                                                                        goTo(idx) {
+                                                                                                            if (this.isTransitioning) return;
+                                                                                                            this.isTransitioning = true;
+                                                                                                            this.enableTransition = true;
+                                                                                                            this.currentIndex = idx + 1;
+                                                                                                            this.realIndex = idx;
                                                                                                             setTimeout(() => {
-                                                                                                                this.enableTransition = true;
                                                                                                                 this.isTransitioning = false;
-                                                                                                            }, 50);
-                                                                                                        }, 500);
-                                                                                                    } else {
-                                                                                                        setTimeout(() => {
-                                                                                                            this.isTransitioning = false;
-                                                                                                        }, 500);
-                                                                                                    }
-                                                                                                },
-                                                                                                prev() {
-                                                                                                    if (this.isTransitioning) return;
-                                                                                                    this.isTransitioning = true;
-                                                                                                    this.enableTransition = true;
-                                                                                                    this.currentIndex--;
-                                                                                                    this.realIndex = (this.currentIndex - 1 + 3) % 3;
-                                                                                                    if (this.currentIndex === 0) {
-                                                                                                        this.realIndex = 2;
-                                                                                                        setTimeout(() => {
-                                                                                                            this.enableTransition = false;
-                                                                                                            this.currentIndex = 3;
-                                                                                                            setTimeout(() => {
-                                                                                                                this.enableTransition = true;
-                                                                                                                this.isTransitioning = false;
-                                                                                                            }, 50);
-                                                                                                        }, 500);
-                                                                                                    } else {
-                                                                                                        setTimeout(() => {
-                                                                                                            this.isTransitioning = false;
-                                                                                                        }, 500);
-                                                                                                    }
-                                                                                                },
-                                                                                                goTo(idx) {
-                                                                                                    if (this.isTransitioning) return;
-                                                                                                    this.isTransitioning = true;
-                                                                                                    this.enableTransition = true;
-                                                                                                    this.currentIndex = idx + 1;
-                                                                                                    this.realIndex = idx;
-                                                                                                    setTimeout(() => {
-                                                                                                        this.isTransitioning = false;
-                                                                                                    }, 500);
-                                                                                                },
-                                                                                                handleTouchStart(e) {
-                                                                                                    this.pause();
-                                                                                                    this.swiped = false;
-                                                                                                    this.touchStartX = e.touches[0].clientX;
-                                                                                                    this.touchStartY = e.touches[0].clientY;
-                                                                                                },
-                                                                                                handleTouchEnd(e) {
-                                                                                                    const diffX = e.changedTouches[0].clientX - this.touchStartX;
-                                                                                                    const diffY = e.changedTouches[0].clientY - this.touchStartY;
-                                                                                                    if (Math.abs(diffX) > 30 && Math.abs(diffX) > Math.abs(diffY)) {
-                                                                                                        this.swiped = true;
-                                                                                                        if (diffX < 0) {
-                                                                                                            this.next();
-                                                                                                        } else {
-                                                                                                            this.prev();
+                                                                                                            }, 500);
+                                                                                                        },
+                                                                                                        handleTouchStart(e) {
+                                                                                                            this.pause();
+                                                                                                            this.swiped = false;
+                                                                                                            this.touchStartX = e.touches[0].clientX;
+                                                                                                            this.touchStartY = e.touches[0].clientY;
+                                                                                                        },
+                                                                                                        handleTouchEnd(e) {
+                                                                                                            const diffX = e.changedTouches[0].clientX - this.touchStartX;
+                                                                                                            const diffY = e.changedTouches[0].clientY - this.touchStartY;
+                                                                                                            if (Math.abs(diffX) > 30 && Math.abs(diffX) > Math.abs(diffY)) {
+                                                                                                                this.swiped = true;
+                                                                                                                if (diffX < 0) {
+                                                                                                                    this.next();
+                                                                                                                } else {
+                                                                                                                    this.prev();
+                                                                                                                }
+                                                                                                            }
+                                                                                                            this.resume();
                                                                                                         }
-                                                                                                    }
-                                                                                                    this.resume();
-                                                                                                }
-                                                                                            }" @mouseenter="pause()"
+                                                                                                    }" @mouseenter="pause()"
                                             @mouseleave="resume()" class="harmoni-cards-animate w-full">
 
                                             <!-- RECTANGULAR SLIDER FRAME (16:9 Pipih pada Mobile, Tetap pada Desktop) -->
@@ -1325,7 +1331,8 @@
 
                                                     <!-- Slide Clone 3 (Prepend for seamless backward wrap) -->
                                                     <div class="w-full h-full shrink-0 relative">
-                                                        <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}" loading="lazy" decoding="async"
+                                                        <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}"
+                                                            loading="lazy" decoding="async"
                                                             class="w-full h-full object-cover select-none pointer-events-none"
                                                             draggable="false">
                                                         <div
@@ -1335,7 +1342,8 @@
 
                                                     <!-- Slide 1 -->
                                                     <div class="w-full h-full shrink-0 relative">
-                                                        <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}" loading="lazy" decoding="async"
+                                                        <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}"
+                                                            loading="lazy" decoding="async"
                                                             class="w-full h-full object-cover select-none pointer-events-none"
                                                             draggable="false">
                                                         <div
@@ -1345,7 +1353,8 @@
 
                                                     <!-- Slide 2 -->
                                                     <div class="w-full h-full shrink-0 relative">
-                                                        <img src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}" loading="lazy" decoding="async"
+                                                        <img src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}"
+                                                            loading="lazy" decoding="async"
                                                             class="w-full h-full object-cover select-none pointer-events-none"
                                                             draggable="false">
                                                         <div
@@ -1355,7 +1364,8 @@
 
                                                     <!-- Slide 3 -->
                                                     <div class="w-full h-full shrink-0 relative">
-                                                        <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}" loading="lazy" decoding="async"
+                                                        <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}"
+                                                            loading="lazy" decoding="async"
                                                             class="w-full h-full object-cover select-none pointer-events-none"
                                                             draggable="false">
                                                         <div
@@ -1365,7 +1375,8 @@
 
                                                     <!-- Slide Clone 1 (Append for seamless forward wrap) -->
                                                     <div class="w-full h-full shrink-0 relative">
-                                                        <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}" loading="lazy" decoding="async"
+                                                        <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}"
+                                                            loading="lazy" decoding="async"
                                                             class="w-full h-full object-cover select-none pointer-events-none"
                                                             draggable="false">
                                                         <div

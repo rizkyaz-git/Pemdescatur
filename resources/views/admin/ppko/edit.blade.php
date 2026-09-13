@@ -50,22 +50,6 @@
 @section('content')
     <div class="space-y-6 max-w-5xl mx-auto font-sans">
 
-        <!-- Flash Alert Message -->
-        @if(session('success'))
-            <div
-                class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-5 py-4 rounded-2xl flex items-center justify-between text-sm shadow-xs animate-fade-in">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </div>
-                    <span class="font-medium">{{ session('success') }}</span>
-                </div>
-                <button type="button" onclick="this.parentElement.remove()"
-                    class="text-emerald-500 hover:text-emerald-700 p-1">&times;</button>
-            </div>
-        @endif
 
         @if($errors->any())
             <div class="bg-rose-50 border border-rose-200 text-rose-800 px-5 py-4 rounded-2xl text-sm shadow-xs space-y-2">

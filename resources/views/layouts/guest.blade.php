@@ -7,6 +7,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Pemerintah Desa Catur') }} - Autentikasi</title>
+    @php
+        $siteFavicon = (isset($globalLogo) && $globalLogo && Storage::disk('public')->exists($globalLogo))
+            ? asset('storage/' . $globalLogo)
+            : (file_exists(public_path('favicon.png')) ? asset('favicon.png') : (file_exists(public_path('images/logo_catur.png')) ? asset('images/logo_catur.png') : asset('favicon.ico')));
+    @endphp
+    <link rel="icon" type="image/png" href="{{ $siteFavicon }}">
+    <link rel="shortcut icon" href="{{ $siteFavicon }}">
+    <link rel="apple-touch-icon" href="{{ $siteFavicon }}">
 
     <!-- Google Fonts: Public Sans & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,6 +29,9 @@
 
 <body class="font-sans text-[#111C2D] bg-[#F4F6F5] antialiased min-h-screen">
     {{ $slot }}
+
+    <!-- Solid Floating Toast Notification -->
+    <x-toast />
 </body>
 
 </html>

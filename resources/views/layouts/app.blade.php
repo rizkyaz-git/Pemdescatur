@@ -5,7 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Pemerintah Desa Catur') }}</title>
+        @php
+            $siteFavicon = (isset($globalLogo) && $globalLogo && Storage::disk('public')->exists($globalLogo))
+                ? asset('storage/' . $globalLogo)
+                : (file_exists(public_path('favicon.png')) ? asset('favicon.png') : (file_exists(public_path('images/logo_catur.png')) ? asset('images/logo_catur.png') : asset('favicon.ico')));
+        @endphp
+        <link rel="icon" type="image/png" href="{{ $siteFavicon }}">
+        <link rel="shortcut icon" href="{{ $siteFavicon }}">
+        <link rel="apple-touch-icon" href="{{ $siteFavicon }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -32,5 +40,8 @@
                 {{ $slot }}
             </main>
         </div>
+
+        <!-- Solid Floating Toast Notification -->
+        <x-toast />
     </body>
 </html>

@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Profil & Sejarah Desa Catur – Sambi, Boyolali')
+@section('title', 'Profil Desa Catur')
 
 @section('meta_description', 'Profil dan sejarah resmi Desa Catur, Kecamatan Sambi, Kabupaten Boyolali. Informasi asal usul nama, visi misi, perjalanan sejarah, dan kondisi geografis Desa Catur.')
 
@@ -17,13 +17,13 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- ========================================================================= --}}
-            {{-- 1. TOP HEADER (Rata Kiri dengan Navigasi Breadcrumb)                      --}}
+            {{-- 1. TOP HEADER (Rata Kiri dengan Navigasi Breadcrumb) --}}
             {{-- ========================================================================= --}}
             <header class="text-left pb-8 sm:pb-10">
                 <x-breadcrumbs :items="[
-                    ['label' => 'BERANDA', 'url' => route('home')],
-                    ['label' => 'Profil Desa']
-                ]" />
+            ['label' => 'BERANDA', 'url' => route('home')],
+            ['label' => 'Profil Desa']
+        ]" />
                 <h1
                     class="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#20332A] tracking-tight leading-tight">
                     Profil Desa Catur
@@ -31,7 +31,7 @@
             </header>
 
             {{-- ========================================================================= --}}
-            {{-- 2. EDITORIAL GRID (Main Story & Photo + Sidebar Data Wilayah)             --}}
+            {{-- 2. EDITORIAL GRID (Main Story & Photo + Sidebar Data Wilayah) --}}
             {{-- ========================================================================= --}}
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start mt-2 sm:mt-4">
 
@@ -128,7 +128,8 @@
                         </div>
 
                         <!-- Clean Embedded Map -->
-                        <div class="w-full h-80 sm:h-96 lg:h-[420px] overflow-hidden border border-[#DCE6DA] rounded-md mt-2">
+                        <div
+                            class="w-full h-80 sm:h-96 lg:h-[420px] overflow-hidden border border-[#DCE6DA] rounded-md mt-2">
                             <iframe src="https://maps.google.com/maps?q=Catur%2C+Sambi%2C+Boyolali&t=h&z=14&output=embed"
                                 class="w-full h-full border-0" loading="lazy" title="Peta Satelit Wilayah Desa Catur"
                                 allowfullscreen>

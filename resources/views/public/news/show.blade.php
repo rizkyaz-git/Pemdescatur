@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', $news->title . ' - Web Profile Desa Catur')
+@section('title', $news->title . ' - Website Pemdes Catur')
 
 @section('content')
 

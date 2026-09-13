@@ -68,22 +68,6 @@
 
     <div class="max-w-5xl mx-auto space-y-6 font-sans">
 
-        <!-- Flash Notification -->
-        @if(session('success'))
-            <div
-                class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-5 py-4 rounded-2xl flex items-center justify-between text-sm shadow-xs animate-fade-in">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </div>
-                    <span class="font-medium">{{ session('success') }}</span>
-                </div>
-                <button type="button" onclick="this.parentElement.remove()"
-                    class="text-emerald-500 hover:text-emerald-700 p-1">&times;</button>
-            </div>
-        @endif
 
         <div class="bg-white rounded-[20px] border border-[#E2E8F0] shadow-xs p-6 sm:p-8 space-y-6">
             <div class="border-b border-[#E2E8F0] pb-5">

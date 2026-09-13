@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel') - Desa Catur</title>
+    @php
+        $siteFavicon = (isset($globalLogo) && $globalLogo && Storage::disk('public')->exists($globalLogo))
+            ? asset('storage/' . $globalLogo)
+            : (file_exists(public_path('favicon.png')) ? asset('favicon.png') : (file_exists(public_path('images/logo_catur.png')) ? asset('images/logo_catur.png') : asset('favicon.ico')));
+    @endphp
+    <link rel="icon" type="image/png" href="{{ $siteFavicon }}">
+    <link rel="shortcut icon" href="{{ $siteFavicon }}">
+    <link rel="apple-touch-icon" href="{{ $siteFavicon }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -325,25 +333,6 @@
         <!-- Dynamic Body Content -->
         <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
 
-            <!-- Flash Notification: Success -->
-            @if(session('success'))
-                <div class="mb-6 bg-[#ECFDF5] border border-[#A7F3D0] p-4 rounded-2xl shadow-xs flex items-center justify-between transition-all"
-                    x-data="{ show: true }" x-show="show">
-                    <div class="flex items-center gap-3">
-                        <div
-                            class="w-8 h-8 rounded-xl bg-[#DCFCE7] text-[#15803D] flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                            </svg>
-                        </div>
-                        <p class="text-xs sm:text-sm font-semibold text-[#065F46]">{{ session('success') }}</p>
-                    </div>
-                    <button @click="show = false"
-                        class="text-[#065F46]/60 hover:text-[#065F46] text-sm p-1 rounded-lg">✕</button>
-                </div>
-            @endif
-
-            <!-- Flash Notification: Error -->
             @if($errors->any())
                 <div class="mb-6 bg-[#FEF2F2] border border-[#FECACA] p-4 rounded-2xl shadow-xs transition-all"
                     x-data="{ show: true }" x-show="show">
@@ -373,6 +362,9 @@
             @yield('content')
         </main>
     </div>
+
+    <!-- Solid Floating Toast Notification -->
+    <x-toast />
 
     @stack('scripts')
 </body>

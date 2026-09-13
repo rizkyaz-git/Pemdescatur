@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\HtmlPurifierHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreNewsRequest;
 use App\Http\Requests\UpdateNewsRequest;
@@ -29,6 +30,9 @@ class NewsController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::slug($data['title']) . '-' . Str::random(5);
 
+        // Sanitasi konten Quill untuk mencegah Stored XSS
+        $data['content'] = HtmlPurifierHelper::clean($data['content']);
+
         if ($request->hasFile('image')) {
             $data['image_path'] = $request->file('image')->store('news', 'public');
         }
@@ -51,6 +55,9 @@ class NewsController extends Controller
     public function update(UpdateNewsRequest $request, News $news): RedirectResponse
     {
         $data = $request->validated();
+
+        // Sanitasi konten Quill untuk mencegah Stored XSS
+        $data['content'] = HtmlPurifierHelper::clean($data['content']);
 
         if ($news->title !== $data['title']) {
             $data['slug'] = Str::slug($data['title']) . '-' . Str::random(5);

@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Pencarian - Web Profile Desa Catur Sambi Boyolali')
+@section('title', 'Pencarian')
 
 @section('content')
 

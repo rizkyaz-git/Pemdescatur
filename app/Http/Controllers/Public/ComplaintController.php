@@ -89,10 +89,18 @@ class ComplaintController extends Controller
     }
 
     /**
-     * Show complaint detail
+     * Show complaint detail — hanya pemilik atau guest tanpa akun yang dapat mengakses.
+     * Pengguna yang login hanya bisa melihat pengaduan miliknya sendiri (mencegah IDOR).
      */
     public function show(Complaint $complaint): View
     {
+        // Jika user sedang login dan bukan admin, pastikan pengaduan ini miliknya
+        if (auth()->check() && !auth()->user()->isAdmin()) {
+            if ($complaint->user_id && $complaint->user_id !== auth()->id()) {
+                abort(403, 'Anda tidak memiliki izin untuk mengakses pengaduan ini.');
+            }
+        }
+
         $complaint->load('category');
         return view('public.layanan.pengaduan.show', compact('complaint'));
     }

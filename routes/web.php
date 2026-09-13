@@ -10,7 +10,7 @@ Route::get('/profil', [PublicControllers\ProfileController::class, 'index'])->na
 Route::get('/struktur', [PublicControllers\OfficialController::class, 'index'])->name('public.officials');
 Route::get('/berita', [PublicControllers\NewsController::class, 'index'])->name('public.news.index');
 Route::get('/berita/{slug}', [PublicControllers\NewsController::class, 'show'])->name('public.news.show');
-Route::post('/berita/{slug}/like', [PublicControllers\NewsController::class, 'like'])->name('public.news.like');
+Route::post('/berita/{slug}/like', [PublicControllers\NewsController::class, 'like'])->middleware('throttle:10,1')->name('public.news.like');
 Route::get('/galeri', [PublicControllers\GalleryController::class, 'index'])->name('public.gallery');
 Route::redirect('/layanan', '/layanan/cetak-surat-mandiri');
 Route::get('/pencarian', [PublicControllers\SearchController::class, 'index'])->name('public.search');
@@ -31,7 +31,8 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
     Route::delete('/profile/avatar', [Admin\ProfileController::class, 'destroyAvatar'])->name('profile.destroy-avatar');
 
     // Utility: Bersihkan cache rute/aplikasi langsung dari web
-    Route::get('/clear-cache', function () {
+    // Menggunakan POST untuk mencegah CSRF via link GET
+    Route::post('/clear-cache', function () {
         try {
             \Illuminate\Support\Facades\Artisan::call('optimize:clear');
             $routeCache = app()->bootstrapPath('cache/routes-v7.php');
@@ -111,13 +112,13 @@ Route::redirect('/layanan/surat', '/layanan/cetak-surat-mandiri');
 Route::get('/layanan/cetak-surat-mandiri', [PublicControllers\LetterRequestController::class, 'index'])->name('warga.letter.index');
 Route::get('/layanan/surat/template/{letterTemplate}/download', [PublicControllers\LetterRequestController::class, 'downloadTemplate'])->name('warga.letter.download');
 Route::get('/layanan/surat/buat', [PublicControllers\LetterRequestController::class, 'create'])->name('warga.letter.create');
-Route::post('/layanan/surat', [PublicControllers\LetterRequestController::class, 'store'])->name('warga.letter.store');
+Route::post('/layanan/surat', [PublicControllers\LetterRequestController::class, 'store'])->middleware('throttle:5,1')->name('warga.letter.store');
 Route::get('/layanan/surat/{letterRequest}', [PublicControllers\LetterRequestController::class, 'show'])->name('warga.letter.show');
 
 // Pengajuan Pengaduan
 Route::get('/layanan/pengaduan', [PublicControllers\ComplaintController::class, 'index'])->name('warga.complaint.index');
 Route::get('/layanan/pengaduan/buat', [PublicControllers\ComplaintController::class, 'create'])->name('warga.complaint.create');
-Route::post('/layanan/pengaduan', [PublicControllers\ComplaintController::class, 'store'])->name('warga.complaint.store');
+Route::post('/layanan/pengaduan', [PublicControllers\ComplaintController::class, 'store'])->middleware('throttle:5,1')->name('warga.complaint.store');
 Route::get('/layanan/pengaduan/{complaint}', [PublicControllers\ComplaintController::class, 'show'])->name('warga.complaint.show');
 
 require __DIR__.'/auth.php';

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\HtmlPurifierHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateVillageProfileRequest;
 use App\Models\VillageProfile;
@@ -28,6 +29,11 @@ class VillageProfileController extends Controller
     {
         $profile = VillageProfile::firstOrCreate(['id' => 1]);
         $data = $request->validated();
+
+        // Sanitasi field HTML dari Quill editor untuk mencegah Stored XSS
+        if (isset($data['history'])) {
+            $data['history'] = HtmlPurifierHelper::clean($data['history']);
+        }
 
         if ($request->hasFile('image')) {
             if ($profile->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($profile->image)) {

@@ -80,10 +80,18 @@ class LetterRequestController extends Controller
     }
 
     /**
-     * Show letter request detail with ticket number
+     * Show letter request detail with ticket number.
+     * Hanya pemilik permohonan yang dapat mengakses (mencegah IDOR).
      */
     public function show(LetterRequest $letterRequest): View
     {
+        // Jika user sedang login dan bukan admin, pastikan surat ini miliknya
+        if (auth()->check() && !auth()->user()->isAdmin()) {
+            if ($letterRequest->user_id && $letterRequest->user_id !== auth()->id()) {
+                abort(403, 'Anda tidak memiliki izin untuk mengakses permohonan surat ini.');
+            }
+        }
+
         $letterRequest->load('template');
         return view('public.layanan.surat.show', compact('letterRequest'));
     }

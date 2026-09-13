@@ -117,31 +117,6 @@
          @keydown.escape.window="closeAlurModal()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6" id="katalog-surat">
 
-            <!-- Session Flash Notifications (Minimalist) -->
-            @if(session('success'))
-                <div
-                    class="bg-emerald-50/80 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-lg text-xs sm:text-sm flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-emerald-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>{{ session('success') }}</span>
-                    </div>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div
-                    class="bg-rose-50/80 border border-rose-200 text-rose-800 px-4 py-3 rounded-lg text-xs sm:text-sm flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>{{ session('error') }}</span>
-                    </div>
-                </div>
-            @endif
 
             <!-- Minimalist Header Title, Search Bar & Tombol Alur -->
             <div

@@ -23,7 +23,7 @@ class UpdateSettingsRequest extends FormRequest
             'library_url' => ['required', 'url', 'max:500'],
             'hero_title' => ['nullable', 'string', 'max:255'],
             'hero_subtitle' => ['nullable', 'string', 'max:500'],
-            'village_logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
+            'village_logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'hero_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'library_desktop_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'library_tablet_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
