@@ -46,12 +46,6 @@
                     </p>
                 </div>
 
-                <!-- Notifikasi Status -->
-                @if (session('status'))
-                    <div class="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800">
-                        {{ session('status') }}
-                    </div>
-                @endif
 
                 <!-- Form Login -->
                 <form method="POST" action="{{ route('login') }}" class="space-y-4">
