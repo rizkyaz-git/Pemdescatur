@@ -8,7 +8,6 @@ use App\Models\News;
 use App\Models\Pojok;
 use App\Models\PpkoProgramDetail;
 use App\Models\VillageProfile;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -18,7 +17,7 @@ class PpkoController extends Controller
     /**
      * Display the public landing page for PPKO Catur Cerdas UMS 2026.
      */
-    public function index(Request $request): View
+    public function index(): View
     {
         $profile = VillageProfile::first();
         $recentNews = News::where('status', 'published')

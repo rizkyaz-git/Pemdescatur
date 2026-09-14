@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Setting;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,9 +27,15 @@ class AppServiceProvider extends ServiceProvider
                 try {
                     if (Schema::hasTable('settings')) {
                         $allSettings = Setting::all()->pluck('value', 'key')->all();
+                        $globalLogo = $allSettings['village_logo_path'] ?? null;
+
+                        $siteFavicon = ($globalLogo && Storage::disk('public')->exists($globalLogo))
+                            ? asset('storage/' . $globalLogo)
+                            : (file_exists(public_path('favicon.png')) ? asset('favicon.png') : (file_exists(public_path('images/logo_catur.png')) ? asset('images/logo_catur.png') : asset('favicon.ico')));
 
                         $globalData = [
-                            'globalLogo' => $allSettings['village_logo_path'] ?? null,
+                            'globalLogo' => $globalLogo,
+                            'siteFavicon' => $siteFavicon,
                             'globalHeroImage' => $allSettings['hero_image_path'] ?? null,
                             'globalVillageName' => $allSettings['village_name'] ?? 'Pemerintah Desa Catur',
                             'globalLibraryUrl' => $allSettings['library_url'] ?? 'https://perpustakaan.boyolali.go.id',

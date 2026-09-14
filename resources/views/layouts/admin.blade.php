@@ -5,11 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel') - Desa Catur</title>
-    @php
-        $siteFavicon = (isset($globalLogo) && $globalLogo && Storage::disk('public')->exists($globalLogo))
-            ? asset('storage/' . $globalLogo)
-            : (file_exists(public_path('favicon.png')) ? asset('favicon.png') : (file_exists(public_path('images/logo_catur.png')) ? asset('images/logo_catur.png') : asset('favicon.ico')));
-    @endphp
     <link rel="icon" type="image/png" href="{{ $siteFavicon }}">
     <link rel="shortcut icon" href="{{ $siteFavicon }}">
     <link rel="apple-touch-icon" href="{{ $siteFavicon }}">

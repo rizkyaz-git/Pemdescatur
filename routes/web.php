@@ -23,7 +23,6 @@ Route::redirect('/ppko', '/ppko-catur-cerdas');
 Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix('admin')->name('admin.')->group(function () {
     // 1. Dashboard: Dapat diakses oleh semua peran admin
     Route::get('/', [Admin\DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [Admin\DashboardController::class, 'index']);
 
     // 2. Pengaturan Profil Sendiri (Foto Profil, Nama & Password): Dapat diakses oleh semua peran admin
     Route::get('/profile', [Admin\ProfileController::class, 'edit'])->name('profile.edit');
@@ -85,8 +84,6 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
             Route::delete('/detail-program/{detail}', [Admin\PpkoSettingController::class, 'destroyProgramDetail'])->name('detail-program.destroy');
         });
     });
-    Route::redirect('/pojoks', '/admin/ppko');
-    Route::redirect('/kegiatans', '/admin/ppko');
 
     // 6. Pengaturan Website & Kelola Pengguna: Eksklusif Super Admin
     Route::middleware(['role:super_admin'])->group(function () {
