@@ -68,63 +68,14 @@
             </div>
 
             <!-- Upload Foto Profil Section -->
-            <div class="p-5 sm:p-6 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0] space-y-4"
-                 x-data="{
-                    preview: null,
-                    fileChosen(event) {
-                        const file = event.target.files[0];
-                        if (file) {
-                            this.preview = URL.createObjectURL(file);
-                        }
-                    }
-                 }">
-                <div class="flex items-center justify-between">
-                    <label class="block text-[13px] font-semibold text-[#1E293B]">
-                        Foto Profil Resmi
-                    </label>
-                    <span class="text-[11px] font-medium text-slate-500">
-                        Format JPG, PNG, WEBP (Maks. 2MB)
-                    </span>
-                </div>
-
-                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-                    <!-- Avatar / Image Preview Container -->
-                    <div class="relative w-20 h-24 sm:w-24 sm:h-28 rounded-xl overflow-hidden bg-white border border-[#E2E8F0] shadow-xs flex items-center justify-center shrink-0">
-                        <template x-if="preview">
-                            <img :src="preview" alt="Preview Foto" class="w-full h-full object-cover object-top">
-                        </template>
-                        <div x-show="preview === null" class="w-full h-full flex flex-col items-center justify-center bg-slate-100 text-slate-400">
-                            <svg class="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                            </svg>
-                            <span class="text-[9px] font-medium mt-1">Belum ada</span>
-                        </div>
-                    </div>
-
-                    <!-- Upload Controls & Info -->
-                    <div class="flex-1 min-w-0 space-y-2">
-                        <div class="text-xs text-slate-600">
-                            <p class="font-medium text-slate-800" x-text="preview ? 'Foto baru siap diunggah' : 'Pilih berkas foto aparatur desa'"></p>
-                            <p class="text-[11px] text-slate-500 mt-0.5">Unggah foto resmi aparatur desa berseragam atau pakaian dinas rapi.</p>
-                        </div>
-
-                        <div>
-                            <input type="file" 
-                                   name="photo" 
-                                   id="photo" 
-                                   accept="image/*" 
-                                   @change="fileChosen"
-                                   class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-[#0F4C3A] hover:file:bg-emerald-100 file:cursor-pointer cursor-pointer border border-[#E2E8F0] rounded-xl bg-white p-1 focus:outline-hidden">
-                        </div>
-
-                        <p class="text-[11px] text-slate-500 flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>Rekomendasi rasio pasfoto <strong>3:4</strong> (misal 600×800 px) atau kotak <strong>1:1</strong>.</span>
-                        </p>
-                    </div>
-                </div>
+            <div class="space-y-2 p-5 sm:p-6 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0]">
+                <label class="block text-[13px] font-semibold text-[#1E293B] mb-2">
+                    Foto Profil Resmi
+                </label>
+                <x-file-picker name="photo" accept="image/*" />
+                @error('photo')
+                    <p class="text-xs text-rose-600 font-medium mt-1.5">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="pt-4 flex items-center justify-end gap-3 border-t border-[#F1F5F9]">

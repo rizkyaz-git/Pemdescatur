@@ -11,80 +11,57 @@
 
 
     <!-- Header Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 sm:p-6 rounded-[20px] border border-[#E2E8F0] shadow-xs">
-        <div>
-            <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Kelola Halaman PPK Ormawa</h1>
-            <p class="text-xs text-slate-500 mt-1">Kelola gambar dokumentasi kegiatan dan modul file unduhan untuk setiap pilar pojok desa.</p>
-        </div>
-        <div class="flex items-center gap-2 shrink-0">
-            <a href="{{ route('public.ppko') }}" target="_blank"
-                class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-semibold transition shadow-xs">
-                <span>Lihat Halaman Publik</span>
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-            </a>
-        </div>
+    <div>
+        <h1 class="font-jakarta text-2xl font-bold text-slate-900">Kelola Halaman PPK Ormawa</h1>
     </div>
 
-    <!-- 5 Tab Bar Navigation (1 Tab per Pojok) -->
-    <div class="bg-white rounded-2xl border border-[#E2E8F0] p-1.5 shadow-xs overflow-x-auto">
-        <div class="flex items-center gap-1.5 min-w-max">
-            @foreach($pojoks as $p)
-                <button type="button"
-                    @click="activeTab = {{ $p->id }}; history.replaceState(null, '', '?tab={{ $p->id }}')"
-                    :class="activeTab === {{ $p->id }} 
-                        ? 'bg-[#0F4C3A] text-white shadow-xs font-bold' 
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium'"
-                    class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs transition-all cursor-pointer">
-                    <span class="w-5 h-5 rounded-lg flex items-center justify-center text-[10px] font-bold shrink-0 transition"
-                          :class="activeTab === {{ $p->id }} ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'">
-                        {{ $loop->iteration }}
-                    </span>
-                    <span>{{ $p->nama }}</span>
-                    @if($p->kurikulums_count > 0)
-                        <span class="px-1.5 py-0.5 rounded-full text-[10px] font-semibold tabular-nums"
-                              :class="activeTab === {{ $p->id }} ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'">
-                            {{ $p->kurikulums_count }} file
-                        </span>
-                    @endif
-                </button>
-            @endforeach
+    <!-- Unified Tab Navigation & Ringkasan Info Pojok Card -->
+    <div class="bg-white rounded-xl border border-[#E2E8F0] shadow-2xs overflow-hidden">
+        <!-- 5 Tab Bar Navigation (Browser Tab Style) -->
+        <div class="bg-[#F8FAFC] px-4 pt-2.5 sm:px-6 sm:pt-3 border-b border-[#E2E8F0]">
+            <div class="flex items-center gap-2 overflow-x-auto custom-scrollbar -mb-px px-2.5">
+                @foreach($pojoks as $p)
+                    <button type="button"
+                        @click="activeTab = {{ $p->id }}; history.replaceState(null, '', '?tab={{ $p->id }}')"
+                        :class="activeTab === {{ $p->id }} 
+                            ? 'tab-browser-active font-semibold shadow-xs' 
+                            : 'rounded-t-lg text-slate-600 hover:text-[#0F4C3A] hover:bg-slate-200/50 font-medium'"
+                        class="px-4 py-2 text-xs whitespace-nowrap transition-all duration-150 cursor-pointer flex items-center gap-2">
+                        <span>{{ $p->nama }}</span>
+                    </button>
+                @endforeach
+            </div>
         </div>
-    </div>
 
-    <!-- Tab Content Containers -->
-    @foreach($pojoks as $pojok)
-        <div x-show="activeTab === {{ $pojok->id }}" x-cloak class="space-y-6">
-
-            <!-- 1. Ringkasan Info Pojok -->
-            <div class="bg-white p-5 sm:p-6 rounded-[20px] border border-[#E2E8F0] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div class="space-y-1">
-                    <div class="flex items-center gap-2">
-                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                            Pilar 0{{ $loop->iteration }}
-                        </span>
-                        <h2 class="font-jakarta text-lg font-bold text-[#0F172A]">{{ $pojok->nama }}</h2>
-                    </div>
-                    <p class="text-xs text-slate-600 max-w-3xl leading-relaxed">{{ $pojok->deskripsi_singkat }}</p>
+        <!-- Ringkasan Info Pojok (Active Tab Content - Berwarna Mengikuti Tab Aktif) -->
+        @foreach($pojoks as $pojok)
+            <div x-show="activeTab === {{ $pojok->id }}" x-cloak
+                class="bg-[#0F4C3A] p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 text-white">
+                <div class="space-y-1.5">
+                    <h2 class="font-jakarta text-xl font-bold text-white">{{ $pojok->nama }}</h2>
+                    <p class="text-xs text-emerald-100/90 max-w-3xl leading-relaxed">{{ $pojok->deskripsi_singkat }}</p>
                 </div>
                 <button type="button"
                     @click="editPojokData = { id: {{ $pojok->id }}, nama: '{{ addslashes($pojok->nama) }}', deskripsi_singkat: '{{ addslashes($pojok->deskripsi_singkat) }}' }; openEditInfoModal = true"
-                    class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold transition shrink-0 shadow-xs">
-                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white hover:bg-emerald-50 text-[#0F4C3A] text-xs font-bold transition shrink-0 shadow-xs cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-[#0F4C3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                     <span>Ubah Nama / Deskripsi</span>
                 </button>
             </div>
+        @endforeach
+    </div>
+
+    <!-- Tab Content Containers -->
+    @foreach($pojoks as $pojok)
+        <div x-show="activeTab === {{ $pojok->id }}" x-cloak class="space-y-6">
 
             <!-- 2. Bagian Gambar yang Ditampilkan (3 Slot) -->
-            <div class="bg-white p-5 sm:p-6 rounded-[20px] border border-[#E2E8F0] shadow-xs space-y-4">
+            <div class="bg-white p-5 sm:p-6 rounded-xl border border-[#E2E8F0] shadow-2xs space-y-4">
                 <div>
                     <h3 class="font-jakarta text-base font-bold text-[#0F172A]">Gambar yang Ditampilkan</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Tersedia 3 slot gambar kegiatan untuk pojok ini. Jika slot belum diisi, akan tampil kotak abu-abu penanda belum diisi.</p>
                 </div>
 
                 @php
@@ -211,7 +188,7 @@
             </div>
 
             <!-- 3. Bagian File Dokumen / Modul Unduhan -->
-            <div class="bg-white p-5 sm:p-6 rounded-[20px] border border-[#E2E8F0] shadow-xs space-y-4">
+            <div class="bg-white p-5 sm:p-6 rounded-xl border border-[#E2E8F0] shadow-2xs space-y-4">
                 <div>
                     <h3 class="font-jakarta text-base font-bold text-[#0F172A]">File & Modul Unduhan</h3>
                     <p class="text-xs text-slate-500 mt-0.5">Kelola dokumen panduan atau kurikulum yang dapat diunduh oleh warga pada pojok ini.</p>
@@ -219,7 +196,7 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     <!-- Form Upload File Baru (5 cols) -->
-                    <div class="lg:col-span-5 bg-[#F8FAFC] p-4 sm:p-5 rounded-2xl border border-[#E2E8F0] space-y-3">
+                    <div class="lg:col-span-5 bg-[#F8FAFC] p-4 sm:p-5 rounded-xl border border-[#E2E8F0] space-y-3">
                         <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                             <svg class="w-4 h-4 text-[#0F4C3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -231,12 +208,12 @@
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 mb-1">Nama / Judul File <span class="text-rose-500">*</span></label>
                                 <input type="text" name="judul" required placeholder="Contoh: Modul Pelatihan Kewirausahaan"
-                                    class="w-full text-xs rounded-xl border border-slate-200 px-3 py-2 text-slate-900 focus:ring-1 focus:ring-[#0F4C3A] focus:border-[#0F4C3A] bg-white">
+                                    class="w-full text-xs rounded-lg border border-slate-200 px-3 py-2 text-slate-900 focus:ring-1 focus:ring-[#0F4C3A] focus:border-[#0F4C3A] bg-white">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 mb-1">Deskripsi Singkat (Opsional)</label>
                                 <textarea name="deskripsi" rows="2" placeholder="Keterangan singkat isi dokumen..."
-                                    class="w-full text-xs rounded-xl border border-slate-200 px-3 py-2 text-slate-900 focus:ring-1 focus:ring-[#0F4C3A] focus:border-[#0F4C3A] bg-white"></textarea>
+                                    class="w-full text-xs rounded-lg border border-slate-200 px-3 py-2 text-slate-900 focus:ring-1 focus:ring-[#0F4C3A] focus:border-[#0F4C3A] bg-white"></textarea>
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 mb-1">File Dokumen <span class="text-rose-500">*</span></label>
@@ -244,14 +221,14 @@
                                     class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-white file:text-slate-700 hover:file:bg-slate-100 text-slate-600">
                                 <span class="text-[10px] text-slate-400 block mt-1">PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, ZIP. Maks 50MB.</span>
                             </div>
-                            <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-bold transition shadow-xs">
+                            <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-bold transition shadow-2xs">
                                 Simpan & Unggah File
                             </button>
                         </form>
                     </div>
 
                     <!-- List File Terunggah (7 cols) -->
-                    <div class="lg:col-span-7 bg-[#F8FAFC] p-4 sm:p-5 rounded-2xl border border-[#E2E8F0] space-y-3">
+                    <div class="lg:col-span-7 bg-[#F8FAFC] p-4 sm:p-5 rounded-xl border border-[#E2E8F0] space-y-3">
                         <div class="flex items-center justify-between border-b border-slate-200/80 pb-2">
                             <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                                 <svg class="w-4 h-4 text-[#0F4C3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

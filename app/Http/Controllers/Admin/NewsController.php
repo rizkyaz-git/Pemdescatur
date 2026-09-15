@@ -7,22 +7,33 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreNewsRequest;
 use App\Http\Requests\UpdateNewsRequest;
 use App\Models\News;
+use App\Models\NewsCategory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class NewsController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $newsList = News::latest()->paginate(10);
-        return view('admin.news.index', compact('newsList'));
+        $categories = NewsCategory::orderBy('name')->get();
+
+        $query = News::query();
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        $newsList = $query->latest()->paginate(10)->withQueryString();
+
+        return view('admin.news.index', compact('newsList', 'categories'));
     }
 
     public function create(): View
     {
-        return view('admin.news.create');
+        $categories = NewsCategory::orderBy('name')->get();
+        return view('admin.news.create', compact('categories'));
     }
 
     public function store(StoreNewsRequest $request): RedirectResponse
@@ -32,6 +43,11 @@ class NewsController extends Controller
 
         // Sanitasi konten Quill untuk mencegah Stored XSS
         $data['content'] = HtmlPurifierHelper::clean($data['content']);
+
+        // Fallback otomatis excerpt dari konten jika tidak ada input ringkasan
+        if (empty($data['excerpt'])) {
+            $data['excerpt'] = Str::limit(strip_tags($data['content']), 150);
+        }
 
         if ($request->hasFile('image')) {
             $data['image_path'] = $request->file('image')->store('news', 'public');
@@ -49,7 +65,8 @@ class NewsController extends Controller
 
     public function edit(News $news): View
     {
-        return view('admin.news.edit', compact('news'));
+        $categories = NewsCategory::orderBy('name')->get();
+        return view('admin.news.edit', compact('news', 'categories'));
     }
 
     public function update(UpdateNewsRequest $request, News $news): RedirectResponse
@@ -58,6 +75,11 @@ class NewsController extends Controller
 
         // Sanitasi konten Quill untuk mencegah Stored XSS
         $data['content'] = HtmlPurifierHelper::clean($data['content']);
+
+        // Fallback otomatis excerpt dari konten jika tidak ada input ringkasan
+        if (empty($data['excerpt'])) {
+            $data['excerpt'] = Str::limit(strip_tags($data['content']), 150);
+        }
 
         if ($news->title !== $data['title']) {
             $data['slug'] = Str::slug($data['title']) . '-' . Str::random(5);

@@ -261,26 +261,25 @@
                 class="space-y-4 pt-2">
                 @csrf
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                            Nama File / Judul Dokumen <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="text" name="judul" value="{{ old('judul') }}" placeholder="Masukkan judul dokumen..."
-                            class="w-full text-xs rounded-xl border-[#E2E8F0] focus:border-[#0F4C3A] focus:ring-[#0F4C3A] p-3 bg-white shadow-xs"
-                            required>
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Nama File / Judul Dokumen <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" name="judul" value="{{ old('judul') }}" placeholder="Masukkan judul dokumen..."
+                        class="w-full text-xs rounded-xl border-[#E2E8F0] focus:border-[#0F4C3A] focus:ring-[#0F4C3A] p-3 bg-white shadow-xs"
+                        required>
+                </div>
 
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                            Pilih Dokumen File <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="file" name="file" id="dokumen-file-input" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar"
-                            class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#0F4C3A] file:text-white hover:file:bg-[#072C21] cursor-pointer bg-white p-2 rounded-xl border border-[#E2E8F0] shadow-xs"
-                            onchange="validateDocumentFile(this)"
-                            required>
-                        <p class="text-[11px] text-slate-400 mt-1">Format PDF, DOCX, PPTX, XLSX, ZIP (Maksimal 50MB).</p>
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Pilih Dokumen File <span class="text-rose-500">*</span>
+                    </label>
+                    <x-file-picker 
+                        name="file" 
+                        id="dokumen-file-input" 
+                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar" 
+                        required 
+                    />
                 </div>
 
                 <div>

@@ -42,39 +42,17 @@
                     File Template Surat Siap Cetak
                 </label>
 
-                @if($template->has_file)
-                    <div class="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-[#0F4C3A] text-white flex items-center justify-center font-bold text-xs uppercase shrink-0">
-                                {{ $template->file_extension }}
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-emerald-950">{{ basename($template->file_path) }}</p>
-                                <p class="text-[11px] text-emerald-700 mt-0.5">Ukuran: {{ $template->file_size_formatted }} • Tersedia untuk diunduh</p>
-                            </div>
-                        </div>
-                        <a href="{{ $template->file_url }}" target="_blank" download
-                           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-emerald-100 text-[#0F4C3A] border border-emerald-300 text-xs font-bold transition shrink-0 shadow-2xs">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                            </svg>
-                            <span>Unduh File Sekarang</span>
-                        </a>
-                    </div>
-                @endif
-
-                <div>
-                    <label for="file" class="block text-xs font-medium text-slate-600 mb-1">
-                        {{ $template->has_file ? 'Ganti dengan File Baru (Kosongkan jika tidak ingin mengubah file)' : 'Unggah File Template (Wajib diisi jika belum ada)' }}
-                    </label>
-                    <input type="file" name="file" id="file"
-                        accept=".doc,.docx,.pdf,.rtf,.odt"
-                        class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#0F4C3A] file:text-white hover:file:bg-[#072C21] cursor-pointer bg-[#F8FAFC]/40 p-2 rounded-xl border border-[#E2E8F0] shadow-xs @error('file') border-rose-500 @enderror">
-                    <p class="text-[11px] text-slate-400 mt-1">Format: Word (.doc, .docx), PDF (.pdf), RTF (.rtf). Maksimal 25 MB.</p>
-                    @error('file')
-                        <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <x-file-picker 
+                    name="file" 
+                    id="file" 
+                    accept=".doc,.docx,.pdf,.rtf,.odt" 
+                    current="{{ $template->has_file ? $template->file_url : '' }}" 
+                    currentName="{{ basename($template->file_path ?? '') }}" 
+                    currentType="file" 
+                />
+                @error('file')
+                    <p class="text-xs text-rose-600 font-medium mt-1.5">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- Persyaratan & Berkas Dibutuhkan -->

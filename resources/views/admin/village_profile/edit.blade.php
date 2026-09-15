@@ -82,26 +82,12 @@
                 <!-- 1. Foto Utama Profil Desa (Upload Image) -->
                 <div class="space-y-3">
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Foto Profil</label>
-                    <div
-                        class="flex flex-col sm:flex-row items-start sm:items-center gap-5 p-5 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0]">
-                        <div
-                            class="w-full sm:w-64 h-36 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 relative shadow-xs shrink-0 group">
-                            <img id="image-preview"
-                                src="{{ $profile->image ? asset('storage/' . $profile->image) : asset('images/hero_landscape.png') }}"
-                                alt="Preview Foto Profil"
-                                class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                        </div>
-                        <div class="space-y-2.5 flex-1">
-                            <input type="file" name="image" id="image-input"
-                                accept="image/png,image/jpeg,image/jpg,image/webp"
-                                class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#0F4C3A] file:text-white hover:file:bg-[#072C21] cursor-pointer bg-white p-1 rounded-xl border border-[#E2E8F0]">
-                            <p class="text-xs text-slate-500 leading-relaxed">
-                                *Rekomendasi Resolusi: <strong class="text-slate-800">1920 x 1080 px</strong> atau <strong
-                                    class="text-slate-800">1280 x 720 px</strong> (Rasio 16:9 Landscape). Format JPG, PNG,
-                                WEBP. Maksimal 5 MB.
-                            </p>
-                        </div>
-                    </div>
+                    <x-file-picker 
+                        name="image" 
+                        accept="image/png,image/jpeg,image/jpg,image/webp" 
+                        current="{{ $profile->image ? asset('storage/' . $profile->image) : asset('images/hero_landscape.png') }}" 
+                        currentName="{{ basename($profile->image ?? 'hero_landscape.png') }}" 
+                    />
                     @error('image')
                         <p class="text-xs text-rose-600 mt-1 font-medium">{{ $message }}</p>
                     @enderror
@@ -163,19 +149,6 @@
                 document.getElementById('history_input').value = historyQuill.root.innerHTML;
             });
 
-            // Image Live Preview Script
-            const imageInput = document.getElementById('image-input');
-            const imagePreview = document.getElementById('image-preview');
-            imageInput.addEventListener('change', function (e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (evt) {
-                        imagePreview.src = evt.target.result;
-                    }
-                    reader.readAsDataURL(file);
-                }
-            });
         });
     </script>
 @endpush

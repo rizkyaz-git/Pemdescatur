@@ -84,20 +84,27 @@
                 </div>
 
                 <div class="space-y-3">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                        <input type="file" name="avatar" id="avatar" accept="image/png,image/jpeg,image/jpg,image/webp"
-                            @change="previewImage($event)"
-                            class="block w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#0F4C3A] file:text-white hover:file:bg-[#072C21] cursor-pointer bg-white p-1 rounded-xl border border-[#E2E8F0]">
+                    <x-file-picker 
+                        name="avatar" 
+                        id="avatar" 
+                        accept="image/png,image/jpeg,image/jpg,image/webp" 
+                        current="{{ $user->avatar ? asset('storage/' . $user->avatar) : '' }}" 
+                        currentName="{{ basename($user->avatar ?? '') }}" 
+                    />
 
-                        @if($user->avatar)
+                    @if($user->avatar)
+                        <div>
                             <button type="button" 
                                 onclick="if(confirm('Apakah Anda yakin ingin menghapus foto profil?')) { document.getElementById('delete-avatar-form').submit(); }"
-                                class="px-3.5 py-2.5 rounded-xl text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition shrink-0">
-                                Hapus Foto
+                                class="px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition inline-flex items-center gap-1.5 cursor-pointer">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                <span>Hapus Foto</span>
                             </button>
-                        @endif
-                    </div>
-                    <p class="text-[11px] text-[#64748B]">Format gambar yang didukung: JPG, PNG, WEBP. Ukuran maksimal 2 MB.</p>
+                        </div>
+                    @endif
+
                     @error('avatar')
                         <p class="text-xs text-rose-600 font-medium">{{ $message }}</p>
                     @enderror

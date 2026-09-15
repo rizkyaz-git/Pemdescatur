@@ -182,3 +182,458 @@ body {
     will-change: auto !important;
   }
 }
+
+/* ========================================================
+   Flatpickr & Date Picker Styling - Refined Dark Green Theme #0F4C3A
+   ======================================================== */
+.flatpickr-calendar {
+  width: 296px !important;
+  max-width: calc(100vw - 32px) !important;
+  border-radius: 0.625rem !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 10px 25px -4px rgba(15, 76, 58, 0.14), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
+  font-family: 'Plus Jakarta Sans', 'Public Sans', sans-serif !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+  box-sizing: border-box !important;
+}
+
+.flatpickr-calendar.arrowTop:before,
+.flatpickr-calendar.arrowTop:after {
+  border-bottom-color: #0F4C3A !important;
+}
+
+/* Header: Month & Year */
+.flatpickr-months {
+  background: #0F4C3A !important;
+  color: #ffffff !important;
+  height: 42px !important;
+  padding: 0 10px !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+}
+
+.flatpickr-months .flatpickr-month {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  height: 42px !important;
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+.flatpickr-current-month {
+  position: static !important;
+  width: auto !important;
+  left: auto !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  padding: 0 !important;
+  transform: none !important;
+}
+
+.flatpickr-current-month .cur-month {
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+}
+
+.flatpickr-current-month input.cur-year {
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: auto !important;
+  background: transparent !important;
+}
+
+.flatpickr-current-month .numInputWrapper span.arrowUp:after {
+  border-bottom-color: #ffffff !important;
+}
+
+.flatpickr-current-month .numInputWrapper span.arrowDown:after {
+  border-top-color: #ffffff !important;
+}
+
+/* Month Dropdown if opened */
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  background: #0F4C3A !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 4px !important;
+  padding: 2px 6px !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  outline: none !important;
+  cursor: pointer !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months option {
+  background-color: #ffffff !important;
+  color: #0F172A !important;
+  font-weight: 600 !important;
+  padding: 6px 10px !important;
+}
+
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+  position: static !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  cursor: pointer !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.flatpickr-months .flatpickr-prev-month:hover,
+.flatpickr-months .flatpickr-next-month:hover {
+  background-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+.flatpickr-months .flatpickr-prev-month svg,
+.flatpickr-months .flatpickr-next-month svg {
+  width: 14px !important;
+  height: 14px !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Weekday Bar: Exactly 7 Columns Matching Date Grid */
+.flatpickr-weekdays {
+  background: #0A372A !important;
+  height: 28px !important;
+  width: 100% !important;
+  padding: 0 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.flatpickr-weekdaycontainer {
+  display: flex !important;
+  width: 280px !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+}
+
+span.flatpickr-weekday {
+  width: 40px !important;
+  flex: 0 0 40px !important;
+  max-width: 40px !important;
+  color: #A7F3D0 !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  text-align: center !important;
+  line-height: 28px !important;
+}
+
+/* Days Container: Symmetrical 7x6 Grid */
+.flatpickr-days {
+  width: 100% !important;
+  padding: 6px 8px !important;
+  display: flex !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+.dayContainer {
+  width: 280px !important;
+  min-width: 280px !important;
+  max-width: 280px !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  box-sizing: border-box !important;
+}
+
+.flatpickr-day {
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  flex: 0 0 34px !important;
+  max-width: 34px !important;
+  margin: 3px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  border-radius: 6px !important;
+  box-sizing: border-box !important;
+  border: 1px solid transparent !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #1E293B !important;
+  transition: all 0.12s ease-in-out !important;
+}
+
+.flatpickr-day:hover,
+.flatpickr-day:focus {
+  background: #EAF1E8 !important;
+  border-color: #EAF1E8 !important;
+  color: #0F4C3A !important;
+}
+
+/* Days from other months: subtle but distinct */
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+  color: #CBD5E1 !important;
+  font-weight: 400 !important;
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.flatpickr-day.prevMonthDay:hover,
+.flatpickr-day.nextMonthDay:hover {
+  background: #F8FAFC !important;
+  color: #64748B !important;
+  border-color: #F8FAFC !important;
+}
+
+/* Today highlight (unselected): soft green fill with dark green border */
+.flatpickr-day.today {
+  border: 1.5px solid #0F4C3A !important;
+  color: #0F4C3A !important;
+  background: #ECFDF5 !important;
+  font-weight: 700 !important;
+}
+
+.flatpickr-day.today:hover {
+  background: #0F4C3A !important;
+  color: #ffffff !important;
+}
+
+/* Selected day: solid brand dark green */
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected.inRange,
+.flatpickr-day.selected:focus,
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected.prevMonthDay,
+.flatpickr-day.selected.nextMonthDay {
+  background: #0F4C3A !important;
+  border-color: #0F4C3A !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 3px rgba(15, 76, 58, 0.25) !important;
+}
+
+/* Time Picker Section: Unified Compact Group */
+.flatpickr-time {
+  border-top: 1px solid #F1F5F9 !important;
+  background: #F8FAFC !important;
+  height: 46px !important;
+  padding: 0 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  box-sizing: border-box !important;
+}
+
+.flatpickr-time .numInputWrapper {
+  height: 32px !important;
+  width: 48px !important;
+  flex: 0 0 48px !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.15s ease !important;
+}
+
+.flatpickr-time .numInputWrapper:hover,
+.flatpickr-time .numInputWrapper:focus-within {
+  border-color: #0F4C3A !important;
+}
+
+.flatpickr-time input.flatpickr-hour,
+.flatpickr-time input.flatpickr-minute {
+  height: 30px !important;
+  line-height: 30px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #0F4C3A !important;
+  text-align: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.flatpickr-time .flatpickr-time-separator {
+  color: #0F4C3A !important;
+  font-weight: 800 !important;
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.flatpickr-time .numInputWrapper span.arrowUp:after {
+  border-bottom-color: #0F4C3A !important;
+}
+
+.flatpickr-time .numInputWrapper span.arrowDown:after {
+  border-top-color: #0F4C3A !important;
+}
+
+/* Footer Action Buttons: Symmetrical & Pixel-Aligned */
+.flatpickr-custom-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 14px !important;
+  background: #ffffff !important;
+  border-top: 1px solid #F1F5F9 !important;
+  height: 48px !important;
+  box-sizing: border-box !important;
+}
+
+.flatpickr-btn-clear {
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  line-height: 30px !important;
+  padding: 0 12px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  color: #64748B !important;
+  background: #ffffff !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+.flatpickr-btn-clear:hover {
+  color: #0F172A !important;
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+
+.flatpickr-btn-today {
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  line-height: 30px !important;
+  padding: 0 12px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  background: #0F4C3A !important;
+  border: 1px solid #0F4C3A !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+.flatpickr-btn-today:hover {
+  background: #072C21 !important;
+  border-color: #072C21 !important;
+}
+
+/* Native datetime-local indicator styling */
+input[type="datetime-local"] {
+  accent-color: #0F4C3A;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(24%) sepia(35%) saturate(1637%) hue-rotate(119deg) brightness(92%) contrast(92%);
+  opacity: 0.85;
+  transition: opacity 0.15s ease-in-out;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  background-color: #EAF1E8;
+}
+
+/* ==========================================================================
+   BROWSER TAB WITH INVERTED CURVED FILLETS & TABLE HEADER SHADOW
+   ========================================================================== */
+.tab-browser-active {
+  position: relative;
+  background-color: #0F4C3A !important;
+  color: #ffffff !important;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  z-index: 20;
+}
+
+/* Lengkung menyatu bawah kiri (inverted fillet) */
+.tab-browser-active::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -8px;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle at top left, transparent 7.5px, #0F4C3A 8px);
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Lengkung menyatu bawah kanan (inverted fillet) */
+.tab-browser-active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: -8px;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle at top right, transparent 7.5px, #0F4C3A 8px);
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Shadow halus di baris atas judul tabel agar tab terkesan berada di bawah */
+.table-header-shadow th {
+  box-shadow: inset 0 3px 5px -1px rgba(0, 0, 0, 0.22);
+}
+
+

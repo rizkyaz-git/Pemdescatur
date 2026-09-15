@@ -31,28 +31,11 @@
             @csrf
 
             <!-- Foto Profil (Opsional) -->
-            <div class="space-y-3 pb-6 border-b border-[#F1F5F9]">
-                <label class="block text-[13px] font-semibold text-[#1E293B]">Foto Profil (Opsional)</label>
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 rounded-full overflow-hidden bg-slate-100 border border-[#E2E8F0] flex items-center justify-center text-slate-400 shrink-0">
-                        <template x-if="avatarPreview">
-                            <img :src="avatarPreview" alt="Preview" class="w-full h-full object-cover">
-                        </template>
-                        <template x-if="!avatarPreview">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                            </svg>
-                        </template>
-                    </div>
-                    <div class="flex-1">
-                        <input type="file" name="avatar" id="avatar" accept="image/png,image/jpeg,image/jpg,image/webp"
-                            @change="previewImage($event)"
-                            class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#0F4C3A] file:text-white hover:file:bg-[#072C21] cursor-pointer bg-white p-1 rounded-xl border border-[#E2E8F0]">
-                        <p class="text-[11px] text-[#64748B] mt-1">Format: JPG, PNG, WEBP. Maks 2 MB.</p>
-                    </div>
-                </div>
+            <div class="space-y-2 pb-6 border-b border-[#F1F5F9]">
+                <label class="block text-[13px] font-semibold text-[#1E293B] mb-2">Foto Profil (Opsional)</label>
+                <x-file-picker name="avatar" accept="image/png,image/jpeg,image/jpg,image/webp" />
                 @error('avatar')
-                    <p class="text-xs text-rose-600 font-medium">{{ $message }}</p>
+                    <p class="text-xs text-rose-600 font-medium mt-1.5">{{ $message }}</p>
                 @enderror
             </div>
 

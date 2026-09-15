@@ -41,73 +41,43 @@
                         <span class="text-[11px] font-semibold text-slate-400">Identitas Visual</span>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                        <div
-                            class="w-24 h-24 bg-white border-2 border-dashed border-[#E2E8F0] rounded-2xl p-2 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
-                            @if(!empty($settings['village_logo_path']))
-                                <img src="{{ asset('storage/' . $settings['village_logo_path']) }}"
-                                    class="max-w-full max-h-full object-contain">
-                            @else
-                                <span class="text-slate-400 text-xs text-center font-medium">Belum ada logo</span>
-                            @endif
-                        </div>
-
-                        <div class="flex-1 space-y-2 w-full">
-                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Unggah / Ganti
-                                Logo Desa</label>
-                            <input type="file" name="village_logo" accept="image/*"
-                                class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#0F4C3A] file:text-white hover:file:bg-[#072C21] cursor-pointer bg-white p-1 rounded-xl border border-[#E2E8F0]">
-                            <p class="text-[11px] text-slate-500 font-medium">*Rekomendasi Ukuran: <strong>512 x 512
-                                    px</strong> (Rasio 1:1. Format <strong>PNG/SVG Transparan</strong>). Maks <strong> 2 MB.
-                                </strong></p>
-                        </div>
-                    </div>
-
-                    @if(!empty($settings['village_logo_path']))
-                        <div class="pt-2">
-                            <button type="submit" form="delete-logo-form"
-                                class="text-xs text-rose-600 hover:text-rose-800 font-bold inline-flex items-center gap-1.5 transition cursor-pointer">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                                <span>Hapus Logo</span>
-                            </button>
-                        </div>
-                    @endif
+                    <x-file-picker 
+                        name="village_logo" 
+                        accept="image/*" 
+                        current="{{ !empty($settings['village_logo_path']) ? asset('storage/' . $settings['village_logo_path']) : '' }}" 
+                        currentName="{{ basename($settings['village_logo_path'] ?? '') }}" 
+                    />
                 </div>
 
-                <!-- Block 1B: Background Hero Section -->
-                <div class="p-6 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0] space-y-4">
-                    <div class="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
-                        <h3 class="font-jakarta font-bold text-base text-slate-900 flex items-center gap-2">
-                            <span>Gambar Latar Sampul Utama</span>
-                        </h3>
-                        <span class="text-xs font-semibold text-slate-400">Halaman Utama (Beranda)</span>
+                @if(!empty($settings['village_logo_path']))
+                    <div class="pt-2">
+                        <button type="submit" form="delete-logo-form"
+                            class="text-xs text-rose-600 hover:text-rose-800 font-bold inline-flex items-center gap-1.5 transition cursor-pointer">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            <span>Hapus Logo</span>
+                        </button>
                     </div>
+                @endif
+            </div>
 
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                        <div
-                            class="w-44 h-24 bg-slate-200 border border-slate-300 rounded-xl overflow-hidden shadow-xs shrink-0 flex items-center justify-center group">
-                            @if(!empty($settings['hero_image_path']))
-                                <img src="{{ asset('storage/' . $settings['hero_image_path']) }}"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                            @else
-                                <img src="{{ asset('images/hero_landscape.png') }}"
-                                    class="w-full h-full object-cover opacity-80" title="Background Bawaan">
-                            @endif
-                        </div>
+            <!-- Block 1B: Background Hero Section -->
+            <div class="p-6 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0] space-y-4">
+                <div class="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
+                    <h3 class="font-jakarta font-bold text-base text-slate-900 flex items-center gap-2">
+                        <span>Gambar Latar Sampul Utama</span>
+                    </h3>
+                    <span class="text-xs font-semibold text-slate-400">Halaman Utama (Beranda)</span>
+                </div>
 
-                        <div class="flex-1 space-y-2 w-full">
-                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Unggah / Ganti
-                                Gambar </label>
-                            <input type="file" name="hero_image" accept="image/*"
-                                class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#0F4C3A] file:text-white hover:file:bg-[#072C21] cursor-pointer bg-white p-1 rounded-xl border border-[#E2E8F0]">
-                            <p class="text-[11px] text-slate-500 font-medium"> *Rekomendasi Resolusi: <strong>1920 x 1080
-                                    px</strong> (Rasio 16:9). Format <strong> JPG/PNG/WEBP.</strong> Maks <strong> 5 MB.
-                                </strong></p>
-                        </div>
-                    </div>
+                <x-file-picker 
+                    name="hero_image" 
+                    accept="image/*" 
+                    current="{{ !empty($settings['hero_image_path']) ? asset('storage/' . $settings['hero_image_path']) : asset('images/hero_landscape.png') }}" 
+                    currentName="{{ basename($settings['hero_image_path'] ?? 'hero_landscape.png') }}" 
+                />
 
                     @if(!empty($settings['hero_image_path']))
                         <div class="pt-2">

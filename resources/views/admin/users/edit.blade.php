@@ -32,26 +32,16 @@
             @method('PUT')
 
             <!-- Foto Profil (Opsional) -->
-            <div class="space-y-3 pb-6 border-b border-[#F1F5F9]">
-                <label class="block text-[13px] font-semibold text-[#1E293B]">Foto Profil</label>
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 rounded-full overflow-hidden bg-slate-100 border border-[#E2E8F0] flex items-center justify-center text-slate-400 shrink-0">
-                        <template x-if="avatarPreview">
-                            <img :src="avatarPreview" alt="Preview" class="w-full h-full object-cover">
-                        </template>
-                        <template x-if="!avatarPreview">
-                            <span class="font-bold text-base text-[#0F4C3A]">{{ strtoupper(substr($user->name, 0, 2)) }}</span>
-                        </template>
-                    </div>
-                    <div class="flex-1">
-                        <input type="file" name="avatar" id="avatar" accept="image/png,image/jpeg,image/jpg,image/webp"
-                            @change="previewImage($event)"
-                            class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#0F4C3A] file:text-white hover:file:bg-[#072C21] cursor-pointer bg-white p-1 rounded-xl border border-[#E2E8F0]">
-                        <p class="text-[11px] text-[#64748B] mt-1">Biarkan kosong jika tidak ingin mengganti foto. Format: JPG, PNG, WEBP.</p>
-                    </div>
-                </div>
+            <div class="space-y-2 pb-6 border-b border-[#F1F5F9]">
+                <label class="block text-[13px] font-semibold text-[#1E293B] mb-2">Foto Profil</label>
+                <x-file-picker 
+                    name="avatar" 
+                    accept="image/png,image/jpeg,image/jpg,image/webp" 
+                    current="{{ $user->avatar ? asset('storage/' . $user->avatar) : '' }}" 
+                    currentName="{{ basename($user->avatar ?? '') }}" 
+                />
                 @error('avatar')
-                    <p class="text-xs text-rose-600 font-medium">{{ $message }}</p>
+                    <p class="text-xs text-rose-600 font-medium mt-1.5">{{ $message }}</p>
                 @enderror
             </div>
 

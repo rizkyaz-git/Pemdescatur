@@ -2,10 +2,15 @@ import './bootstrap';
 
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
+import flatpickr from 'flatpickr';
+import { Indonesian } from 'flatpickr/dist/l10n/id.js';
+import 'flatpickr/dist/flatpickr.min.css';
 
 Alpine.plugin(collapse);
 
 window.Alpine = Alpine;
+window.flatpickr = flatpickr;
+flatpickr.localize(Indonesian);
 
 const navSearchComponent = (initialQuery = '') => ({
     mobileMenuOpen: false,

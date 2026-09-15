@@ -33,12 +33,13 @@
             </div>
 
             <div class="space-y-2 p-5 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0]">
-                <label class="block text-[13px] font-semibold text-[#1E293B] mb-1">
+                <label class="block text-[13px] font-semibold text-[#1E293B] mb-2">
                     File Foto (Gambar) <span class="text-rose-500">*</span>
                 </label>
-                <input type="file" name="image" accept="image/*" required 
-                    class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-[#0F4C3A] hover:file:bg-emerald-100 cursor-pointer">
-                <p class="text-[11px] text-slate-500 mt-1 font-medium">📐 Rekomendasi Resolusi: <strong>1280 x 720 px</strong> atau <strong>1920 x 1080 px</strong> (Rasio 16:9 Landscape). Format JPG, PNG, WEBP. Maksimal 4 MB.</p>
+                <x-file-picker name="image" accept="image/*" required />
+                @error('image')
+                    <p class="text-xs text-rose-600 font-medium mt-1.5">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>

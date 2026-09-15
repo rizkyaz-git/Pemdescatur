@@ -37,15 +37,17 @@
 
             <!-- Upload File Template Dokumen -->
             <div>
-                <label for="file" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
+                <label for="file" class="block text-[13px] font-semibold text-[#1E293B] mb-2">
                     File Template Surat Siap Cetak <span class="text-rose-500">*</span>
                 </label>
-                <input type="file" name="file" id="file" required
-                    accept=".doc,.docx,.pdf,.rtf,.odt"
-                    class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#0F4C3A] file:text-white hover:file:bg-[#072C21] cursor-pointer bg-[#F8FAFC]/40 p-2 rounded-xl border border-[#E2E8F0] shadow-xs @error('file') border-rose-500 @enderror">
-                <p class="text-[11px] text-slate-400 mt-1">Format didukung: Word (.doc, .docx), PDF (.pdf), RTF (.rtf). Maksimal 25 MB.</p>
+                <x-file-picker 
+                    name="file" 
+                    id="file" 
+                    accept=".doc,.docx,.pdf,.rtf,.odt" 
+                    required 
+                />
                 @error('file')
-                    <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
+                    <p class="text-xs text-rose-600 font-medium mt-1.5">{{ $message }}</p>
                 @enderror
             </div>
 

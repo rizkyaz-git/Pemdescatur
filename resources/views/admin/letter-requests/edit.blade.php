@@ -49,22 +49,19 @@
             </div>
 
             <div class="space-y-2 p-5 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0]">
-                <label for="result_file_path" class="block text-[13px] font-semibold text-[#1E293B] mb-1">
+                <label for="result_file_path" class="block text-[13px] font-semibold text-[#1E293B] mb-2">
                     Upload Berkas Surat Hasil / TTD Resmi (PDF)
                 </label>
-                <input type="file" name="result_file_path" id="result_file_path" accept=".pdf"
-                    class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-[#0F4C3A] hover:file:bg-emerald-100 cursor-pointer @error('result_file_path') border-rose-500 @enderror">
-                <p class="text-[11px] text-slate-500">Format PDF, maksimal ukuran 5MB.</p>
-                @if($request->result_file_path)
-                    <div class="mt-2 flex items-center gap-2 text-xs text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
-                        <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                        </svg>
-                        <span>Berkas saat ini: <code class="font-mono text-[11px]">{{ basename($request->result_file_path) }}</code></span>
-                    </div>
-                @endif
+                <x-file-picker 
+                    name="result_file_path" 
+                    id="result_file_path" 
+                    accept=".pdf" 
+                    current="{{ $request->result_file_path ? asset('storage/' . $request->result_file_path) : '' }}" 
+                    currentName="{{ basename($request->result_file_path ?? '') }}" 
+                    currentType="file" 
+                />
                 @error('result_file_path')
-                    <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
+                    <p class="text-xs text-rose-600 font-medium mt-1.5">{{ $message }}</p>
                 @enderror
             </div>
 
