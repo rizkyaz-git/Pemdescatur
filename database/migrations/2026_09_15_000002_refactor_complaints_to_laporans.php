@@ -89,8 +89,13 @@ return new class extends Migration
                 "ALTER TABLE complaints MODIFY COLUMN `status` ENUM('baru','diproses','selesai','ditolak') NOT NULL DEFAULT 'baru'"
             );
 
-            // Rename tabel (drop terlebih dahulu jika ada sisa dari kegagalan migrasi sebelumnya)
+            // Rename tabel (bersihkan terlebih dahulu tabel rogue dari migrasi magic_link yang mungkin terlanjur jalan di VPS)
+            Schema::dropIfExists('laporan_tanggapans');
+            Schema::dropIfExists('login_attempts');
+            Schema::dropIfExists('login_tokens');
             Schema::dropIfExists('laporans');
+            Schema::dropIfExists('pelapors');
+
             Schema::rename('complaints', 'laporans');
 
         } else {
