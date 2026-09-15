@@ -42,6 +42,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'pelapor' => [
+            'driver' => 'session',
+            'provider' => 'pelapors',
+        ],
     ],
 
     /*
@@ -65,6 +69,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', User::class),
+        ],
+        'pelapors' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Pelapor::class,
         ],
 
         // 'users' => [

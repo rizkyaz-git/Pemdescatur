@@ -15,11 +15,12 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (!auth()->check()) {
+        // The administrator area must only ever use the existing web guard.
+        if (!auth('web')->check()) {
             return redirect('/login');
         }
 
-        $user = auth()->user();
+        $user = auth('web')->user();
 
         if (!$user->isAdmin()) {
             abort(403, 'Akses ditolak: Anda tidak memiliki hak akses administrator.');

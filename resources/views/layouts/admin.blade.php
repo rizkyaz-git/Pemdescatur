@@ -85,6 +85,13 @@
                     <span class="w-1.5 h-3.5 rounded-full bg-[#22C55E]"></span>
                 @endif
             </a>
+            <a href="{{ route('admin.laporans.index') }}"
+                class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.laporans.*') ? 'bg-[#0F4C3A] text-white shadow-xs' : 'text-[#BFC9C3] hover:bg-white/[0.07] hover:text-white' }}">
+                <div class="flex items-center gap-3 min-w-0">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h7l5 5v9a2 2 0 01-2 2z" /></svg>
+                    <span class="truncate">Laporan Privat</span>
+                </div>
+            </a>
             @endif
 
             @if(Auth::user()->canAccessNews())

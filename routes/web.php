@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Public as PublicControllers;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Public\LaporanController as PublicLaporanController;
+use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
 
 // --- HALAMAN PUBLIK ---
 Route::get('/', [PublicControllers\HomeController::class, 'index'])->name('home');
@@ -68,6 +70,7 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
         Route::resource('letter-templates', Admin\LetterTemplateController::class)->except(['show']);
         Route::resource('letter-requests', Admin\LetterRequestController::class)->only(['index', 'show', 'edit', 'update']);
         Route::resource('complaints', Admin\ComplaintController::class)->except(['create', 'store']);
+        Route::resource('laporans', AdminLaporanController::class)->only(['index', 'show', 'edit', 'update']);
     });
 
     // 5. Modul PPK Ormawa: Hanya dapat diakses oleh Super Admin dan PPK Ormawa
@@ -115,9 +118,17 @@ Route::post('/layanan/surat', [PublicControllers\LetterRequestController::class,
 Route::get('/layanan/surat/{letterRequest}', [PublicControllers\LetterRequestController::class, 'show'])->name('warga.letter.show');
 
 // Pengajuan Pengaduan
-Route::get('/layanan/pengaduan', [PublicControllers\ComplaintController::class, 'index'])->name('warga.complaint.index');
-Route::get('/layanan/pengaduan/buat', [PublicControllers\ComplaintController::class, 'create'])->name('warga.complaint.create');
-Route::post('/layanan/pengaduan', [PublicControllers\ComplaintController::class, 'store'])->middleware('throttle:5,1')->name('warga.complaint.store');
-Route::get('/layanan/pengaduan/{complaint}', [PublicControllers\ComplaintController::class, 'show'])->name('warga.complaint.show');
+Route::get('/layanan/pengaduan', [PublicLaporanController::class, 'landing'])->name('warga.complaint.index');
+Route::get('/layanan/pengaduan/buat', [PublicLaporanController::class, 'create'])->name('warga.complaint.create');
+Route::post('/layanan/pengaduan', [PublicLaporanController::class, 'store'])->middleware('throttle:5,1')->name('warga.complaint.store');
+Route::get('/cek-laporan', [PublicLaporanController::class, 'requestLogin'])->name('pelapor.login.request');
+Route::post('/cek-laporan', [PublicLaporanController::class, 'sendLogin'])->name('pelapor.login.send');
+Route::get('/verify', [PublicLaporanController::class, 'verify'])->name('pelapor.verify');
+Route::middleware('pelapor')->prefix('laporan-saya')->name('pelapor.laporan.')->group(function () {
+    Route::get('/', [PublicLaporanController::class, 'index'])->name('index');
+    Route::get('/{laporan}', [PublicLaporanController::class, 'show'])->name('show');
+    Route::get('/{laporan}/lampiran', [PublicLaporanController::class, 'attachment'])->name('attachment');
+});
+Route::post('/pelapor/logout', [PublicLaporanController::class, 'logout'])->middleware('pelapor')->name('pelapor.logout');
 
 require __DIR__.'/auth.php';
