@@ -72,7 +72,8 @@ return new class extends Migration
                 "ALTER TABLE complaints MODIFY COLUMN `status` ENUM('baru','diproses','selesai','ditolak') NOT NULL DEFAULT 'baru'"
             );
 
-            // Rename tabel
+            // Rename tabel (drop terlebih dahulu jika ada sisa dari kegagalan migrasi sebelumnya)
+            Schema::dropIfExists('laporans');
             Schema::rename('complaints', 'laporans');
 
         } else {
