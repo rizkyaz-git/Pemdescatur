@@ -31,6 +31,8 @@ class LetterGeneratorService
     {
         $letterText = $this->generateLetterText($letterRequest);
 
+        $processedAt = $letterRequest->processed_at ? $letterRequest->processed_at->format('d-m-Y H:i:s') : '-';
+
         return <<<HTML
         <!DOCTYPE html>
         <html>
@@ -64,7 +66,7 @@ class LetterGeneratorService
             </div>
             <div class="footer">
                 <p><small>Nomor Tiket: {$letterRequest->ticket_number}</small></p>
-                <p><small>Tanggal Diproses: {$letterRequest->processed_at?->format('d-m-Y H:i:s') ?? '-'}</small></p>
+                <p><small>Tanggal Diproses: {$processedAt}</small></p>
             </div>
         </body>
         </html>

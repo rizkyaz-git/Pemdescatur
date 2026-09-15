@@ -6,7 +6,7 @@ use App\Models\Laporan;
 use App\Models\Setting;
 use App\Events\LaporanDiperbarui;
 use App\Listeners\KirimNotifikasiEmailPelapor;
-use App\Models\Laporan;
+
 use App\Policies\LaporanPolicy;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
