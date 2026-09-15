@@ -21,7 +21,19 @@ return new class extends Migration
 
         if ($driver === 'mysql') {
             // === PATH MYSQL ===
-            // Drop index spesifik MySQL (tidak ada FK constraint di DB ini, hanya index biasa)
+            // Drop Foreign Keys and Indexes (with try-catch to ignore if they don't exist)
+            try {
+                Schema::table('complaints', function (Blueprint $table) {
+                    $table->dropForeign('complaints_category_id_foreign');
+                });
+            } catch (\Exception $e) {}
+
+            try {
+                Schema::table('complaints', function (Blueprint $table) {
+                    $table->dropForeign('complaints_user_id_foreign');
+                });
+            } catch (\Exception $e) {}
+
             try {
                 Schema::table('complaints', function (Blueprint $table) {
                     $table->dropIndex('complaints_category_id_foreign');
