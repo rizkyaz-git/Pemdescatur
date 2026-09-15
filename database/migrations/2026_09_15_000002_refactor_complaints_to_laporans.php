@@ -46,25 +46,42 @@ return new class extends Migration
                 });
             } catch (\Exception $e) {}
 
-            // Drop kolom-kolom lama
-            Schema::table('complaints', function (Blueprint $table) {
-                $table->dropColumn([
-                    'user_id', 'category_id', 'title', 'description',
-                    'admin_response', 'responded_at', 'attachment_path',
-                ]);
-            });
+            // Drop kolom-kolom lama (secara individual dan cek eksistensi agar aman dari partial migration)
+            $oldColumns = [
+                'user_id', 'category_id', 'title', 'description',
+                'admin_response', 'responded_at', 'attachment_path',
+            ];
+            foreach ($oldColumns as $col) {
+                if (Schema::hasColumn('complaints', $col)) {
+                    Schema::table('complaints', function (Blueprint $table) use ($col) {
+                        $table->dropColumn($col);
+                    });
+                }
+            }
 
             // Drop tabel complaint_categories
             Schema::dropIfExists('complaint_categories');
 
-            // Tambah kolom baru
+            // Tambah kolom baru (cek eksistensi untuk menghindari error duplicate column)
             Schema::table('complaints', function (Blueprint $table) {
-                $table->string('nama');
-                $table->string('no_whatsapp');
-                $table->string('kategori');
-                $table->text('isi_laporan');
-                $table->string('lampiran')->nullable();
-                $table->text('catatan_admin')->nullable();
+                if (!Schema::hasColumn('complaints', 'nama')) {
+                    $table->string('nama');
+                }
+                if (!Schema::hasColumn('complaints', 'no_whatsapp')) {
+                    $table->string('no_whatsapp');
+                }
+                if (!Schema::hasColumn('complaints', 'kategori')) {
+                    $table->string('kategori');
+                }
+                if (!Schema::hasColumn('complaints', 'isi_laporan')) {
+                    $table->text('isi_laporan');
+                }
+                if (!Schema::hasColumn('complaints', 'lampiran')) {
+                    $table->string('lampiran')->nullable();
+                }
+                if (!Schema::hasColumn('complaints', 'catatan_admin')) {
+                    $table->text('catatan_admin')->nullable();
+                }
             });
 
             // Ubah enum status
