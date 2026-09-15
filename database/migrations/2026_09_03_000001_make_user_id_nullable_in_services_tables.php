@@ -25,12 +25,16 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('letter_requests', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable(false)->change();
-        });
+        if (Schema::hasTable('letter_requests')) {
+            Schema::table('letter_requests', function (Blueprint $table) {
+                $table->foreignId('user_id')->nullable(false)->change();
+            });
+        }
 
-        Schema::table('complaints', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable(false)->change();
-        });
+        if (Schema::hasTable('complaints')) {
+            Schema::table('complaints', function (Blueprint $table) {
+                $table->foreignId('user_id')->nullable(false)->change();
+            });
+        }
     }
 };

@@ -51,12 +51,16 @@ return new class extends Migration
                 'user_id', 'category_id', 'title', 'description',
                 'admin_response', 'responded_at', 'attachment_path',
             ];
+            $columnsToDrop = [];
             foreach ($oldColumns as $col) {
                 if (Schema::hasColumn('complaints', $col)) {
-                    Schema::table('complaints', function (Blueprint $table) use ($col) {
-                        $table->dropColumn($col);
-                    });
+                    $columnsToDrop[] = $col;
                 }
+            }
+            if (!empty($columnsToDrop)) {
+                Schema::table('complaints', function (Blueprint $table) use ($columnsToDrop) {
+                    $table->dropColumn($columnsToDrop);
+                });
             }
 
             // Drop tabel complaint_categories
