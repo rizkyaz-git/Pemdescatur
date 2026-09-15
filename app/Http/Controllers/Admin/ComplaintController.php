@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Complaint;
-use App\Models\ComplaintCategory;
+use App\Models\Laporan;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -12,81 +11,80 @@ use Illuminate\Http\RedirectResponse;
 class ComplaintController extends Controller
 {
     /**
-     * Display a listing of complaints.
+     * Tampilkan daftar laporan pengaduan dengan filter status.
      */
     public function index(Request $request): View
     {
-        $query = Complaint::with('user', 'category');
+        $query = Laporan::query();
 
-        // Filter by status
         if ($request->filled('status')) {
             $query->where('status', $request->input('status'));
         }
 
-        // Filter by category
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->input('category_id'));
+        if ($request->filled('kategori')) {
+            $query->where('kategori', $request->input('kategori'));
         }
 
-        // Search
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('isi_laporan', 'like', "%{$search}%");
+            });
         }
 
-        $complaints = $query->latest()->paginate(15);
-        $categories = ComplaintCategory::all();
+        $laporans   = $query->latest()->paginate(15)->withQueryString();
+        $kategoris  = ['infrastruktur', 'kependudukan', 'keamanan', 'lingkungan', 'layanan_publik', 'lainnya'];
 
-        return view('admin.complaints.index', compact('complaints', 'categories'));
+        return view('admin.complaints.index', compact('laporans', 'kategoris'));
     }
 
     /**
-     * Show the specified complaint.
+     * Tampilkan detail satu laporan.
      */
-    public function show(Complaint $complaint): View
+    public function show(Laporan $complaint): View
     {
-        $complaint->load('user', 'category');
         return view('admin.complaints.show', compact('complaint'));
     }
 
     /**
-     * Show the form for editing the specified complaint.
+     * Tampilkan form edit status & catatan admin.
      */
-    public function edit(Complaint $complaint): View
+    public function edit(Laporan $complaint): View
     {
-        $complaint->load('user', 'category');
         return view('admin.complaints.edit', compact('complaint'));
     }
 
     /**
-     * Update the specified complaint.
+     * Update status dan catatan admin untuk laporan.
      */
-    public function update(Request $request, Complaint $complaint): RedirectResponse
+    public function update(Request $request, Laporan $complaint): RedirectResponse
     {
         $validated = $request->validate([
-            'status' => 'required|in:new,processing,resolved',
-            'admin_response' => 'nullable|string',
+            'status'         => ['required', 'in:baru,diproses,selesai,ditolak'],
+            'catatan_admin'  => ['nullable', 'string', 'max:2000'],
         ]);
-
-        if ($validated['status'] === 'resolved' && $validated['admin_response']) {
-            $validated['responded_at'] = now();
-        }
 
         $complaint->update($validated);
 
-        return redirect()->route('admin.complaints.index')
-                        ->with('success', 'Pengaduan berhasil diperbarui.');
+        return redirect()
+            ->route('admin.complaints.index')
+            ->with('success', 'Laporan pengaduan berhasil diperbarui.');
     }
 
     /**
-     * Remove the specified complaint.
+     * Hapus laporan pengaduan beserta lampirannya.
      */
-    public function destroy(Complaint $complaint): RedirectResponse
+    public function destroy(Laporan $complaint): RedirectResponse
     {
+        if ($complaint->lampiran) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($complaint->lampiran);
+        }
+
         $complaint->delete();
 
-        return redirect()->route('admin.complaints.index')
-                        ->with('success', 'Pengaduan berhasil dihapus.');
+        return redirect()
+            ->route('admin.complaints.index')
+            ->with('success', 'Laporan pengaduan berhasil dihapus.');
     }
 }

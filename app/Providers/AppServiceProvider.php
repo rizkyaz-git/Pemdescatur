@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Laporan;
 use App\Models\Setting;
 use App\Events\LaporanDiperbarui;
 use App\Listeners\KirimNotifikasiEmailPelapor;
 use App\Models\Laporan;
 use App\Policies\LaporanPolicy;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
@@ -29,6 +31,11 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(LaporanDiperbarui::class, KirimNotifikasiEmailPelapor::class);
         Gate::policy(Laporan::class, LaporanPolicy::class);
         Carbon::setLocale('id');
+
+        // Explicit binding: parameter {complaint} di route admin → model Laporan
+        // (route admin sudah pakai nama 'complaints' tapi model diganti menjadi Laporan)
+        Route::model('complaint', Laporan::class);
+
 
         View::composer('*', function ($view) {
             static $globalData = null;

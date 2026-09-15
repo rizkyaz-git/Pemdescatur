@@ -218,7 +218,7 @@
                         </a>
 
                         <!-- 3. Pengaduan & Aspirasi Warga -->
-                        <a href="{{ route('warga.complaint.index') }}"
+                        <a href="{{ route('warga.complaint.create') }}"
                             class="flex items-center gap-3 w-full px-4 py-3 transition-colors duration-150 text-xs font-semibold group"
                             :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-black/[0.05] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-black/35 hover:text-white'">
                             <svg class="w-4 h-4 shrink-0 transition-colors duration-150"
@@ -680,7 +680,7 @@
                     class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.letter*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
                     <span>Cetak Surat Mandiri</span>
                 </a>
-                <a href="{{ route('warga.complaint.index') }}" @click="mobileMenuOpen = false"
+                <a href="{{ route('warga.complaint.create') }}" @click="mobileMenuOpen = false"
                     class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.complaint*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
                     <span>Pengaduan & Aspirasi Warga</span>
                 </a>

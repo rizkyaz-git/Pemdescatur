@@ -3,10 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Laporan;
 use App\Models\LetterTemplate;
 use App\Models\LetterRequest;
-use App\Models\ComplaintCategory;
-use App\Models\Complaint;
 use Illuminate\Database\Seeder;
 
 class SamplePublicServicesSeeder extends Seeder
@@ -17,13 +16,11 @@ class SamplePublicServicesSeeder extends Seeder
         $wargaUser = User::firstOrCreate(
             ['email' => 'warga@desacatur.id'],
             [
-                'name' => 'Budi Santoso',
-                'password' => bcrypt('password123'),
-                'email_verified_at' => now(),
+                'name'               => 'Budi Santoso',
+                'password'           => bcrypt('password123'),
+                'email_verified_at'  => now(),
             ]
         );
-
-        $adminUser = User::where('email', 'admin@desacatur.id')->first() ?? $wargaUser;
 
         // Sample Letter Template (Ensure SKU exists)
         $skuTemplate = LetterTemplate::where('code', 'SKU')->first();
@@ -32,54 +29,39 @@ class SamplePublicServicesSeeder extends Seeder
             LetterRequest::firstOrCreate(
                 ['ticket_number' => 'TKT-202609-00001'],
                 [
-                    'user_id' => $wargaUser->id,
+                    'user_id'     => $wargaUser->id,
                     'template_id' => $skuTemplate->id,
-                    'form_data' => [
+                    'form_data'   => [
                         'nama_pemohon' => 'Budi Santoso',
-                        'nik' => '3309121508850001',
-                        'jenis_usaha' => 'Budidaya Padi Organik & Kopi Sambi',
+                        'nik'          => '3309121508850001',
+                        'jenis_usaha'  => 'Budidaya Padi Organik & Kopi Sambi',
                         'lokasi_usaha' => 'Dukuh Catur RT 02 / RW 01, Desa Catur',
                         'tahun_berdiri' => '2019',
-                        'keperluan' => 'Pengajuan Kemitraan UMKM & Kredit Usaha Rakyat',
+                        'keperluan'    => 'Pengajuan Kemitraan UMKM & Kredit Usaha Rakyat',
                     ],
-                    'status' => 'pending',
+                    'status'       => 'pending',
                     'submitted_at' => now()->subHours(5),
                 ]
             );
         }
 
-        // Sample Complaint Categories
-        $infrastrukturCategory = ComplaintCategory::where('name', 'Infrastruktur & Jalan')->first() ??
-            ComplaintCategory::firstOrCreate(
-                ['name' => 'Infrastruktur & Jalan'],
-                ['description' => 'Laporan perbaikan jalan, penerangan jalan, dam perairan']
-            );
-
-        ComplaintCategory::firstOrCreate(
-            ['name' => 'Pelayanan Publik'],
-            ['description' => 'Masukan dan pelayanan administrasi balai desa']
-        );
-
-        // Sample Complaints
-        Complaint::firstOrCreate(
-            ['title' => 'Lampu Penerangan Jalan Utama Dukuh Catur Padam'],
+        // Sample Laporans (Pengaduan Warga — tanpa akun)
+        Laporan::firstOrCreate(
+            ['nama' => 'Budi Santoso', 'isi_laporan' => 'Mohon bantuan perbaikan lampu penerangan jalan umum (PJU) di dekat batas pertigaan RT 02 Dukuh Catur yang padam sejak 2 hari lalu.'],
             [
-                'user_id' => $wargaUser->id,
-                'category_id' => $infrastrukturCategory->id,
-                'description' => 'Mohon bantuan perbaikan lampu penerangan jalan umum (PJU) di dekat batas pertigaan RT 02 Dukuh Catur yang padam sejak 2 hari lalu.',
-                'status' => 'new',
+                'no_whatsapp' => '6281234567890',
+                'kategori'    => 'infrastruktur',
+                'status'      => 'baru',
             ]
         );
 
-        Complaint::firstOrCreate(
-            ['title' => 'Usulan Penambahan Tempat Sampah Organik di Pasar Desa'],
+        Laporan::firstOrCreate(
+            ['nama' => 'Siti Rahayu', 'isi_laporan' => 'Diperlukan tambahan tempat pembuangan sampah terpilah di sekitar area balai pertemuan warga dan pasar desa.'],
             [
-                'user_id' => $wargaUser->id,
-                'category_id' => $infrastrukturCategory->id,
-                'description' => 'Diperlukan tambahan tempat pembuangan sampah terpilah di sekitar area balai pertemuan warga.',
-                'status' => 'processing',
-                'admin_response' => 'Terima kasih atas masukannya. Tim kebersihan desa akan mengalokasikan 2 unit tong sampah baru minggu ini.',
-                'responded_at' => now()->subHours(2),
+                'no_whatsapp' => '6285678901234',
+                'kategori'    => 'lingkungan',
+                'status'      => 'diproses',
+                'catatan_admin' => 'Sudah dikoordinasikan dengan Pokdarwis dan Tim Kebersihan Desa untuk rencana pengadaan.',
             ]
         );
     }

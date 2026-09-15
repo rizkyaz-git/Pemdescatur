@@ -1,17 +1,52 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Laporan extends Model
 {
-    use HasUuids;
-    public const STATUSES = ['pending_verification', 'diterima', 'diproses', 'selesai', 'ditolak'];
-    protected $fillable = ['pelapor_id', 'kategori', 'isi_laporan', 'lampiran', 'status', 'catatan_admin'];
-    public function pelapor(): BelongsTo { return $this->belongsTo(Pelapor::class); }
-    public function tanggapans(): HasMany { return $this->hasMany(LaporanTanggapan::class); }
-    public function loginTokens(): HasMany { return $this->hasMany(LoginToken::class); }
+    use HasFactory;
+
+    protected $fillable = [
+        'nama',
+        'no_whatsapp',
+        'kategori',
+        'isi_laporan',
+        'lampiran',
+        'status',
+        'catatan_admin',
+    ];
+
+    protected $casts = [
+        'status' => 'string',
+    ];
+
+    /**
+     * Get status label dalam bahasa Indonesia
+     */
+    public function getStatusLabelAttribute(): string
+    {
+        return match ($this->status) {
+            'baru'     => 'Baru',
+            'diproses' => 'Sedang Diproses',
+            'selesai'  => 'Selesai',
+            'ditolak'  => 'Ditolak',
+            default    => 'Tidak Diketahui',
+        };
+    }
+
+    /**
+     * Get CSS class for status badge
+     */
+    public function getStatusBadgeClassAttribute(): string
+    {
+        return match ($this->status) {
+            'baru'     => 'bg-rose-50 text-rose-700 border-rose-200/60',
+            'diproses' => 'bg-amber-50 text-amber-800 border-amber-200/60',
+            'selesai'  => 'bg-green-50 text-green-700 border-green-200/60',
+            'ditolak'  => 'bg-slate-100 text-slate-600 border-slate-200/60',
+            default    => 'bg-slate-100 text-slate-600',
+        };
+    }
 }

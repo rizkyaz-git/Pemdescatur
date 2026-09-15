@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             GallerySeeder::class,
             SettingSeeder::class,
             // Phase 1 Seeders
-            ComplaintCategorySeeder::class,
+            // ComplaintCategorySeeder dihapus (tabel sudah tidak ada, kategori kini string di tabel laporans)
             LetterTemplateSeeder::class,
             SamplePublicServicesSeeder::class,
             // PPKO Catur Cerdas Seeder

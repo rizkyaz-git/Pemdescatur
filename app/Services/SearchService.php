@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\ComplaintCategory;
+
 use App\Models\Gallery;
 use App\Models\Kurikulum;
 use App\Models\LetterTemplate;
@@ -192,7 +192,7 @@ class SearchService
                 'title' => 'Formulir Pengaduan & Aspirasi Warga Desa Catur',
                 'category' => 'Layanan Pengaduan & Aspirasi',
                 'snippet' => 'Saluran resmi pelaporan fasilitas umum, aduan warga, atau aspirasi pembangunan langsung ke Pemdes Catur.',
-                'url' => route('warga.complaint.index'),
+                'url' => route('warga.complaint.create'),
                 'badge' => 'Pengaduan',
                 'priority' => 1
             ];
@@ -207,26 +207,8 @@ class SearchService
             ];
         }
 
-        $complaintCats = ComplaintCategory::where(function ($query) use ($raw, $tokens) {
-            $query->where('name', 'like', "%{$raw}%")
-                  ->orWhere('description', 'like', "%{$raw}%");
-            foreach ($tokens as $token) {
-                $query->orWhere('name', 'like', "%{$token}%")
-                      ->orWhere('description', 'like', "%{$token}%");
-            }
-        })->take(3)->get();
-
-        foreach ($complaintCats as $cat) {
-            $collected[] = [
-                'type' => 'Layanan Pengaduan',
-                'title' => 'Lapor Pengaduan Bidang: ' . $cat->name,
-                'category' => 'Kategori Pengaduan Warga',
-                'snippet' => Str::limit(strip_tags($cat->description ?? 'Salurkan aspirasi atau aduan terkait ' . $cat->name . ' ke Pemdes Catur.'), 120),
-                'url' => route('warga.complaint.create'),
-                'badge' => 'Pengaduan',
-                'priority' => 3
-            ];
-        }
+        // Kategori pengaduan tidak lagi disimpan di tabel terpisah.
+        // Warga dapat langsung mengakses form pengaduan via link di atas.
 
         // 4. BERITA & PENGUMUMAN (News)
         $newsQuery = News::where('status', 'published');

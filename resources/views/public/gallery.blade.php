@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Galeri Foto Kegiatan - Desa Catur Sambi Boyolali')
-@section('meta_description', 'Dokumentasi visual foto kegiatan, pembangunan, potensi desa wisata, pertanian, dan kemasyarakatan Pemerintah Desa Catur, Boyolali.')
+@section('title', 'Galeri Foto Kegiatan - Pemerintah Desa Catur')
+@section('meta_description', 'Dokumentasi foto kegiatan Pemerintah Desa Catur')
 
 @section('content')
 
@@ -33,15 +33,12 @@
                     ['label' => 'Galeri Foto']
                 ]" />
                 <h1 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#20332A] leading-tight tracking-tight">
-                    Galeri Foto Kegiatan
+                    Galeri Foto
                 </h1>
-                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
-                    Dokumentasi visual kegiatan, pembangunan, dan potensi kemasyarakatan Desa Catur dari berita resmi desa.
-                </p>
             </div>
 
-            <!-- Action Buttons: Terbaru & Filter Dropdown -->
-            <div class="flex items-center gap-2.5 relative flex-wrap sm:flex-nowrap">
+            <!-- Action Buttons Desktop: Terbaru, Populer & Filter Dropdown -->
+            <div class="hidden sm:flex items-center gap-2.5 relative">
                 
                 <!-- Tombol Terbaru -->
                 <a href="{{ route('public.gallery', array_merge(request()->except(['sort', 'page']), ['sort' => 'latest'])) }}" 
@@ -66,14 +63,14 @@
                 <div class="relative">
                     <button type="button" 
                             @click="filterOpen = !filterOpen" 
-                            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer {{ request('category') ? 'bg-[#0A3D29]/15 text-[#0A3D29] border border-[#0A3D29]/30 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 shadow-2xs' }}">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                            title="Filter Kategori{{ request('category') ? ': ' . request('category') : '' }}"
+                            class="relative inline-flex items-center justify-center w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer {{ request('category') ? 'bg-[#0A3D29]/15 text-[#0A3D29] border border-[#0A3D29]/30 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 shadow-2xs' }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                         </svg>
-                        <span>Filter{{ request('category') ? ': ' . request('category') : '' }}</span>
-                        <svg class="w-3 h-3 transition-transform duration-200" :class="filterOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                        @if(request('category'))
+                            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#0A3D29]"></span>
+                        @endif
                     </button>
 
                     <!-- Filter Category Dropdown Menu -->
@@ -105,17 +102,92 @@
 
         </div>
 
-        <!-- Gallery Grid Container with Progressive Reveal -->
+        <!-- Mobile Floating Bottom Capsule Bar -->
+        <div class="sm:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[99999] pointer-events-auto"
+             x-data="{ 
+                 mobileTab: '{{ request('category') ? 'filter' : (request('sort') === 'popular' ? 'popular' : 'latest') }}',
+                 mobileFilterOpen: false 
+             }"
+             @click.away="mobileFilterOpen = false">
+            
+            <!-- Capsule Outer Container (Compact & Snug fit to prevent collision with scroll-to-top) -->
+            <div class="relative flex items-center h-11 bg-white/75 hover:bg-white/95 backdrop-blur-3xl backdrop-saturate-200 border-2 border-white ring-1 ring-[#0A3D29]/25 shadow-2xl p-1 rounded-xl w-[210px] transition-all duration-300">
+                
+                <!-- Flowing Indicator Pill -->
+                <div class="absolute top-1 bottom-1 rounded-lg bg-[#0A3D29]/10 transition-all duration-200 ease-out pointer-events-none"
+                     :style="mobileTab === 'latest' ? 'left: 4px; width: calc((100% - 44px) / 2);' : (mobileTab === 'popular' ? 'left: calc(4px + (100% - 44px) / 2); width: calc((100% - 44px) / 2);' : 'left: calc(100% - 40px); width: 36px;')">
+                </div>
+
+                <!-- Button 1: Terbaru -->
+                <a href="{{ route('public.gallery', array_merge(request()->except(['sort', 'page']), ['sort' => 'latest'])) }}" 
+                   @click="mobileTab = 'latest'; mobileFilterOpen = false"
+                   class="relative z-10 flex-1 h-full flex items-center justify-center rounded-lg text-xs transition-colors duration-200 select-none"
+                   :class="mobileTab === 'latest' ? 'text-[#0A3D29] font-bold' : 'text-slate-600 font-medium hover:text-slate-900'">
+                    <span>Terbaru</span>
+                </a>
+
+                <!-- Button 2: Populer -->
+                <a href="{{ route('public.gallery', array_merge(request()->except(['sort', 'page']), ['sort' => 'popular'])) }}" 
+                   @click="mobileTab = 'popular'; mobileFilterOpen = false"
+                   class="relative z-10 flex-1 h-full flex items-center justify-center rounded-lg text-xs transition-colors duration-200 select-none"
+                   :class="mobileTab === 'popular' ? 'text-[#0A3D29] font-bold' : 'text-slate-600 font-medium hover:text-slate-900'">
+                    <span>Populer</span>
+                </a>
+
+                <!-- Button 3: Filter (Hanya Ikon Saja - Mengepaskan Area Ikon) -->
+                <button type="button" 
+                        @click="mobileTab = 'filter'; mobileFilterOpen = !mobileFilterOpen"
+                        title="Filter Kategori"
+                        class="relative z-10 w-9 h-full flex items-center justify-center rounded-lg transition-colors duration-200 select-none cursor-pointer shrink-0"
+                        :class="mobileTab === 'filter' ? 'text-[#0A3D29]' : 'text-slate-600 hover:text-slate-900'">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                    </svg>
+                    @if(request('category'))
+                        <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#0A3D29]"></span>
+                    @endif
+                </button>
+            </div>
+
+            <!-- Mobile Category Dropdown Popup (Muncul di Atas / Drop-Up) -->
+            <div x-show="mobileFilterOpen" 
+                 x-cloak
+                 x-transition:enter="transition ease-out duration-200 transform"
+                 x-transition:enter-start="opacity-0 scale-95 translate-y-3"
+                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150 transform"
+                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 scale-95 translate-y-3"
+                 class="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-56 max-h-60 overflow-y-auto bg-white/85 hover:bg-white/95 backdrop-blur-3xl backdrop-saturate-200 rounded-xl border-2 border-white ring-1 ring-[#0A3D29]/25 shadow-2xl p-1.5 space-y-0.5 z-[999999]">
+                
+                <a href="{{ route('public.gallery', request()->except(['category', 'page'])) }}" 
+                   class="block px-3 py-2 rounded-xl text-xs transition {{ !request('category') ? 'bg-[#0A3D29]/10 text-[#0A3D29] font-bold' : 'text-slate-700 hover:bg-white/60 font-medium' }}">
+                    Semua Kategori
+                </a>
+
+                @foreach($categories as $cat)
+                    <a href="{{ route('public.gallery', array_merge(request()->except(['page']), ['category' => $cat])) }}" 
+                       class="block px-3 py-2 rounded-xl text-xs transition {{ request('category') === $cat ? 'bg-[#0A3D29]/10 text-[#0A3D29] font-bold' : 'text-slate-700 hover:bg-white/60 font-medium' }}">
+                        {{ $cat }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Gallery Masonry Collage Container with Progressive Reveal -->
         <div class="relative min-h-[400px]" :aria-busy="!isReady">
-            <!-- Skeleton Grid (Initial Loading State) -->
+            <!-- Skeleton Masonry Grid (Initial Loading State) -->
             <div x-show="!isReady" 
                  x-transition:leave="transition-opacity duration-300"
                  x-transition:leave-start="opacity-100"
                  x-transition:leave-end="opacity-0"
-                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+                 class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-5 lg:gap-6"
                  aria-hidden="true">
+                @php
+                    $skeletonAspects = ['aspect-[4/5]', 'aspect-[16/11]', 'aspect-[3/4]', 'aspect-square', 'aspect-[16/10]', 'aspect-[5/6]'];
+                @endphp
                 @for($i = 0; $i < 6; $i++)
-                    <x-skeleton.gallery-card />
+                    <x-skeleton.gallery-card :aspect="$skeletonAspects[$i % count($skeletonAspects)]" />
                 @endfor
             </div>
 
@@ -126,7 +198,20 @@
                  x-transition:enter-start="opacity-0"
                  x-transition:enter-end="opacity-100">
                 @if(isset($galleries) && $galleries->count() > 0)
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                    <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-5 lg:gap-6">
+                        @php
+                            // Variasi aspek rasio foto untuk menciptakan layout asymmetric masonry collage yang dinamis, modern, dan tetap seimbang
+                            $aspectRhythms = [
+                                'aspect-[4/5]',   // Tall portrait
+                                'aspect-[16/11]', // Clean landscape
+                                'aspect-[3/4]',   // Vertical portrait
+                                'aspect-square',  // Square
+                                'aspect-[16/10]', // Wide landscape
+                                'aspect-[5/6]',   // Medium portrait
+                                'aspect-[4/3]',   // Classic landscape
+                                'aspect-[3/4]',   // Elegant portrait
+                            ];
+                        @endphp
                         @foreach($galleries as $item)
                             @php
                                 $imageExists = $item->image_path && (
@@ -143,9 +228,10 @@
                                 }
                                 $formattedDate = $item->published_at ? $item->published_at->translatedFormat('d F Y') : $item->created_at->translatedFormat('d F Y');
                                 $newsUrl = route('public.news.show', $item->slug);
+                                $currentAspect = $aspectRhythms[$loop->index % count($aspectRhythms)];
                             @endphp
 
-                            <div class="group bg-white rounded-xl border border-slate-200/90 hover:border-[#0A3D29]/40 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
+                            <div class="break-inside-avoid mb-4 sm:mb-5 lg:mb-6 group relative {{ $currentAspect }} rounded-lg overflow-hidden bg-slate-900/5 shadow-xs hover:shadow-2xl transition-all duration-500 cursor-pointer"
                                  @click="
                                     activeModal = true; 
                                     activeImage = '{{ $imgUrl }}'; 
@@ -156,64 +242,20 @@
                                     activeUrl = '{{ $newsUrl }}';
                                  ">
                                 
-                                <!-- Image Container with 16:10 Ratio & Shimmer Glow -->
-                                <div class="relative aspect-[16/10] bg-slate-100 overflow-hidden" x-data="{ imgLoaded: false }">
-                                    <!-- Image Shimmer Placeholder -->
-                                    <div x-show="!imgLoaded" class="absolute inset-0 skeleton-shimmer" aria-hidden="true"></div>
+                                <!-- Foto Sebagai Fokus Utama (Tidak terdistorsi dengan object-cover & Zoom-in halus saat hover) -->
+                                <img src="{{ $imgUrl }}" 
+                                     alt="{{ $item->title }}" 
+                                     loading="lazy"
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out select-none">
+                                
+                                <!-- Gradasi Gelap Transparan (Mendukung keterbacaan teks, menggelap halus saat hover) -->
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300 pointer-events-none"></div>
 
-                                    <img src="{{ $imgUrl }}" 
-                                         alt="{{ $item->title }}" 
-                                         loading="lazy"
-                                         @load="imgLoaded = true"
-                                         :class="imgLoaded ? 'opacity-100' : 'opacity-0'"
-                                         class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ease-out">
-                                    
-                                    <!-- Category Badge Overlay -->
-                                    <div class="absolute top-3 left-3 z-10">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#0A3D29]/80 backdrop-blur-md text-white shadow-xs border border-white/20">
-                                            {{ $item->category ?? 'Berita' }}
-                                        </span>
-                                    </div>
-
-                                    <!-- Hover Overlay: Magnifier Icon -->
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                        <div class="w-11 h-11 rounded-full bg-white/90 text-[#0A3D29] flex items-center justify-center shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Card Content -->
-                                <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
-                                    <div>
-                                        <h2 class="font-serif font-bold text-sm sm:text-base text-slate-900 group-hover:text-[#0A3D29] transition-colors leading-snug line-clamp-2">
-                                            {{ $item->title }}
-                                        </h2>
-                                        @if(!empty($item->image_caption))
-                                            <p class="text-xs text-slate-500 line-clamp-1 mt-1 font-normal italic">
-                                                {{ $item->image_caption }}
-                                            </p>
-                                        @endif
-                                    </div>
-
-                                    <!-- Bottom Meta Row -->
-                                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-                                        <span class="flex items-center gap-1.5 font-medium">
-                                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                            </svg>
-                                            <span>{{ $formattedDate }}</span>
-                                        </span>
-                                        <span class="text-[#0A3D29] font-bold inline-flex items-center gap-1 group-hover:underline">
-                                            <span>Lihat</span>
-                                            <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                            </svg>
-                                        </span>
-                                    </div>
-
+                                <!-- HANYA JUDUL FOTO di Bagian Bawah (Teks putih, lebih jelas & smooth saat hover) -->
+                                <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5 lg:p-6 z-10 pointer-events-none">
+                                    <h2 class="font-serif font-bold text-white/95 group-hover:text-white text-sm sm:text-base lg:text-lg leading-snug drop-shadow-md transform translate-y-1 group-hover:translate-y-0 transition-all duration-300 line-clamp-2 sm:line-clamp-3">
+                                        {{ $item->title }}
+                                    </h2>
                                 </div>
 
                             </div>
@@ -253,11 +295,11 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- LIGHTBOX PREVIEW MODAL (INTERAKTIF & ELEGAN)                               -->
+    <!-- LIGHTBOX PREVIEW MODAL (GLASSMORPHISM BURAM MEMBIASKAN GALERI)             -->
     <!-- ========================================================================= -->
     <div x-show="activeModal" 
          x-cloak 
-         class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-black/85 backdrop-blur-md"
+         class="fixed inset-0 z-[100000] flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-black/60 backdrop-blur-xs overflow-y-auto"
          x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
@@ -266,48 +308,43 @@
          x-transition:leave-end="opacity-0"
          @click="activeModal = false">
         
-        <div class="relative max-w-4xl w-full bg-white rounded-xl overflow-hidden shadow-2xl border border-white/20 flex flex-col max-h-[90vh]" 
+        <div class="relative max-w-3xl w-full rounded-lg overflow-hidden shadow-2xl border border-white/30 flex flex-col max-h-[90vh] my-auto bg-slate-900/20 backdrop-blur-md" 
              @click.stop
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0 scale-95"
              x-transition:enter-end="opacity-100 scale-100">
             
-            <!-- Close Button Top Floating -->
+            <!-- Tombol Silang Menyesuaikan Latar untuk Keterbacaan yang Baik -->
             <button @click="activeModal = false" 
                     type="button"
-                    class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center shadow-lg transition-all focus:outline-none">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    title="Tutup"
+                    class="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center shadow-lg backdrop-blur-md border border-white/30 transition-all duration-200 focus:outline-none">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
 
-            <!-- Large Photo Display Area -->
-            <div class="bg-black/95 flex items-center justify-center overflow-hidden flex-1 min-h-[300px] max-h-[60vh] relative">
+            <!-- Photo Display Area - Mengepaskan Frame Proporsional (Object Cover) -->
+            <div class="relative w-full aspect-[16/10] max-h-[65vh] bg-black/40 overflow-hidden">
                 <img :src="activeImage" 
                      :alt="activeTitle" 
-                     class="w-full h-full max-h-[60vh] object-contain select-none">
+                     class="w-full h-full object-cover select-none">
             </div>
 
-            <!-- Modal Info Footer -->
-            <div class="p-6 sm:p-7 bg-white border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div class="space-y-1.5 max-w-xl">
-                    <div class="flex items-center gap-2">
-                        <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0A3D29] text-[11px] font-bold" x-text="activeCategory"></span>
-                        <span class="text-xs text-slate-400 font-medium" x-text="activeDate"></span>
-                    </div>
-                    <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-900 leading-snug" x-text="activeTitle"></h3>
-                    <p class="text-xs sm:text-sm text-slate-600 font-normal line-clamp-2" x-text="activeCaption" x-show="activeCaption"></p>
+            <!-- Latar Bagian Judul & Tanggal Bergaya Kaca Buram Glassmorphism (Membiaskan Halaman Galeri) -->
+            <div class="px-5 py-4 bg-white/85 backdrop-blur-xl border-t border-white/40 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+                <div class="min-w-0 flex-1 space-y-1">
+                    <span class="inline-block text-[11px] sm:text-xs text-slate-500 font-medium" x-text="activeDate"></span>
+                    <h3 class="font-serif text-sm sm:text-base font-bold text-slate-900 leading-snug line-clamp-none sm:line-clamp-2" x-text="activeTitle"></h3>
                 </div>
-
-                <div class="shrink-0 pt-2 sm:pt-0">
-                    <a :href="activeUrl" 
-                       class="inline-flex items-center justify-center gap-2 bg-[#0A3D29] hover:bg-[#072B1D] text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-xl shadow-md transition-all">
-                        <span>Baca Berita Terkait</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                </div>
+                <a :href="activeUrl" 
+                   x-show="activeUrl"
+                   class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-md border border-[#0A3D29] text-[#0A3D29] hover:bg-[#0A3D29]/5 text-xs font-semibold transition-colors shrink-0">
+                    <span>Lihat Berita</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
             </div>
 
         </div>

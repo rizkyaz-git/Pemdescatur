@@ -3,105 +3,40 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
-use App\Models\Complaint;
-use App\Models\ComplaintCategory;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreLaporanRequest;
+use App\Models\Laporan;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
 class ComplaintController extends Controller
 {
     /**
-     * Display list / search of complaints
-     */
-    public function index(Request $request): View
-    {
-        $search = trim($request->input('search', ''));
-        $selectedCategory = $request->input('kategori');
-        $selectedStatus = $request->input('status');
-
-        $query = Complaint::with('category');
-
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-                
-                // Also search by ID if user typed ticket number like PGD-202609-00001 or just digits
-                if (preg_match('/(\d+)$/', $search, $matches)) {
-                    $q->orWhere('id', intval($matches[1]));
-                }
-            });
-        }
-
-        if (!empty($selectedCategory)) {
-            $query->where('category_id', $selectedCategory);
-        }
-
-        if (!empty($selectedStatus)) {
-            $query->where('status', $selectedStatus);
-        }
-
-        $complaints = $query->latest()->paginate(9)->withQueryString();
-        $categories = ComplaintCategory::all();
-
-        return view('public.layanan.pengaduan.index', compact('complaints', 'categories', 'search', 'selectedCategory', 'selectedStatus'));
-    }
-
-    /**
-     * Show form for creating new complaint
+     * Tampilkan form pengaduan publik.
      */
     public function create(): View
     {
-        $categories = ComplaintCategory::all();
-        return view('public.layanan.pengaduan.create', compact('categories'));
+        return view('public.layanan.pengaduan.create');
     }
 
     /**
-     * Store new complaint (guest & logged-in user)
+     * Simpan laporan pengaduan baru.
+     * Pelapor tidak memiliki akun — identifikasi lewat nama & no_whatsapp.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreLaporanRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'category_id' => 'required|exists:complaint_categories,id',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'attachment' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+        $validated = $request->validated();
 
-        $attachment_path = null;
-        if ($request->hasFile('attachment')) {
-            $file = $request->file('attachment');
-            $attachment_path = $file->storeAs('complaints', uniqid() . '.' . $file->getClientOriginalExtension(), 'public');
+        // Simpan lampiran jika ada
+        if ($request->hasFile('lampiran')) {
+            $validated['lampiran'] = $request->file('lampiran')
+                ->store('laporans', 'public');
         }
 
-        $complaint = Complaint::create([
-            'user_id' => auth()->id(), // null if guest
-            'category_id' => $validated['category_id'],
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'attachment_path' => $attachment_path,
-            'status' => 'new',
-        ]);
+        Laporan::create($validated);
 
-        return redirect()->route('warga.complaint.show', $complaint->id)
-                        ->with('success', "Pengaduan berhasil dikirim! Laporan Anda telah tercatat dan akan segera ditindaklanjuti.");
-    }
-
-    /**
-     * Show complaint detail — hanya pemilik atau guest tanpa akun yang dapat mengakses.
-     * Pengguna yang login hanya bisa melihat pengaduan miliknya sendiri (mencegah IDOR).
-     */
-    public function show(Complaint $complaint): View
-    {
-        // Jika user sedang login dan bukan admin, pastikan pengaduan ini miliknya
-        if (auth()->check() && !auth()->user()->isAdmin()) {
-            if ($complaint->user_id && $complaint->user_id !== auth()->id()) {
-                abort(403, 'Anda tidak memiliki izin untuk mengakses pengaduan ini.');
-            }
-        }
-
-        $complaint->load('category');
-        return view('public.layanan.pengaduan.show', compact('complaint'));
+        return redirect()
+            ->route('warga.complaint.create')
+            ->with('success', 'Laporan pengaduan Anda berhasil dikirim! Admin Desa Catur akan menghubungi Anda melalui WhatsApp ke nomor ' . $validated['no_whatsapp'] . ' untuk menindaklanjuti laporan ini.');
     }
 }

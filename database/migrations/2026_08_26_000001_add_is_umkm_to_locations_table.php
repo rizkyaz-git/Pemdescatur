@@ -8,9 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('locations', function (Blueprint $table) {
-            $table->boolean('is_umkm')->default(false)->after('is_primary');
-        });
+        if (Schema::hasTable('locations') && !Schema::hasColumn('locations', 'is_umkm')) {
+            Schema::table('locations', function (Blueprint $table) {
+                $table->boolean('is_umkm')->default(false)->after('is_primary');
+            });
+        }
     }
 
     public function down(): void

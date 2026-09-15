@@ -117,18 +117,12 @@ Route::get('/layanan/surat/buat', [PublicControllers\LetterRequestController::cl
 Route::post('/layanan/surat', [PublicControllers\LetterRequestController::class, 'store'])->middleware('throttle:5,1')->name('warga.letter.store');
 Route::get('/layanan/surat/{letterRequest}', [PublicControllers\LetterRequestController::class, 'show'])->name('warga.letter.show');
 
-// Pengajuan Pengaduan
-Route::get('/layanan/pengaduan', [PublicLaporanController::class, 'landing'])->name('warga.complaint.index');
-Route::get('/layanan/pengaduan/buat', [PublicLaporanController::class, 'create'])->name('warga.complaint.create');
-Route::post('/layanan/pengaduan', [PublicLaporanController::class, 'store'])->middleware('throttle:5,1')->name('warga.complaint.store');
-Route::get('/cek-laporan', [PublicLaporanController::class, 'requestLogin'])->name('pelapor.login.request');
-Route::post('/cek-laporan', [PublicLaporanController::class, 'sendLogin'])->name('pelapor.login.send');
-Route::get('/verify', [PublicLaporanController::class, 'verify'])->name('pelapor.verify');
-Route::middleware('pelapor')->prefix('laporan-saya')->name('pelapor.laporan.')->group(function () {
-    Route::get('/', [PublicLaporanController::class, 'index'])->name('index');
-    Route::get('/{laporan}', [PublicLaporanController::class, 'show'])->name('show');
-    Route::get('/{laporan}/lampiran', [PublicLaporanController::class, 'attachment'])->name('attachment');
-});
-Route::post('/pelapor/logout', [PublicLaporanController::class, 'logout'])->middleware('pelapor')->name('pelapor.logout');
+// Pengaduan Warga (tanpa akun — identifikasi via nama & nomor WhatsApp)
+Route::get('/pengaduan', [PublicControllers\ComplaintController::class, 'create'])->name('warga.complaint.create');
+Route::post('/pengaduan', [PublicControllers\ComplaintController::class, 'store'])->middleware('throttle:5,1')->name('warga.complaint.store');
+
+// Redirect lama ke URL baru (backward compatibility)
+Route::redirect('/layanan/pengaduan', '/pengaduan');
+Route::redirect('/layanan/pengaduan/buat', '/pengaduan');
 
 require __DIR__.'/auth.php';

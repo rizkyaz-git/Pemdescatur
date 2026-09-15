@@ -32,7 +32,7 @@
             </a>
 
             <!-- 3. Pengaduan Warga -->
-            <a href="{{ route('warga.complaint.index') }}"
+            <a href="{{ route('warga.complaint.create') }}"
                 class="flex flex-col items-center justify-center px-0.5 py-1 group transition-colors">
                 <svg class="w-5 h-5 text-[#0A3D29] group-hover:scale-110 transition-transform mb-1 shrink-0" fill="none"
                     stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -113,7 +113,7 @@
             </a>
 
             <!-- Card 3: Pengaduan Warga -->
-            <a href="{{ route('warga.complaint.index') }}"
+            <a href="{{ route('warga.complaint.create') }}"
                 class="p-4 lg:p-5 flex flex-col space-y-1.5 hover:bg-slate-100/80 transition-colors">
                 <div class="flex items-center gap-2">
                     <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor"

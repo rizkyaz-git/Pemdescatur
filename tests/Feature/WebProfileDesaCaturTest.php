@@ -19,19 +19,19 @@ class WebProfileDesaCaturTest extends TestCase
         $this->get('/struktur')->assertStatus(200)->assertSee('Struktur Organisasi');
         $this->get('/berita')->assertStatus(200)->assertSee('Berita & Pengumuman');
         $this->get('/galeri')->assertStatus(200)->assertSee('Galeri Foto');
-        $this->get('/layanan')->assertRedirect('/layanan/surat');
+        $this->get('/layanan')->assertRedirect('/layanan/cetak-surat-mandiri');
     }
 
     public function test_guest_cannot_access_admin_dashboard(): void
     {
-        $response = $this->get('/admin/dashboard');
+        $response = $this->get('/admin');
         $response->assertRedirect('/login');
     }
 
     public function test_authenticated_admin_can_access_dashboard(): void
     {
         $admin = User::first();
-        $response = $this->actingAs($admin)->get('/admin/dashboard');
+        $response = $this->actingAs($admin)->get('/admin');
         $response->assertStatus(200);
         $response->assertSee('Dashboard Ringkasan Admin');
     }

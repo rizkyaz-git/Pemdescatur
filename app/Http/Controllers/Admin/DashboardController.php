@@ -7,7 +7,7 @@ use App\Models\Gallery;
 use App\Models\News;
 use App\Models\Official;
 use App\Models\LetterTemplate;
-use App\Models\Complaint;
+use App\Models\Laporan;
 use App\Models\Pojok;
 use App\Models\User;
 use Illuminate\View\View;
@@ -21,7 +21,7 @@ class DashboardController extends Controller
             'officials_count' => Official::count(),
             'galleries_count' => Gallery::count(),
             'letter_templates_count' => LetterTemplate::count(),
-            'new_complaints_count' => Complaint::where('status', 'new')->count(),
+            'new_complaints_count' => Laporan::where('status', 'baru')->count(),
             'users_count' => User::count(),
             'pojoks_count' => class_exists(Pojok::class) ? Pojok::count() : 4,
         ];

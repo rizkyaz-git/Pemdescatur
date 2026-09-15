@@ -74,7 +74,7 @@
                     <li><a href="{{ route('public.news.index') }}" class="hover:text-white transition">Berita & Pengumuman</a></li>
                     <li><a href="{{ route('public.gallery') }}" class="hover:text-white transition">Galeri Kegiatan</a></li>
                     <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Cetak Surat Mandiri</a></li>
-                    <li><a href="{{ route('warga.complaint.index') }}" class="hover:text-white transition">Laporan & Pengaduan</a></li>
+                    <li><a href="{{ route('warga.complaint.create') }}" class="hover:text-white transition">Laporan & Pengaduan</a></li>
                     <li><a href="{{ route('public.ppko') }}" class="hover:text-white transition">PPKO Catur Cerdas</a></li>
                 </ul>
             </div>
@@ -122,7 +122,7 @@
             <div class="flex items-center gap-4 sm:gap-6">
                 <a href="{{ route('home') }}" class="hover:text-white transition">BERANDA</a>
                 <a href="{{ route('public.profile') }}" class="hover:text-white transition">PROFIL</a>
-                <a href="{{ route('warga.complaint.index') }}" class="hover:text-white transition">PENGADUAN</a>
+                <a href="{{ route('warga.complaint.create') }}" class="hover:text-white transition">PENGADUAN</a>
             </div>
         </div>
     </div>
