@@ -518,14 +518,22 @@
                         @close-other-pojoks.window="if ($event.detail.id !== {{ $pojok->id }} && expanded) closeDropdown()"
                         class="lg:col-span-7 order-2 {{ $isEven ? 'lg:order-2' : 'lg:order-1' }} flex flex-col justify-start space-y-3 sm:space-y-6">
 
-                        <!-- HEADER: DISPLAY NUMBER (01, 02, ...) + TITLE POJOK -->
-                        <div class="pojok-header-wrap flex items-center sm:items-baseline gap-2.5 sm:gap-5 lg:gap-6 w-full min-w-0">
-                            <span class="pojok-num-text harmoni-num-animate select-none font-sans font-black leading-tight sm:leading-none tracking-tight shrink-0 {{ $isUmkmGoDigital ? 'pojok-num-umkm' : 'pojok-num-standard' }} {{ $isDark ? 'text-white' : 'text-[#20332A]' }}">
-                                {{ sprintf('%02d', $loop->iteration) }}
-                            </span>
-                            <h2 class="pojok-title-text harmoni-text-animate font-sans font-black leading-tight sm:leading-none tracking-tight {{ $isUmkmGoDigital ? 'pojok-title-umkm' : 'pojok-title-standard whitespace-normal sm:whitespace-nowrap' }} {{ $isDark ? 'text-white' : 'text-[#20332A]' }}">
-                                {{ $pojok->nama }}
-                            </h2>
+                        <!-- HEADER: EYEBROW (POJOK 01 ONLY) + DISPLAY NUMBER & TITLE POJOK -->
+                        <div class="{{ $loop->first ? 'space-y-4 sm:space-y-5 lg:space-y-6' : '' }}">
+                            @if($loop->first)
+                                <p class="text-[11px] sm:text-xs md:text-[13px] font-bold uppercase tracking-wider text-[#0A3D29] select-none m-0">
+                                    5 POJOK PEMBERDAYAAN CATUR CERDAS
+                                </p>
+                            @endif
+
+                            <div class="pojok-header-wrap flex items-center sm:items-baseline gap-2.5 sm:gap-5 lg:gap-6 w-full min-w-0">
+                                <span class="pojok-num-text harmoni-num-animate select-none font-sans font-black leading-tight sm:leading-none tracking-tight shrink-0 {{ $isUmkmGoDigital ? 'pojok-num-umkm' : 'pojok-num-standard' }} {{ $isDark ? 'text-white' : 'text-[#20332A]' }}">
+                                    {{ sprintf('%02d', $loop->iteration) }}
+                                </span>
+                                <h2 class="pojok-title-text harmoni-text-animate font-sans font-black leading-tight sm:leading-none tracking-tight {{ $isUmkmGoDigital ? 'pojok-title-umkm' : 'pojok-title-standard whitespace-normal sm:whitespace-nowrap' }} {{ $isDark ? 'text-white' : 'text-[#20332A]' }}">
+                                    {{ $pojok->nama }}
+                                </h2>
+                            </div>
                         </div>
 
                         <!-- AREA KONTEN UTAMA DENGAN TRANSISI TINGGI YANG KONTINU & MULUS -->
@@ -798,33 +806,63 @@
                                     :style="'transform: translateX(-' + (currentIndex * 100) + '%);'">
 
                                     <!-- Slide Clone 3 (Prepend for seamless backward wrap) -->
-                                    <div class="w-full h-full shrink-0 relative">
-                                        <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}" loading="lazy" decoding="async" class="w-full h-full object-cover select-none pointer-events-none" draggable="false">
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                                    <div class="w-full h-full shrink-0 relative overflow-hidden"
+                                        x-data="{ imgLoaded: false }"
+                                        x-init="if ($refs.sImgC3 && $refs.sImgC3.complete) { imgLoaded = true; }">
+                                        <div x-show="!imgLoaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
+                                        <img x-ref="sImgC3" src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}" loading="lazy" decoding="async"
+                                            x-on:load="imgLoaded = true;"
+                                            class="w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300"
+                                            :class="imgLoaded ? 'opacity-100' : 'opacity-0'" draggable="false">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-10"></div>
                                     </div>
 
                                     <!-- Slide 1 -->
-                                    <div class="w-full h-full shrink-0 relative">
-                                        <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}" loading="lazy" decoding="async" class="w-full h-full object-cover select-none pointer-events-none" draggable="false">
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                                    <div class="w-full h-full shrink-0 relative overflow-hidden"
+                                        x-data="{ imgLoaded: false }"
+                                        x-init="if ($refs.sImg1 && $refs.sImg1.complete) { imgLoaded = true; }">
+                                        <div x-show="!imgLoaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
+                                        <img x-ref="sImg1" src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}" loading="lazy" decoding="async"
+                                            x-on:load="imgLoaded = true;"
+                                            class="w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300"
+                                            :class="imgLoaded ? 'opacity-100' : 'opacity-0'" draggable="false">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-10"></div>
                                     </div>
 
                                     <!-- Slide 2 -->
-                                    <div class="w-full h-full shrink-0 relative">
-                                        <img src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}" loading="lazy" decoding="async" class="w-full h-full object-cover select-none pointer-events-none" draggable="false">
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                                    <div class="w-full h-full shrink-0 relative overflow-hidden"
+                                        x-data="{ imgLoaded: false }"
+                                        x-init="if ($refs.sImg2 && $refs.sImg2.complete) { imgLoaded = true; }">
+                                        <div x-show="!imgLoaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
+                                        <img x-ref="sImg2" src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}" loading="lazy" decoding="async"
+                                            x-on:load="imgLoaded = true;"
+                                            class="w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300"
+                                            :class="imgLoaded ? 'opacity-100' : 'opacity-0'" draggable="false">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-10"></div>
                                     </div>
 
                                     <!-- Slide 3 -->
-                                    <div class="w-full h-full shrink-0 relative">
-                                        <img src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}" loading="lazy" decoding="async" class="w-full h-full object-cover select-none pointer-events-none" draggable="false">
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                                    <div class="w-full h-full shrink-0 relative overflow-hidden"
+                                        x-data="{ imgLoaded: false }"
+                                        x-init="if ($refs.sImg3 && $refs.sImg3.complete) { imgLoaded = true; }">
+                                        <div x-show="!imgLoaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
+                                        <img x-ref="sImg3" src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}" loading="lazy" decoding="async"
+                                            x-on:load="imgLoaded = true;"
+                                            class="w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300"
+                                            :class="imgLoaded ? 'opacity-100' : 'opacity-0'" draggable="false">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-10"></div>
                                     </div>
 
                                     <!-- Slide Clone 1 (Append for seamless forward wrap) -->
-                                    <div class="w-full h-full shrink-0 relative">
-                                        <img src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}" loading="lazy" decoding="async" class="w-full h-full object-cover select-none pointer-events-none" draggable="false">
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                                    <div class="w-full h-full shrink-0 relative overflow-hidden"
+                                        x-data="{ imgLoaded: false }"
+                                        x-init="if ($refs.sImgC1 && $refs.sImgC1.complete) { imgLoaded = true; }">
+                                        <div x-show="!imgLoaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
+                                        <img x-ref="sImgC1" src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}" loading="lazy" decoding="async"
+                                            x-on:load="imgLoaded = true;"
+                                            class="w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300"
+                                            :class="imgLoaded ? 'opacity-100' : 'opacity-0'" draggable="false">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-10"></div>
                                     </div>
                                 </div>
 

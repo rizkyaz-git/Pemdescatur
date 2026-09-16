@@ -122,10 +122,15 @@
     <div id="ppko-right-panel" class="lg:col-span-5 flex flex-col space-y-6">
 
         <!-- Banner Showcase PPKO Card -->
-        <div class="rounded-lg overflow-hidden border border-[#DCE6DA] shadow-xs bg-slate-50 group shrink-0">
-            <img src="{{ $ppkoCoverMobile }}" alt="PPKO Catur Cerdas Display Banner" loading="eager"
+        <div class="rounded-lg overflow-hidden border border-[#DCE6DA] shadow-xs bg-slate-100 group shrink-0 relative"
+            x-data="{ bannerLoaded: false, bannerError: false }"
+            x-init="if ($refs.bannerImg && $refs.bannerImg.complete) { bannerLoaded = true; }">
+            <div x-show="!bannerLoaded && !bannerError" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
+            <img x-ref="bannerImg" src="{{ $ppkoCoverMobile }}" alt="PPKO Catur Cerdas Display Banner" loading="eager"
                 fetchpriority="high" decoding="async" width="1920" height="1080"
-                class="w-full h-auto aspect-video object-cover object-center group-hover:scale-[1.01] transition-transform duration-500">
+                x-on:load="bannerLoaded = true;" x-on:error="bannerError = true;"
+                class="w-full h-auto aspect-video object-cover object-center group-hover:scale-[1.01] transition-transform duration-500 transition-opacity duration-300"
+                :class="(bannerLoaded && !bannerError) ? 'opacity-100' : 'opacity-0'">
         </div>
 
         <!-- Kartu 1: Detail Program & Mitra Program -->

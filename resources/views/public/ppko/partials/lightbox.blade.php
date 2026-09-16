@@ -24,10 +24,15 @@
         </button>
 
         <!-- Image Area -->
-        <div
-            class="md:w-3/5 bg-black flex items-center justify-center min-h-[260px] max-h-[500px] md:max-h-none overflow-hidden">
+        <div class="md:w-3/5 bg-slate-950 flex items-center justify-center min-h-[260px] max-h-[500px] md:max-h-none overflow-hidden relative"
+            x-data="{ imgLoaded: false }"
+            x-init="$watch('activeImg', () => { imgLoaded = false; })">
+            <div x-show="activeImg && !imgLoaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
             <template x-if="activeImg">
-                <img :src="activeImg" :alt="activeTitle" class="max-w-full max-h-full object-contain">
+                <img :src="activeImg" :alt="activeTitle"
+                    @load="imgLoaded = true"
+                    class="max-w-full max-h-full object-contain relative z-10 transition-opacity duration-300"
+                    :class="imgLoaded ? 'opacity-100' : 'opacity-0'">
             </template>
             <template x-if="!activeImg">
                 <div class="text-slate-400 text-xs p-8 text-center">Tidak ada gambar pratinjau</div>
