@@ -159,7 +159,7 @@
         <!-- Main Container: Clean White Background with subtle sage accents (#DCE6DA) -->
         <div class="bg-white min-h-screen">
             <div class="pt-6 sm:pt-8 pb-10 sm:pb-12">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
+                <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10" style="margin: 0 auto;">
 
                     {{-- 1. Top Header & Breadcrumbs --}}
                     @include('public.ppko.partials.header')

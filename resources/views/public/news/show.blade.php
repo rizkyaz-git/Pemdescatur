@@ -158,7 +158,7 @@
     .article-body-content img {
         max-width: 100%;
         height: auto;
-        border-radius: 0.75rem;
+        border-radius: 0.5rem;
         margin: 1.5rem auto;
         display: block;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -279,7 +279,7 @@
 
                 <!-- 2. Featured Image Card & Caption with Thin Divider Line -->
                 <figure class="my-6 space-y-3">
-                    <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 shadow-xs relative"
+                    <div class="rounded-lg overflow-hidden border border-slate-100 bg-slate-50 shadow-xs relative"
                          x-data="{ loaded: false }"
                          x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
                         <img x-ref="img"
@@ -294,10 +294,6 @@
                     </div>
                     @if(!empty($news->image_caption))
                         <figcaption class="text-xs sm:text-[13px] text-slate-500 italic text-center px-3 leading-relaxed flex items-center justify-center gap-1.5 pt-0.5">
-                            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
                             <span>{{ $news->image_caption }}</span>
                         </figcaption>
                     @endif
@@ -328,7 +324,7 @@
                     <div class="flex items-center gap-2.5 sm:gap-3">
                         <!-- Interactive Like Button (Icon + Counter) -->
                         <button @click="toggleLike()" 
-                                class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl border transition-all cursor-pointer active:scale-95 text-xs font-semibold shadow-xs"
+                                class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg border transition-all cursor-pointer active:scale-95 text-xs font-semibold shadow-xs"
                                 :class="isLiked ? 'bg-[#0A3D29] text-white border-[#0A3D29]' : 'bg-slate-50 text-slate-700 border-slate-200/80 hover:bg-slate-100 hover:text-[#0A3D29]'"
                                 :title="isLiked ? 'Batal menyukai berita ini' : 'Sukai berita ini'"
                                 aria-label="Sukai berita">
@@ -339,7 +335,7 @@
                         </button>
 
                         <!-- Keterangan Dilihat (Dipindahkan ke Sebelah Tombol Like) -->
-                        <div class="inline-flex items-center gap-1.5 h-9 px-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-semibold text-slate-600 shadow-xs select-none"
+                        <div class="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-slate-50 border border-slate-200/80 text-xs font-semibold text-slate-600 shadow-xs select-none"
                              title="{{ number_format($news->views_count ?? 0) }} kali dilihat">
                             <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -356,7 +352,7 @@
                         <!-- WhatsApp -->
                         <a :href="'https://api.whatsapp.com/send?text=' + encodeURIComponent('{{ $news->title }} ' + window.location.href)" 
                            target="_blank" rel="noopener" 
-                           class="w-9 h-9 rounded-xl bg-slate-50 hover:bg-emerald-600 hover:text-white text-slate-600 flex items-center justify-center border border-slate-200/80 transition-all active:scale-95 shadow-xs" 
+                           class="w-9 h-9 rounded-lg bg-slate-50 hover:bg-emerald-600 hover:text-white text-slate-600 flex items-center justify-center border border-slate-200/80 transition-all active:scale-95 shadow-xs" 
                            title="Bagikan ke WhatsApp"
                            aria-label="Bagikan ke WhatsApp">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -367,7 +363,7 @@
                         <!-- Facebook -->
                         <a :href="'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href)" 
                            target="_blank" rel="noopener" 
-                           class="w-9 h-9 rounded-xl bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-600 flex items-center justify-center border border-slate-200/80 transition-all active:scale-95 shadow-xs" 
+                           class="w-9 h-9 rounded-lg bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-600 flex items-center justify-center border border-slate-200/80 transition-all active:scale-95 shadow-xs" 
                            title="Bagikan ke Facebook"
                            aria-label="Bagikan ke Facebook">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -378,7 +374,7 @@
                         <!-- Salin Tautan (Copy Link Icon Button) -->
                         <div class="relative">
                             <button @click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2500)" 
-                                    class="w-9 h-9 rounded-xl flex items-center justify-center border transition-all active:scale-95 cursor-pointer shadow-xs"
+                                    class="w-9 h-9 rounded-lg flex items-center justify-center border transition-all active:scale-95 cursor-pointer shadow-xs"
                                     :class="copied ? 'bg-emerald-50 text-emerald-600 border-emerald-300' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border-slate-200/80'"
                                     :title="copied ? 'Tautan berhasil disalin!' : 'Salin Tautan'"
                                     aria-label="Salin Tautan">
@@ -422,10 +418,10 @@
                                         ? asset('storage/' . $item->image_path) 
                                         : asset($defaultImages[$item->id % count($defaultImages)]);
                                 @endphp
-                                <a href="{{ route('public.news.show', $item->slug) }}" class="group flex gap-3.5 items-start p-2 -mx-2 rounded-xl hover:bg-slate-50 transition-colors">
+                                <a href="{{ route('public.news.show', $item->slug) }}" class="group flex gap-3 items-start p-2 -mx-2 rounded-lg hover:bg-slate-50 transition-colors">
                                     
                                     <!-- Image Thumbnail -->
-                                    <div class="w-20 h-16 rounded-xl overflow-hidden bg-slate-100 border border-slate-200/70 shrink-0 relative">
+                                    <div class="w-20 h-16 rounded-lg overflow-hidden bg-slate-100 border border-slate-200/70 shrink-0 relative">
                                         <img src="{{ $itemImageSrc }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                     </div>
 
@@ -455,72 +451,98 @@
 
         </div>
 
-        <!-- ================= BAGIAN BAWAH: BERITA TERKAIT (Berjajar beberapa kartu pada mode desktop) ================= -->
+        <!-- ================= BAGIAN BAWAH: BERITA TERKAIT ================= -->
         @php
-            $displayRelated = isset($relatedNews) && $relatedNews->count() > 0 ? $relatedNews : (isset($recentNews) ? $recentNews->take(3) : collect());
+            $displayRelated = isset($relatedNews) && $relatedNews->count() > 0 ? $relatedNews->take(4) : (isset($recentNews) ? $recentNews->take(4) : collect());
         @endphp
 
         @if($displayRelated->count() > 0)
-            <section class="mt-16 pt-10 border-t border-slate-200/80">
+            <section class="mt-14 pt-8 border-t border-slate-200/80">
                 <!-- Section Header -->
-                <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center justify-between mb-5">
                     <div>
-                        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
                             Berita Terkait
                         </h2>
-                        <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
-                            Baca juga kabar dan informasi pilihan lainnya seputar Desa Catur
+                        <p class="text-xs text-slate-500 mt-0.5">
+                            Kabar dan informasi pilihan lainnya seputar Desa Catur
                         </p>
                     </div>
                     <a href="{{ route('public.news.index') }}" 
-                       class="text-xs sm:text-sm font-semibold text-[#0A3D29] hover:underline inline-flex items-center gap-1 group shrink-0">
+                       class="text-xs font-semibold text-[#0A3D29] hover:underline inline-flex items-center gap-1 group shrink-0">
                         <span>Lihat Semua</span>
-                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
                     </a>
                 </div>
 
-                <!-- Kartu Berjajar di Desktop (grid-cols-1 sm:grid-cols-2 lg:grid-cols-3) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                <!-- 1. Tampilan Mode Mobile: Daftar Berita (List) -->
+                <div class="sm:hidden space-y-2.5">
                     @foreach($displayRelated as $item)
                         @php
                             $itemImageSrc = $item->image_path 
                                 ? asset('storage/' . $item->image_path) 
                                 : asset($defaultImages[$item->id % count($defaultImages)]);
                         @endphp
-                        <article class="group flex flex-col bg-white rounded-2xl border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition-all duration-200 overflow-hidden">
+                        <a href="{{ route('public.news.show', $item->slug) }}" 
+                           class="group flex gap-3 items-start p-2.5 rounded-lg border border-slate-200/80 bg-white hover:bg-slate-50 transition-colors shadow-2xs">
+                            <!-- Image Thumbnail -->
+                            <div class="w-20 h-16 rounded-md overflow-hidden bg-slate-100 border border-slate-200/70 shrink-0 relative">
+                                <img src="{{ $itemImageSrc }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            </div>
+
+                            <!-- Content Info -->
+                            <div class="space-y-1 min-w-0 flex-1">
+                                <span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold text-[#0A3D29] bg-emerald-50 border border-emerald-200/60 uppercase tracking-wider">
+                                    {{ $item->category ?: 'Berita' }}
+                                </span>
+                                <h3 class="font-bold text-xs text-slate-900 group-hover:text-[#0A3D29] transition-colors line-clamp-2 leading-snug">
+                                    {{ $item->title }}
+                                </h3>
+                                <div class="flex items-center gap-2 text-[10.5px] text-slate-400 font-medium pt-0.5">
+                                    <span>{{ $item->published_at ? $item->published_at->translatedFormat('d M Y') : $item->created_at->translatedFormat('d M Y') }}</span>
+                                    <span>•</span>
+                                    <span>{{ number_format($item->views_count ?? 0) }} dilihat</span>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+
+                <!-- 2. Tampilan Mode Desktop & Tablet: 4 Kartu Padat Berjajar -->
+                <div class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    @foreach($displayRelated as $item)
+                        @php
+                            $itemImageSrc = $item->image_path 
+                                ? asset('storage/' . $item->image_path) 
+                                : asset($defaultImages[$item->id % count($defaultImages)]);
+                        @endphp
+                        <article class="group flex flex-col bg-white rounded-lg border border-slate-200/80 hover:border-slate-300 hover:shadow-xs transition-all duration-200 overflow-hidden">
                             <!-- Image Thumbnail -->
                             <a href="{{ route('public.news.show', $item->slug) }}" class="block aspect-16/10 w-full overflow-hidden bg-slate-100 relative">
                                 <img src="{{ $itemImageSrc }}" 
                                      alt="{{ $item->title }}" 
                                      loading="lazy"
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                <span class="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-white/95 text-[#0A3D29] backdrop-blur-xs shadow-xs">
+                                <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-white/95 text-[#0A3D29] backdrop-blur-xs shadow-2xs">
                                     {{ $item->category ?: 'Berita' }}
                                 </span>
                             </a>
 
                             <!-- Card Body -->
-                            <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
-                                <div class="space-y-1.5">
-                                    <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-[#0A3D29] transition-colors line-clamp-2 leading-snug">
-                                        <a href="{{ route('public.news.show', $item->slug) }}">
-                                            {{ $item->title }}
-                                        </a>
-                                    </h3>
-                                    @if($item->excerpt)
-                                        <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                                            {{ $item->excerpt }}
-                                        </p>
-                                    @endif
-                                </div>
+                            <div class="p-3 flex-1 flex flex-col justify-between space-y-2">
+                                <h3 class="font-bold text-xs sm:text-[13px] text-slate-900 group-hover:text-[#0A3D29] transition-colors line-clamp-2 leading-snug">
+                                    <a href="{{ route('public.news.show', $item->slug) }}">
+                                        {{ $item->title }}
+                                    </a>
+                                </h3>
 
                                 <!-- Card Footer: Date & Views -->
-                                <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium pt-2.5 border-t border-slate-100">
+                                <div class="flex items-center justify-between text-[10.5px] text-slate-400 font-medium pt-2 border-t border-slate-100">
                                     <span>{{ $item->published_at ? $item->published_at->translatedFormat('d M Y') : $item->created_at->translatedFormat('d M Y') }}</span>
                                     <span class="flex items-center gap-1">
-                                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                         </svg>

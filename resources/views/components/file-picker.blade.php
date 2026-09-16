@@ -63,6 +63,12 @@
             };
         });
     },
+    removeFile(idx) {
+        this.files.splice(idx, 1);
+        if (this.$refs.input) {
+            this.$refs.input.value = '';
+        }
+    },
     getFileCategory(ext) {
         if (!ext) return 'file';
         ext = ext.toLowerCase();
@@ -74,17 +80,20 @@
         return 'file';
     }
 }" class="w-full">
-    <!-- Layout: 2 Kolom di Desktop (md+), 1 Kolom di Tablet/Mobile -->
+    <!-- Layout: 2 Kolom di Desktop (md+), 1 Kolom Bergantian di Mobile -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
         
-        <!-- SISI KIRI: Area Upload / Dropzone -->
+        <!-- SISI KIRI: Area Upload / Dropzone (Mobile: Tampil saat belum ada file) -->
         <div 
             @dragover.prevent="isDragging = true"
             @dragleave.prevent="isDragging = false"
             @drop.prevent="handleDrop($event)"
             @click="$refs.input.click()"
-            :class="isDragging ? 'border-[#0F4C3A] bg-emerald-50/60' : 'border-[#CBD5E1] hover:border-[#0F4C3A]/60 bg-[#F8FAFC] hover:bg-slate-50'"
-            class="border-2 border-dashed rounded-xl p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-colors duration-150 min-h-[180px] sm:min-h-[200px]"
+            :class="[
+                isDragging ? 'border-[#0F4C3A] bg-emerald-50/60' : 'border-[#CBD5E1] hover:border-[#0F4C3A]/60 bg-[#F8FAFC] hover:bg-slate-50',
+                files.length > 0 ? 'hidden md:flex' : 'flex'
+            ]"
+            class="border-2 border-dashed rounded-xl p-5 flex-col items-center justify-center text-center cursor-pointer transition-colors duration-150 min-h-[180px] sm:min-h-[200px]"
         >
             <input 
                 x-ref="input"
@@ -119,10 +128,13 @@
             </button>
         </div>
 
-        <!-- SISI KANAN: Area Preview File -->
-        <div class="border border-[#E2E8F0] rounded-xl bg-[#F8FAFC] p-3 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] overflow-hidden">
+        <!-- SISI KANAN: Area Preview File (Mobile: Tampil bergantian saat file sudah dipilih) -->
+        <div 
+            :class="files.length === 0 ? 'hidden md:flex' : 'flex'"
+            class="border border-[#E2E8F0] rounded-xl bg-[#F8FAFC] p-3 flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] overflow-hidden relative"
+        >
             
-            <!-- State 1: Belum Ada Berkas Dipilih -->
+            <!-- State 1: Belum Ada Berkas Dipilih (Desktop only saat kosong) -->
             <template x-if="files.length === 0">
                 <div class="flex flex-col items-center justify-center text-center p-4 text-slate-400">
                     <svg class="w-9 h-9 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,14 +150,40 @@
                     
                     <!-- Preview Jika Gambar -->
                     <template x-if="files[0].type === 'image'">
-                        <div class="w-full h-full flex items-center justify-center rounded-lg bg-white p-1 border border-[#E2E8F0]/70 max-h-48 overflow-hidden">
+                        <div class="relative w-full h-full flex items-center justify-center rounded-lg bg-white p-1 border border-[#E2E8F0]/70 max-h-48 overflow-hidden group">
                             <img :src="files[0].url" :alt="files[0].name" class="max-h-44 w-full object-contain rounded-md">
+
+                            <!-- Tombol Silang Kecil untuk Mengurungkan / Kembali ke Upload -->
+                            <button 
+                                type="button" 
+                                @click.stop="removeFile(0)" 
+                                class="absolute top-2 right-2 w-7 h-7 rounded-full bg-slate-900/75 hover:bg-rose-600 text-white flex items-center justify-center shadow-md backdrop-blur-xs transition-colors duration-150 cursor-pointer z-10"
+                                title="Batalkan dan pilih ulang berkas"
+                                aria-label="Batalkan dan pilih ulang berkas"
+                            >
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
                         </div>
                     </template>
 
                     <!-- Preview Jika Non-Gambar: Ikon Format + Nama File Saja (Tanpa Metadata Apapun) -->
                     <template x-if="files[0].type !== 'image'">
-                        <div class="flex flex-col items-center justify-center text-center p-3.5 w-full bg-white rounded-lg border border-[#E2E8F0]">
+                        <div class="relative flex flex-col items-center justify-center text-center p-3.5 w-full bg-white rounded-lg border border-[#E2E8F0]">
+                            <!-- Tombol Silang Kecil untuk Mengurungkan / Kembali ke Upload -->
+                            <button 
+                                type="button" 
+                                @click.stop="removeFile(0)" 
+                                class="absolute top-2 right-2 w-6 h-6 rounded-full bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 flex items-center justify-center transition-colors duration-150 cursor-pointer z-10"
+                                title="Batalkan dan pilih ulang berkas"
+                                aria-label="Batalkan dan pilih ulang berkas"
+                            >
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+
                             <!-- Format Icon Container -->
                             <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-2"
                                  :class="{
@@ -216,7 +254,18 @@
                                     </svg>
                                 </div>
                             </template>
-                            <span class="text-xs font-medium text-[#1E293B] truncate" :title="file.name" x-text="file.name"></span>
+                            <span class="text-xs font-medium text-[#1E293B] truncate flex-1" :title="file.name" x-text="file.name"></span>
+                            <button 
+                                type="button" 
+                                @click.stop="removeFile(idx)" 
+                                class="w-5 h-5 shrink-0 rounded-full hover:bg-rose-50 text-slate-400 hover:text-rose-600 flex items-center justify-center transition cursor-pointer"
+                                title="Hapus berkas"
+                                aria-label="Hapus berkas"
+                            >
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
                         </div>
                     </template>
                 </div>

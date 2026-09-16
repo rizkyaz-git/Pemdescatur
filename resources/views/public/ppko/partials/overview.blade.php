@@ -25,12 +25,12 @@
 <!-- 2. TENTANG PROGRAM & DETAIL PROGRAM                                       -->
 <!-- ========================================================================= -->
 <section id="tentang-program"
-    class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start ppko-section-entrance pt-2 sm:pt-4">
+    class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start ppko-section-entrance pt-2 sm:pt-4">
     <div id="ppko-left-panel" class="lg:col-span-7 flex flex-col space-y-6">
 
         <!-- Kartu Pembungkus Tentang Program -->
         <div id="ppko-tentang-card"
-            class="bg-white rounded-xl border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-4 shrink-0">
+            class="bg-white rounded-lg border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-4 shrink-0">
             <div class="flex items-center justify-between pb-3 border-b border-[#DCE6DA]">
                 <div class="flex items-center gap-2.5">
                     <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
@@ -122,7 +122,7 @@
     <div id="ppko-right-panel" class="lg:col-span-5 flex flex-col space-y-6">
 
         <!-- Banner Showcase PPKO Card -->
-        <div class="rounded-xl overflow-hidden border border-[#DCE6DA] shadow-xs bg-slate-50 group shrink-0">
+        <div class="rounded-lg overflow-hidden border border-[#DCE6DA] shadow-xs bg-slate-50 group shrink-0">
             <img src="{{ $ppkoCoverMobile }}" alt="PPKO Catur Cerdas Display Banner" loading="eager"
                 fetchpriority="high" decoding="async" width="1920" height="1080"
                 class="w-full h-auto aspect-video object-cover object-center group-hover:scale-[1.01] transition-transform duration-500">
@@ -130,7 +130,7 @@
 
         <!-- Kartu 1: Detail Program & Mitra Program -->
         <div id="ppko-detail-card"
-            class="bg-white rounded-xl border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-3 shrink-0">
+            class="bg-white rounded-lg border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-3 shrink-0 overflow-hidden">
             <div class="flex items-center justify-between pb-3 border-b border-[#DCE6DA]">
                 <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-900 leading-tight">
                     Detail Program
@@ -212,20 +212,20 @@
             <div class="border-t border-[#DCE6DA] pt-3.5 sm:pt-4 space-y-2 sm:space-y-2.5">
                 <h4 class="text-xs font-semibold text-slate-500 text-center tracking-wider uppercase">
                     Mitra Program</h4>
-                <div class="flex items-center justify-center gap-2 xs:gap-2.5 sm:gap-4 lg:gap-5 w-full flex-nowrap pt-1">
+                <div class="flex items-center justify-center gap-1.5 xs:gap-2 sm:gap-2.5 w-full flex-nowrap pt-1">
                     <a href="https://kemdiktisaintek.go.id/" target="_blank" rel="noopener noreferrer"
                         class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                         title="Kemendiktisaintek">
                         <img src="{{ asset('images/TUTWURI.png') }}" alt="Tut Wuri Handayani"
                             loading="lazy" decoding="async"
-                            class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
+                            class="h-6.5 sm:h-7.5 w-auto max-w-[32px] sm:max-w-[36px] object-contain">
                     </a>
                     <a href="https://kemdiktisaintek.go.id/en" target="_blank" rel="noopener noreferrer"
                         class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                         title="Diktisaintek Berdampak">
                         <img src="{{ asset('images/DIKTISAINTEK.png') }}" alt="Diktisaintek"
                             loading="lazy" decoding="async"
-                            class="h-4 xs:h-4.5 sm:h-7 lg:h-7.5 w-auto max-w-[42px] xs:max-w-[48px] sm:max-w-[88px] object-contain">
+                            class="h-4.5 sm:h-5.5 w-auto max-w-[50px] sm:max-w-[58px] object-contain">
                     </a>
                     <a href="https://ppkormawa.kemdiktisaintek.go.id/" target="_blank"
                         rel="noopener noreferrer"
@@ -233,14 +233,14 @@
                         title="PPK Ormawa">
                         <img src="{{ asset('images/PPK_ORMAWA.png') }}" alt="PPK Ormawa" loading="lazy"
                             decoding="async"
-                            class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
+                            class="h-6.5 sm:h-7.5 w-auto max-w-[32px] sm:max-w-[36px] object-contain">
                     </a>
                     <a href="https://www.ums.ac.id/" target="_blank" rel="noopener noreferrer"
                         class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                         title="Universitas Muhammadiyah Surakarta">
                         <img src="{{ asset('images/UMS.png') }}"
                             alt="Universitas Muhammadiyah Surakarta" loading="lazy" decoding="async"
-                            class="h-4 xs:h-4.5 sm:h-7 lg:h-7.5 w-auto max-w-[42px] xs:max-w-[48px] sm:max-w-[88px] object-contain">
+                            class="h-4.5 sm:h-5.5 w-auto max-w-[50px] sm:max-w-[58px] object-contain">
                     </a>
                     <a href="https://www.instagram.com/imm_alghozali/" target="_blank"
                         rel="noopener noreferrer"
@@ -248,7 +248,7 @@
                         title="Ikatan Mahasiswa Muhammadiyah Al-Ghozali Fakultas Psikologi UMS">
                         <img src="{{ asset('images/IMMALGHO.png') }}" alt="IMM Al-Ghozali"
                             loading="lazy" decoding="async"
-                            class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
+                            class="h-6.5 sm:h-7.5 w-auto max-w-[32px] sm:max-w-[36px] object-contain">
                     </a>
                     <a href="https://www.instagram.com/ppko_caturcerdas/" target="_blank"
                         rel="noopener noreferrer"
@@ -256,14 +256,14 @@
                         title="PPK Ormawa Catur Cerdas UMS 2026">
                         <img src="{{ asset('images/CATURCERDAS.png') }}" alt="Catur Cerdas"
                             loading="lazy" decoding="async"
-                            class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[34px] xs:max-w-[40px] sm:max-w-[70px] object-contain">
+                            class="h-6.5 sm:h-7.5 w-auto max-w-[34px] sm:max-w-[38px] object-contain">
                     </a>
                     <a href="https://boyolali.go.id/" target="_blank" rel="noopener noreferrer"
                         class="inline-flex items-center justify-center shrink-0 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
                         title="Pemerintah Kabupaten Boyolali">
                         <img src="{{ asset('images/PEMKABBYL.png') }}" alt="Pemkab Boyolali"
                             loading="lazy" decoding="async"
-                            class="h-5 xs:h-5.5 sm:h-8 lg:h-8.5 w-auto max-w-[28px] xs:max-w-[34px] sm:max-w-[60px] object-contain">
+                            class="h-6.5 sm:h-7.5 w-auto max-w-[26px] sm:max-w-[30px] object-contain">
                     </a>
                 </div>
             </div>

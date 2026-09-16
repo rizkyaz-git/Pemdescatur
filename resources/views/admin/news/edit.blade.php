@@ -77,50 +77,50 @@
         </div>
 
         <div class="bg-white rounded-xl border border-[#E2E8F0] shadow-xs p-5 sm:p-7" x-data="{
-                    categoryDropdownOpen: false,
-                    selectedCategory: '{{ old('category', $news->category) }}',
-                    categoryModalOpen: false,
-                    newCategoryName: '',
-                    isSubmittingCategory: false,
-                    categoriesList: [
-                        @foreach($categories as $cat)
-                            { id: {{ $cat->id }}, name: '{{ addslashes($cat->name) }}' },
-                        @endforeach
-                    ],
-                    selectCategory(name) {
-                        this.selectedCategory = name;
-                        this.categoryDropdownOpen = false;
-                    },
-                    async submitCategory() {
-                        if (!this.newCategoryName.trim()) return;
-                        this.isSubmittingCategory = true;
-                        try {
-                            const res = await fetch('{{ route('admin.news-categories.store') }}', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    'Accept': 'application/json'
-                                },
-                                body: JSON.stringify({ name: this.newCategoryName })
-                            });
-                            const data = await res.json();
-                            if (data.success && data.category) {
-                                this.categoriesList.push({ id: data.category.id, name: data.category.name });
-                                this.selectedCategory = data.category.name;
-                                this.newCategoryName = '';
-                                this.categoryModalOpen = false;
-                                this.categoryDropdownOpen = false;
-                            } else {
-                                alert(data.message || 'Gagal menambahkan kategori');
+                        categoryDropdownOpen: false,
+                        selectedCategory: '{{ old('category', $news->category) }}',
+                        categoryModalOpen: false,
+                        newCategoryName: '',
+                        isSubmittingCategory: false,
+                        categoriesList: [
+                            @foreach($categories as $cat)
+                                { id: {{ $cat->id }}, name: '{{ addslashes($cat->name) }}' },
+                            @endforeach
+                        ],
+                        selectCategory(name) {
+                            this.selectedCategory = name;
+                            this.categoryDropdownOpen = false;
+                        },
+                        async submitCategory() {
+                            if (!this.newCategoryName.trim()) return;
+                            this.isSubmittingCategory = true;
+                            try {
+                                const res = await fetch('{{ route('admin.news-categories.store') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'Accept': 'application/json'
+                                    },
+                                    body: JSON.stringify({ name: this.newCategoryName })
+                                });
+                                const data = await res.json();
+                                if (data.success && data.category) {
+                                    this.categoriesList.push({ id: data.category.id, name: data.category.name });
+                                    this.selectedCategory = data.category.name;
+                                    this.newCategoryName = '';
+                                    this.categoryModalOpen = false;
+                                    this.categoryDropdownOpen = false;
+                                } else {
+                                    alert(data.message || 'Gagal menambahkan kategori');
+                                }
+                            } catch (e) {
+                                alert('Terjadi kesalahan saat menambahkan kategori.');
+                            } finally {
+                                this.isSubmittingCategory = false;
                             }
-                        } catch (e) {
-                            alert('Terjadi kesalahan saat menambahkan kategori.');
-                        } finally {
-                            this.isSubmittingCategory = false;
                         }
-                    }
-                }">
+                    }">
             <form id="news-form" action="{{ route('admin.news.update', $news) }}" method="POST"
                 enctype="multipart/form-data" class="space-y-5">
                 @csrf
@@ -210,7 +210,8 @@
                             Penulis / Redaksi
                         </label>
                         <div class="relative flex items-center">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#0F4C3A] z-10">
+                            <div
+                                class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#0F4C3A] z-10">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -242,7 +243,8 @@
                             </button>
                         </div>
                         <div class="relative flex items-center">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#0F4C3A] z-10">
+                            <div
+                                class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#0F4C3A] z-10">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -402,16 +404,16 @@
                             const footer = document.createElement('div');
                             footer.className = 'flatpickr-custom-footer';
                             footer.innerHTML = `
-                                <button type="button" class="flatpickr-btn-clear">
-                                    Reset
-                                </button>
-                                <button type="button" class="flatpickr-btn-today">
-                                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    <span>Pilih Hari Ini</span>
-                                </button>
-                            `;
+                                    <button type="button" class="flatpickr-btn-clear">
+                                        Reset
+                                    </button>
+                                    <button type="button" class="flatpickr-btn-today">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <span>Pilih Hari Ini</span>
+                                    </button>
+                                `;
 
                             footer.querySelector('.flatpickr-btn-today').addEventListener('click', function (e) {
                                 e.preventDefault();

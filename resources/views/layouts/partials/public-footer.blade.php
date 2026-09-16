@@ -55,7 +55,7 @@
                         </svg>
                         @php
                             $rawIg = !empty($globalInstagram) ? $globalInstagram : 'https://www.instagram.com/pemerintahdesacatur';
-                            $igUrl = \Illuminate\Support\Str::startsWith($rawIg, ['http://', 'https://']) ? $rawIg : 'https://www.instagram.com/' . ltrim($rawIg, '@/');
+                            $igUrl = \Illuminate\Support\Str::startsWith($rawIg, ['http://', 'https://']) ? $rawIg : 'https://www.instagram.com/pemerintahdesacatur' . ltrim($rawIg, '@/');
                         @endphp
                         <a href="{{ $igUrl }}" target="_blank" rel="noopener noreferrer"
                             class="hover:text-white transition">
@@ -70,12 +70,18 @@
                 <h4 class="text-xs font-bold text-[#D9B85C] uppercase tracking-wider">TAUTAN CEPAT</h4>
                 <ul class="space-y-2 text-xs sm:text-sm text-slate-300 font-light">
                     <li><a href="{{ route('public.profile') }}" class="hover:text-white transition">Profil Desa</a></li>
-                    <li><a href="{{ route('public.officials') }}" class="hover:text-white transition">Struktur Pemerintahan</a></li>
-                    <li><a href="{{ route('public.news.index') }}" class="hover:text-white transition">Berita & Pengumuman</a></li>
-                    <li><a href="{{ route('public.gallery') }}" class="hover:text-white transition">Galeri Kegiatan</a></li>
-                    <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Cetak Surat Mandiri</a></li>
-                    <li><a href="{{ route('warga.complaint.create') }}" class="hover:text-white transition">Laporan & Pengaduan</a></li>
-                    <li><a href="{{ route('public.ppko') }}" class="hover:text-white transition">PPKO Catur Cerdas</a></li>
+                    <li><a href="{{ route('public.officials') }}" class="hover:text-white transition">Struktur
+                            Pemerintahan</a></li>
+                    <li><a href="{{ route('public.news.index') }}" class="hover:text-white transition">Berita &
+                            Pengumuman</a></li>
+                    <li><a href="{{ route('public.gallery') }}" class="hover:text-white transition">Galeri Kegiatan</a>
+                    </li>
+                    <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Cetak Surat
+                            Mandiri</a></li>
+                    <li><a href="{{ route('warga.complaint.create') }}" class="hover:text-white transition">Laporan &
+                            Pengaduan</a></li>
+                    <li><a href="{{ route('public.ppko') }}" class="hover:text-white transition">PPKO Catur Cerdas</a>
+                    </li>
                 </ul>
             </div>
 
@@ -88,17 +94,24 @@
                 <ul class="space-y-2 text-xs sm:text-sm text-slate-300 font-light">
                     @forelse($footerLetterTemplates as $tpl)
                         <li>
-                            <a href="{{ route('warga.letter.index', ['search' => $tpl->name]) }}#katalog-surat" class="hover:text-white transition">
+                            <a href="{{ route('warga.letter.index', ['search' => $tpl->name]) }}#katalog-surat"
+                                class="hover:text-white transition">
                                 {{ $tpl->name }} {{ $tpl->code ? "({$tpl->code})" : '' }}
                             </a>
                         </li>
                     @empty
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan Usaha (SKU)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan Domisili (SKD)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan Tidak Mampu (SKTM)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Pengantar Nikah (SPN)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan Kelahiran (SKK)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan Kematian (SKKM)</a></li>
+                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan
+                                Usaha (SKU)</a></li>
+                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan
+                                Domisili (SKD)</a></li>
+                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan
+                                Tidak Mampu (SKTM)</a></li>
+                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Pengantar
+                                Nikah (SPN)</a></li>
+                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan
+                                Kelahiran (SKK)</a></li>
+                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan
+                                Kematian (SKKM)</a></li>
                     @endforelse
                 </ul>
             </div>

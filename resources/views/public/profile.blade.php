@@ -12,14 +12,14 @@
             : asset('images/hero_landscape.png');
     @endphp
 
-    <!-- Classic Editorial Magazine Layout (Diselaraskan dengan Tema Hijau Botani Desa Catur) -->
-    <div class="bg-white min-h-screen py-10 sm:py-14 lg:py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Classic Editorial Magazine Layout (Diselaraskan dengan Tema Berita & Botani Desa Catur) -->
+    <div class="bg-white min-h-screen py-6 sm:py-10">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" style="margin: 0 auto;">
 
             {{-- ========================================================================= --}}
             {{-- 1. TOP HEADER (Rata Kiri dengan Navigasi Breadcrumb) --}}
             {{-- ========================================================================= --}}
-            <header class="text-left pb-8 sm:pb-10">
+            <header class="text-left pb-6 sm:pb-8">
                 <x-breadcrumbs :items="[
             ['label' => 'BERANDA', 'url' => route('home')],
             ['label' => 'Profil Desa']
@@ -129,7 +129,7 @@
 
                         <!-- Clean Embedded Map -->
                         <div
-                            class="w-full h-80 sm:h-96 lg:h-[420px] overflow-hidden border border-[#DCE6DA] rounded-md mt-2">
+                            class="w-full h-80 sm:h-96 lg:h-[420px] overflow-hidden border border-[#DCE6DA] rounded-lg mt-2">
                             <iframe src="https://maps.google.com/maps?q=Catur%2C+Sambi%2C+Boyolali&t=h&z=14&output=embed"
                                 class="w-full h-full border-0" loading="lazy" title="Peta Satelit Wilayah Desa Catur"
                                 allowfullscreen>

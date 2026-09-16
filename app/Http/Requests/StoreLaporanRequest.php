@@ -17,7 +17,7 @@ class StoreLaporanRequest extends FormRequest
             'no_whatsapp' => ['required', 'string', 'regex:/^(?:\+62|62|0)8[1-9][0-9]{6,10}$/'],
             'kategori'    => ['required', 'string', 'in:infrastruktur,kependudukan,keamanan,lingkungan,layanan_publik,lainnya'],
             'isi_laporan' => ['required', 'string', 'min:10', 'max:2000'],
-            'lampiran'    => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+            'lampiran'    => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
         ];
     }
 
@@ -33,7 +33,7 @@ class StoreLaporanRequest extends FormRequest
             'isi_laporan.min'         => 'Isi laporan minimal 10 karakter.',
             'isi_laporan.max'         => 'Isi laporan maksimal 2.000 karakter.',
             'lampiran.mimes'          => 'Lampiran hanya boleh berformat JPG, JPEG, PNG, atau PDF.',
-            'lampiran.max'            => 'Ukuran lampiran maksimal 2 MB.',
+            'lampiran.max'            => 'Ukuran lampiran maksimal 5 MB.',
         ];
     }
 

@@ -7,7 +7,7 @@
     {{-- =========================================================== --}}
     {{-- 1. TOP HEADER (Rata Kiri dengan Navigasi Breadcrumb)        --}}
     {{-- =========================================================== --}}
-    <header class="bg-white pt-8 sm:pt-10 pb-4 sm:pb-6 text-left max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+    <header class="bg-white pt-6 sm:pt-10 pb-4 sm:pb-6 text-left max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" style="margin: 0 auto;">
         <x-breadcrumbs :items="[
             ['label' => 'BERANDA', 'url' => route('home')],
             ['label' => 'Pemerintahan']
@@ -19,7 +19,7 @@
 
     <!-- Main Content Area (Latar Standar Putih Datar) -->
     <div class="bg-white pt-2 pb-12 sm:pt-4 sm:pb-18">
-        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" style="margin: 0 auto;">
 
             @if(isset($officials) && $officials->count() > 0)
             <div x-data="{ isReady: false }" x-init="$nextTick(() => { setTimeout(() => { isReady = true; }, 120); })" class="relative">
@@ -36,7 +36,7 @@
                     <!-- Desktop Skeletons -->
                     <div class="hidden md:block space-y-6 lg:space-y-8">
                         <!-- Head Official Skeleton -->
-                        <div class="bg-white rounded-xl p-5 lg:p-7 border border-slate-200/90 shadow-xs flex flex-row items-center gap-6 lg:gap-8">
+                        <div class="bg-white rounded-lg p-5 lg:p-7 border border-slate-200/90 shadow-xs flex flex-row items-center gap-6 lg:gap-8">
                             <div class="w-40 lg:w-48 aspect-[3/4] rounded-lg skeleton-shimmer shrink-0"></div>
                             <div class="space-y-3 flex-1 min-w-0">
                                 <div class="w-28 h-3.5 rounded-sm skeleton-shimmer"></div>
@@ -64,7 +64,7 @@
                     <div class="grid grid-cols-2 gap-3 sm:gap-4 md:hidden">
                         @foreach($officials as $official)
                             <div
-                                class="bg-slate-50/80 rounded-xl p-2.5 sm:p-3.5 border border-slate-200/90 shadow-xs flex flex-col justify-between group hover:border-[#0A3D29]/40 hover:bg-white transition-all duration-200">
+                                class="bg-slate-50/80 rounded-lg p-2.5 sm:p-3.5 border border-slate-200/90 shadow-xs flex flex-col justify-between group hover:border-[#0A3D29]/40 hover:bg-white transition-all duration-200">
                                 <div>
                                     <!-- Foto dengan rasio aspek 3:4 -->
                                     <div class="relative rounded-lg overflow-hidden aspect-[3/4] w-full bg-slate-100 border border-slate-200/70 mb-2.5 flex items-center justify-center shadow-xs"
@@ -122,7 +122,7 @@
                             @endphp
 
                             <div
-                                class="bg-white rounded-xl p-5 lg:p-7 border border-slate-200/90 hover:border-[#0A3D29]/40 hover:bg-slate-50/50 shadow-xs hover:shadow-md transition-all duration-300 flex flex-row items-center gap-6 lg:gap-8 group">
+                                class="bg-white rounded-lg p-5 lg:p-7 border border-slate-200/90 hover:border-[#0A3D29]/40 hover:bg-slate-50/50 shadow-xs hover:shadow-md transition-all duration-300 flex flex-row items-center gap-6 lg:gap-8 group">
                                 <!-- Foto Profil Sekretaris Desa (Rasio Aspek 3:4) -->
                                 <div class="relative w-40 lg:w-48 aspect-[3/4] rounded-lg overflow-hidden bg-slate-100 border border-slate-200/80 shrink-0 shadow-xs flex items-center justify-center"
                                     x-data="{ loaded: false, error: false }"
@@ -168,7 +168,7 @@
                         <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
                             @foreach($otherOfficials as $official)
                                 <div
-                                    class="bg-white rounded-xl p-3.5 sm:p-4 border border-slate-200/90 hover:border-[#0A3D29]/40 hover:bg-slate-50/50 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between group">
+                                    class="bg-white rounded-lg p-3.5 sm:p-4 border border-slate-200/90 hover:border-[#0A3D29]/40 hover:bg-slate-50/50 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between group">
                                     <div>
                                         <!-- Photo Container (Rasio Aspek 3:4) -->
                                         <div class="relative rounded-lg overflow-hidden aspect-[3/4] w-full bg-slate-100 border border-slate-200/70 mb-3.5 flex items-center justify-center shadow-xs"

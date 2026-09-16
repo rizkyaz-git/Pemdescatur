@@ -53,22 +53,22 @@ class NewsController extends Controller
             session()->put($viewKey, true);
         }
 
-        // Fetch up to 3 related news (same category first, backfill with latest if needed)
+        // Fetch up to 4 related news (same category first, backfill with latest if needed)
         $relatedNews = News::where('status', 'published')
             ->where('id', '!=', $news->id)
             ->when($news->category, function ($query, $cat) {
                 return $query->where('category', $cat);
             })
             ->orderBy('published_at', 'desc')
-            ->take(3)
+            ->take(4)
             ->get();
 
-        if ($relatedNews->count() < 3) {
+        if ($relatedNews->count() < 4) {
             $fallback = News::where('status', 'published')
                 ->where('id', '!=', $news->id)
                 ->whereNotIn('id', $relatedNews->pluck('id'))
                 ->orderBy('published_at', 'desc')
-                ->take(3 - $relatedNews->count())
+                ->take(4 - $relatedNews->count())
                 ->get();
             $relatedNews = $relatedNews->concat($fallback);
         }
