@@ -263,6 +263,13 @@
     </style>
 
     <div id="katalog-pojok-container" class="w-full">
+        <!-- Eyebrow Pengantar: Jeda Menuju Seksi Pojok (Tengah Halaman) -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center text-center pt-3 sm:pt-4 lg:pt-6 pb-2 sm:pb-3">
+            <p class="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#0A3D29] select-none text-center">
+                5 POJOK PEMBERDAYAAN CATUR CERDAS
+            </p>
+        </div>
+
         @foreach($pojoks as $index => $pojok)
             @php
                 $slugId = Str::slug(str_replace('Pojok ', '', $pojok->nama));
@@ -368,7 +375,7 @@
             @endphp
 
             <section id="{{ $slugId }}"
-                class="w-full relative scroll-mt-28 md:scroll-mt-36 ppko-section-spacing flex flex-col justify-center ppko-section-entrance overflow-hidden {{ $isDark ? 'bg-[#0A3D29] text-white' : 'bg-white text-slate-900' }}">
+                class="w-full relative scroll-mt-28 md:scroll-mt-36 {{ $loop->first ? 'pt-4 sm:pt-6 lg:pt-8 pb-[clamp(2.5rem,1.5rem+2.5vw,4.75rem)]' : 'ppko-section-spacing' }} flex flex-col justify-center ppko-section-entrance overflow-hidden {{ $isDark ? 'bg-[#0A3D29] text-white' : 'bg-white text-slate-900' }}">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
 
                     <!-- MAIN GRID: SELANG-SELING KIRI KANAN (Ganjil: Teks Kiri, Foto Kanan | Genap: Foto Kiri, Teks Kanan) -->
@@ -518,22 +525,14 @@
                         @close-other-pojoks.window="if ($event.detail.id !== {{ $pojok->id }} && expanded) closeDropdown()"
                         class="lg:col-span-7 order-2 {{ $isEven ? 'lg:order-2' : 'lg:order-1' }} flex flex-col justify-start space-y-3 sm:space-y-6">
 
-                        <!-- HEADER: EYEBROW (POJOK 01 ONLY) + DISPLAY NUMBER & TITLE POJOK -->
-                        <div class="{{ $loop->first ? 'space-y-4 sm:space-y-5 lg:space-y-6' : '' }}">
-                            @if($loop->first)
-                                <p class="text-[11px] sm:text-xs md:text-[13px] font-bold uppercase tracking-wider text-[#0A3D29] select-none m-0">
-                                    5 POJOK PEMBERDAYAAN CATUR CERDAS
-                                </p>
-                            @endif
-
-                            <div class="pojok-header-wrap flex items-center sm:items-baseline gap-2.5 sm:gap-5 lg:gap-6 w-full min-w-0">
-                                <span class="pojok-num-text harmoni-num-animate select-none font-sans font-black leading-tight sm:leading-none tracking-tight shrink-0 {{ $isUmkmGoDigital ? 'pojok-num-umkm' : 'pojok-num-standard' }} {{ $isDark ? 'text-white' : 'text-[#20332A]' }}">
-                                    {{ sprintf('%02d', $loop->iteration) }}
-                                </span>
-                                <h2 class="pojok-title-text harmoni-text-animate font-sans font-black leading-tight sm:leading-none tracking-tight {{ $isUmkmGoDigital ? 'pojok-title-umkm' : 'pojok-title-standard whitespace-normal sm:whitespace-nowrap' }} {{ $isDark ? 'text-white' : 'text-[#20332A]' }}">
-                                    {{ $pojok->nama }}
-                                </h2>
-                            </div>
+                        <!-- HEADER: DISPLAY NUMBER (01, 02, ...) + TITLE POJOK -->
+                        <div class="pojok-header-wrap flex items-center sm:items-baseline gap-2.5 sm:gap-5 lg:gap-6 w-full min-w-0">
+                            <span class="pojok-num-text harmoni-num-animate select-none font-sans font-black leading-tight sm:leading-none tracking-tight shrink-0 {{ $isUmkmGoDigital ? 'pojok-num-umkm' : 'pojok-num-standard' }} {{ $isDark ? 'text-white' : 'text-[#20332A]' }}">
+                                {{ sprintf('%02d', $loop->iteration) }}
+                            </span>
+                            <h2 class="pojok-title-text harmoni-text-animate font-sans font-black leading-tight sm:leading-none tracking-tight {{ $isUmkmGoDigital ? 'pojok-title-umkm' : 'pojok-title-standard whitespace-normal sm:whitespace-nowrap' }} {{ $isDark ? 'text-white' : 'text-[#20332A]' }}">
+                                {{ $pojok->nama }}
+                            </h2>
                         </div>
 
                         <!-- AREA KONTEN UTAMA DENGAN TRANSISI TINGGI YANG KONTINU & MULUS -->

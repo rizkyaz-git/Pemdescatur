@@ -158,7 +158,7 @@
 
         <!-- Main Container: Clean White Background with subtle sage accents (#DCE6DA) -->
         <div class="bg-white min-h-screen">
-            <div class="pt-6 sm:pt-8 lg:pt-10 pb-6 sm:pb-8 lg:pb-10">
+            <div class="pt-6 sm:pt-8 lg:pt-10 pb-5 sm:pb-7 lg:pb-9">
                 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8" style="margin: 0 auto;">
 
                     {{-- 1. Top Header & Breadcrumbs --}}
