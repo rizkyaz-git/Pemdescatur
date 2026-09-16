@@ -264,10 +264,31 @@
 
     <div id="katalog-pojok-container" class="w-full">
         <!-- Eyebrow Pengantar: Jeda Menuju Seksi Pojok (Tengah Halaman) -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center text-center pt-2 sm:pt-3 lg:pt-4 pb-3 sm:pb-4 lg:pb-5">
-            <p class="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#0A3D29] select-none text-center">
-                5 POJOK PEMBERDAYAAN CATUR CERDAS
-            </p>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-6 sm:pb-8 lg:pb-10">
+            <div class="relative w-full bg-[#0A3D29] rounded-2xl overflow-hidden shadow-sm flex items-center justify-center py-3.5 sm:py-4 px-4 sm:px-8">
+                
+                <!-- Center Content: Flanking Divider Lines & Title -->
+                <div class="relative z-10 flex items-center justify-center gap-3 sm:gap-5 md:gap-6 w-full max-w-2xl">
+                    <span class="h-[1.5px] w-6 sm:w-16 md:w-24 bg-white/25 rounded-full shrink" aria-hidden="true"></span>
+                    <h2 class="text-white text-[11px] sm:text-xs md:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.24em] select-none text-center whitespace-nowrap m-0 leading-none">
+                        5 POJOK PEMBERDAYAAN CATUR CERDAS
+                    </h2>
+                    <span class="h-[1.5px] w-6 sm:w-16 md:w-24 bg-white/25 rounded-full shrink" aria-hidden="true"></span>
+                </div>
+
+                <!-- Right Botanical Leaves Watermark (Motif Daun Khas Catur Cerdas) -->
+                <div class="absolute right-2 sm:right-6 md:right-8 -bottom-1 pointer-events-none select-none overflow-hidden" aria-hidden="true">
+                    <svg class="w-24 sm:w-32 md:w-36 h-auto opacity-90" viewBox="0 0 160 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Daun Kiri (Menghadap Kiri Atas) -->
+                        <path d="M52 56 C50 44 38 32 22 20 C18 17 21 14 25 15 C32 17 46 24 55 35 C62 43 58 52 52 56 Z" fill="rgba(255, 255, 255, 0.13)"/>
+                        <path d="M51 55 Q39 37 23 18" stroke="#0A3D29" stroke-width="1.75" stroke-linecap="round"/>
+
+                        <!-- Daun Kanan (Menghadap Kanan Atas) -->
+                        <path d="M116 56 C112 42 114 26 136 10 C140 8 142 11 141 15 C137 26 142 40 131 56 Z" fill="rgba(255, 255, 255, 0.13)"/>
+                        <path d="M122 55 Q127 33 137 11" stroke="#0A3D29" stroke-width="1.75" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
         </div>
 
         @foreach($pojoks as $index => $pojok)
