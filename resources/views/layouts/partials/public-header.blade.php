@@ -14,10 +14,10 @@
             <!-- 2. Scrolled Glassmorphism Layer (Fades in softly and smoothly when scrolled down) -->
             <div class="absolute inset-0 bg-white/80 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-200/80 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.05)] transition-opacity ease-in-out pointer-events-none"
                 :class="(mobileMenuOpen || mobileSearchOpen) 
-                                                                                                         ? 'opacity-100 duration-200' 
-                                                                                                         : (isScrolled 
-                                                                                                             ? 'opacity-100 duration-700' 
-                                                                                                             : 'opacity-0 duration-700 delay-100')">
+                                                                                                                                 ? 'opacity-100 duration-200' 
+                                                                                                                                 : (isScrolled 
+                                                                                                                                     ? 'opacity-100 duration-700' 
+                                                                                                                                     : 'opacity-0 duration-700 delay-100')">
             </div>
         @else
             <!-- Non-homepage glassmorphism navbar background with scroll shadow -->
@@ -79,8 +79,7 @@
                         <svg class="w-3.5 h-3.5 transition-transform duration-200"
                             :class="[profileDropdown ? 'rotate-180' : '', ({{ $isHomePage ? 'isScrolled' : 'true' }}) ? ((request()->routeIs('public.profile') || request()->routeIs('public.officials')) ? 'text-[#0A3D29]' : 'text-[#6C7B72]') : 'text-white']"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
@@ -133,8 +132,7 @@
                         <svg class="w-3.5 h-3.5 transition-transform duration-200"
                             :class="[infoDropdown ? 'rotate-180' : '', ({{ $isHomePage ? 'isScrolled' : 'true' }}) ? ((request()->routeIs('public.news*') || request()->routeIs('public.gallery')) ? 'text-[#0A3D29]' : 'text-[#6C7B72]') : 'text-white']"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
@@ -187,8 +185,7 @@
                         <svg class="w-3.5 h-3.5 transition-transform duration-200"
                             :class="[layananDropdown ? 'rotate-180' : '', ({{ $isHomePage ? 'isScrolled' : 'true' }}) ? ((request()->routeIs('public.services.*') || request()->routeIs('warga.letter.*') || request()->routeIs('warga.complaint.*')) ? 'text-[#0A3D29]' : 'text-[#6C7B72]') : 'text-white']"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
@@ -244,8 +241,8 @@
                 </a>
 
                 <!-- Perpustakaan Button -->
-                <a href="{{ $globalLibraryUrl ?? 'https://desacaturbyl.perpustakaan.co.id/home.ks' }}"
-                    target="_blank" rel="noopener noreferrer"
+                <a href="{{ $globalLibraryUrl ?? 'https://desacaturbyl.perpustakaan.co.id/home.ks' }}" target="_blank"
+                    rel="noopener noreferrer"
                     class="h-9 sm:h-10 px-3.5 inline-flex items-center gap-1.5 rounded-lg transition-all duration-700 ease-in-out font-semibold"
                     :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#20332A] hover:bg-[#EAF1E8] hover:text-[#0A3D29]' : 'text-white/90 hover:bg-white/20 hover:text-white'">
                     <span>Perpustakaan</span>
@@ -267,8 +264,7 @@
                 <div class="relative shrink-0" @click.away="searchOpen = false">
                     <form action="{{ url('/pencarian') }}" method="GET" @submit="searchOpen = false">
                         <div class="relative flex items-center">
-                            <input type="text" name="q" x-model="searchQuery"
-                                @input.debounce.300ms="fetchSuggestions()"
+                            <input type="text" name="q" x-model="searchQuery" @input.debounce.300ms="fetchSuggestions()"
                                 @focus="if(searchQuery.length >= 2) searchOpen = true"
                                 @keydown.escape="searchOpen = false" placeholder="Cari informasi..."
                                 aria-label="Cari informasi di Desa Catur"
@@ -329,12 +325,10 @@
                             class="max-h-80 overflow-y-auto divide-y"
                             :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'divide-slate-100' : 'divide-white/10'">
                             <template x-for="item in searchResults" :key="item.title">
-                                <a :href="item.url"
-                                    class="block px-4 py-2.5 w-full transition-colors text-left group"
+                                <a :href="item.url" class="block px-4 py-2.5 w-full transition-colors text-left group"
                                     :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'hover:bg-black/[0.05]' : 'hover:bg-black/35'">
                                     <div class="flex items-center gap-1.5 mb-1">
-                                        <span
-                                            class="text-[10px] font-semibold uppercase tracking-wider text-[#0A3D29]"
+                                        <span class="text-[10px] font-semibold uppercase tracking-wider text-[#0A3D29]"
                                             x-text="item.badge"></span>
                                         <span class="text-[10px] text-slate-300 font-light">/</span>
                                         <span class="text-[10px] font-light text-slate-400"
@@ -400,8 +394,8 @@
                                 : (mobileSearchOpen ? 'text-[#0A3D29] bg-white' : 'text-white hover:bg-white/10 active:bg-white/20')"
                         aria-label="Buka Pencarian" title="Pencarian">
                         <!-- Search Icon (When Closed) -->
-                        <svg x-show="!mobileSearchOpen" class="w-6 h-6 transition-transform duration-200"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg x-show="!mobileSearchOpen" class="w-6 h-6 transition-transform duration-200" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
@@ -415,8 +409,7 @@
                     </button>
 
                     <!-- 2. Hamburger Menu Button -->
-                    <button
-                        @click.stop="mobileMenuOpen = !mobileMenuOpen; if(mobileMenuOpen) mobileSearchOpen = false;"
+                    <button @click.stop="mobileMenuOpen = !mobileMenuOpen; if(mobileMenuOpen) mobileSearchOpen = false;"
                         type="button"
                         class="w-10 h-10 p-2 rounded-xl focus:outline-none flex items-center justify-center shrink-0 cursor-pointer transition-colors duration-300 ease-in-out"
                         :class="(isScrolled || mobileMenuOpen || mobileSearchOpen || !{{ $isHomePage ? 'true' : 'false' }}) 
@@ -575,8 +568,7 @@
             <a href="{{ route('home') }}" @click="mobileMenuOpen = false"
                 class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors {{ request()->routeIs('home') ? 'bg-black/[0.06] text-[#0A3D29] font-bold' : 'text-slate-800 active:bg-black/[0.08]' }}">
                 <div class="flex items-center gap-3.5">
-                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 001 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
@@ -591,8 +583,7 @@
                 class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-800 active:bg-black/[0.08]"
                 :class="activeSection === 'profil' ? 'bg-black/[0.04] text-[#0A3D29]' : ''">
                 <div class="flex items-center gap-3.5">
-                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0V5m0 6h4m-4 0H9" />
                     </svg>
@@ -605,12 +596,11 @@
                 </svg>
             </button>
             <div x-show="activeSection === 'profil'" x-transition:enter="transition ease-out duration-150"
-                x-transition:enter-start="opacity-0 -translate-y-1"
-                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
                 class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                 <a href="{{ route('public.profile') }}" @click="mobileMenuOpen = false"
                     class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.profile') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
-                    <span>Tentang Desa Catur</span>
+                    <span>Tentang Desa</span>
                 </a>
                 <a href="{{ route('public.officials') }}" @click="mobileMenuOpen = false"
                     class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.officials') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
@@ -625,8 +615,7 @@
                 class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-800 active:bg-black/[0.08]"
                 :class="activeSection === 'informasi' ? 'bg-black/[0.04] text-[#0A3D29]' : ''">
                 <div class="flex items-center gap-3.5">
-                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6" />
                     </svg>
@@ -639,8 +628,7 @@
                 </svg>
             </button>
             <div x-show="activeSection === 'informasi'" x-transition:enter="transition ease-out duration-150"
-                x-transition:enter-start="opacity-0 -translate-y-1"
-                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
                 class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                 <a href="{{ route('public.news.index') }}" @click="mobileMenuOpen = false"
                     class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('public.news*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
@@ -659,12 +647,11 @@
                 class="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors text-slate-800 active:bg-black/[0.08]"
                 :class="activeSection === 'layanan' ? 'bg-black/[0.04] text-[#0A3D29]' : ''">
                 <div class="flex items-center gap-3.5">
-                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span>Layanan Warga</span>
+                    <span>Layanan Online</span>
                 </div>
                 <svg class="w-4 h-4 text-slate-400 transition-transform duration-200"
                     :class="activeSection === 'layanan' ? 'rotate-180 text-[#0A3D29]' : ''" fill="none"
@@ -673,8 +660,7 @@
                 </svg>
             </button>
             <div x-show="activeSection === 'layanan'" x-transition:enter="transition ease-out duration-150"
-                x-transition:enter-start="opacity-0 -translate-y-1"
-                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
                 class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                 <a href="{{ route('warga.letter.index') }}" @click="mobileMenuOpen = false"
                     class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.letter*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
@@ -682,7 +668,7 @@
                 </a>
                 <a href="{{ route('warga.complaint.create') }}" @click="mobileMenuOpen = false"
                     class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.complaint*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
-                    <span>Pengaduan & Aspirasi Warga</span>
+                    <span>Laporan & Pengaduan</span>
                 </a>
             </div>
         </div>
@@ -692,8 +678,7 @@
             <a href="{{ route('public.ppko') }}" @click="mobileMenuOpen = false"
                 class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors {{ request()->routeIs('public.ppko') ? 'bg-black/[0.06] text-[#0A3D29] font-bold' : 'text-slate-800 active:bg-black/[0.08]' }}">
                 <div class="flex items-center gap-3.5">
-                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 14l9-5-9-5-9 5 9 5z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -710,12 +695,11 @@
                 rel="noopener noreferrer" @click="mobileMenuOpen = false"
                 class="w-full flex items-center justify-between px-5 py-3.5 font-semibold text-sm transition-colors text-slate-800 active:bg-black/[0.08]">
                 <div class="flex items-center gap-3.5">
-                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-[#0A3D29] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
-                    <span>Perpustakaan Digital Remen Maos</span>
+                    <span>Remen Maos Desa Catur</span>
                 </div>
                 <div class="flex items-center gap-1.5 text-xs text-slate-400">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

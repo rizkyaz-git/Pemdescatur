@@ -33,7 +33,7 @@
 
             .programs-list .program-name {
                 font-weight: 700;
-                color: #0f172a;
+                color: #20332A;
                 white-space: nowrap;
             }
 
@@ -77,7 +77,7 @@
 
             .programs-list .program-name {
                 font-weight: 700;
-                color: #0f172a;
+                color: #20332A;
                 grid-column: 2;
                 grid-row: 1;
             }
@@ -93,6 +93,12 @@
                 color: #475569;
                 line-height: 1.625;
             }
+        }
+
+        /* ─── Unified Responsive Section Vertical Rhythm ─── */
+        .ppko-section-spacing {
+            padding-top: clamp(2.5rem, 1.5rem + 2.5vw, 4.75rem);
+            padding-bottom: clamp(2.5rem, 1.5rem + 2.5vw, 4.75rem);
         }
 
         /* ─── Entrance Animation: Pure Fade (GPU-Lite) ─── */
@@ -362,11 +368,11 @@
             @endphp
 
             <section id="{{ $slugId }}"
-                class="w-full relative scroll-mt-28 md:scroll-mt-36 py-10 sm:py-14 lg:py-18 flex flex-col justify-center ppko-section-entrance overflow-hidden border-b {{ $isDark ? 'bg-[#0A3D29] text-white border-emerald-950/40' : 'bg-white text-slate-900 border-slate-100' }}">
+                class="w-full relative scroll-mt-28 md:scroll-mt-36 ppko-section-spacing flex flex-col justify-center ppko-section-entrance overflow-hidden {{ $isDark ? 'bg-[#0A3D29] text-white' : 'bg-white text-slate-900' }}">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
 
                     <!-- MAIN GRID: SELANG-SELING KIRI KANAN (Ganjil: Teks Kiri, Foto Kanan | Genap: Foto Kiri, Teks Kanan) -->
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-6 lg:gap-12 items-start">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-12 items-start">
 
                         <!-- TEXT & INTERACTION COLUMN (Order-2 di Mobile agar Teks Berada di Bawah Gambar) -->
                         <div x-data="{
@@ -514,10 +520,10 @@
 
                         <!-- HEADER: DISPLAY NUMBER (01, 02, ...) + TITLE POJOK -->
                         <div class="pojok-header-wrap flex items-center sm:items-baseline gap-2.5 sm:gap-5 lg:gap-6 w-full min-w-0">
-                            <span class="pojok-num-text harmoni-num-animate select-none font-sans font-black leading-tight sm:leading-none tracking-tight shrink-0 {{ $isUmkmGoDigital ? 'pojok-num-umkm' : 'pojok-num-standard' }} {{ $isDark ? 'text-white' : 'text-black' }}">
+                            <span class="pojok-num-text harmoni-num-animate select-none font-sans font-black leading-tight sm:leading-none tracking-tight shrink-0 {{ $isUmkmGoDigital ? 'pojok-num-umkm' : 'pojok-num-standard' }} {{ $isDark ? 'text-white' : 'text-[#20332A]' }}">
                                 {{ sprintf('%02d', $loop->iteration) }}
                             </span>
-                            <h2 class="pojok-title-text harmoni-text-animate font-sans font-black leading-tight sm:leading-none tracking-tight {{ $isUmkmGoDigital ? 'pojok-title-umkm' : 'pojok-title-standard whitespace-normal sm:whitespace-nowrap' }} {{ $isDark ? 'text-white' : 'text-black' }}">
+                            <h2 class="pojok-title-text harmoni-text-animate font-sans font-black leading-tight sm:leading-none tracking-tight {{ $isUmkmGoDigital ? 'pojok-title-umkm' : 'pojok-title-standard whitespace-normal sm:whitespace-nowrap' }} {{ $isDark ? 'text-white' : 'text-[#20332A]' }}">
                                 {{ $pojok->nama }}
                             </h2>
                         </div>
@@ -543,7 +549,7 @@
                                 <!-- Kolom Kanan: Fokus Pembelajaran & Mitra Asli dari Database -->
                                 @if(!empty($detailKanan))
                                     <div class="harmoni-desc-animate harmoni-desc-delay">
-                                        <div class="text-xs sm:text-[14px] lg:text-[14.5px] leading-relaxed font-normal space-y-2.5 [&>p]:leading-relaxed [&>p]:mb-2.5 [&>p:last-child]:mb-0 [&>ul]:list-disc [&>ul]:list-inside [&>ol]:list-decimal [&>ol]:list-inside {{ $isDark ? 'text-white/85 [&>p>strong]:text-white' : 'text-slate-700 [&>p>strong]:text-black' }}">
+                                        <div class="text-xs sm:text-[14px] lg:text-[14.5px] leading-relaxed font-normal space-y-2.5 [&>p]:leading-relaxed [&>p]:mb-2.5 [&>p:last-child]:mb-0 [&>ul]:list-disc [&>ul]:list-inside [&>ol]:list-decimal [&>ol]:list-inside {{ $isDark ? 'text-white/85 [&>p>strong]:text-white' : 'text-slate-700 [&>p>strong]:text-[#20332A]' }}">
                                             {!! $detailKanan !!}
                                         </div>
                                     </div>
@@ -564,9 +570,9 @@
                                         {{-- Informasi Mitra Komunitas (Tampil Pertama di Mobile & Desktop) --}}
                                         @if(!empty($mitraKomunitas))
                                             <div class="w-full order-1">
-                                                <div class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }} mb-2.5"></div>
+                                                <div class="h-px w-full {{ $isDark ? 'bg-white/15' : 'bg-[#DCE6DA]' }} mb-2.5"></div>
                                                 <div class="pr-2">
-                                                    <h5 class="font-bold text-sm sm:text-base leading-snug {{ $isDark ? 'text-white' : 'text-slate-900' }} mb-2">
+                                                    <h5 class="font-bold text-sm sm:text-base leading-snug {{ $isDark ? 'text-white' : 'text-[#20332A]' }} mb-2">
                                                         {{ $mitraKomunitas['title'] }} :
                                                     </h5>
 
@@ -592,18 +598,18 @@
                                             <div class="w-full flex flex-col gap-4 order-2">
                                                 @foreach($pojok->kurikulums as $file)
                                                     <div class="w-full">
-                                                        <div class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }} mb-2.5"></div>
+                                                        <div class="h-px w-full {{ $isDark ? 'bg-white/15' : 'bg-[#DCE6DA]' }} mb-2.5"></div>
                                                         <div class="flex items-start justify-between gap-4">
                                                             <div class="min-w-0 flex-1 pr-2">
-                                                                <h5 class="font-bold text-sm sm:text-base leading-snug {{ $isDark ? 'text-white' : 'text-slate-900' }}">
+                                                                <h5 class="font-bold text-sm sm:text-base leading-snug {{ $isDark ? 'text-white' : 'text-[#20332A]' }}">
                                                                     {{ $file->judul }}
                                                                 </h5>
                                                                 @if(!empty($file->deskripsi))
-                                                                    <p class="italic text-xs sm:text-[13px] leading-relaxed pt-0.5 {{ $isDark ? 'text-white/75' : 'text-slate-700' }}">
+                                                                    <p class="italic text-xs sm:text-[13px] leading-relaxed pt-0.5 {{ $isDark ? 'text-white/75' : 'text-slate-600' }}">
                                                                         {{ $file->deskripsi }}
                                                                     </p>
                                                                 @endif
-                                                                <span class="block font-bold text-xs sm:text-sm tracking-tight pt-1.5 {{ $isDark ? 'text-emerald-300' : 'text-slate-800' }}">
+                                                                <span class="block font-bold text-xs sm:text-sm tracking-tight pt-1.5 {{ $isDark ? 'text-emerald-300' : 'text-[#0A3D29]' }}">
                                                                     {{ $file->formatted_file_size }}
                                                                 </span>
                                                             </div>
@@ -620,7 +626,7 @@
 
                                                                 <a href="{{ asset('storage/' . $file->file_path) }}"
                                                                     target="_blank" rel="noopener noreferrer"
-                                                                    class="w-22 sm:w-24 inline-flex items-center justify-center gap-1.5 py-1 px-2.5 rounded-md {{ $isDark ? 'bg-white/10 hover:bg-white/20 text-white border border-white/40 hover:border-white' : 'bg-white hover:bg-emerald-50 text-[#0A3D29] border border-[#0A3D29]/30 hover:border-[#0A3D29]' }} active:scale-95 font-semibold text-xs transition shadow-2xs">
+                                                                    class="w-22 sm:w-24 inline-flex items-center justify-center gap-1.5 py-1 px-2.5 rounded-md {{ $isDark ? 'bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white' : 'bg-white hover:bg-[#EAF1E8] text-[#0A3D29] border border-[#0A3D29]/30 hover:border-[#0A3D29]' }} active:scale-95 font-semibold text-xs transition shadow-2xs">
                                                                     <svg class="w-3.5 h-3.5 {{ $isDark ? 'text-white' : 'text-[#0A3D29]' }} shrink-0"
                                                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -637,16 +643,16 @@
 
                                     </div>
                                 @else
-                                    <div class="text-xs py-3.5 italic rounded-lg px-4 border border-dashed {{ $isDark ? 'text-white/60 bg-white/5 border-white/20' : 'text-slate-500 bg-slate-50 border-slate-200' }}">
+                                    <div class="text-xs py-3.5 italic rounded-lg px-4 border border-dashed {{ $isDark ? 'text-white/70 bg-white/5 border-white/20' : 'text-slate-600 bg-[#F4F6F5] border-[#DCE6DA]' }}">
                                         Modul ajar akan segera diperbarui oleh admin.
                                     </div>
                                 @endif
 
                                 @auth
                                     @if(auth()->user()->isAdmin())
-                                        <div class="mt-3 pt-2 border-t {{ $isDark ? 'border-white/15' : 'border-slate-100' }} flex justify-end">
+                                        <div class="mt-3 pt-2 border-t {{ $isDark ? 'border-white/15' : 'border-[#DCE6DA]' }} flex justify-end">
                                             <a href="{{ route('admin.ppko.edit', $pojok) }}"
-                                                class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md transition {{ $isDark ? 'bg-white/15 hover:bg-white/25 text-white border border-white/20' : 'bg-slate-100 hover:bg-slate-200 text-slate-700' }}">
+                                                class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md transition {{ $isDark ? 'bg-white/15 hover:bg-white/25 text-white border border-white/20' : 'bg-[#EAF1E8] hover:bg-[#d5e5d1] text-[#0A3D29]' }}">
                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                                 </svg>
@@ -660,18 +666,18 @@
                         </div>
 
                         <!-- TRIGGER BAR DI BAGIAN BAWAH: GARIS HORIZONTAL DI ATAS, TEKS & ARROW DI BAWAH GARIS -->
-                        <div class="pt-3 sm:pt-5 w-full flex flex-col items-center harmoni-desc-animate harmoni-desc-delay-2">
-                            <div class="h-[1px] w-full {{ $isDark ? 'bg-white/20' : 'bg-slate-200' }} mb-2.5"></div>
+                        <div class="pt-4 sm:pt-6 w-full flex flex-col items-center harmoni-desc-animate harmoni-desc-delay-2">
+                            <div class="h-px w-full {{ $isDark ? 'bg-white/15' : 'bg-[#DCE6DA]' }} mb-3"></div>
 
                             <button type="button" @click="toggleExpanded($el)"
                                 class="inline-flex items-center justify-center gap-2 cursor-pointer select-none group focus:outline-none pt-0.5 pb-1 px-4"
                                 title="Klik untuk membuka/menutup selengkapnya">
-                                <span class="font-sans font-bold italic text-xs sm:text-sm lg:text-[15px] tracking-tight transition-colors {{ $isDark ? 'text-white group-hover:text-emerald-300' : 'text-slate-800 group-hover:text-emerald-800' }}">
+                                <span class="font-sans font-bold italic text-xs sm:text-sm lg:text-[15px] tracking-tight transition-colors {{ $isDark ? 'text-white group-hover:text-emerald-300' : 'text-[#20332A] group-hover:text-[#0A3D29]' }}">
                                     Pelajari selengkapnya tentang {{ strtolower($pojok->nama) }}
                                 </span>
 
-                                <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px] transform transition-transform duration-300 ease-out stroke-[2.5] transition-colors {{ $isDark ? 'text-white/70 group-hover:text-emerald-300' : 'text-slate-500 group-hover:text-emerald-800' }}"
-                                    :class="expanded ? 'rotate-180 {{ $isDark ? 'text-emerald-300' : 'text-emerald-800' }}' : ''"
+                                <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px] transform transition-transform duration-300 ease-out stroke-[2.5] transition-colors {{ $isDark ? 'text-white/70 group-hover:text-emerald-300' : 'text-slate-500 group-hover:text-[#0A3D29]' }}"
+                                    :class="expanded ? 'rotate-180 {{ $isDark ? 'text-emerald-300' : 'text-[#0A3D29]' }}' : ''"
                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
                                 </svg>
@@ -782,7 +788,7 @@
                         }" @mouseenter="pause()" @mouseleave="resume()" class="harmoni-cards-animate w-full">
 
                             <!-- RECTANGULAR SLIDER FRAME (16:9 Pipih pada Mobile, Tetap pada Desktop) -->
-                            <div class="pojok-slider-frame relative overflow-hidden bg-slate-900/10 select-none touch-pan-y group shadow-md rounded-xl border border-black/5 {{ $isDark ? 'border-white/10' : 'border-slate-200' }}"
+                            <div class="pojok-slider-frame relative overflow-hidden bg-slate-900/10 select-none touch-pan-y group shadow-xs rounded-xl border {{ $isDark ? 'border-white/10' : 'border-[#DCE6DA]' }}"
                                 @touchstart.passive="handleTouchStart($event)"
                                 @touchend="handleTouchEnd($event)">
 
@@ -867,7 +873,7 @@
                                     @foreach([0, 1, 2] as $idx)
                                         <button type="button" @click.stop="goTo({{ $idx }})"
                                             class="h-1.5 rounded-sm transition-all duration-300"
-                                            :class="realIndex === {{ $idx }} ? '{{ $isDark ? 'w-5 bg-white' : 'w-5 bg-[#0A3D29]' }}' : '{{ $isDark ? 'w-1.5 bg-white/40 hover:bg-white/70' : 'w-1.5 bg-slate-300 hover:bg-slate-400' }}'"
+                                            :class="realIndex === {{ $idx }} ? '{{ $isDark ? 'w-5 bg-white' : 'w-5 bg-[#0A3D29]' }}' : '{{ $isDark ? 'w-1.5 bg-white/35 hover:bg-white/60' : 'w-1.5 bg-[#DCE6DA] hover:bg-[#7D9B78]' }}'"
                                             title="Foto {{ $idx + 1 }}">
                                         </button>
                                     @endforeach

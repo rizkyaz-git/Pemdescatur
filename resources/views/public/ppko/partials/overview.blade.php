@@ -33,7 +33,7 @@
             class="bg-white rounded-lg border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-4 shrink-0">
             <div class="flex items-center justify-between pb-3 border-b border-[#DCE6DA]">
                 <div class="flex items-center gap-2.5">
-                    <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
+                    <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#20332A] leading-tight">
                         Tentang Catur Cerdas
                     </h2>
                 </div>
@@ -132,7 +132,7 @@
         <div id="ppko-detail-card"
             class="bg-white rounded-lg border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-3 shrink-0 overflow-hidden">
             <div class="flex items-center justify-between pb-3 border-b border-[#DCE6DA]">
-                <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-900 leading-tight">
+                <h3 class="font-serif text-lg sm:text-xl font-bold text-[#20332A] leading-tight">
                     Detail Program
                 </h3>
                 @auth
@@ -156,7 +156,7 @@
                         @forelse($programDetails ?? [] as $index => $detail)
                             @php /** @var \App\Models\PpkoProgramDetail $detail */ @endphp
                             <tr class="border-b border-[#DCE6DA] last:border-b-0 hover:bg-slate-50/60 transition-colors">
-                                <td class="py-3 pr-3 pl-0 font-bold text-slate-900 align-top w-[36%] sm:w-[32%] leading-relaxed">
+                                <td class="py-3 pr-3 pl-0 font-bold text-[#20332A] align-top w-[36%] sm:w-[32%] leading-relaxed">
                                     {{ $detail->aspek }}
                                 </td>
                                 <td class="py-3 pl-2 pr-0 leading-relaxed align-top text-slate-700">
