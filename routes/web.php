@@ -3,8 +3,6 @@
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Public as PublicControllers;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Public\LaporanController as PublicLaporanController;
-use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
 
 // --- HALAMAN PUBLIK ---
 Route::get('/', [PublicControllers\HomeController::class, 'index'])->name('home');
@@ -70,7 +68,6 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
         Route::resource('letter-templates', Admin\LetterTemplateController::class)->except(['show']);
         Route::resource('letter-requests', Admin\LetterRequestController::class)->only(['index', 'show', 'edit', 'update']);
         Route::resource('complaints', Admin\ComplaintController::class)->except(['create', 'store']);
-        Route::resource('laporans', AdminLaporanController::class)->only(['index', 'show', 'edit', 'update']);
     });
 
     // 5. Modul PPK Ormawa: Hanya dapat diakses oleh Super Admin dan PPK Ormawa

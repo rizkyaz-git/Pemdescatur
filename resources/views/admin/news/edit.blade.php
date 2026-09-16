@@ -138,7 +138,7 @@
                     @enderror
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <!-- Dropdown Kategori (Navbar Dropdown Style) -->
                     <div class="relative" @click.away="categoryDropdownOpen = false">
                         <label class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
@@ -200,6 +200,28 @@
                         </div>
 
                         @error('category')
+                            <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Penulis Berita -->
+                    <div>
+                        <label for="author" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
+                            Penulis / Redaksi
+                        </label>
+                        <div class="relative flex items-center">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#0F4C3A] z-10">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <input type="text" name="author" id="author"
+                                value="{{ old('author', $news->author ?? 'Admin Pemdes Catur') }}"
+                                placeholder="mis. Admin Pemdes Catur"
+                                class="w-full pl-10 pr-3.5 py-2 rounded-lg border border-[#E2E8F0] focus:ring-1 focus:ring-[#0F4C3A] focus:border-[#0F4C3A] text-sm bg-white text-slate-900 placeholder:text-slate-400 @error('author') border-rose-500 @enderror">
+                        </div>
+                        @error('author')
                             <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
                         @enderror
                     </div>

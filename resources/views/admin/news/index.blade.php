@@ -160,6 +160,12 @@
                                         class="font-semibold text-slate-900 hover:text-[#0F4C3A] transition-colors text-xs leading-snug line-clamp-2 block">
                                         {{ $news->title }}
                                     </a>
+                                    <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
+                                        <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                        </svg>
+                                        <span>{{ $news->author ?: 'Admin Pemdes Catur' }}</span>
+                                    </div>
                                 </td>
 
                                 <!-- Kolom Kategori -->

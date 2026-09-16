@@ -15,6 +15,7 @@ class UpdateNewsRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
+            'author' => ['nullable', 'string', 'max:100'],
             'excerpt' => ['nullable', 'string', 'max:500'],
             'content' => ['required', 'string'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:3072'],

@@ -4,17 +4,11 @@ namespace App\Providers;
 
 use App\Models\Laporan;
 use App\Models\Setting;
-use App\Events\LaporanDiperbarui;
-use App\Listeners\KirimNotifikasiEmailPelapor;
-
-use App\Policies\LaporanPolicy;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,10 +20,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Explicit registration keeps queued notification delivery reliable even when event
-        // auto-discovery is disabled in a production deployment.
-        Event::listen(LaporanDiperbarui::class, KirimNotifikasiEmailPelapor::class);
-        Gate::policy(Laporan::class, LaporanPolicy::class);
         Carbon::setLocale('id');
 
         // Explicit binding: parameter {complaint} di route admin → model Laporan

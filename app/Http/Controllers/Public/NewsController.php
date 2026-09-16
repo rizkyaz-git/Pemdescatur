@@ -53,6 +53,27 @@ class NewsController extends Controller
             session()->put($viewKey, true);
         }
 
+        // Fetch up to 3 related news (same category first, backfill with latest if needed)
+        $relatedNews = News::where('status', 'published')
+            ->where('id', '!=', $news->id)
+            ->when($news->category, function ($query, $cat) {
+                return $query->where('category', $cat);
+            })
+            ->orderBy('published_at', 'desc')
+            ->take(3)
+            ->get();
+
+        if ($relatedNews->count() < 3) {
+            $fallback = News::where('status', 'published')
+                ->where('id', '!=', $news->id)
+                ->whereNotIn('id', $relatedNews->pluck('id'))
+                ->orderBy('published_at', 'desc')
+                ->take(3 - $relatedNews->count())
+                ->get();
+            $relatedNews = $relatedNews->concat($fallback);
+        }
+
+        // Fetch 5 recent news for sidebar
         $recentNews = News::where('status', 'published')
             ->where('id', '!=', $news->id)
             ->orderBy('published_at', 'desc')
@@ -65,7 +86,7 @@ class NewsController extends Controller
             ->filter()
             ->values();
 
-        return view('public.news.show', compact('news', 'recentNews', 'categories'));
+        return view('public.news.show', compact('news', 'relatedNews', 'recentNews', 'categories'));
     }
 
     public function like(string $slug)

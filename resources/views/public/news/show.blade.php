@@ -210,42 +210,42 @@
 </style>
 @endpush
 
-<!-- Main Container (Clean White Canvas) -->
+<!-- Main Container (Centered Readable Layout with comfortable margin 0 auto) -->
 <div class="bg-white min-h-screen py-6 sm:py-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" style="margin: 0 auto;"
+         x-data="{ 
+             copied: false,
+             likesCount: {{ $news->likes_count ?? 0 }},
+             isLiked: {{ session()->has('liked_news_' . $news->id) ? 'true' : 'false' }},
+             async toggleLike() {
+                 try {
+                     const response = await fetch('{{ route('public.news.like', $news->slug) }}', {
+                         method: 'POST',
+                         headers: {
+                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                             'Content-Type': 'application/json',
+                             'Accept': 'application/json'
+                         }
+                     });
+                     const data = await response.json();
+                     if (data.success) {
+                         this.likesCount = data.likes_count;
+                         this.isLiked = data.is_liked;
+                     }
+                 } catch (e) {
+                     console.error(e);
+                 }
+             }
+         }">
 
         <!-- 2-Column Grid (Main Article 8 cols + Sidebar 4 cols) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 lg:items-start"
-              x-data="{ 
-                  copied: false,
-                  likesCount: {{ $news->likes_count ?? 0 }},
-                  isLiked: {{ session()->has('liked_news_' . $news->id) ? 'true' : 'false' }},
-                  async toggleLike() {
-                      try {
-                          const response = await fetch('{{ route('public.news.like', $news->slug) }}', {
-                              method: 'POST',
-                              headers: {
-                                  'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                  'Content-Type': 'application/json',
-                                  'Accept': 'application/json'
-                              }
-                          });
-                          const data = await response.json();
-                          if (data.success) {
-                              this.likesCount = data.likes_count;
-                              this.isLiked = data.is_liked;
-                          }
-                      } catch (e) {
-                          console.error(e);
-                      }
-                  }
-              }">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:items-start">
 
             <!-- ================= LEFT / MAIN ARTICLE COLUMN (col-span-8) ================= -->
             <article class="lg:col-span-8 space-y-6">
 
-                <!-- 1. Header Title & Meta Info Section -->
-                <div class="space-y-4 text-left">
+                <!-- 1. Header Title & Meta Info Section (Bersih tanpa garis berlebih) -->
+                <div class="space-y-3 text-left">
                     <!-- Route Breadcrumb (BERITA / Kategori) -->
                     <x-breadcrumbs :items="[
                         ['label' => 'BERITA', 'url' => route('public.news.index')],
@@ -253,52 +253,33 @@
                     ]" />
 
                     <!-- Title -->
-                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 leading-tight tracking-tight">
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 leading-tight tracking-tight pt-0.5">
                         {{ $news->title }}
                     </h1>
 
-                    <!-- Author & Meta Info Row (Avatar, Name, Category, Date, Views) -->
-                    <div class="flex items-center gap-3 text-xs sm:text-sm text-slate-500 font-medium flex-wrap">
-                        <!-- Profile Avatar & Name -->
-                        <div class="flex items-center gap-2">
-                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden shadow-xs">
-                                @if(file_exists(public_path('images/logo_catur.png')))
-                                    <img src="{{ asset('images/logo_catur.png') }}" alt="Logo Pemdes Catur" class="w-full h-full object-contain p-0.5 bg-white">
-                                @else
-                                    <span>P</span>
-                                @endif
-                            </div>
-                            <span class="font-bold text-slate-900">Admin Pemdes Catur</span>
+                    <!-- Author & Date Meta Row (Penulis di Kiri, Tanggal di Kanan, Tanpa Logo, Tanpa Kategori, & Bersih Tanpa Garis) -->
+                    <div class="flex items-center justify-between gap-4 text-xs sm:text-sm text-slate-500 font-medium pt-1 pb-1">
+                        <!-- Rata Kiri: Penulis (Logo dihilangkan) -->
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-slate-400">Oleh:</span>
+                            <span class="font-bold text-slate-900">{{ $news->author ?: 'Admin Pemdes Catur' }}</span>
                         </div>
 
-                        <span class="text-slate-300">•</span>
-
-                        <!-- Category -->
-                        <span class="text-slate-600 font-medium text-xs">
-                            {{ $news->category }}
-                        </span>
-
-                        <span class="text-slate-300">•</span>
-
-                        <!-- Published Date -->
-                        <span>{{ $news->published_at ? $news->published_at->translatedFormat('d F Y') : $news->created_at->translatedFormat('d F Y') }}</span>
-
-                        <span class="text-slate-300">•</span>
-
-                        <!-- Views Counter -->
-                        <span class="flex items-center gap-1 text-slate-500">
-                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        <!-- Rata Kanan: Tanggal Terbit -->
+                        <div class="flex items-center gap-1.5 text-slate-500 shrink-0 text-right">
+                            <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
-                            <span>{{ number_format($news->views_count ?? 0) }} dilihat</span>
-                        </span>
+                            <time datetime="{{ $news->published_at ? $news->published_at->toIso8601String() : $news->created_at->toIso8601String() }}">
+                                {{ $news->published_at ? $news->published_at->translatedFormat('d F Y') : $news->created_at->translatedFormat('d F Y') }}
+                            </time>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 2. Featured Image Card & Caption -->
-                <figure class="space-y-2">
-                    <div class="rounded-xl overflow-hidden border border-slate-100 bg-slate-50 shadow-xs relative"
+                <!-- 2. Featured Image Card & Caption with Thin Divider Line -->
+                <figure class="my-6 space-y-3">
+                    <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 shadow-xs relative"
                          x-data="{ loaded: false }"
                          x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
                         <img x-ref="img"
@@ -308,11 +289,11 @@
                              loading="eager"
                              decoding="async"
                              @load="loaded = true;"
-                             class="w-full h-auto max-h-[460px] object-cover transition-opacity duration-300"
+                             class="w-full h-auto max-h-[480px] object-cover transition-opacity duration-300"
                              :class="loaded ? 'opacity-100' : 'opacity-0'">
                     </div>
                     @if(!empty($news->image_caption))
-                        <figcaption class="text-xs sm:text-[13px] text-slate-500 italic text-center px-3 leading-relaxed flex items-center justify-center gap-1.5">
+                        <figcaption class="text-xs sm:text-[13px] text-slate-500 italic text-center px-3 leading-relaxed flex items-center justify-center gap-1.5 pt-0.5">
                             <svg class="w-3.5 h-3.5 text-slate-400 shrink-0 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -320,16 +301,19 @@
                             <span>{{ $news->image_caption }}</span>
                         </figcaption>
                     @endif
+
+                    <!-- Garis Tipis Pemisah di Bawah Keterangan Gambar Sampul Berita -->
+                    <div class="border-b border-slate-200/70 pt-2"></div>
                 </figure>
 
-                <!-- 3. Article Lead / Excerpt (Clean Editorial Flow) -->
+                <!-- 3. Article Lead / Excerpt -->
                 @if($news->excerpt)
-                    <p class="text-base sm:text-lg text-slate-600 font-medium leading-relaxed">
+                    <p class="text-base sm:text-lg text-slate-700 font-medium leading-relaxed my-5">
                         {{ $news->excerpt }}
                     </p>
                 @endif
 
-                <!-- 4. Article Body Content (Rich Text Formatting from Editor) -->
+                <!-- 4. Article Body Content -->
                 <div class="article-body-content pt-1">
                     @if(strip_tags($news->content) !== $news->content)
                         {!! $news->content !!}
@@ -338,22 +322,37 @@
                     @endif
                 </div>
 
-                <!-- 5. Bottom Action Bar (Icon-Only Like & Social Share) -->
-                <div class="pt-6 mt-8 border-t border-slate-100 flex items-center justify-between gap-3">
-                    <!-- Interactive Like Button (Icon + Counter) -->
-                    <button @click="toggleLike()" 
-                            class="inline-flex items-center gap-1.5 h-9 px-3 rounded-xl border transition-all cursor-pointer active:scale-95 text-xs font-semibold shadow-xs"
-                            :class="isLiked ? 'bg-[#0A3D29] text-white border-[#0A3D29]' : 'bg-slate-50 text-slate-700 border-slate-200/80 hover:bg-slate-100 hover:text-[#0A3D29]'"
-                            :title="isLiked ? 'Batal menyukai berita ini' : 'Sukai berita ini'"
-                            aria-label="Sukai berita">
-                        <svg class="w-4 h-4 transition-transform" :class="isLiked ? 'fill-current text-white scale-110' : 'fill-none stroke-current'" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 001.99-1.68l1.54-9A2 2 0 0017.72 9H14zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
-                        </svg>
-                        <span x-text="likesCount" class="font-bold">{{ number_format($news->likes_count ?? 0) }}</span>
-                    </button>
+                <!-- 5. Bottom Action Bar (Like Button + Keterangan Dilihat + Social Share) -->
+                <div class="pt-6 mt-10 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
+                    <!-- Kiri: Tombol Like & Keterangan Dilihat Berdampingan -->
+                    <div class="flex items-center gap-2.5 sm:gap-3">
+                        <!-- Interactive Like Button (Icon + Counter) -->
+                        <button @click="toggleLike()" 
+                                class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl border transition-all cursor-pointer active:scale-95 text-xs font-semibold shadow-xs"
+                                :class="isLiked ? 'bg-[#0A3D29] text-white border-[#0A3D29]' : 'bg-slate-50 text-slate-700 border-slate-200/80 hover:bg-slate-100 hover:text-[#0A3D29]'"
+                                :title="isLiked ? 'Batal menyukai berita ini' : 'Sukai berita ini'"
+                                aria-label="Sukai berita">
+                            <svg class="w-4 h-4 transition-transform" :class="isLiked ? 'fill-current text-white scale-110' : 'fill-none stroke-current'" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 001.99-1.68l1.54-9A2 2 0 0017.72 9H14zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
+                            </svg>
+                            <span x-text="likesCount" class="font-bold">{{ number_format($news->likes_count ?? 0) }}</span>
+                        </button>
 
-                    <!-- Streamlined Social Share Icons -->
+                        <!-- Keterangan Dilihat (Dipindahkan ke Sebelah Tombol Like) -->
+                        <div class="inline-flex items-center gap-1.5 h-9 px-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-semibold text-slate-600 shadow-xs select-none"
+                             title="{{ number_format($news->views_count ?? 0) }} kali dilihat">
+                            <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                            <span>{{ number_format($news->views_count ?? 0) }} dilihat</span>
+                        </div>
+                    </div>
+
+                    <!-- Kanan: Social Share Icons -->
                     <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-slate-400 mr-1 hidden sm:inline">Bagikan:</span>
+
                         <!-- WhatsApp -->
                         <a :href="'https://api.whatsapp.com/send?text=' + encodeURIComponent('{{ $news->title }} ' + window.location.href)" 
                            target="_blank" rel="noopener" 
@@ -401,15 +400,14 @@
 
             </article>
 
-
             <!-- ================= RIGHT / SIDEBAR COLUMN (col-span-4) ================= -->
             <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-24 lg:self-start lg:pl-2">
                 
-                <!-- Related Articles Block -->
+                <!-- Recent News Widget -->
                 <div class="space-y-4">
                     <div class="flex items-center justify-between pb-2 border-b border-slate-100">
                         <h3 class="font-bold text-base text-slate-900 tracking-tight">
-                            Berita Terkait
+                            Berita Terbaru
                         </h3>
                         <a href="{{ route('public.news.index') }}" class="text-xs font-semibold text-[#0A3D29] hover:underline">
                             Lihat semua →
@@ -427,7 +425,7 @@
                                 <a href="{{ route('public.news.show', $item->slug) }}" class="group flex gap-3.5 items-start p-2 -mx-2 rounded-xl hover:bg-slate-50 transition-colors">
                                     
                                     <!-- Image Thumbnail -->
-                                    <div class="w-24 h-20 rounded-xl overflow-hidden bg-slate-100 border border-slate-200/70 shrink-0 relative">
+                                    <div class="w-20 h-16 rounded-xl overflow-hidden bg-slate-100 border border-slate-200/70 shrink-0 relative">
                                         <img src="{{ $itemImageSrc }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                     </div>
 
@@ -449,13 +447,92 @@
                             @endforeach
                         </div>
                     @else
-                        <p class="text-xs text-slate-400 italic">Belum ada berita terkait lainnya.</p>
+                        <p class="text-xs text-slate-400 italic">Belum ada berita lainnya.</p>
                     @endif
                 </div>
 
             </aside>
 
         </div>
+
+        <!-- ================= BAGIAN BAWAH: BERITA TERKAIT (Berjajar beberapa kartu pada mode desktop) ================= -->
+        @php
+            $displayRelated = isset($relatedNews) && $relatedNews->count() > 0 ? $relatedNews : (isset($recentNews) ? $recentNews->take(3) : collect());
+        @endphp
+
+        @if($displayRelated->count() > 0)
+            <section class="mt-16 pt-10 border-t border-slate-200/80">
+                <!-- Section Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                            Berita Terkait
+                        </h2>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+                            Baca juga kabar dan informasi pilihan lainnya seputar Desa Catur
+                        </p>
+                    </div>
+                    <a href="{{ route('public.news.index') }}" 
+                       class="text-xs sm:text-sm font-semibold text-[#0A3D29] hover:underline inline-flex items-center gap-1 group shrink-0">
+                        <span>Lihat Semua</span>
+                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Kartu Berjajar di Desktop (grid-cols-1 sm:grid-cols-2 lg:grid-cols-3) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                    @foreach($displayRelated as $item)
+                        @php
+                            $itemImageSrc = $item->image_path 
+                                ? asset('storage/' . $item->image_path) 
+                                : asset($defaultImages[$item->id % count($defaultImages)]);
+                        @endphp
+                        <article class="group flex flex-col bg-white rounded-2xl border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition-all duration-200 overflow-hidden">
+                            <!-- Image Thumbnail -->
+                            <a href="{{ route('public.news.show', $item->slug) }}" class="block aspect-16/10 w-full overflow-hidden bg-slate-100 relative">
+                                <img src="{{ $itemImageSrc }}" 
+                                     alt="{{ $item->title }}" 
+                                     loading="lazy"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                <span class="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-white/95 text-[#0A3D29] backdrop-blur-xs shadow-xs">
+                                    {{ $item->category ?: 'Berita' }}
+                                </span>
+                            </a>
+
+                            <!-- Card Body -->
+                            <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                                <div class="space-y-1.5">
+                                    <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-[#0A3D29] transition-colors line-clamp-2 leading-snug">
+                                        <a href="{{ route('public.news.show', $item->slug) }}">
+                                            {{ $item->title }}
+                                        </a>
+                                    </h3>
+                                    @if($item->excerpt)
+                                        <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                                            {{ $item->excerpt }}
+                                        </p>
+                                    @endif
+                                </div>
+
+                                <!-- Card Footer: Date & Views -->
+                                <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium pt-2.5 border-t border-slate-100">
+                                    <span>{{ $item->published_at ? $item->published_at->translatedFormat('d M Y') : $item->created_at->translatedFormat('d M Y') }}</span>
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                        <span>{{ number_format($item->views_count ?? 0) }}</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+            </section>
+        @endif
 
     </div>
 </div>

@@ -10,16 +10,154 @@
      x-data="{ 
          filterOpen: false, 
          activeModal: false, 
+         backdropVisible: false,
+         isClosing: false,
          activeImage: '', 
          activeTitle: '', 
          activeCaption: '', 
          activeDate: '', 
          activeCategory: '', 
          activeUrl: '',
-         isReady: false
+         isReady: false,
+         originElement: null,
+         originRect: null,
+         touchTimer: null,
+         touchStartX: 0,
+         touchStartY: 0,
+         longPressTriggered: false,
+
+         openLightbox(e, data) {
+             if (this.activeModal) return;
+
+             const card = e ? (e.currentTarget || e.target) : null;
+             this.originElement = card;
+             const img = (card && card.querySelector) ? (card.querySelector('img') || card) : card;
+             this.originRect = (img && img.getBoundingClientRect) ? img.getBoundingClientRect() : null;
+
+             this.activeImage = data.image;
+             this.activeTitle = data.title;
+             this.activeCaption = data.caption;
+             this.activeDate = data.date;
+             this.activeCategory = data.category;
+             this.activeUrl = data.url;
+             this.isClosing = false;
+             this.backdropVisible = false;
+             this.activeModal = true;
+
+             this.$nextTick(() => {
+                 const modal = this.$refs.modalCard;
+                 if (!modal) return;
+
+                 if (this.originRect) {
+                     const targetRect = modal.getBoundingClientRect();
+                     if (targetRect.width > 0 && targetRect.height > 0) {
+                         const scaleX = this.originRect.width / targetRect.width;
+                         const scaleY = this.originRect.height / targetRect.height;
+                         const transX = (this.originRect.left + this.originRect.width / 2) - (targetRect.left + targetRect.width / 2);
+                         const transY = (this.originRect.top + this.originRect.height / 2) - (targetRect.top + targetRect.height / 2);
+
+                         modal.style.transition = 'none';
+                         modal.style.transformOrigin = 'center center';
+                         modal.style.transform = `translate3d(${transX}px, ${transY}px, 0) scale(${scaleX}, ${scaleY})`;
+                         modal.style.opacity = '0.5';
+                         modal.style.willChange = 'transform, opacity';
+                     }
+                 }
+
+                 // Reflow agar posisi awal terdaftar di browser
+                 void modal.offsetHeight;
+
+                 requestAnimationFrame(() => {
+                     this.backdropVisible = true;
+                     modal.style.transition = 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 320ms ease-out';
+                     modal.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
+                     modal.style.opacity = '1';
+                 });
+             });
+         },
+
+         closeLightbox() {
+             if (this.isClosing || !this.activeModal) return;
+             this.isClosing = true;
+             this.backdropVisible = false;
+
+             const modal = this.$refs.modalCard;
+             if (modal) {
+                 let rect = this.originRect;
+                 if (this.originElement && this.originElement.isConnected) {
+                     const img = (this.originElement.querySelector) ? (this.originElement.querySelector('img') || this.originElement) : this.originElement;
+                     if (img && img.getBoundingClientRect) {
+                         rect = img.getBoundingClientRect();
+                     }
+                 }
+
+                 if (rect) {
+                     const targetRect = modal.getBoundingClientRect();
+                     const scaleX = rect.width / targetRect.width;
+                     const scaleY = rect.height / targetRect.height;
+                     const transX = (rect.left + rect.width / 2) - (targetRect.left + targetRect.width / 2);
+                     const transY = (rect.top + rect.height / 2) - (targetRect.top + targetRect.height / 2);
+
+                     modal.style.transition = 'transform 320ms cubic-bezier(0.16, 1, 0.3, 1), opacity 260ms ease-in';
+                     modal.style.transform = `translate3d(${transX}px, ${transY}px, 0) scale(${scaleX}, ${scaleY})`;
+                     modal.style.opacity = '0';
+                 } else {
+                     modal.style.transition = 'transform 260ms ease-in, opacity 260ms ease-in';
+                     modal.style.transform = 'scale(0.7)';
+                     modal.style.opacity = '0';
+                 }
+             }
+
+             // Unmount hanya setelah animasi menyusut ke tepat asal foto selesai 100% (tanpa kedip/reset transform)
+             setTimeout(() => {
+                 this.activeModal = false;
+                 this.isClosing = false;
+             }, 330);
+         },
+
+         handleTouchStart(e, data) {
+             if (!e.touches || e.touches.length !== 1) return;
+             this.longPressTriggered = false;
+             this.touchStartX = e.touches[0].clientX;
+             this.touchStartY = e.touches[0].clientY;
+
+             if (this.touchTimer) clearTimeout(this.touchTimer);
+             this.touchTimer = setTimeout(() => {
+                 this.longPressTriggered = true;
+                 if (navigator.vibrate) {
+                     try { navigator.vibrate(40); } catch(err) {}
+                 }
+                 this.openLightbox(e, data);
+             }, 450);
+         },
+
+         handleTouchMove(e) {
+             if (!this.touchTimer) return;
+             const moveX = e.touches[0].clientX;
+             const moveY = e.touches[0].clientY;
+             if (Math.hypot(moveX - this.touchStartX, moveY - this.touchStartY) > 10) {
+                 clearTimeout(this.touchTimer);
+                 this.touchTimer = null;
+             }
+         },
+
+         handleTouchEnd() {
+             if (this.touchTimer) {
+                 clearTimeout(this.touchTimer);
+                 this.touchTimer = null;
+             }
+         },
+
+         handleClick(e, data) {
+             if (this.longPressTriggered) {
+                 this.longPressTriggered = false;
+                 return;
+             }
+             this.openLightbox(e, data);
+         }
      }"
      x-init="$nextTick(() => { setTimeout(() => { isReady = true; }, 120); })"
-     @keydown.escape.window="activeModal = false">
+     @keydown.escape.window="closeLightbox()">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
@@ -229,18 +367,21 @@
                                 $formattedDate = $item->published_at ? $item->published_at->translatedFormat('d F Y') : $item->created_at->translatedFormat('d F Y');
                                 $newsUrl = route('public.news.show', $item->slug);
                                 $currentAspect = $aspectRhythms[$loop->index % count($aspectRhythms)];
+                                $galleryData = [
+                                    'image' => $imgUrl,
+                                    'title' => $item->title,
+                                    'caption' => $item->image_caption ?? $item->excerpt ?? '',
+                                    'date' => $formattedDate,
+                                    'category' => $item->category ?? 'Berita Desa',
+                                    'url' => $newsUrl,
+                                ];
                             @endphp
 
-                            <div class="break-inside-avoid mb-4 sm:mb-5 lg:mb-6 group relative {{ $currentAspect }} rounded-lg overflow-hidden bg-slate-900/5 shadow-xs hover:shadow-2xl transition-all duration-500 cursor-pointer"
-                                 @click="
-                                    activeModal = true; 
-                                    activeImage = '{{ $imgUrl }}'; 
-                                    activeTitle = '{{ addslashes($item->title) }}'; 
-                                    activeCaption = '{{ addslashes($item->image_caption ?? $item->excerpt ?? '') }}'; 
-                                    activeDate = '{{ $formattedDate }}'; 
-                                    activeCategory = '{{ addslashes($item->category ?? 'Berita Desa') }}'; 
-                                    activeUrl = '{{ $newsUrl }}';
-                                 ">
+                            <div class="break-inside-avoid mb-4 sm:mb-5 lg:mb-6 group relative {{ $currentAspect }} rounded-xl overflow-hidden bg-slate-900/5 shadow-xs hover:shadow-2xl transition-all duration-500 cursor-pointer select-none"
+                                 @touchstart="handleTouchStart($event, @js($galleryData))"
+                                 @touchmove="handleTouchMove($event)"
+                                 @touchend="handleTouchEnd()"
+                                 @click="handleClick($event, @js($galleryData))">
                                 
                                 <!-- Foto Sebagai Fokus Utama (Tidak terdistorsi dengan object-cover & Zoom-in halus saat hover) -->
                                 <img src="{{ $imgUrl }}" 
@@ -295,57 +436,69 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- LIGHTBOX PREVIEW MODAL (GLASSMORPHISM BURAM MEMBIASKAN GALERI)             -->
+    <!-- LIGHTBOX PREVIEW MODAL (MINIMALIS, ELEGAN & ANIMASI MENGALIR)             -->
     <!-- ========================================================================= -->
     <div x-show="activeModal" 
          x-cloak 
-         class="fixed inset-0 z-[100000] flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-black/60 backdrop-blur-xs overflow-y-auto"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         @click="activeModal = false">
+         class="fixed inset-0 z-[100000] flex items-center justify-center p-3 sm:p-5 lg:p-6 transition-all duration-300 ease-out overflow-hidden"
+         :class="backdropVisible ? 'bg-black/80 backdrop-blur-md opacity-100' : 'bg-black/0 backdrop-blur-none opacity-0 pointer-events-none'"
+         @click.self="closeLightbox()">
         
-        <div class="relative max-w-3xl w-full rounded-lg overflow-hidden shadow-2xl border border-white/30 flex flex-col max-h-[90vh] my-auto bg-slate-900/20 backdrop-blur-md" 
-             @click.stop
-             x-transition:enter="transition ease-out duration-200"
-             x-transition:enter-start="opacity-0 scale-95"
-             x-transition:enter-end="opacity-100 scale-100">
+        <!-- Modal Card Utama: Membesar Tepat dari Asal Foto dan Menutup Kembali ke Asal Foto -->
+        <div x-ref="modalCard"
+             class="relative max-w-4xl w-full rounded-2xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] bg-neutral-900 border border-white/10 flex flex-col my-auto select-none will-change-transform opacity-0" 
+             @click.stop>
             
-            <!-- Tombol Silang Menyesuaikan Latar untuk Keterbacaan yang Baik -->
-            <button @click="activeModal = false" 
+            <!-- Tombol Silang Minimalis & Elegan -->
+            <button @click.prevent.stop="closeLightbox()" 
                     type="button"
-                    title="Tutup"
-                    class="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center shadow-lg backdrop-blur-md border border-white/30 transition-all duration-200 focus:outline-none">
+                    title="Tutup (Esc)"
+                    class="absolute top-3.5 right-3.5 z-30 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/45 hover:bg-black/75 text-white/80 hover:text-white flex items-center justify-center backdrop-blur-md border border-white/15 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none cursor-pointer">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
 
-            <!-- Photo Display Area - Mengepaskan Frame Proporsional (Object Cover) -->
-            <div class="relative w-full aspect-[16/10] max-h-[65vh] bg-black/40 overflow-hidden">
+            <!-- Photo Display Area - Menampilkan Foto Utuh Tanpa Terpotong (Minimalis Bersih) -->
+            <div class="relative w-full max-h-[66vh] sm:max-h-[72vh] min-h-[220px] sm:min-h-[360px] bg-neutral-950 flex items-center justify-center overflow-hidden">
+                <!-- Ambient Blur Background (Membias Warna Foto dengan Halus & Mewah) -->
+                <img :src="activeImage" 
+                     aria-hidden="true" 
+                     class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-20 scale-110 select-none pointer-events-none">
+                
+                <!-- Foto Utama -->
                 <img :src="activeImage" 
                      :alt="activeTitle" 
-                     class="w-full h-full object-cover select-none">
+                     class="relative z-10 max-h-[66vh] sm:max-h-[72vh] w-auto max-w-full object-contain select-none shadow-2xl">
             </div>
 
-            <!-- Latar Bagian Judul & Tanggal Bergaya Kaca Buram Glassmorphism (Membiaskan Halaman Galeri) -->
-            <div class="px-5 py-4 bg-white/85 backdrop-blur-xl border-t border-white/40 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-                <div class="min-w-0 flex-1 space-y-1">
-                    <span class="inline-block text-[11px] sm:text-xs text-slate-500 font-medium" x-text="activeDate"></span>
-                    <h3 class="font-serif text-sm sm:text-base font-bold text-slate-900 leading-snug line-clamp-none sm:line-clamp-2" x-text="activeTitle"></h3>
+            <!-- Latar Bagian Info & Tombol (Dapat diklik di seluruh area langsung mengarah ke berita) -->
+            <a :href="activeUrl" 
+               x-show="activeUrl"
+               title="Buka berita terkait"
+               class="group/footer px-5 sm:px-6 py-4 sm:py-5 bg-white/95 sm:hover:bg-slate-100/90 active:bg-slate-200/90 active:scale-[0.99] transition-all duration-200 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 cursor-pointer select-none block no-underline text-inherit">
+                <div class="min-w-0 flex-1 space-y-1 sm:space-y-1.5">
+                    <div class="flex items-center gap-2 text-[11px] sm:text-xs text-slate-500 font-medium">
+                        <span x-text="activeDate"></span>
+                        <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                        <span class="text-[#0A3D29] font-semibold" x-text="activeCategory"></span>
+                    </div>
+                    <h3 class="font-serif text-sm sm:text-base lg:text-lg font-bold text-slate-900 sm:group-hover/footer:text-[#0A3D29] transition-colors leading-snug line-clamp-2" x-text="activeTitle"></h3>
                 </div>
-                <a :href="activeUrl" 
-                   x-show="activeUrl"
-                   class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-md border border-[#0A3D29] text-[#0A3D29] hover:bg-[#0A3D29]/5 text-xs font-semibold transition-colors shrink-0">
-                    <span>Lihat Berita</span>
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                
+                <!-- Tombol Lihat Berita: Tanpa Pembungkus, Mengikuti Latar, Animasi Saat Hover Desktop / Tap Mobile -->
+                <div class="group/btn inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#0A3D29] sm:group-hover/footer:text-[#072B1D] transition-colors duration-200 self-start sm:self-auto py-1 shrink-0">
+                    <span class="relative py-0.5">
+                        <span>Lihat Berita</span>
+                        <!-- Garis Animasi Bawah yang Mengalir Halus Saat Hover Desktop -->
+                        <span class="absolute left-0 bottom-0 w-0 h-[1.5px] bg-[#0A3D29] sm:group-hover/footer:w-full transition-all duration-300 ease-out"></span>
+                    </span>
+                    <!-- Ikon Panah dengan Animasi Nudge/Geser Halus Saat Hover Desktop -->
+                    <svg class="w-4 h-4 transform sm:group-hover/footer:translate-x-1.5 transition-transform duration-300 ease-out text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                     </svg>
-                </a>
-            </div>
+                </div>
+            </a>
 
         </div>
 
