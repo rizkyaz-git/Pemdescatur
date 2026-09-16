@@ -10,6 +10,7 @@ use App\Models\News;
 use App\Models\NewsCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -57,6 +58,11 @@ class NewsController extends Controller
             $data['published_at'] = now();
         }
 
+        // Antisipasi jika migration belum dijalankan di server database target
+        if (isset($data['author']) && !Schema::hasColumn('news', 'author')) {
+            unset($data['author']);
+        }
+
         News::create($data);
 
         return redirect()->route('admin.news.index')
@@ -90,6 +96,11 @@ class NewsController extends Controller
                 Storage::disk('public')->delete($news->image_path);
             }
             $data['image_path'] = $request->file('image')->store('news', 'public');
+        }
+
+        // Antisipasi jika migration belum dijalankan di server database target
+        if (isset($data['author']) && !Schema::hasColumn('news', 'author')) {
+            unset($data['author']);
         }
 
         $news->update($data);
