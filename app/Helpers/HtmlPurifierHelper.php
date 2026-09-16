@@ -29,18 +29,22 @@ class HtmlPurifierHelper
         try {
             $config = HTMLPurifier_Config::createDefault();
 
-            // Izinkan elemen HTML yang umum dipakai oleh Quill editor
+            // Izinkan elemen HTML dan atribut class/style yang umum dipakai oleh Quill editor (perataan teks ql-align-justify, ql-indent, dll)
             $config->set('HTML.Allowed',
-                'h1,h2,h3,h4,h5,h6,p[style],ul,ol,li,blockquote,'
-                . 'a[href|target|rel],strong,b,em,i,u,s,del,br,'
+                'h1[class|style],h2[class|style],h3[class|style],h4[class|style],h5[class|style],h6[class|style],'
+                . 'p[class|style],ul[class|style],ol[class|style],li[class|style],blockquote[class|style],'
+                . 'a[href|target|rel|class|style],strong,b,em,i,u,s,del,br,'
                 . 'img[src|alt|width|height|class|style],'
-                . 'table,thead,tbody,tr,td[colspan|rowspan|style],th[colspan|rowspan|style],'
-                . 'hr,code,pre,span[class|style],div[class|style]'
+                . 'table[class|style],thead[class|style],tbody[class|style],tr[class|style],td[colspan|rowspan|style|class],th[colspan|rowspan|style|class],'
+                . 'hr,code[class|style],pre[class|style],span[class|style],div[class|style]'
             );
+
+            // Izinkan semua class yang aman dari Quill editor (ql-align-justify, ql-align-center, ql-indent-*, dll)
+            $config->set('Attr.AllowedClasses', null);
 
             // Izinkan style terbatas (Quill sering memakai inline style)
             $config->set('CSS.AllowedProperties', [
-                'text-align', 'color', 'background-color', 'font-size',
+                'text-align', 'text-justify', 'color', 'background-color', 'font-size',
                 'font-weight', 'font-style', 'text-decoration',
                 'margin', 'margin-top', 'margin-bottom', 'margin-left', 'margin-right',
                 'padding', 'padding-top', 'padding-bottom', 'padding-left', 'padding-right',
