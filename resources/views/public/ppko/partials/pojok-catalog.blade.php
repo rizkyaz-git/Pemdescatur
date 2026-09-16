@@ -123,20 +123,20 @@
 
         /* ─── Responsive Title & Number Pojok (Single Line UMKM Mobile) ─── */
         .pojok-title-umkm {
-            font-size: clamp(0.92rem, 4.1vw, 1.45rem);
+            font-size: clamp(0.88rem, 4vw, 1.45rem);
             white-space: nowrap;
         }
 
         .pojok-num-umkm {
-            font-size: clamp(1rem, 4.3vw, 1.55rem);
+            font-size: clamp(0.98rem, 4.2vw, 1.55rem);
         }
 
         .pojok-title-standard {
-            font-size: clamp(1.4rem, 5.5vw, 5rem);
+            font-size: clamp(1.35rem, 5.4vw, 3rem);
         }
 
         .pojok-num-standard {
-            font-size: clamp(1.5rem, 5.8vw, 5rem);
+            font-size: clamp(1.45rem, 5.6vw, 3rem);
         }
 
         @media (min-width: 640px) {
@@ -264,7 +264,7 @@
 
     <div id="katalog-pojok-container" class="w-full">
         <!-- Eyebrow Pengantar: Jeda Menuju Seksi Pojok (Tengah Halaman) -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center text-center pt-3 sm:pt-4 lg:pt-6 pb-2 sm:pb-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center text-center pt-2 sm:pt-3 lg:pt-4 pb-3 sm:pb-4 lg:pb-5">
             <p class="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#0A3D29] select-none text-center">
                 5 POJOK PEMBERDAYAAN CATUR CERDAS
             </p>
@@ -375,7 +375,7 @@
             @endphp
 
             <section id="{{ $slugId }}"
-                class="w-full relative scroll-mt-28 md:scroll-mt-36 {{ $loop->first ? 'pt-4 sm:pt-6 lg:pt-8 pb-[clamp(2.5rem,1.5rem+2.5vw,4.75rem)]' : 'ppko-section-spacing' }} flex flex-col justify-center ppko-section-entrance overflow-hidden {{ $isDark ? 'bg-[#0A3D29] text-white' : 'bg-white text-slate-900' }}">
+                class="w-full relative scroll-mt-28 md:scroll-mt-36 {{ $loop->first ? 'pt-2 sm:pt-3 lg:pt-4 pb-[clamp(2.5rem,1.5rem+2.5vw,4.75rem)]' : 'ppko-section-spacing' }} flex flex-col justify-center ppko-section-entrance overflow-hidden {{ $isDark ? 'bg-[#0A3D29] text-white' : 'bg-white text-slate-900' }}">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
 
                     <!-- MAIN GRID: SELANG-SELING KIRI KANAN (Ganjil: Teks Kiri, Foto Kanan | Genap: Foto Kiri, Teks Kanan) -->
@@ -537,7 +537,7 @@
 
                         <!-- AREA KONTEN UTAMA DENGAN TRANSISI TINGGI YANG KONTINU & MULUS -->
                         <div x-ref="contentBox" style="overflow-anchor: none;"
-                            class="relative w-full grid grid-cols-1 grid-rows-1 items-start min-h-0 sm:min-h-[280px] md:min-h-[220px] lg:min-h-[200px]">
+                            class="relative w-full grid grid-cols-1 grid-rows-1 items-start min-h-0 sm:min-h-[260px] md:min-h-[220px] lg:min-h-[220px]">
 
                             <!-- VIEW 1: TEKS DESKRIPSI POJOK (DEFAULT) -->
                             <div x-ref="view1" x-show="!expanded"
@@ -673,13 +673,13 @@
                         </div>
 
                         <!-- TRIGGER BAR DI BAGIAN BAWAH: GARIS HORIZONTAL DI ATAS, TEKS & ARROW DI BAWAH GARIS -->
-                        <div class="pt-4 sm:pt-6 w-full flex flex-col items-center harmoni-desc-animate harmoni-desc-delay-2">
+                        <div class="pt-4 sm:pt-5 lg:pt-6 w-full flex flex-col items-center harmoni-desc-animate harmoni-desc-delay-2">
                             <div class="h-px w-full {{ $isDark ? 'bg-white/15' : 'bg-[#DCE6DA]' }} mb-3"></div>
 
                             <button type="button" @click="toggleExpanded($el)"
                                 class="inline-flex items-center justify-center gap-2 cursor-pointer select-none group focus:outline-none pt-0.5 pb-1 px-4"
                                 title="Klik untuk membuka/menutup selengkapnya">
-                                <span class="font-sans font-bold italic text-xs sm:text-sm lg:text-[15px] tracking-tight transition-colors {{ $isDark ? 'text-white group-hover:text-emerald-300' : 'text-[#20332A] group-hover:text-[#0A3D29]' }}">
+                                <span class="font-sans font-bold italic text-xs sm:text-sm lg:text-[14.5px] tracking-tight transition-colors {{ $isDark ? 'text-white group-hover:text-emerald-300' : 'text-[#20332A] group-hover:text-[#0A3D29]' }}">
                                     Pelajari selengkapnya tentang {{ strtolower($pojok->nama) }}
                                 </span>
 
@@ -811,7 +811,8 @@
                                         <div x-show="!imgLoaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
                                         <img x-ref="sImgC3" src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}" loading="lazy" decoding="async"
                                             x-on:load="imgLoaded = true;"
-                                            class="w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300"
+                                            onerror="this.onerror=null; this.src='{{ asset('images/cover_ppko.png') }}';"
+                                            class="w-full h-full object-cover object-center select-none pointer-events-none transition-opacity duration-300"
                                             :class="imgLoaded ? 'opacity-100' : 'opacity-0'" draggable="false">
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-10"></div>
                                     </div>
@@ -823,7 +824,8 @@
                                         <div x-show="!imgLoaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
                                         <img x-ref="sImg1" src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}" loading="lazy" decoding="async"
                                             x-on:load="imgLoaded = true;"
-                                            class="w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300"
+                                            onerror="this.onerror=null; this.src='{{ asset('images/cover_ppko.png') }}';"
+                                            class="w-full h-full object-cover object-center select-none pointer-events-none transition-opacity duration-300"
                                             :class="imgLoaded ? 'opacity-100' : 'opacity-0'" draggable="false">
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-10"></div>
                                     </div>
@@ -835,7 +837,8 @@
                                         <div x-show="!imgLoaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
                                         <img x-ref="sImg2" src="{{ $cardImg2 }}" alt="Foto 2 {{ $pojok->nama }}" loading="lazy" decoding="async"
                                             x-on:load="imgLoaded = true;"
-                                            class="w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300"
+                                            onerror="this.onerror=null; this.src='{{ asset('images/cover_ppko.png') }}';"
+                                            class="w-full h-full object-cover object-center select-none pointer-events-none transition-opacity duration-300"
                                             :class="imgLoaded ? 'opacity-100' : 'opacity-0'" draggable="false">
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-10"></div>
                                     </div>
@@ -847,7 +850,8 @@
                                         <div x-show="!imgLoaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
                                         <img x-ref="sImg3" src="{{ $cardImg3 }}" alt="Foto 3 {{ $pojok->nama }}" loading="lazy" decoding="async"
                                             x-on:load="imgLoaded = true;"
-                                            class="w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300"
+                                            onerror="this.onerror=null; this.src='{{ asset('images/cover_ppko.png') }}';"
+                                            class="w-full h-full object-cover object-center select-none pointer-events-none transition-opacity duration-300"
                                             :class="imgLoaded ? 'opacity-100' : 'opacity-0'" draggable="false">
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-10"></div>
                                     </div>
@@ -859,7 +863,8 @@
                                         <div x-show="!imgLoaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
                                         <img x-ref="sImgC1" src="{{ $cardImg1 }}" alt="Foto 1 {{ $pojok->nama }}" loading="lazy" decoding="async"
                                             x-on:load="imgLoaded = true;"
-                                            class="w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300"
+                                            onerror="this.onerror=null; this.src='{{ asset('images/cover_ppko.png') }}';"
+                                            class="w-full h-full object-cover object-center select-none pointer-events-none transition-opacity duration-300"
                                             :class="imgLoaded ? 'opacity-100' : 'opacity-0'" draggable="false">
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-10"></div>
                                     </div>
@@ -887,7 +892,7 @@
                             <div class="pojok-slider-desc-bar flex items-center justify-between gap-3.5 px-1.5">
 
                                 <!-- Bagian Kiri: Teks Deskripsi Gambar -->
-                                <div class="relative flex-1 min-h-[34px] sm:min-h-[38px] grid grid-cols-1 grid-rows-1 items-center overflow-hidden">
+                                <div class="relative flex-1 min-h-[32px] sm:min-h-[36px] grid grid-cols-1 grid-rows-1 items-center overflow-hidden">
                                     @foreach($cardDescs as $idx => $desc)
                                         <div x-show="realIndex === {{ $idx }}"
                                             x-transition:enter="transition-opacity duration-300 ease-out delay-150"
@@ -898,7 +903,7 @@
                                             x-transition:leave-end="opacity-0"
                                             class="col-start-1 row-start-1 flex items-center pr-2">
 
-                                            <p class="text-xs sm:text-[13px] leading-snug font-medium italic {{ $isDark ? 'text-white/85' : 'text-slate-600' }} line-clamp-2">
+                                            <p class="text-[11.5px] sm:text-[12.5px] leading-snug font-normal italic {{ $isDark ? 'text-white/75' : 'text-slate-500' }} line-clamp-2">
                                                 {{ $desc }}
                                             </p>
                                         </div>
