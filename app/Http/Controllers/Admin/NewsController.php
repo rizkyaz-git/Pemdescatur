@@ -45,11 +45,6 @@ class NewsController extends Controller
         // Sanitasi konten Quill untuk mencegah Stored XSS
         $data['content'] = HtmlPurifierHelper::clean($data['content']);
 
-        // Fallback otomatis excerpt dari konten jika tidak ada input ringkasan
-        if (empty($data['excerpt'])) {
-            $data['excerpt'] = Str::limit(strip_tags($data['content']), 150);
-        }
-
         if ($request->hasFile('image')) {
             $data['image_path'] = $request->file('image')->store('news', 'public');
         }
@@ -81,11 +76,6 @@ class NewsController extends Controller
 
         // Sanitasi konten Quill untuk mencegah Stored XSS
         $data['content'] = HtmlPurifierHelper::clean($data['content']);
-
-        // Fallback otomatis excerpt dari konten jika tidak ada input ringkasan
-        if (empty($data['excerpt'])) {
-            $data['excerpt'] = Str::limit(strip_tags($data['content']), 150);
-        }
 
         if ($news->title !== $data['title']) {
             $data['slug'] = Str::slug($data['title']) . '-' . Str::random(5);

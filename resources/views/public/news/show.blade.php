@@ -302,15 +302,8 @@
                     <div class="border-b border-slate-200/70 pt-2"></div>
                 </figure>
 
-                <!-- 3. Article Lead / Excerpt -->
-                @if($news->excerpt)
-                    <p class="text-base sm:text-lg text-slate-700 font-medium leading-relaxed my-5">
-                        {{ $news->excerpt }}
-                    </p>
-                @endif
-
-                <!-- 4. Article Body Content -->
-                <div class="article-body-content pt-1">
+                <!-- 3. Article Body Content -->
+                <div class="article-body-content pt-4">
                     @if(strip_tags($news->content) !== $news->content)
                         {!! $news->content !!}
                     @else
@@ -464,9 +457,6 @@
                         <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
                             Berita Terkait
                         </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">
-                            Kabar dan informasi pilihan lainnya seputar Desa Catur
-                        </p>
                     </div>
                     <a href="{{ route('public.news.index') }}" 
                        class="text-xs font-semibold text-[#0A3D29] hover:underline inline-flex items-center gap-1 group shrink-0">
