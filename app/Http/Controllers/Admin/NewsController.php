@@ -25,6 +25,12 @@ class NewsController extends Controller
         if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . trim($request->search) . '%');
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
 
         $newsList = $query->latest()->paginate(10)->withQueryString();
 
