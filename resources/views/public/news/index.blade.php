@@ -55,7 +55,7 @@
                                     @endfor
                                 </div>
                                 <div class="lg:col-span-6 space-y-3">
-                                    <div class="w-full aspect-[16/10] rounded-lg skeleton-shimmer"></div>
+                                    <div class="w-full h-56 sm:h-64 lg:h-72 xl:h-80 rounded-lg skeleton-shimmer"></div>
                                     <div class="w-24 h-4 rounded skeleton-shimmer"></div>
                                     <div class="w-3/4 h-6 rounded skeleton-shimmer"></div>
                                 </div>
@@ -166,8 +166,8 @@
                                         <article class="group block h-full flex flex-col justify-between">
                                             <a href="{{ route('public.news.show', $latestNews->slug) }}"
                                                 class="block h-full flex flex-col justify-between focus:outline-none">
-                                                <!-- Image Utama: diselaraskan agar total tinggi sejajar dengan 4 daftar kiri -->
-                                                <div class="relative w-full h-44 sm:h-48 lg:h-52 overflow-hidden rounded-lg bg-slate-100 mb-3 shrink-0">
+                                                <!-- Image Utama: diperbesar untuk mengisi ruang dan menjadi focal point editorial yang megah -->
+                                                <div class="relative w-full h-56 sm:h-64 lg:h-72 xl:h-80 overflow-hidden rounded-lg bg-slate-100 mb-3 shrink-0">
                                                     <img src="{{ $lImg }}" alt="{{ $latestNews->title }}"
                                                         class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500">
                                                 </div>
