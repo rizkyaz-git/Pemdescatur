@@ -28,9 +28,12 @@ class SettingController extends Controller
             'library_desktop_image_path' => Setting::get('library_desktop_image_path'),
             'library_tablet_image_path' => Setting::get('library_tablet_image_path'),
             'library_mobile_image_path' => Setting::get('library_mobile_image_path'),
+            'featured_news_id' => Setting::get('featured_news_id'),
         ];
 
-        return view('admin.settings.edit', compact('settings'));
+        $publishedNews = \App\Models\News::where('status', 'published')->latest()->get();
+
+        return view('admin.settings.edit', compact('settings', 'publishedNews'));
     }
 
     public function update(UpdateSettingsRequest $request): RedirectResponse
@@ -48,6 +51,7 @@ class SettingController extends Controller
         Setting::set('library_url', $validated['library_url']);
         Setting::set('hero_title', $validated['hero_title'] ?? '');
         Setting::set('hero_subtitle', $validated['hero_subtitle'] ?? '');
+        Setting::set('featured_news_id', $validated['featured_news_id'] ?? null);
 
         if ($request->hasFile('village_logo')) {
             $oldLogo = Setting::get('village_logo_path');

@@ -37,7 +37,58 @@ class NewsController extends Controller
         $newsList = $query->paginate(12)->withQueryString();
         $categories = News::where('status', 'published')->distinct()->pluck('category')->filter()->values();
 
-        return view('public.news.index', compact('newsList', 'categories'));
+        // 1. Berita Disarankan (Acak per sesi)
+        $suggestedIds = session()->get('suggested_news_ids', []);
+        if (!is_array($suggestedIds) || empty($suggestedIds)) {
+            $suggestedIds = News::where('status', 'published')
+                ->inRandomOrder()
+                ->take(3)
+                ->pluck('id')
+                ->toArray();
+            session()->put('suggested_news_ids', $suggestedIds);
+        }
+
+        $suggestedNews = News::where('status', 'published')
+            ->whereIn('id', $suggestedIds)
+            ->get();
+
+        if ($suggestedNews->count() > 0) {
+            $suggestedNews = $suggestedNews->sortBy(function ($item) use ($suggestedIds) {
+                return array_search($item->id, $suggestedIds);
+            })->values();
+        }
+
+        if ($suggestedNews->count() < 3) {
+            $fallbackSuggested = News::where('status', 'published')
+                ->whereNotIn('id', $suggestedNews->pluck('id'))
+                ->orderBy('published_at', 'desc')
+                ->take(3 - $suggestedNews->count())
+                ->get();
+            $suggestedNews = $suggestedNews->concat($fallbackSuggested);
+        }
+
+        // 2. Berita Utama (Dapat di-set admin via pengaturan/tabel berita)
+        $featuredId = \App\Models\Setting::get('featured_news_id');
+        $latestNews = null;
+        if ($featuredId) {
+            $latestNews = News::where('status', 'published')->find($featuredId);
+        }
+        if (!$latestNews) {
+            $latestNews = News::where('status', 'published')
+                ->orderBy('published_at', 'desc')
+                ->first();
+        }
+
+        // 3. Berita Sering Dilihat (Bagian kanan, urut views_count)
+        $popularNews = News::where('status', 'published')
+            ->orderBy('views_count', 'desc')
+            ->orderBy('published_at', 'desc')
+            ->take(5)
+            ->get();
+
+        $weather = app(\App\Services\BmkgWeatherService::class)->getCurrentWeather();
+
+        return view('public.news.index', compact('newsList', 'categories', 'suggestedNews', 'latestNews', 'popularNews', 'weather'));
     }
 
     public function show(string $slug): View

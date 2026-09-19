@@ -28,6 +28,7 @@ class UpdateSettingsRequest extends FormRequest
             'library_desktop_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'library_tablet_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'library_mobile_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'featured_news_id' => ['nullable', 'exists:news,id'],
         ];
     }
 }

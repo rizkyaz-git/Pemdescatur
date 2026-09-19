@@ -165,6 +165,35 @@
                     </div>
                 </div>
 
+                <!-- Block 4: Pengaturan Berita Utama (Featured Headline) -->
+                <div class="p-6 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0] space-y-4">
+                    <div class="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
+                        <h3 class="font-jakarta font-bold text-base text-slate-900 flex items-center gap-2">
+                            <span>Berita Utama (Headline Halaman Berita)</span>
+                        </h3>
+                        <span class="text-xs font-semibold text-slate-400">Portal Berita</span>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                            Pilih Berita yang Dijadikan Berita Utama
+                        </label>
+                        <select name="featured_news_id" class="w-full rounded-xl border-[#E2E8F0] focus:border-[#0F4C3A] focus:ring-[#0F4C3A] text-xs p-3 bg-white shadow-xs">
+                            <option value="">-- Otomatis (Berita Terakhir yang Diterbitkan) --</option>
+                            @if(isset($publishedNews))
+                                @foreach($publishedNews as $pNews)
+                                    <option value="{{ $pNews->id }}" {{ (string) old('featured_news_id', $settings['featured_news_id']) === (string) $pNews->id ? 'selected' : '' }}>
+                                        [{{ $pNews->category }}] {{ $pNews->title }} ({{ $pNews->published_at ? $pNews->published_at->format('d/m/Y') : '-' }})
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        <p class="text-[11px] text-slate-400">
+                            Berita yang dipilih akan tampil di kolom tengah Hero Section pada halaman Berita. Anda juga dapat langsung mengaturnya melalui tombol "Set Utama" di tabel Daftar Berita.
+                        </p>
+                    </div>
+                </div>
+
                 <div class="pt-5 border-t border-[#E2E8F0] flex justify-end">
                     <button type="submit"
                         class="inline-flex items-center gap-2 bg-[#0F4C3A] hover:bg-[#072C21] text-white font-jakarta font-bold text-xs px-6 py-2.5 rounded-xl shadow-xs transition cursor-pointer">

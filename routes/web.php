@@ -46,6 +46,7 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
 
     // 3. Berita & Pengumuman: Dapat diakses oleh Super Admin, Admin Pemdes, dan PPK Ormawa
     Route::middleware(['role:super_admin,admin_pemdes,ppk_ormawa'])->group(function () {
+        Route::post('news/{news}/set-featured', [Admin\NewsController::class, 'setFeatured'])->name('news.set-featured');
         Route::resource('news', Admin\NewsController::class)->except(['show']);
         Route::post('news-categories', [Admin\NewsCategoryController::class, 'store'])->name('news-categories.store');
         Route::delete('news-categories/{newsCategory}', [Admin\NewsCategoryController::class, 'destroy'])->name('news-categories.destroy');

@@ -33,8 +33,21 @@ class NewsController extends Controller
         }
 
         $newsList = $query->latest()->paginate(10)->withQueryString();
+        $featuredNewsId = \App\Models\Setting::get('featured_news_id');
 
-        return view('admin.news.index', compact('newsList', 'categories'));
+        return view('admin.news.index', compact('newsList', 'categories', 'featuredNewsId'));
+    }
+
+    public function setFeatured(News $news): RedirectResponse
+    {
+        $current = \App\Models\Setting::get('featured_news_id');
+        if ((string) $current === (string) $news->id) {
+            \App\Models\Setting::set('featured_news_id', null);
+            return redirect()->back()->with('success', "Status Berita Utama untuk \"{$news->title}\" dinonaktifkan.");
+        }
+
+        \App\Models\Setting::set('featured_news_id', (string) $news->id);
+        return redirect()->back()->with('success', "Berita \"{$news->title}\" berhasil ditetapkan sebagai Berita Utama!");
     }
 
     public function create(): View
