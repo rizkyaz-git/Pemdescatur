@@ -16,7 +16,8 @@ class BmkgWeatherService
     public const LOCATION_DETAIL = 'Sambi, Boyolali';
     public const ADM4 = '3309102006';
     public const ADM4_DOTTED = '33.09.10.2006';
-    public const CACHE_KEY = 'bmkg_weather_catur_v2';
+    public const BMKG_WEB_URL = 'https://www.bmkg.go.id/cuaca/prakiraan-cuaca/33.09.10.2006';
+    public const CACHE_KEY = 'bmkg_weather_catur_v3';
     public const CACHE_TTL_SECONDS = 1800; // 30 menit
 
     /**
@@ -60,7 +61,7 @@ class BmkgWeatherService
             'updated_at' => null,
             'message' => 'Informasi cuaca sementara tidak tersedia.',
             'source' => 'BMKG',
-            'source_url' => 'https://data.bmkg.go.id/prakiraan-cuaca/',
+            'source_url' => self::BMKG_WEB_URL,
         ];
 
         try {
@@ -124,7 +125,7 @@ class BmkgWeatherService
                 'sub_location' => self::LOCATION_DETAIL,
                 'message' => 'Data prakiraan cuaca tidak ditemukan.',
                 'source' => 'BMKG',
-                'source_url' => 'https://data.bmkg.go.id/prakiraan-cuaca/',
+                'source_url' => self::BMKG_WEB_URL,
             ];
         }
 
@@ -220,7 +221,7 @@ class BmkgWeatherService
             'updated_at' => Carbon::parse($currentEntry['local_datetime'], 'Asia/Jakarta')->format('H:i') . ' WIB',
             'message' => null,
             'source' => 'BMKG',
-            'source_url' => 'https://data.bmkg.go.id/prakiraan-cuaca/',
+            'source_url' => self::BMKG_WEB_URL,
         ];
     }
 

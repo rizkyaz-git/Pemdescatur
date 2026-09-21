@@ -1,4 +1,4 @@
-<div {{ $attributes->merge(['class' => 'bg-slate-50/80 rounded-xl p-2.5 sm:p-3.5 border border-slate-200/90 shadow-xs flex flex-col justify-between']) }} aria-hidden="true">
+<div {{ $attributes->merge(['class' => 'bg-white rounded-lg p-3 sm:p-4 border border-slate-200/90 shadow-xs flex flex-col justify-between']) }} aria-hidden="true">
     <div>
         <!-- Photo Skeleton (Aspect 3:4, Rounded-lg matching real official card) -->
         <div class="aspect-[3/4] w-full rounded-lg skeleton-shimmer mb-2.5"></div>

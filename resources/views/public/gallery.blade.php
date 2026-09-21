@@ -11,108 +11,175 @@
          filterOpen: false, 
          activeModal: false, 
          backdropVisible: false,
+         contentVisible: false,
          isClosing: false,
          activeImage: '', 
          activeTitle: '', 
          activeCaption: '', 
          activeDate: '', 
-         activeCategory: '', 
-         activeUrl: '',
-         isReady: false,
-         originElement: null,
-         originRect: null,
-         touchTimer: null,
-         touchStartX: 0,
-         touchStartY: 0,
-         longPressTriggered: false,
+          activeCategory: '', 
+          activeUrl: '',
+          downloadFileName: '',
+          zoomLevel: 1,
+          panX: 0,
+          panY: 0,
+          isDragging: false,
+          hasDragged: false,
+          dragStartX: 0,
+          dragStartY: 0,
+          dragStartPanX: 0,
+          dragStartPanY: 0,
+          isReady: false,
+          originElement: null,
+          touchTimer: null,
+          touchStartX: 0,
+          touchStartY: 0,
+          longPressTriggered: false,
 
-         openLightbox(e, data) {
-             if (this.activeModal) return;
+          zoomIn() {
+              if (this.zoomLevel < 3) {
+                  this.zoomLevel = Math.min(3, +(this.zoomLevel + 0.5).toFixed(1));
+              }
+          },
 
-             const card = e ? (e.currentTarget || e.target) : null;
-             this.originElement = card;
-             const img = (card && card.querySelector) ? (card.querySelector('img') || card) : card;
-             this.originRect = (img && img.getBoundingClientRect) ? img.getBoundingClientRect() : null;
+          zoomOut() {
+              if (this.zoomLevel > 1) {
+                  this.zoomLevel = Math.max(1, +(this.zoomLevel - 0.5).toFixed(1));
+                  if (this.zoomLevel === 1) {
+                      this.panX = 0;
+                      this.panY = 0;
+                  }
+              }
+          },
 
-             this.activeImage = data.image;
-             this.activeTitle = data.title;
-             this.activeCaption = data.caption;
-             this.activeDate = data.date;
-             this.activeCategory = data.category;
-             this.activeUrl = data.url;
-             this.isClosing = false;
-             this.backdropVisible = false;
-             this.activeModal = true;
+          resetZoom() {
+              this.zoomLevel = 1;
+              this.panX = 0;
+              this.panY = 0;
+          },
 
-             this.$nextTick(() => {
-                 const modal = this.$refs.modalCard;
-                 if (!modal) return;
+          toggleZoom() {
+              if (this.zoomLevel > 1) {
+                  this.zoomLevel = 1;
+                  this.panX = 0;
+                  this.panY = 0;
+              } else {
+                  this.zoomLevel = 2;
+              }
+          },
 
-                 if (this.originRect) {
-                     const targetRect = modal.getBoundingClientRect();
-                     if (targetRect.width > 0 && targetRect.height > 0) {
-                         const scaleX = this.originRect.width / targetRect.width;
-                         const scaleY = this.originRect.height / targetRect.height;
-                         const transX = (this.originRect.left + this.originRect.width / 2) - (targetRect.left + targetRect.width / 2);
-                         const transY = (this.originRect.top + this.originRect.height / 2) - (targetRect.top + targetRect.height / 2);
+          startDrag(e) {
+              if (this.zoomLevel <= 1) return;
+              this.isDragging = true;
+              this.hasDragged = false;
+              const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+              const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+              this.dragStartX = clientX;
+              this.dragStartY = clientY;
+              this.dragStartPanX = this.panX;
+              this.dragStartPanY = this.panY;
+          },
 
-                         modal.style.transition = 'none';
-                         modal.style.transformOrigin = 'center center';
-                         modal.style.transform = `translate3d(${transX}px, ${transY}px, 0) scale(${scaleX}, ${scaleY})`;
-                         modal.style.opacity = '0.5';
-                         modal.style.willChange = 'transform, opacity';
-                     }
-                 }
+          onDrag(e) {
+              if (!this.isDragging || this.zoomLevel <= 1) return;
+              const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+              const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+              const deltaX = clientX - this.dragStartX;
+              const deltaY = clientY - this.dragStartY;
+              if (Math.hypot(deltaX, deltaY) > 5) {
+                  this.hasDragged = true;
+              }
+              this.panX = this.dragStartPanX + deltaX;
+              this.panY = this.dragStartPanY + deltaY;
+          },
 
-                 // Reflow agar posisi awal terdaftar di browser
-                 void modal.offsetHeight;
+          endDrag() {
+              this.isDragging = false;
+          },
 
-                 requestAnimationFrame(() => {
-                     this.backdropVisible = true;
-                     modal.style.transition = 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 320ms ease-out';
-                     modal.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
-                     modal.style.opacity = '1';
-                 });
-             });
-         },
+          handleImageClick(e) {
+              if (this.hasDragged) {
+                  this.hasDragged = false;
+                  return;
+              }
+              this.toggleZoom();
+          },
 
-         closeLightbox() {
-             if (this.isClosing || !this.activeModal) return;
-             this.isClosing = true;
-             this.backdropVisible = false;
+          openLightbox(e, data) {
+              if (this.activeModal) return;
 
-             const modal = this.$refs.modalCard;
-             if (modal) {
-                 let rect = this.originRect;
-                 if (this.originElement && this.originElement.isConnected) {
-                     const img = (this.originElement.querySelector) ? (this.originElement.querySelector('img') || this.originElement) : this.originElement;
-                     if (img && img.getBoundingClientRect) {
-                         rect = img.getBoundingClientRect();
-                     }
-                 }
+              this.activeImage = data.image;
+              this.activeTitle = data.title;
+              this.activeCaption = data.caption;
+              this.activeDate = data.date;
+              this.activeCategory = data.category;
+              this.activeUrl = data.url;
+              this.zoomLevel = 1;
+              this.panX = 0;
+              this.panY = 0;
+              this.isDragging = false;
+              this.hasDragged = false;
 
-                 if (rect) {
-                     const targetRect = modal.getBoundingClientRect();
-                     const scaleX = rect.width / targetRect.width;
-                     const scaleY = rect.height / targetRect.height;
-                     const transX = (rect.left + rect.width / 2) - (targetRect.left + targetRect.width / 2);
-                     const transY = (rect.top + rect.height / 2) - (targetRect.top + targetRect.height / 2);
+              // Format nama file untuk unduhan
+              const rawTitle = data.title ? data.title.trim().replace(/[^a-zA-Z0-9_\-\s]/g, '').replace(/\s+/g, '_') : 'foto-desa-catur';
+              this.downloadFileName = `${rawTitle || 'foto-desa-catur'}.jpg`;
 
-                     modal.style.transition = 'transform 320ms cubic-bezier(0.16, 1, 0.3, 1), opacity 260ms ease-in';
-                     modal.style.transform = `translate3d(${transX}px, ${transY}px, 0) scale(${scaleX}, ${scaleY})`;
-                     modal.style.opacity = '0';
-                 } else {
-                     modal.style.transition = 'transform 260ms ease-in, opacity 260ms ease-in';
-                     modal.style.transform = 'scale(0.7)';
-                     modal.style.opacity = '0';
-                 }
+              this.isClosing = false;
+              this.activeModal = true;
+              this.backdropVisible = false;
+              this.contentVisible = false;
+              document.body.style.overflow = 'hidden';
+
+              this.$nextTick(() => {
+                  requestAnimationFrame(() => {
+                      this.backdropVisible = true;
+                      this.contentVisible = true;
+                  });
+              });
+          },
+
+          closeLightbox() {
+              if (this.isClosing || !this.activeModal) return;
+              this.isClosing = true;
+              this.contentVisible = false;
+              this.backdropVisible = false;
+              this.zoomLevel = 1;
+              this.panX = 0;
+              this.panY = 0;
+              this.isDragging = false;
+              this.hasDragged = false;
+
+              setTimeout(() => {
+                  this.activeModal = false;
+                  this.isClosing = false;
+                  document.body.style.overflow = '';
+              }, 200);
+          },
+
+         async downloadActiveImage(e) {
+             if (!this.activeImage) return;
+             try {
+                 const response = await fetch(this.activeImage);
+                 if (!response.ok) throw new Error('Download failed');
+                 const blob = await response.blob();
+                 const blobUrl = window.URL.createObjectURL(blob);
+                 const a = document.createElement('a');
+                 a.style.display = 'none';
+                 a.href = blobUrl;
+                 a.download = this.downloadFileName || 'foto-desa-catur.jpg';
+                 document.body.appendChild(a);
+                 a.click();
+                 window.URL.revokeObjectURL(blobUrl);
+                 document.body.removeChild(a);
+             } catch (err) {
+                 const a = document.createElement('a');
+                 a.href = this.activeImage;
+                 a.download = this.downloadFileName || 'foto-desa-catur.jpg';
+                 a.target = '_blank';
+                 document.body.appendChild(a);
+                 a.click();
+                 document.body.removeChild(a);
              }
-
-             // Unmount hanya setelah animasi menyusut ke tepat asal foto selesai 100% (tanpa kedip/reset transform)
-             setTimeout(() => {
-                 this.activeModal = false;
-                 this.isClosing = false;
-             }, 330);
          },
 
          handleTouchStart(e, data) {
@@ -159,10 +226,10 @@
      x-init="$nextTick(() => { setTimeout(() => { isReady = true; }, 120); })"
      @keydown.escape.window="closeLightbox()">
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5 sm:space-y-6">
         
         <!-- Header Title & Action Buttons (Terbaru, Populer & Filter Kategori) -->
-        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 pb-6 border-b border-slate-200/80 text-left">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 text-left">
             
             <!-- Clean Title & Subtitle with Route Breadcrumbs -->
             <div>
@@ -175,39 +242,42 @@
                 </h1>
             </div>
 
-            <!-- Action Buttons Desktop: Terbaru, Populer & Filter Dropdown -->
+            <!-- Action Buttons Desktop: Terbaru & Populer (Satu Pembungkus) + Filter Dropdown (Terpisah & Fill Solid) -->
             <div class="hidden sm:flex items-center gap-2.5 relative">
                 
-                <!-- Tombol Terbaru -->
-                <a href="{{ route('public.gallery', array_merge(request()->except(['sort', 'page']), ['sort' => 'latest'])) }}" 
-                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all backdrop-blur-xl {{ (!request('sort') || request('sort') === 'latest') ? 'bg-[#0A3D29]/15 text-[#0A3D29] border border-[#0A3D29]/30 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 shadow-2xs' }}">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span>Terbaru</span>
-                </a>
+                <!-- Pembungkus Segmented: Terbaru & Populer (Tidak terlalu rounded / rounded-lg) -->
+                <div class="inline-flex items-center p-1 bg-slate-100/90 rounded-lg border border-slate-200/80 shadow-2xs">
+                    <!-- Tombol Terbaru -->
+                    <a href="{{ route('public.gallery', array_merge(request()->except(['sort', 'page']), ['sort' => 'latest'])) }}" 
+                       class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs transition-all {{ (!request('sort') || request('sort') === 'latest') ? 'bg-white text-[#0A3D29] font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 font-medium' }}">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Terbaru</span>
+                    </a>
 
-                <!-- Tombol Populer -->
-                <a href="{{ route('public.gallery', array_merge(request()->except(['sort', 'page']), ['sort' => 'popular'])) }}" 
-                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all backdrop-blur-xl {{ (request('sort') === 'popular') ? 'bg-[#0A3D29]/15 text-[#0A3D29] border border-[#0A3D29]/30 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 shadow-2xs' }}">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                    </svg>
-                    <span>Populer</span>
-                </a>
+                    <!-- Tombol Populer -->
+                    <a href="{{ route('public.gallery', array_merge(request()->except(['sort', 'page']), ['sort' => 'popular'])) }}" 
+                       class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs transition-all {{ (request('sort') === 'popular') ? 'bg-white text-[#0A3D29] font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 font-medium' }}">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        <span>Populer</span>
+                    </a>
+                </div>
 
-                <!-- Tombol Filter Dropdown -->
+                <!-- Tombol Filter Dropdown (Terpisah & Fill Solid) -->
                 <div class="relative">
                     <button type="button" 
                             @click="filterOpen = !filterOpen" 
                             title="Filter Kategori{{ request('category') ? ': ' . request('category') : '' }}"
-                            class="relative inline-flex items-center justify-center w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer {{ request('category') ? 'bg-[#0A3D29]/15 text-[#0A3D29] border border-[#0A3D29]/30 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 shadow-2xs' }}">
+                            class="relative inline-flex items-center justify-center w-9 h-9 rounded-lg text-xs font-bold transition-all cursor-pointer bg-[#0A3D29] text-white hover:bg-[#072B1D] shadow-xs active:scale-95">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                         </svg>
                         @if(request('category'))
-                            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#0A3D29]"></span>
+                            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0A3D29]"></span>
                         @endif
                     </button>
 
@@ -220,16 +290,16 @@
                          x-transition:leave="transition ease-in duration-150"
                          x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                          x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
-                         class="absolute right-0 mt-2 w-56 bg-white rounded-xl border border-slate-200 shadow-2xl z-50 p-2 space-y-1">
+                         class="absolute right-0 mt-2 w-56 bg-white rounded-lg border border-slate-200 shadow-xl z-50 p-1.5 space-y-0.5">
                         
                         <a href="{{ route('public.gallery', request()->except(['category', 'page'])) }}" 
-                           class="block px-3.5 py-2 rounded-xl text-xs font-bold transition {{ !request('category') ? 'bg-[#0A3D29]/15 text-[#0A3D29]' : 'text-slate-700 hover:bg-slate-100/70' }}">
+                           class="block px-3 py-1.5 rounded-md text-xs font-medium transition {{ !request('category') ? 'bg-[#0A3D29]/10 text-[#0A3D29] font-bold' : 'text-slate-700 hover:bg-slate-100' }}">
                             Semua Kategori
                         </a>
 
                         @foreach($categories as $cat)
                             <a href="{{ route('public.gallery', array_merge(request()->except(['page']), ['category' => $cat])) }}" 
-                               class="block px-3.5 py-2 rounded-xl text-xs font-bold transition {{ request('category') === $cat ? 'bg-[#0A3D29]/15 text-[#0A3D29]' : 'text-slate-700 hover:bg-slate-100/70' }}">
+                               class="block px-3 py-1.5 rounded-md text-xs font-medium transition {{ request('category') === $cat ? 'bg-[#0A3D29]/10 text-[#0A3D29] font-bold' : 'text-slate-700 hover:bg-slate-100' }}">
                                 {{ $cat }}
                             </a>
                         @endforeach
@@ -319,7 +389,7 @@
                  x-transition:leave="transition-opacity duration-300"
                  x-transition:leave-start="opacity-100"
                  x-transition:leave-end="opacity-0"
-                 class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-5 lg:gap-6"
+                 class="columns-2 sm:columns-2 lg:columns-3 xl:columns-4 gap-3 sm:gap-5 lg:gap-6"
                  aria-hidden="true">
                 @php
                     $skeletonAspects = ['aspect-[4/5]', 'aspect-[16/11]', 'aspect-[3/4]', 'aspect-square', 'aspect-[16/10]', 'aspect-[5/6]'];
@@ -336,7 +406,7 @@
                  x-transition:enter-start="opacity-0"
                  x-transition:enter-end="opacity-100">
                 @if(isset($galleries) && $galleries->count() > 0)
-                    <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-5 lg:gap-6">
+                    <div class="columns-2 sm:columns-2 lg:columns-3 xl:columns-4 gap-3 sm:gap-5 lg:gap-6">
                         @php
                             // Variasi aspek rasio foto untuk menciptakan layout asymmetric masonry collage yang dinamis, modern, dan tetap seimbang
                             $aspectRhythms = [
@@ -377,7 +447,7 @@
                                 ];
                             @endphp
 
-                            <div class="break-inside-avoid mb-4 sm:mb-5 lg:mb-6 group relative {{ $currentAspect }} rounded-xl overflow-hidden bg-slate-900/5 shadow-xs hover:shadow-2xl transition-all duration-500 cursor-pointer select-none"
+                            <div class="break-inside-avoid mb-3 sm:mb-5 lg:mb-6 group relative {{ $currentAspect }} rounded-xl overflow-hidden bg-slate-900/5 shadow-xs hover:shadow-2xl transition-all duration-500 cursor-pointer select-none"
                                  @touchstart="handleTouchStart($event, @js($galleryData))"
                                  @touchmove="handleTouchMove($event)"
                                  @touchend="handleTouchEnd()"
@@ -393,8 +463,8 @@
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300 pointer-events-none"></div>
 
                                 <!-- HANYA JUDUL FOTO di Bagian Bawah (Teks putih, lebih jelas & smooth saat hover) -->
-                                <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5 lg:p-6 z-10 pointer-events-none">
-                                    <h2 class="font-serif font-bold text-white/95 group-hover:text-white text-sm sm:text-base lg:text-lg leading-snug drop-shadow-md transform translate-y-1 group-hover:translate-y-0 transition-all duration-300 line-clamp-2 sm:line-clamp-3">
+                                <div class="absolute inset-x-0 bottom-0 p-2.5 sm:p-5 lg:p-6 z-10 pointer-events-none">
+                                    <h2 class="font-serif font-bold text-white/95 group-hover:text-white text-xs sm:text-base lg:text-lg leading-snug drop-shadow-md transform translate-y-1 group-hover:translate-y-0 transition-all duration-300 line-clamp-2 sm:line-clamp-3">
                                         {{ $item->title }}
                                     </h2>
                                 </div>
@@ -436,69 +506,152 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- LIGHTBOX PREVIEW MODAL (MINIMALIS, ELEGAN & ANIMASI MENGALIR)             -->
+    <!-- DARK EDITORIAL PHOTO VIEWER                                               -->
     <!-- ========================================================================= -->
     <div x-show="activeModal" 
          x-cloak 
-         class="fixed inset-0 z-[100000] flex items-center justify-center p-3 sm:p-5 lg:p-6 transition-all duration-300 ease-out overflow-hidden"
-         :class="backdropVisible ? 'bg-black/80 backdrop-blur-md opacity-100' : 'bg-black/0 backdrop-blur-none opacity-0 pointer-events-none'"
-         @click.self="closeLightbox()">
+         class="fixed inset-0 z-[100000] overflow-hidden select-none bg-[#0D0F0E] transition-opacity duration-200 ease-out"
+         :class="backdropVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+         @click="closeLightbox()"
+         @keydown.escape.window="closeLightbox()"
+         @mousemove.window="onDrag($event)"
+         @mouseup.window="endDrag()"
+         @touchmove.window="onDrag($event)"
+         @touchend.window="endDrag()">
         
-        <!-- Modal Card Utama: Membesar Tepat dari Asal Foto dan Menutup Kembali ke Asal Foto -->
-        <div x-ref="modalCard"
-             class="relative max-w-4xl w-full rounded-2xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] bg-neutral-900 border border-white/10 flex flex-col my-auto select-none will-change-transform opacity-0" 
+        <!-- Header Controls (Dark Glassmorphism membiaskan latar) -->
+        <div class="absolute top-0 inset-x-0 z-30 flex items-center justify-between px-4 py-3 sm:px-8 sm:py-4 pointer-events-auto bg-[#0D0F0E]/75 border-b border-white/[0.08] transition-opacity duration-200 ease-out"
+             style="-webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%);"
+             :class="contentVisible ? 'opacity-100' : 'opacity-0'"
              @click.stop>
             
-            <!-- Tombol Silang Minimalis & Elegan -->
-            <button @click.prevent.stop="closeLightbox()" 
-                    type="button"
-                    title="Tutup (Esc)"
-                    class="absolute top-3.5 right-3.5 z-30 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/45 hover:bg-black/75 text-white/80 hover:text-white flex items-center justify-center backdrop-blur-md border border-white/15 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none cursor-pointer">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
+            <!-- Subtle Label (Editorial Context) -->
+            <span class="text-[11px] uppercase tracking-[0.2em] text-neutral-400 font-medium hidden sm:inline select-none">
+                Pratinjau Gambar
+            </span>
 
-            <!-- Photo Display Area - Menampilkan Foto Utuh Tanpa Terpotong (Minimalis Bersih) -->
-            <div class="relative w-full max-h-[66vh] sm:max-h-[72vh] min-h-[220px] sm:min-h-[360px] bg-neutral-950 flex items-center justify-center overflow-hidden">
-                <!-- Ambient Blur Background (Membias Warna Foto dengan Halus & Mewah) -->
-                <img :src="activeImage" 
-                     aria-hidden="true" 
-                     class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-20 scale-110 select-none pointer-events-none">
-                
-                <!-- Foto Utama -->
-                <img :src="activeImage" 
-                     :alt="activeTitle" 
-                     class="relative z-10 max-h-[66vh] sm:max-h-[72vh] w-auto max-w-full object-contain select-none shadow-2xl">
+            <!-- Right: Minimalist Editorial Controls -->
+            <div class="flex items-center gap-2 sm:gap-2.5 ml-auto">
+                <!-- Tombol Unduh -->
+                <button type="button" 
+                        @click.stop="downloadActiveImage($event)"
+                        title="Unduh foto asli"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-neutral-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.09] border border-white/15 hover:border-white/30 text-xs font-medium transition-colors duration-150 cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    <span>Unduh</span>
+                </button>
+
+                <!-- Tombol Close (×) -->
+                <button type="button" 
+                        @click.stop="closeLightbox()"
+                        title="Tutup (Esc)"
+                        class="w-8 h-8 rounded-md text-neutral-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-white/20 flex items-center justify-center transition-colors duration-150 cursor-pointer focus:outline-none">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Center Stage: Foto Sebagai Focal Point Utama (Dapat di-Zoom & di-Geser/Pan) -->
+        <div class="absolute inset-0 z-10 flex items-center justify-center select-none overflow-hidden"
+             @click.self="closeLightbox()">
+            <img x-ref="modalImage"
+                 :src="activeImage" 
+                 :alt="activeTitle" 
+                 @mousedown="startDrag($event)"
+                 @touchstart.passive="startDrag($event)"
+                 @click.stop="handleImageClick($event)"
+                 class="max-h-[calc(100dvh-230px)] sm:max-h-[calc(100vh-220px)] max-w-[94vw] w-auto h-auto object-contain rounded-none shadow-2xl select-none will-change-transform"
+                 :class="[
+                     contentVisible ? 'opacity-100' : 'opacity-0',
+                     zoomLevel > 1 ? (isDragging ? 'cursor-grabbing touch-none' : 'cursor-grab touch-none') : 'cursor-zoom-in'
+                 ]"
+                 :style="'transform: translate3d(' + panX + 'px, ' + panY + 'px, 0) scale(' + (contentVisible ? zoomLevel : 0.97) + '); transform-origin: center center; ' + (isDragging ? 'transition: none;' : 'transition: transform 200ms ease-out;')">
+        </div>
+
+        <!-- Bottom Wrapper: Memposisikan Zoom Controls dan Caption Bar Secara Independen -->
+        <div class="absolute bottom-0 inset-x-0 z-30 pointer-events-none flex flex-col justify-end transition-opacity duration-200 ease-out"
+             :class="contentVisible ? 'opacity-100' : 'opacity-0'">
+            
+            <!-- Floating Dark Glassmorphic Zoom Controls (Independen, Nyata Membiaskan Foto) -->
+            <div class="w-full max-w-7xl mx-auto px-4 sm:px-8 flex justify-end sm:justify-center mb-2.5 sm:mb-3 pointer-events-none">
+                <div class="pointer-events-auto flex items-center gap-1.5 p-1 rounded-lg bg-neutral-900/60 hover:bg-neutral-900/75 border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2)] select-none"
+                     style="-webkit-backdrop-filter: blur(24px) saturate(200%); backdrop-filter: blur(24px) saturate(200%);"
+                     @click.stop>
+                    
+                    <!-- Zoom Out (-) -->
+                    <button type="button" 
+                            @click.stop="zoomOut()" 
+                            :disabled="zoomLevel <= 1" 
+                            title="Perkecil (-)"
+                            class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-white/90 hover:text-white bg-white/[0.08] hover:bg-white/[0.18] active:bg-white/25 border border-white/10 disabled:opacity-25 disabled:pointer-events-none transition-all duration-150 cursor-pointer">
+                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                        </svg>
+                    </button>
+
+                    <!-- Indicator / Reset Zoom (Desktop) -->
+                    <button type="button" 
+                            @click.stop="resetZoom()" 
+                            title="Reset Ukuran (100%)"
+                            class="hidden sm:flex px-2.5 h-7 sm:h-8 rounded-lg text-[11px] sm:text-xs font-mono font-medium text-white/90 hover:text-white bg-white/[0.08] hover:bg-white/[0.18] active:bg-white/25 border border-white/10 transition-all duration-150 items-center justify-center min-w-[44px] cursor-pointer">
+                        <span x-text="Math.round(zoomLevel * 100) + '%'"></span>
+                    </button>
+
+                    <!-- Zoom In (+) -->
+                    <button type="button" 
+                            @click.stop="zoomIn()" 
+                            :disabled="zoomLevel >= 3" 
+                            title="Perbesar (+)"
+                            class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-white/90 hover:text-white bg-white/[0.08] hover:bg-white/[0.18] active:bg-white/25 border border-white/10 disabled:opacity-25 disabled:pointer-events-none transition-all duration-150 cursor-pointer">
+                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-            <!-- Latar Bagian Info & Tombol (Dapat diklik di seluruh area langsung mengarah ke berita) -->
-            <a :href="activeUrl" 
-               x-show="activeUrl"
-               title="Buka berita terkait"
-               class="group/footer px-5 sm:px-6 py-4 sm:py-5 bg-white/95 sm:hover:bg-slate-100/90 active:bg-slate-200/90 active:scale-[0.99] transition-all duration-200 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 cursor-pointer select-none block no-underline text-inherit">
-                <div class="min-w-0 flex-1 space-y-1 sm:space-y-1.5">
-                    <div class="flex items-center gap-2 text-[11px] sm:text-xs text-slate-500 font-medium">
-                        <span x-text="activeDate"></span>
-                        <span class="w-1 h-1 rounded-full bg-slate-300"></span>
-                        <span class="text-[#0A3D29] font-semibold" x-text="activeCategory"></span>
+            <!-- Bottom: Information & Editorial Caption -->
+            <div class="w-full border-t border-white/[0.08] bg-[#0D0F0E]/80 px-5 py-4 sm:px-8 sm:py-5 lg:px-12 pointer-events-auto"
+                 style="-webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%);"
+                 @click.stop>
+                <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3.5 sm:gap-8">
+                    
+                    <!-- Left: Metadata, Title, and Description -->
+                    <div class="min-w-0 flex-1 space-y-3">
+                        <!-- Metadata: Category · Date (Level 3 Hierarchy) -->
+                        <div class="flex items-center gap-2 sm:gap-2.5 text-neutral-400">
+                            <span class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.1em] text-neutral-400" x-text="activeCategory"></span>
+                            <span class="text-neutral-600 text-xs select-none">·</span>
+                            <span class="text-xs sm:text-sm font-normal text-neutral-400" x-text="activeDate"></span>
+                        </div>
+
+                        <!-- Title: Primary Focal Point (Level 1 Hierarchy) -->
+                        <h2 class="font-serif text-xl sm:text-2xl lg:text-[30px] font-medium sm:font-semibold text-white/95 leading-[1.18] tracking-[-0.015em] max-w-3xl lg:max-w-[70%]" x-text="activeTitle"></h2>
+
+                        <!-- Description: Secondary Information (Level 2 Hierarchy) -->
+                        <p class="text-sm sm:text-[15px] text-neutral-400 leading-relaxed font-normal max-w-2xl lg:max-w-3xl line-clamp-2 sm:line-clamp-3" 
+                           x-show="activeCaption && activeCaption.trim() !== '' && activeCaption !== activeTitle" 
+                           x-text="activeCaption"></p>
                     </div>
-                    <h3 class="font-serif text-sm sm:text-base lg:text-lg font-bold text-slate-900 sm:group-hover/footer:text-[#0A3D29] transition-colors leading-snug line-clamp-2" x-text="activeTitle"></h3>
+
+                    <!-- Right / Bottom: Editorial Text CTA (Level 4 Hierarchy) -->
+                    <div class="shrink-0 flex items-center self-start sm:self-end pt-1 sm:pt-0" x-show="activeUrl">
+                        <a :href="activeUrl" 
+                           title="Buka artikel berita terkait"
+                           class="group inline-flex items-center gap-1.5 text-sm sm:text-[15px] font-medium text-neutral-300 hover:text-emerald-400 transition-colors duration-200 py-0.5">
+                            <span>Lihat berita</span>
+                            <svg class="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+
                 </div>
-                
-                <!-- Tombol Lihat Berita: Tanpa Pembungkus, Mengikuti Latar, Animasi Saat Hover Desktop / Tap Mobile -->
-                <div class="group/btn inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#0A3D29] sm:group-hover/footer:text-[#072B1D] transition-colors duration-200 self-start sm:self-auto py-1 shrink-0">
-                    <span class="relative py-0.5">
-                        <span>Lihat Berita</span>
-                        <!-- Garis Animasi Bawah yang Mengalir Halus Saat Hover Desktop -->
-                        <span class="absolute left-0 bottom-0 w-0 h-[1.5px] bg-[#0A3D29] sm:group-hover/footer:w-full transition-all duration-300 ease-out"></span>
-                    </span>
-                    <!-- Ikon Panah dengan Animasi Nudge/Geser Halus Saat Hover Desktop -->
-                    <svg class="w-4 h-4 transform sm:group-hover/footer:translate-x-1.5 transition-transform duration-300 ease-out text-[#0A3D29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                    </svg>
-                </div>
-            </a>
+            </div>
 
         </div>
 
