@@ -136,23 +136,10 @@
         <!-- Kartu 1: Detail Program & Mitra Program -->
         <div id="ppko-detail-card"
             class="bg-white rounded-lg border border-[#DCE6DA] shadow-xs p-5 sm:p-6 space-y-3 shrink-0 overflow-hidden">
-            <div class="flex items-center justify-between pb-3 border-b border-[#DCE6DA]">
+            <div class="pb-3 border-b border-[#DCE6DA]">
                 <h3 class="font-serif text-lg sm:text-xl font-bold text-[#20332A] leading-tight">
                     Detail Program
                 </h3>
-                @auth
-                    @if(auth()->user()->isSuperAdmin())
-                        <a href="{{ route('admin.ppko.index') }}#kelola-detail-program"
-                            class="inline-flex items-center gap-1 text-xs font-semibold text-[#0A3D29] bg-[#EAF1E8] hover:bg-[#d5e5d1] px-2.5 py-1 rounded-md transition shadow-xs"
-                            title="Kelola detail program di Admin PPKO">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            <span>Kelola</span>
-                        </a>
-                    @endif
-                @endauth
             </div>
 
             <div class="overflow-x-auto">

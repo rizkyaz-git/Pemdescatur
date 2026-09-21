@@ -675,20 +675,6 @@
                                         Modul ajar akan segera diperbarui oleh admin.
                                     </div>
                                 @endif
-
-                                @auth
-                                    @if(auth()->user()->isAdmin())
-                                        <div class="mt-3 pt-2 border-t {{ $isDark ? 'border-white/15' : 'border-[#DCE6DA]' }} flex justify-end">
-                                            <a href="{{ route('admin.ppko.edit', $pojok) }}"
-                                                class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md transition {{ $isDark ? 'bg-white/15 hover:bg-white/25 text-white border border-white/20' : 'bg-[#EAF1E8] hover:bg-[#d5e5d1] text-[#0A3D29]' }}">
-                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                                                </svg>
-                                                <span>Kelola Modul</span>
-                                            </a>
-                                        </div>
-                                    @endif
-                                @endauth
                             </div>
 
                         </div>
@@ -943,21 +929,6 @@
                                 </div>
                             </div>
 
-                            <!-- Tombol Kelola Foto & Deskripsi Khusus Admin -->
-                            @auth
-                                @if(auth()->user()->isAdmin())
-                                    <div class="mt-3 flex justify-center">
-                                        <a href="{{ route('admin.ppko.edit', $pojok) }}"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-xs transition hover:scale-105 active:scale-95 {{ $isDark ? 'bg-white hover:bg-slate-100 text-[#0A3D29]' : 'bg-slate-900 hover:bg-slate-800 text-white' }}">
-                                            <svg class="w-3.5 h-3.5 {{ $isDark ? 'text-[#0A3D29]' : 'text-emerald-400' }}"
-                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                            </svg>
-                                            <span>Kelola 3 Foto & Deskripsi</span>
-                                        </a>
-                                    </div>
-                                @endif
-                            @endauth
 
                         </div>
                     </div>
