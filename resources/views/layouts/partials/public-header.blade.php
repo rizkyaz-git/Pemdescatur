@@ -210,7 +210,7 @@
                                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                             <div>
-                                <span class="block font-bold">Cetak Surat Mandiri</span>
+                                <span class="block font-bold">Layanan Surat Online</span>
                             </div>
                         </a>
 
@@ -664,7 +664,7 @@
                 class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                 <a href="{{ route('warga.letter.index') }}" @click="mobileMenuOpen = false"
                     class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.letter*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">
-                    <span>Cetak Surat Mandiri</span>
+                    <span>Layanan Surat Online</span>
                 </a>
                 <a href="{{ route('warga.complaint.create') }}" @click="mobileMenuOpen = false"
                     class="w-full flex items-center pl-12 pr-5 py-3 text-xs font-medium transition-colors {{ request()->routeIs('warga.complaint*') ? 'bg-black/[0.07] text-[#0A3D29] font-bold' : 'text-slate-700 active:bg-black/[0.08]' }}">

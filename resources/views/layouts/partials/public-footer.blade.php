@@ -76,8 +76,8 @@
                             Pengumuman</a></li>
                     <li><a href="{{ route('public.gallery') }}" class="hover:text-white transition">Galeri Kegiatan</a>
                     </li>
-                    <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Cetak Surat
-                            Mandiri</a></li>
+                    <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Layanan Surat
+                            Online</a></li>
                     <li><a href="{{ route('warga.complaint.create') }}" class="hover:text-white transition">Laporan &
                             Pengaduan</a></li>
                     <li><a href="{{ route('public.ppko') }}" class="hover:text-white transition">PPKO Catur Cerdas</a>
@@ -88,31 +88,9 @@
             <!-- Col 3: Layanan Surat Online (3 cols) -->
             <div class="lg:col-span-3 space-y-3">
                 <h4 class="text-xs font-bold text-[#D9B85C] uppercase tracking-wider">LAYANAN SURAT ONLINE</h4>
-                @php
-                    $footerLetterTemplates = \App\Models\LetterTemplate::select('id', 'name', 'code')->orderBy('name')->get();
-                @endphp
                 <ul class="space-y-2 text-xs sm:text-sm text-slate-300 font-light">
-                    @forelse($footerLetterTemplates as $tpl)
-                        <li>
-            <a href="{{ route('warga.letter.templates', ['search' => $tpl->name]) }}#katalog-surat"
-                                class="hover:text-white transition">
-                                {{ $tpl->name }} {{ $tpl->code ? "({$tpl->code})" : '' }}
-                            </a>
-                        </li>
-                    @empty
-                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Keterangan
-                                Usaha (SKU)</a></li>
-                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Keterangan
-                                Domisili (SKD)</a></li>
-                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Keterangan
-                                Tidak Mampu (SKTM)</a></li>
-                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Pengantar
-                                Nikah (SPN)</a></li>
-                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Keterangan
-                                Kelahiran (SKK)</a></li>
-                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Keterangan
-                                Kematian (SKKM)</a></li>
-                    @endforelse
+                    <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Pengajuan Surat</a></li>
+                    <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Template Cetak Mandiri</a></li>
                 </ul>
             </div>
 

@@ -39,16 +39,16 @@ Urutan pengerjaan bersifat sekuensial per Fase. Jangan lompat ke fase berikutnya
 - [ ] Tambahkan handling empty state: jika `LetterTemplate::all()` kosong, kirim flag/variabel ke view agar dropdown menampilkan state kosong yang jelas (lihat PRD §23).
 
 ## FASE 3 — View Publik: Form "Pengajuan Surat" (halaman utama baru)
-- [ ] Buka `resources/views/public/layanan/surat/create.blade.php` sebagai basis.
-- [ ] Restyle total mengikuti pola visual `resources/views/public/layanan/pengaduan/create.blade.php` (WAJIB dijadikan acuan 1:1 untuk: struktur card, label, input, error style, tombol submit) — lihat PRD §19.
-- [ ] Update judul, breadcrumb, dan `@section('title')`/`@section('meta_description')` agar mencerminkan "Pengajuan Surat" sebagai layanan utama.
-- [ ] Tambahkan field **Nama Lengkap** (`form_data[nama]`) — field baru, belum ada sebelumnya.
-- [ ] Pertahankan field NIK (`form_data[nik]`) dan No. WhatsApp (`form_data[telepon]`) dengan key yang sama seperti sekarang (backward compatible), tapi restyle sesuai pola baru.
-- [ ] Hapus/ganti referensi `auth()->user()->nik` (bug lama, kolom tidak ada) — jangan disalin ke form baru; gunakan `old('form_data.nik')` saja sebagai default value.
-- [ ] Pertahankan field Jenis Surat (`template_id`) dan Keperluan (`form_data[keperluan]`), restyle sesuai pola baru.
-- [ ] Tambahkan tautan sekunder kecil/understated menuju halaman "Template & Format Surat" (route baru dari Fase 1), diposisikan dekat header halaman, TIDAK berupa tombol besar/mencolok — lihat PRD §19.
-- [ ] Tangani empty state dropdown Jenis Surat (opsi disabled dengan pesan jelas) sesuai PRD §23.
-- [ ] Pastikan responsive sesuai pola `max-w-3xl mx-auto px-4 sm:px-6 lg:px-8`.
+- [x] Buka `resources/views/public/layanan/surat/create.blade.php` sebagai basis.
+- [x] Restyle total mengikuti pola visual `resources/views/public/layanan/pengaduan/create.blade.php` (WAJIB dijadikan acuan 1:1 untuk: struktur card, label, input, error style, tombol submit) — lihat PRD §19.
+- [x] Update judul, breadcrumb, dan `@section('title')`/`@section('meta_description')` agar mencerminkan "Pengajuan Surat" sebagai layanan utama.
+- [x] Tambahkan field **Nama Lengkap** (`form_data[nama]`) — field baru, belum ada sebelumnya.
+- [x] Pertahankan field NIK (`form_data[nik]`) dan No. WhatsApp (`form_data[telepon]`) dengan key yang sama seperti sekarang (backward compatible), tapi restyle sesuai pola baru.
+- [x] Hapus/ganti referensi `auth()->user()->nik` (bug lama, kolom tidak ada) — jangan disalin ke form baru; gunakan `old('form_data.nik')` saja sebagai default value.
+- [x] Pertahankan field Jenis Surat (`template_id`) dan Keperluan (`form_data[keperluan]`), restyle sesuai pola baru.
+- [x] Tambahkan tautan sekunder kecil/understated menuju halaman "Template & Format Surat" (route baru dari Fase 1), diposisikan dekat header halaman, TIDAK berupa tombol besar/mencolok — lihat PRD §19.
+- [x] Tangani empty state dropdown Jenis Surat (opsi disabled dengan pesan jelas) sesuai PRD §23.
+- [x] Pastikan responsive sesuai pola `max-w-3xl mx-auto px-4 sm:px-6 lg:px-8`.
 
 ## FASE 4 — View Publik: Halaman Sekunder "Template & Format Surat"
 - [ ] Pastikan `resources/views/public/layanan/surat/index.blade.php` (katalog, TIDAK dihapus) sekarang dirender oleh route baru dari Fase 1.
@@ -59,14 +59,14 @@ Urutan pengerjaan bersifat sekuensial per Fase. Jangan lompat ke fase berikutnya
 
 ## FASE 5 — Navigasi Situs Publik (Link ke halaman baru)
 - [ ] `resources/views/public/home/sections/shortcuts.blade.php`: cek 2 titik referensi `warga.letter.index` — pastikan konteks copy (mis. "Surat Mandiri") masih relevan untuk halaman form; sesuaikan teks kecil bila perlu, tanpa mengubah struktur kartu.
-- [ ] `resources/views/layouts/partials/public-footer.blade.php`: cek 7 titik referensi `warga.letter.index` — khususnya baris yang mem-passing parameter `search` ke `warga.letter.index` (mengasumsikan tujuan adalah katalog) — arahkan referensi tersebut ke route baru "Template & Format Surat" (Fase 1), BUKAN ke `warga.letter.index` yang sekarang jadi form.
-- [ ] `resources/views/layouts/partials/public-header.blade.php`: cek 2 titik referensi `warga.letter.index` — pastikan label menu masih sesuai ("Cetak Surat Mandiri" mengarah ke halaman form).
+- [x] `resources/views/layouts/partials/public-footer.blade.php`: bagian "LAYANAN SURAT ONLINE" disesuaikan hanya menampilkan 2 layanan riil: Pengajuan Surat & Template Cetak Mandiri.
+- [x] `resources/views/layouts/partials/public-header.blade.php`: label menu diubah dari "Cetak Surat Mandiri" menjadi "Layanan Surat Online" (desktop & mobile drawer).
 - [ ] Setelah semua diaudit, buat daftar singkat titik mana yang tetap mengarah ke `warga.letter.index` (form) vs yang diarahkan ulang ke route katalog baru — sertakan di ringkasan pekerjaan akhir.
 
 ## FASE 6 — View Publik: Halaman Status Tiket (Penyelarasan Visual)
-- [ ] `resources/views/public/layanan/surat/show.blade.php`: selaraskan warna aksen ke `#0A3D29` (forest.deep) secara konsisten — saat ini beberapa elemen memakai `emerald-600`/`emerald-800`/`gray-*` generik.
-- [ ] Selaraskan style card/border mengikuti pola situs (`rounded-xl border-slate-200/90 shadow-xs` dsb) jika ditemukan penggunaan `gray-*` yang tidak konsisten dengan `slate-*` yang dipakai di halaman lain.
-- [ ] Jangan ubah logika progress tracker (3 langkah) — hanya styling.
+- [x] `resources/views/public/layanan/surat/show.blade.php`: selaraskan warna aksen ke `#0A3D29` (forest.deep) secara konsisten — saat ini beberapa elemen memakai `emerald-600`/`emerald-800`/`gray-*` generik.
+- [x] Selaraskan style card/border mengikuti pola situs (`rounded-xl border-slate-200/90 shadow-xs` dsb) jika ditemukan penggunaan `gray-*` yang tidak konsisten dengan `slate-*` yang dipakai di halaman lain.
+- [x] Jangan ubah logika progress tracker (3 langkah) — hanya styling.
 
 ## FASE 7 — Admin: Navigasi Sidebar
 - [ ] Buka `resources/views/layouts/admin.blade.php`, cari section "LAYANAN PUBLIK" (sekitar baris 164–199, dalam blok `@if(Auth::user()->canAccessPublicServices())`).

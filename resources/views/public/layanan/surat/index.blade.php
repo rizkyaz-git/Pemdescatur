@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Template & Format Surat - Pemerintah Desa Catur')
-@section('meta_description', 'Referensi template dan format surat resmi Pemerintah Desa Catur, Kec. Sambi, Kab. Boyolali. Unduh contoh format dokumen dan pelajari persyaratan sebelum mengajukan surat.')
+@section('title', 'Template Cetak Mandiri - Pemerintah Desa Catur')
+@section('meta_description', 'Referensi template cetak mandiri surat resmi Pemerintah Desa Catur, Kec. Sambi, Kab. Boyolali. Unduh contoh format dokumen dan pelajari persyaratan sebelum mengajukan surat.')
 
 @section('content')
 
@@ -125,11 +125,11 @@
                     <x-breadcrumbs :items="[
                         ['label' => 'Beranda', 'url' => route('home')],
                         ['label' => 'Pengajuan Surat', 'url' => route('warga.letter.index')],
-                        ['label' => 'Template & Format Surat']
+                        ['label' => 'Template Cetak Mandiri']
                     ]" />
                     <h1
                         class="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#20332A] leading-tight tracking-tight">
-                        Template &amp; Format Surat
+                        Template Cetak Mandiri
                     </h1>
                 </div>
 
@@ -395,30 +395,37 @@
                                 </template>
                             </div>
 
-                            <!-- Tombol Unduh & Catatan -->
-                            <div class="pt-5 border-t border-slate-100 space-y-3">
+                            <!-- Tombol Aksi: Ajukan Online & Unduh Format -->
+                            <div class="pt-5 border-t border-slate-100 space-y-2.5">
+                                <a :href="'{{ route('warga.letter.index') }}?template_id=' + selectedTemplate.id"
+                                    class="w-full inline-flex items-center justify-center gap-2 bg-[#0A3D29] hover:bg-[#072B1D] text-white font-bold text-xs sm:text-sm py-2.5 sm:py-3 px-4 rounded-xl transition-all duration-200 shadow-xs hover:shadow active:scale-[0.98] cursor-pointer">
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                    </svg>
+                                    <span>Ajukan Surat Ini Secara Online</span>
+                                </a>
+
                                 <template x-if="selectedTemplate && selectedTemplate.has_file">
                                     <a :href="selectedTemplate.download_url"
-                                        class="w-full inline-flex items-center justify-center gap-2 bg-[#0A3D29] hover:bg-[#072B1D] text-white font-semibold text-xs sm:text-sm py-2.5 px-4 rounded-lg transition-colors text-center cursor-pointer shadow-xs">
-                                        <svg class="w-4 h-4 text-white/80" fill="none" stroke="currentColor"
+                                        class="w-full inline-flex items-center justify-center gap-2 border border-slate-200 hover:border-slate-300 text-slate-700 bg-white hover:bg-slate-50 font-semibold text-xs sm:text-sm py-2.5 px-4 rounded-xl transition-all active:scale-[0.98] shadow-2xs">
+                                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                         </svg>
-                                        <span x-text="'Unduh Berkas (' + selectedTemplate.file_extension + ')'"></span>
+                                        <span x-text="'Unduh Contoh Format (' + selectedTemplate.file_extension + ')'"></span>
                                     </a>
                                 </template>
 
                                 <template x-if="selectedTemplate && !selectedTemplate.has_file">
                                     <button type="button" disabled
-                                        class="w-full inline-flex items-center justify-center gap-2 bg-slate-100 text-slate-400 font-medium text-xs sm:text-sm py-2.5 px-4 rounded-lg cursor-not-allowed">
+                                        class="w-full inline-flex items-center justify-center gap-2 bg-slate-100 text-slate-400 font-medium text-xs sm:text-sm py-2.5 px-4 rounded-xl cursor-not-allowed">
                                         <span>Berkas Template Belum Tersedia untuk Diunduh</span>
                                     </button>
                                 </template>
 
                                 <p class="text-[11px] text-slate-400 text-center leading-relaxed">
-                                    Cetak mandiri berkas ini di atas kertas F4/A4, lengkapi data pemohon, lalu bawa ke Balai
-                                    Desa Catur beserta berkas persyaratan untuk legalisasi.
+                                    Pilih <strong>Ajukan Secara Online</strong> untuk permohonan mandiri cepat, atau unduh berkas untuk dicetak manual.
                                 </p>
                             </div>
 

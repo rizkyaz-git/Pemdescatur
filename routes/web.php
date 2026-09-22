@@ -20,7 +20,8 @@ Route::get('/ppko/kurikulum/{kurikulum}/download', [PublicControllers\PpkoContro
 Route::redirect('/ppko', '/ppko-catur-cerdas');
 
 // --- PANEL ADMIN (TERPROTEKSI MIDDLEWARE AUTH & CHECKROLE) ---
-Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix('admin')->name('admin.')->group(function () {
+Route::redirect('/admin', '/kelola');
+Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix('kelola')->name('admin.')->group(function () {
     // 1. Dashboard: Dapat diakses oleh semua peran admin
     Route::get('/', [Admin\DashboardController::class, 'index'])->name('dashboard');
 

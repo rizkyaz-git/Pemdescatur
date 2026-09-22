@@ -27,8 +27,20 @@
         {{-- 1. MOBILE ONLY AUTO-SLIDING CAROUSEL (lg:hidden) --}}
         @if(isset($latestNews) && $latestNews->count() > 0)
             @php
-                $firstNews = $latestNews->first();
-                $sideNews = $latestNews->slice(1, 3);
+                $allNewsList = $latestNews;
+                if ($allNewsList->count() < 5) {
+                    $extraNews = \App\Models\News::where('status', 'published')
+                        ->whereNotIn('id', $allNewsList->pluck('id'))
+                        ->orderBy('published_at', 'desc')
+                        ->take(5 - $allNewsList->count())
+                        ->get();
+                    if ($extraNews->isNotEmpty()) {
+                        $allNewsList = $allNewsList->concat($extraNews);
+                    }
+                }
+
+                $firstNews = $allNewsList->first();
+                $sideNews = $allNewsList->slice(1, 4);
                 $firstImageExists = $firstNews && $firstNews->image_path && (file_exists(public_path('storage/' . $firstNews->image_path)) || file_exists(storage_path('app/public/' . $firstNews->image_path)));
                 $firstImageSrc = $firstImageExists ? asset('storage/' . $firstNews->image_path) : asset('images/sawah_irigasi.png');
                 $firstFormattedDate = $firstNews ? ($firstNews->published_at ? $firstNews->published_at->format('d M Y') : $firstNews->created_at->format('d M Y')) : '';
@@ -62,6 +74,15 @@
                         'url' => route('public.news.index'),
                         'excerpt' => 'Pemberitahuan perubahan jam layanan tatap muka administrasi kependudukan di Kantor Balai Desa Catur.',
                     ],
+                    [
+                        'title' => 'Penyaluran Bantuan Langsung Tunai Dana Desa (BLT-DD) Tahap Ketiga',
+                        'category' => 'Sosial',
+                        'date' => '01 Okt 2023',
+                        'author' => 'Admin Desa',
+                        'image' => asset('images/sawah_irigasi.png'),
+                        'url' => route('public.news.index'),
+                        'excerpt' => 'Pemerintah Desa Catur menyalurkan BLT Dana Desa kepada keluarga penerima manfaat secara transparan.',
+                    ],
                 ];
 
                 $displaySideNews = [];
@@ -78,7 +99,7 @@
                     ];
                 }
                 $fbIndex = 0;
-                while (count($displaySideNews) < 3 && isset($fallbackSideNews[$fbIndex])) {
+                while (count($displaySideNews) < 4 && isset($fallbackSideNews[$fbIndex])) {
                     $displaySideNews[] = $fallbackSideNews[$fbIndex++];
                 }
 
@@ -208,10 +229,11 @@
             </div>
 
             {{-- 2. DESKTOP ONLY EDITORIAL GRID (hidden lg:grid) --}}
-            <div class="hidden lg:grid grid-cols-12 gap-8 items-start">
-                <div class="col-span-7">
+            <div class="hidden lg:grid grid-cols-12 gap-8 items-stretch">
+                <!-- Featured News (Left: ~58%) -->
+                <div class="col-span-7 flex flex-col justify-between">
                     <a href="{{ route('public.news.show', $firstNews->slug) }}" class="group block space-y-2.5">
-                        <div class="relative w-full h-56 rounded-xl overflow-hidden bg-slate-100 shadow-2xs group-hover:shadow-md transition-all duration-500"
+                        <div class="relative w-full h-[224px] rounded-xl overflow-hidden bg-slate-100 shadow-2xs group-hover:shadow-md transition-all duration-500"
                             x-data="{ loaded: false }" x-init="if ($refs.img && $refs.img.complete) { loaded = true; }">
                             <div x-show="!loaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none">
                             </div>
@@ -221,35 +243,27 @@
                                 class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
                                 :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'">
                         </div>
-                        <div class="space-y-2 pt-0.5">
+                        <div class="space-y-1.5 pt-0.5">
                             <h3
-                                class="font-['Public_Sans',sans-serif] text-xl lg:text-2xl font-extrabold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                class="font-['Public_Sans',sans-serif] text-xl lg:text-[22px] font-extrabold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
                                 {{ $firstNews->title }}
                             </h3>
-                            <div class="flex items-center gap-4 text-xs text-slate-500 font-medium">
-                                <div class="flex items-center gap-1.5">
-                                    <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                    <span>{{ $firstFormattedDate }}</span>
-                                </div>
-                                <span>•</span>
-                                <div class="flex items-center gap-1.5">
-                                    <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                    </svg>
-                                    <span>{{ $firstAuthorName }}</span>
-                                </div>
+                            <div class="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+                                <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <span>{{ $firstFormattedDate }}</span>
                             </div>
                         </div>
                     </a>
                 </div>
 
-                <div class="col-span-5 space-y-4">
+                <!-- Companion News Editorial List (Right: ~42%, 4 Items) -->
+                <div class="col-span-5 flex flex-col justify-between divide-y divide-slate-100">
                     @foreach($displaySideNews as $sNews)
                         <a href="{{ $sNews['url'] }}"
-                            class="group flex items-start gap-4 p-2 -mx-2 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200/80 transition-all duration-300">
-                            <div class="relative w-28 md:w-32 aspect-[4/3] rounded-lg overflow-hidden bg-slate-100 shrink-0 shadow-2xs"
+                            class="group flex items-center gap-3.5 py-2.5 first:pt-0 last:pb-0 transition-colors">
+                            <div class="relative w-[115px] sm:w-[120px] h-[72px] rounded-lg overflow-hidden bg-slate-100 shrink-0"
                                 x-data="{ loaded: false }" x-init="if ($refs.sImg && $refs.sImg.complete) { loaded = true; }">
                                 <div x-show="!loaded" class="absolute inset-0 skeleton-shimmer z-10 pointer-events-none"></div>
                                 <img x-ref="sImg" src="{{ $sNews['image'] }}" alt="{{ $sNews['title'] }}" loading="lazy"
@@ -260,7 +274,7 @@
                             </div>
                             <div class="space-y-1 flex-1 min-w-0">
                                 <h4
-                                    class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                    class="font-['Public_Sans',sans-serif] text-xs sm:text-[13.5px] font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
                                     {{ $sNews['title'] }}
                                 </h4>
                                 <p class="text-[11px] text-slate-400 font-medium">{{ $sNews['date'] }}</p>
@@ -312,21 +326,22 @@
                 </div>
             </div>
 
-            <div class="hidden lg:grid grid-cols-12 gap-8 items-start">
-                <div class="col-span-7">
+            <div class="hidden lg:grid grid-cols-12 gap-8 items-stretch">
+                <!-- Fallback Featured News -->
+                <div class="col-span-7 flex flex-col justify-between">
                     <a href="{{ route('public.news.index') }}" class="group block space-y-2.5">
                         <div
-                            class="relative w-full h-56 rounded-xl overflow-hidden bg-slate-100 shadow-2xs group-hover:shadow-md transition-all duration-500">
+                            class="relative w-full h-[224px] rounded-xl overflow-hidden bg-slate-100 shadow-2xs group-hover:shadow-md transition-all duration-500">
                             <img src="{{ asset('images/sawah_irigasi.png') }}" alt="Kerja Bakti"
                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                         </div>
-                        <div class="space-y-2 pt-0.5">
+                        <div class="space-y-1.5 pt-0.5">
                             <h3
-                                class="font-['Public_Sans',sans-serif] text-xl lg:text-2xl font-extrabold text-slate-800 group-hover:text-[#0A3D29] leading-snug transition-colors">
+                                class="font-['Public_Sans',sans-serif] text-xl lg:text-[22px] font-extrabold text-slate-800 group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
                                 Kerja Bakti Rutin Bersihkan Saluran Irigasi Jelang Musim Tanam Padi
                             </h3>
-                            <div class="flex items-center gap-1 text-xs sm:text-sm text-slate-500 font-medium">
-                                <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <div class="flex items-center gap-1 text-xs text-slate-400 font-medium">
+                                <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
                                 <span>12 Okt 2023</span>
@@ -335,17 +350,17 @@
                     </a>
                 </div>
 
-                <div class="col-span-5 space-y-4">
+                <!-- Fallback Companion News (4 Items) -->
+                <div class="col-span-5 flex flex-col justify-between divide-y divide-slate-100">
                     <a href="{{ route('public.news.index') }}"
-                        class="group flex items-start gap-4 p-2 -mx-2 rounded-xl hover:bg-white border border-transparent hover:border-[#c5c6ce]/60 hover:shadow-2xs transition-all duration-300">
-                        <div
-                            class="relative w-28 md:w-32 aspect-[4/3] rounded-lg overflow-hidden bg-slate-100 shrink-0 shadow-2xs">
+                        class="group flex items-center gap-3.5 py-2.5 first:pt-0 last:pb-0 transition-colors">
+                        <div class="relative w-[115px] sm:w-[120px] h-[72px] rounded-lg overflow-hidden bg-slate-100 shrink-0">
                             <img src="{{ asset('images/hero_landscape.png') }}" alt="Pembangunan"
                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="space-y-1 flex-1 min-w-0">
                             <h4
-                                class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors">
+                                class="font-['Public_Sans',sans-serif] text-xs sm:text-[13.5px] font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
                                 Peningkatan Kualitas Jalan Poros Dusun I Selesai Dikerjakan
                             </h4>
                             <p class="text-[11px] text-slate-400 font-medium">10 Okt 2023</p>
@@ -353,15 +368,14 @@
                     </a>
 
                     <a href="{{ route('public.news.index') }}"
-                        class="group flex items-start gap-4 p-2 -mx-2 rounded-xl hover:bg-white border border-transparent hover:border-[#c5c6ce]/60 hover:shadow-2xs transition-all duration-300">
-                        <div
-                            class="relative w-28 md:w-32 aspect-[4/3] rounded-lg overflow-hidden bg-slate-100 shrink-0 shadow-2xs">
+                        class="group flex items-center gap-3.5 py-2.5 first:pt-0 last:pb-0 transition-colors">
+                        <div class="relative w-[115px] sm:w-[120px] h-[72px] rounded-lg overflow-hidden bg-slate-100 shrink-0">
                             <img src="{{ asset('images/umbul_siraman.png') }}" alt="Pemberdayaan"
                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="space-y-1 flex-1 min-w-0">
                             <h4
-                                class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors">
+                                class="font-['Public_Sans',sans-serif] text-xs sm:text-[13.5px] font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
                                 Pelatihan Pengolahan Hasil Pertanian bagi Kelompok Tani & UMKM
                             </h4>
                             <p class="text-[11px] text-slate-400 font-medium">08 Okt 2023</p>
@@ -369,18 +383,32 @@
                     </a>
 
                     <a href="{{ route('public.news.index') }}"
-                        class="group flex items-start gap-4 p-2 -mx-2 rounded-xl hover:bg-white border border-transparent hover:border-[#c5c6ce]/60 hover:shadow-2xs transition-all duration-300">
-                        <div
-                            class="relative w-28 md:w-32 aspect-[4/3] rounded-lg overflow-hidden bg-slate-100 shrink-0 shadow-2xs">
+                        class="group flex items-center gap-3.5 py-2.5 first:pt-0 last:pb-0 transition-colors">
+                        <div class="relative w-[115px] sm:w-[120px] h-[72px] rounded-lg overflow-hidden bg-[#f2f4f6] shrink-0 p-1.5 flex items-center justify-center">
                             <img src="{{ asset('images/logo_catur.png') }}" alt="Pengumuman"
-                                class="w-full h-full object-contain p-2.5 bg-[#f2f4f6]">
+                                class="max-w-full max-h-full object-contain">
                         </div>
                         <div class="space-y-1 flex-1 min-w-0">
                             <h4
-                                class="font-['Public_Sans',sans-serif] text-sm lg:text-base font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors">
+                                class="font-['Public_Sans',sans-serif] text-xs sm:text-[13.5px] font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
                                 Penyesuaian Jam Pelayanan Kantor Desa Catur Selama Bulan Ini
                             </h4>
                             <p class="text-[11px] text-slate-400 font-medium">05 Okt 2023</p>
+                        </div>
+                    </a>
+
+                    <a href="{{ route('public.news.index') }}"
+                        class="group flex items-center gap-3.5 py-2.5 first:pt-0 last:pb-0 transition-colors">
+                        <div class="relative w-[115px] sm:w-[120px] h-[72px] rounded-lg overflow-hidden bg-slate-100 shrink-0">
+                            <img src="{{ asset('images/sawah_irigasi.png') }}" alt="Sosial"
+                                class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <div class="space-y-1 flex-1 min-w-0">
+                            <h4
+                                class="font-['Public_Sans',sans-serif] text-xs sm:text-[13.5px] font-bold text-[#191c1e] group-hover:text-[#0A3D29] leading-snug transition-colors line-clamp-2">
+                                Penyaluran Bantuan Langsung Tunai Dana Desa (BLT-DD) Tahap Ketiga
+                            </h4>
+                            <p class="text-[11px] text-slate-400 font-medium">01 Okt 2023</p>
                         </div>
                     </a>
                 </div>
