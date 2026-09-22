@@ -94,23 +94,23 @@
                 <ul class="space-y-2 text-xs sm:text-sm text-slate-300 font-light">
                     @forelse($footerLetterTemplates as $tpl)
                         <li>
-                            <a href="{{ route('warga.letter.index', ['search' => $tpl->name]) }}#katalog-surat"
+            <a href="{{ route('warga.letter.templates', ['search' => $tpl->name]) }}#katalog-surat"
                                 class="hover:text-white transition">
                                 {{ $tpl->name }} {{ $tpl->code ? "({$tpl->code})" : '' }}
                             </a>
                         </li>
                     @empty
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan
+                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Keterangan
                                 Usaha (SKU)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan
+                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Keterangan
                                 Domisili (SKD)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan
+                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Keterangan
                                 Tidak Mampu (SKTM)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Pengantar
+                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Pengantar
                                 Nikah (SPN)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan
+                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Keterangan
                                 Kelahiran (SKK)</a></li>
-                        <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Surat Keterangan
+                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Surat Keterangan
                                 Kematian (SKKM)</a></li>
                     @endforelse
                 </ul>

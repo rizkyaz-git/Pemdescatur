@@ -107,11 +107,15 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
 Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 // ===== PORTAL LAYANAN PUBLIK WARGA & GUEST =====
-// Pengajuan & Unduh Template Surat
+// Pengajuan Surat (halaman utama) & Template/Katalog Surat (halaman sekunder)
 Route::redirect('/layanan/surat', '/layanan/cetak-surat-mandiri');
-Route::get('/layanan/cetak-surat-mandiri', [PublicControllers\LetterRequestController::class, 'index'])->name('warga.letter.index');
+// Halaman utama: form pengajuan surat (dipromosikan dari create() lama)
+Route::get('/layanan/cetak-surat-mandiri', [PublicControllers\LetterRequestController::class, 'create'])->name('warga.letter.index');
+// Halaman sekunder: katalog & unduh template surat (dipindah dari index() lama)
+Route::get('/layanan/surat/template', [PublicControllers\LetterRequestController::class, 'index'])->name('warga.letter.templates');
 Route::get('/layanan/surat/template/{letterTemplate}/download', [PublicControllers\LetterRequestController::class, 'downloadTemplate'])->name('warga.letter.download');
-Route::get('/layanan/surat/buat', [PublicControllers\LetterRequestController::class, 'create'])->name('warga.letter.create');
+// /layanan/surat/buat → redirect permanen ke halaman form utama (keduanya sekarang identik)
+Route::permanentRedirect('/layanan/surat/buat', '/layanan/cetak-surat-mandiri');
 Route::post('/layanan/surat', [PublicControllers\LetterRequestController::class, 'store'])->middleware('throttle:5,1')->name('warga.letter.store');
 Route::get('/layanan/surat/{letterRequest}', [PublicControllers\LetterRequestController::class, 'show'])->name('warga.letter.show');
 

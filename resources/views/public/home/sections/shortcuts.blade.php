@@ -108,7 +108,7 @@
                     </h3>
                 </div>
                 <p class="text-xs text-slate-500 font-medium leading-relaxed text-left">
-                    Unduh template surat resmi siap cetak desa.
+                    Ajukan permohonan surat resmi desa secara online.
                 </p>
             </a>
 

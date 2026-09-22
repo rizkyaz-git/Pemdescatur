@@ -13,6 +13,7 @@ class LetterRequestController extends Controller
 {
     /**
      * Display list / search of ready-to-print letter templates
+     * (now accessible via /layanan/surat/template → warga.letter.templates)
      */
     public function index(Request $request): View
     {
@@ -51,32 +52,33 @@ class LetterRequestController extends Controller
     }
 
     /**
-     * Show form for creating new letter request
+     * Show form for creating new letter request.
+     * Now the main entry point via /layanan/cetak-surat-mandiri (warga.letter.index).
      */
     public function create(): View
     {
-        $templates = LetterTemplate::all();
-        return view('public.layanan.surat.create', compact('templates'));
+        $templates = LetterTemplate::orderBy('name')->get();
+        $isEmpty = $templates->isEmpty();
+        return view('public.layanan.surat.create', compact('templates', 'isEmpty'));
     }
 
     /**
      * Store new letter request (guest & logged-in user)
      */
-    public function store(Request $request): RedirectResponse
+    public function store(\App\Http\Requests\StoreLetterRequestRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'template_id' => 'required|exists:letter_templates,id',
-            'form_data' => 'required|array',
-        ]);
+        $validated = $request->validated();
 
         $letterRequest = LetterRequest::create([
-            'user_id' => auth()->id(), // null if guest
+            'user_id'     => auth()->id(), // null if guest
             'template_id' => $validated['template_id'],
-            'form_data' => $request->input('form_data'),
+            'form_data'   => $validated['form_data'],
         ]);
 
+        $noWa = data_get($validated, 'form_data.telepon', '');
+
         return redirect()->route('warga.letter.show', $letterRequest->id)
-                        ->with('success', "Permohonan surat berhasil dikirim! Simpan Nomor Tiket Anda: {$letterRequest->ticket_number}");
+                        ->with('success', "Permohonan surat berhasil dikirim! Nomor Tiket Anda: {$letterRequest->ticket_number}. Admin Desa Catur akan menghubungi Anda melalui WhatsApp ke nomor {$noWa} untuk menindaklanjuti.");
     }
 
     /**

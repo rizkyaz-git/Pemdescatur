@@ -28,13 +28,17 @@ class LetterRequestController extends Controller
             $query->where('template_id', $request->input('template_id'));
         }
 
-        // Search by ticket number or user name
+        // Search by ticket number, user name, or form_data fields (for guest submissions)
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where('ticket_number', 'like', "%{$search}%")
-                  ->orWhereHas('user', function ($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
-                  });
+            $query->where(function ($q) use ($search) {
+                $q->where('ticket_number', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhere('form_data->nama', 'like', "%{$search}%")
+                  ->orWhere('form_data->telepon', 'like', "%{$search}%");
+            });
         }
 
         $requests = $query->latest()->paginate(15);

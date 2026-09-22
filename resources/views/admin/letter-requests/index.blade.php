@@ -66,6 +66,7 @@
                     <tr class="bg-[#F8FAFC] text-[#64748B] text-[11px] font-bold uppercase tracking-wider border-b border-[#E2E8F0]">
                         <th class="px-5 py-3.5">No. Tiket</th>
                         <th class="px-5 py-3.5">Pemohon</th>
+                        <th class="px-5 py-3.5">No. WhatsApp</th>
                         <th class="px-5 py-3.5">Jenis Surat</th>
                         <th class="px-5 py-3.5">Tgl Pengajuan</th>
                         <th class="px-5 py-3.5">Status</th>
@@ -79,8 +80,11 @@
                                 {{ $req->ticket_number }}
                             </td>
                             <td class="px-5 py-4">
-                                <p class="font-medium text-[#0F172A] text-xs sm:text-sm">{{ $req->user ? $req->user->name : '-' }}</p>
+                                <p class="font-medium text-[#0F172A] text-xs sm:text-sm">{{ $req->user ? $req->user->name : data_get($req->form_data, 'nama', '-') }}</p>
                                 <p class="text-[11px] text-slate-500 font-mono">{{ $req->user ? $req->user->email : '' }}</p>
+                            </td>
+                            <td class="px-5 py-4">
+                                <p class="font-mono text-xs text-slate-600">{{ data_get($req->form_data, 'telepon', '-') }}</p>
                             </td>
                             <td class="px-5 py-4">
                                 <span class="font-semibold text-[#0F4C3A] text-xs sm:text-sm">
@@ -126,7 +130,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center text-slate-400">
+                            <td colspan="7" class="px-6 py-12 text-center text-slate-400">
                                 <svg class="w-10 h-10 mx-auto mb-2 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                 </svg>

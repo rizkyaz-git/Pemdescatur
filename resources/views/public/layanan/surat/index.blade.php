@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Layanan Cetak Surat Mandiri - Pemerintah Desa Catur')
-@section('meta_description', 'Unduh resmi berkas template surat keterangan siap cetak Pemerintah Desa Catur, Kec. Sambi, Kab. Boyolali. Unduh template dokumen dan lengkapi persyaratan sebelum legalisasi ke balai desa.')
+@section('title', 'Template & Format Surat - Pemerintah Desa Catur')
+@section('meta_description', 'Referensi template dan format surat resmi Pemerintah Desa Catur, Kec. Sambi, Kab. Boyolali. Unduh contoh format dokumen dan pelajari persyaratan sebelum mengajukan surat.')
 
 @section('content')
 
@@ -123,12 +123,13 @@
                 class="pb-6 border-b border-slate-200/80 text-left space-y-3.5 md:space-y-0 md:flex md:items-center md:justify-between md:gap-6">
                 <div class="space-y-1">
                     <x-breadcrumbs :items="[
-                        ['label' => 'BERANDA', 'url' => route('home')],
-                        ['label' => 'Cetak Surat Mandiri']
+                        ['label' => 'Beranda', 'url' => route('home')],
+                        ['label' => 'Pengajuan Surat', 'url' => route('warga.letter.index')],
+                        ['label' => 'Template & Format Surat']
                     ]" />
                     <h1
                         class="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#20332A] leading-tight tracking-tight">
-                        Layanan Cetak Surat Mandiri
+                        Template &amp; Format Surat
                     </h1>
                 </div>
 

@@ -75,7 +75,8 @@ class PublicServicesTest extends TestCase
     public function test_letter_service_accessible_for_guest(): void
     {
         $this->get('/layanan/cetak-surat-mandiri')->assertStatus(200);
-        $this->get('/layanan/surat/buat')->assertStatus(200);
+        // /layanan/surat/buat sekarang redirect permanen ke /layanan/cetak-surat-mandiri
+        $this->get('/layanan/surat/buat')->assertRedirect('/layanan/cetak-surat-mandiri');
     }
 
     public function test_authenticated_warga_can_access_letter_forms(): void
@@ -83,7 +84,8 @@ class PublicServicesTest extends TestCase
         $user = User::where('email', 'warga@desacatur.id')->first() ?? User::factory()->create();
 
         $this->actingAs($user)->get('/layanan/cetak-surat-mandiri')->assertStatus(200);
-        $this->actingAs($user)->get('/layanan/surat/buat')->assertStatus(200);
+        // /layanan/surat/buat sekarang redirect permanen ke /layanan/cetak-surat-mandiri
+        $this->actingAs($user)->get('/layanan/surat/buat')->assertRedirect('/layanan/cetak-surat-mandiri');
         $this->actingAs($user)->get('/pengaduan')->assertStatus(200);
     }
 
