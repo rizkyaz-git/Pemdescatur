@@ -19,7 +19,7 @@ class LetterRequestController extends Controller
     {
         $search = trim($request->input('search', ''));
 
-        $query = LetterTemplate::query();
+        $query = LetterTemplate::whereNotNull('file_path');
 
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
@@ -57,8 +57,34 @@ class LetterRequestController extends Controller
      */
     public function create(): View
     {
-        $templates = LetterTemplate::orderBy('name')->get();
-        $isEmpty = $templates->isEmpty();
+        // Pastikan Surat Keterangan dan Surat Pengantar selalu tersedia di database
+        if (LetterTemplate::whereIn('name', ['Surat Keterangan', 'Surat Pengantar'])->count() < 2) {
+            LetterTemplate::firstOrCreate(
+                ['name' => 'Surat Keterangan'],
+                [
+                    'code' => 'SK',
+                    'description' => 'Surat Keterangan resmi dari Pemerintah Desa Catur untuk berbagai keperluan warga.',
+                    'requirements' => "- Fotokopi KTP Pemohon\n- Fotokopi Kartu Keluarga (KK)\n- Surat Pengantar RT/RW",
+                ]
+            );
+            LetterTemplate::firstOrCreate(
+                ['name' => 'Surat Pengantar'],
+                [
+                    'code' => 'SP',
+                    'description' => 'Surat Pengantar resmi dari Pemerintah Desa Catur untuk pengurusan dokumen di instansi terkait.',
+                    'requirements' => "- Fotokopi KTP Pemohon\n- Fotokopi Kartu Keluarga (KK)\n- Surat Pengantar RT/RW",
+                ]
+            );
+        }
+
+        // Urutkan: Surat Keterangan paling atas, lalu Surat Pengantar, kemudian jenis surat lainnya
+        $templates = LetterTemplate::where('name', '!=', 'Lainnya')->get()->sortBy(function ($item) {
+            if ($item->name === 'Surat Keterangan') return 1;
+            if ($item->name === 'Surat Pengantar') return 2;
+            return 3;
+        })->values();
+
+        $isEmpty = false;
         return view('public.layanan.surat.create', compact('templates', 'isEmpty'));
     }
 
@@ -69,9 +95,21 @@ class LetterRequestController extends Controller
     {
         $validated = $request->validated();
 
+        $templateId = $validated['template_id'];
+        if ($templateId === 'lainnya') {
+            $otherTpl = LetterTemplate::firstOrCreate(
+                ['name' => 'Lainnya'],
+                [
+                    'code' => 'LAINNYA',
+                    'description' => 'Jenis surat permohonan lainnya yang diisi secara spesifik oleh warga.'
+                ]
+            );
+            $templateId = $otherTpl->id;
+        }
+
         $letterRequest = LetterRequest::create([
             'user_id'     => auth()->id(), // null if guest
-            'template_id' => $validated['template_id'],
+            'template_id' => $templateId,
             'form_data'   => $validated['form_data'],
         ]);
 

@@ -95,7 +95,12 @@
                             $label = $item->name . ($item->code ? ' (' . $item->code . ')' : '');
                             return [(string) $item->id => $label];
                         })->toArray();
+                        $templatesList['lainnya'] = 'Lainnya (Tulis Manual)';
+
                         $initialTemplateId = (string) old('template_id', request('template_id', ''));
+                        if (empty($initialTemplateId) && old('form_data.jenis_surat_lainnya')) {
+                            $initialTemplateId = 'lainnya';
+                        }
                     @endphp
 
                     <div x-data="{
@@ -108,84 +113,127 @@
                                     select(val) {
                                         this.selected = val;
                                         this.open = false;
+                                        if (val === 'lainnya') {
+                                            this.$nextTick(() => {
+                                                const el = document.getElementById('jenis_surat_lainnya');
+                                                if (el) el.focus();
+                                            });
+                                        }
                                     }
                                 }" @click.away="open = false" class="relative">
                         <label class="block text-[13px] font-semibold text-slate-800 mb-1.5">
                             Jenis Surat <span class="text-rose-500">*</span>
                         </label>
 
-                        @if($isEmpty)
-                            <select name="template_id" id="template_id" disabled
-                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm text-slate-400 bg-slate-100 cursor-not-allowed">
-                                <option value="">Belum ada jenis surat tersedia — hubungi admin desa</option>
+                        {{-- Hidden input for standard form submission --}}
+                        <input type="hidden" name="template_id" :value="selected" required>
+
+                        {{-- Mobile Select (sm:hidden) --}}
+                        <div class="sm:hidden">
+                            <select x-model="selected"
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#0A3D29]/20 focus:border-[#0A3D29] text-sm text-slate-900 bg-slate-50/40 @error('template_id') border-rose-500 @enderror">
+                                <option value="">-- Pilih Jenis Surat --</option>
+                                @foreach($templates as $tpl)
+                                    <option value="{{ $tpl->id }}">
+                                        {{ $tpl->name }}{{ $tpl->code ? ' (' . $tpl->code . ')' : '' }}
+                                    </option>
+                                @endforeach
+                                <option value="lainnya">Lainnya (Tulis Manual)</option>
                             </select>
-                            <p class="text-xs text-amber-600 font-medium mt-1">Jenis surat belum tersedia. Silakan hubungi
-                                Kantor Desa Catur secara langsung.</p>
-                        @else
-                            {{-- Hidden input for standard form submission --}}
-                            <input type="hidden" name="template_id" :value="selected" required>
+                        </div>
 
-                            {{-- Mobile Select --}}
-                            <div class="sm:hidden">
-                                <select x-model="selected"
-                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#0A3D29]/20 focus:border-[#0A3D29] text-sm text-slate-900 bg-slate-50/40 @error('template_id') border-rose-500 @enderror">
-                                    <option value="">-- Pilih Jenis Surat --</option>
+                        {{-- Desktop Dropdown (hidden sm:block) --}}
+                        <div class="hidden sm:block relative">
+                            <button type="button" @click="open = !open"
+                                class="flex items-center justify-between w-full h-11 px-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#0A3D29]/20 focus:border-[#0A3D29] text-sm bg-slate-50/40 text-slate-900 cursor-pointer text-left transition shadow-2xs hover:bg-white"
+                                :class="open ? 'border-[#0A3D29] ring-2 ring-[#0A3D29]/20 bg-white' : ''">
+                                <span x-text="selectedLabel"
+                                    :class="selected ? 'text-slate-900 font-semibold' : 'text-slate-400'"></span>
+                                <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0"
+                                    :class="open ? 'rotate-180 text-[#0A3D29]' : ''" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            <div x-show="open" x-cloak 
+                                x-transition:enter="transition ease-out duration-150"
+                                x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                x-transition:leave="transition ease-in duration-100"
+                                x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
+                                class="absolute left-0 mt-1.5 w-full max-h-72 overflow-y-auto rounded-xl p-1.5 z-50 shadow-xl bg-white border border-slate-200 text-slate-800 space-y-0.5"
+                                style="display: none;">
+
+                                <div class="space-y-0.5">
                                     @foreach($templates as $tpl)
-                                        <option value="{{ $tpl->id }}">
-                                            {{ $tpl->name }}{{ $tpl->code ? ' (' . $tpl->code . ')' : '' }}
-                                        </option>
+                                        @php $val = (string) $tpl->id; @endphp
+                                        <button type="button" @click="select('{{ $val }}')"
+                                            class="flex items-center justify-between w-full px-3.5 py-2.5 text-xs sm:text-sm font-medium rounded-lg text-left transition-colors duration-150 cursor-pointer"
+                                            :class="selected === '{{ $val }}' ? 'bg-[#0A3D29] text-white font-semibold' : 'text-slate-700 hover:bg-slate-100 hover:text-[#0A3D29]'">
+                                            <span>{{ $tpl->name }}{{ $tpl->code ? ' (' . $tpl->code . ')' : '' }}</span>
+                                            <template x-if="selected === '{{ $val }}'">
+                                                <svg class="w-4 h-4 text-white shrink-0" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </template>
+                                        </button>
                                     @endforeach
-                                </select>
-                            </div>
+                                </div>
 
-                            {{-- Desktop Dropdown --}}
-                            <div class="hidden sm:block relative">
-                                <button type="button" @click="open = !open"
-                                    class="flex items-center justify-between w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#0A3D29]/20 focus:border-[#0A3D29] text-sm bg-slate-50/40 text-slate-900 cursor-pointer text-left transition"
-                                    :class="open ? 'border-[#0A3D29] ring-2 ring-[#0A3D29]/20 bg-white' : ''">
-                                    <span x-text="selectedLabel"
-                                        :class="selected ? 'text-slate-900 font-medium' : 'text-slate-400'"></span>
-                                    <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0"
-                                        :class="open ? 'rotate-180 text-[#0A3D29]' : ''" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </button>
-
-                                <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-150"
-                                    x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
-                                    x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                                    x-transition:leave="transition ease-in duration-100"
-                                    x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-                                    x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
-                                    class="absolute left-0 mt-1.5 w-full max-h-72 overflow-y-auto rounded-lg p-1.5 z-50 shadow-xl bg-white/95 backdrop-blur-2xl border border-slate-200/90 text-slate-800"
-                                    style="display: none;">
-
-                                    <div class="space-y-0.5">
-                                        @foreach($templates as $tpl)
-                                            @php $val = (string) $tpl->id; @endphp
-                                            <button type="button" @click="select('{{ $val }}')"
-                                                class="flex items-center justify-between w-full px-3.5 py-2 text-xs font-semibold rounded-md text-left transition-colors duration-150 cursor-pointer"
-                                                :class="selected === '{{ $val }}' ? 'bg-[#0A3D29] text-white' : 'text-slate-700 hover:bg-slate-100 hover:text-[#0A3D29]'">
-                                                <span>{{ $tpl->name }}{{ $tpl->code ? ' (' . $tpl->code . ')' : '' }}</span>
-                                                <template x-if="selected === '{{ $val }}'">
-                                                    <svg class="w-4 h-4 text-white shrink-0" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                            d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                </template>
-                                            </button>
-                                        @endforeach
-                                    </div>
+                                {{-- Opsi Lainnya --}}
+                                <div class="pt-1 mt-1 border-t border-slate-100">
+                                    <button type="button" @click="select('lainnya')"
+                                        class="flex items-center justify-between w-full px-3.5 py-2.5 text-xs sm:text-sm font-semibold rounded-lg text-left transition-colors duration-150 cursor-pointer"
+                                        :class="selected === 'lainnya' ? 'bg-[#0A3D29] text-white' : 'text-slate-700 hover:bg-emerald-50/70 hover:text-[#0A3D29]'">
+                                        <div class="flex items-center gap-2">
+                                            <svg class="w-4 h-4 text-slate-400" :class="selected === 'lainnya' ? 'text-white' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                            </svg>
+                                            <span>Lainnya (Tulis Manual)</span>
+                                        </div>
+                                        <template x-if="selected === 'lainnya'">
+                                            <svg class="w-4 h-4 text-white shrink-0" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </template>
+                                    </button>
                                 </div>
                             </div>
+                        </div>
 
-                            @error('template_id')
+                        @error('template_id')
+                            <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
+                        @enderror
+
+                        {{-- Form Tambahan Jika Memilih Lainnya --}}
+                        <div x-show="selected === 'lainnya'" x-cloak
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 -translate-y-2"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 -translate-y-2"
+                            class="p-4 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-1.5 mt-3">
+                            <label for="jenis_surat_lainnya" class="block text-[13px] font-semibold text-slate-800">
+                                Nama / Jenis Surat yang Dibutuhkan <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" name="form_data[jenis_surat_lainnya]" id="jenis_surat_lainnya"
+                                value="{{ old('form_data.jenis_surat_lainnya') }}"
+                                :required="selected === 'lainnya'"
+                                placeholder="Contoh: Surat Rekomendasi, Surat Keterangan Belum Menikah, dll..."
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#0A3D29]/20 focus:border-[#0A3D29] text-sm text-slate-900 bg-white transition @error('form_data.jenis_surat_lainnya') border-rose-500 @enderror">
+                            <p class="text-[11px] text-slate-500">Tuliskan nama atau jenis surat resmi yang Anda perlukan secara spesifik.</p>
+                            @error('form_data.jenis_surat_lainnya')
                                 <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
                             @enderror
-                        @endif
+                        </div>
                     </div>
 
                     {{-- Keperluan / Keterangan --}}
@@ -208,8 +256,8 @@
                             class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition cursor-pointer">
                             Reset
                         </button>
-                        <button type="submit" {{ $isEmpty ? 'disabled' : '' }}
-                            class="inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#072B1D] text-white font-semibold text-xs py-2.5 px-6 rounded-lg transition shadow-xs cursor-pointer active:scale-95 {{ $isEmpty ? 'opacity-50 cursor-not-allowed' : '' }}">
+                        <button type="submit"
+                            class="inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#072B1D] text-white font-semibold text-xs py-2.5 px-6 rounded-lg transition shadow-xs cursor-pointer active:scale-95">
                             <svg class="w-4 h-4 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

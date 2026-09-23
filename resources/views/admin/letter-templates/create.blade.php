@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Template Surat Siap Cetak')
+@section('title', 'Tambah Template Surat')
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
@@ -15,7 +15,7 @@
         </a>
         <div>
             <h1 class="font-jakarta text-2xl font-bold text-[#0F172A]">Tambah Template Surat Baru</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Unggah file dokumen surat resmi yang siap diunduh dan dicetak oleh warga.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Unggah dokumen template surat siap cetak desa untuk diunduh warga.</p>
         </div>
     </div>
 
@@ -28,24 +28,25 @@
                     Nama Template Surat <span class="text-rose-500">*</span>
                 </label>
                 <input type="text" name="name" id="name" value="{{ old('name') }}" required
-                    placeholder="Contoh: Surat Keterangan Usaha (SKU)"
+                    placeholder="Contoh: Surat Keterangan Usaha (SKU) atau Surat Pengantar KTP"
                     class="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-sm bg-[#F8FAFC]/40 text-slate-900 @error('name') border-rose-500 @enderror">
                 @error('name')
                     <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Upload File Template Dokumen -->
+            <!-- Upload File Template Dokumen (Wajib) -->
             <div>
-                <label for="file" class="block text-[13px] font-semibold text-[#1E293B] mb-2">
+                <label for="file" class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
                     File Template Surat Siap Cetak <span class="text-rose-500">*</span>
                 </label>
                 <x-file-picker 
                     name="file" 
                     id="file" 
                     accept=".doc,.docx,.pdf,.rtf,.odt" 
-                    required 
+                    required
                 />
+                <p class="text-[11px] text-slate-400 mt-1.5">Unggah file dokumen (.doc, .docx, .pdf) template siap cetak yang dapat diunduh oleh warga.</p>
                 @error('file')
                     <p class="text-xs text-rose-600 font-medium mt-1.5">{{ $message }}</p>
                 @enderror

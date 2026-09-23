@@ -92,7 +92,7 @@
                         </div>
 
                         <div class="pt-4 mt-4 border-t border-[#F1F5F9] flex items-center justify-between text-xs font-semibold text-[#0F4C3A]">
-                            <span>Kelola Berkas</span>
+                            <span>Kelola Template</span>
                             <span class="group-hover:translate-x-0.5 transition-transform">→</span>
                         </div>
                     </a>

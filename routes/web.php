@@ -67,6 +67,7 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
         Route::resource('galleries', Admin\GalleryController::class)->except(['show']);
 
         // Layanan Publik (Template Surat, Permohonan Surat, Pengaduan Warga)
+        Route::post('letter-requests/letter-types', [Admin\LetterRequestController::class, 'storeType'])->name('letter-requests.store-type');
         Route::resource('letter-templates', Admin\LetterTemplateController::class)->except(['show']);
         Route::resource('letter-requests', Admin\LetterRequestController::class)->only(['index', 'show', 'edit', 'update']);
         Route::resource('complaints', Admin\ComplaintController::class)->except(['create', 'store']);

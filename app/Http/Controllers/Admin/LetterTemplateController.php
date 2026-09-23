@@ -16,7 +16,7 @@ class LetterTemplateController extends Controller
      */
     public function index(): View
     {
-        $templates = LetterTemplate::latest()->paginate(15);
+        $templates = LetterTemplate::whereNotNull('file_path')->latest()->paginate(15);
         return view('admin.letter-templates.index', compact('templates'));
     }
 
@@ -40,7 +40,7 @@ class LetterTemplateController extends Controller
             'requirements' => 'nullable|string',
         ], [
             'name.required' => 'Nama template surat wajib diisi.',
-            'file.required' => 'File template surat siap cetak wajib diunggah.',
+            'file.required' => 'File dokumen template surat siap cetak wajib diunggah.',
             'file.mimes' => 'Format file harus berupa DOC, DOCX, PDF, RTF, atau ODT.',
             'file.max' => 'Ukuran file maksimal 25 MB.',
         ]);
@@ -56,7 +56,7 @@ class LetterTemplateController extends Controller
         ]);
 
         return redirect()->route('admin.letter-templates.index')
-                        ->with('success', 'File template surat siap cetak berhasil ditambahkan.');
+                        ->with('success', 'Template surat siap cetak berhasil ditambahkan.');
     }
 
     /**

@@ -3,12 +3,21 @@
 @section('title', 'Permohonan Surat Warga')
 
 @section('content')
-<div class="space-y-5">
-    {{-- 1. Page Header --}}
+<div class="space-y-5" x-data="{ createTypeModalOpen: false }">
+    {{-- 1. Page Header & Primary Action --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
             <h1 class="font-jakarta font-extrabold text-2xl text-slate-900 tracking-tight">Permohonan Surat Warga</h1>
             <p class="text-xs text-[#64748B] mt-1 font-medium">Pantau, proses, dan verifikasi permohonan surat masuk dari warga secara online.</p>
+        </div>
+        <div class="shrink-0 self-start sm:self-auto">
+            <button type="button" @click="createTypeModalOpen = true"
+               class="inline-flex items-center gap-1.5 bg-[#0F4C3A] hover:bg-[#072C21] text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-xs hover:shadow-sm transition active:scale-95 cursor-pointer">
+                <svg class="w-4 h-4 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span>Tambah Jenis Surat</span>
+            </button>
         </div>
     </div>
 
@@ -28,15 +37,24 @@
 
         <!-- Dropdown Jenis Surat Gaya Navbar -->
         @php
-            $selectedTemplate = $templates->firstWhere('id', request('template_id'));
+            $currentTplId = request('template_id');
+            $selectedTemplate = $templates->first(function ($t) use ($currentTplId) {
+                return (string) $t->id === (string) $currentTplId;
+            });
+            $selectedLabel = 'Semua Jenis Surat';
+            if ($selectedTemplate) {
+                $selectedLabel = $selectedTemplate->name . ($selectedTemplate->code ? ' (' . $selectedTemplate->code . ')' : '');
+            } elseif ($currentTplId === 'lainnya') {
+                $selectedLabel = 'Lainnya';
+            }
         @endphp
         <div class="relative shrink-0" x-data="{ templateOpen: false }" @click.away="templateOpen = false">
             <input type="hidden" name="template_id" x-ref="templateInput" value="{{ request('template_id') }}">
             
             <button type="button" @click="templateOpen = !templateOpen"
                 class="w-full sm:w-auto h-9 px-3.5 inline-flex items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-2xs">
-                <span class="truncate max-w-[160px]">
-                    {{ $selectedTemplate ? ($selectedTemplate->title ?? $selectedTemplate->name) : 'Semua Jenis Surat' }}
+                <span class="truncate max-w-[170px]">
+                    {{ $selectedLabel }}
                 </span>
                 <svg class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200 shrink-0"
                     :class="templateOpen ? 'rotate-180 text-[#0F4C3A]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +69,7 @@
                 x-transition:leave="transition ease-in duration-100"
                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                 x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
-                class="absolute left-0 mt-1.5 w-60 rounded-xl bg-white border border-slate-200 shadow-xl py-1 z-30 overflow-hidden text-xs max-h-60 overflow-y-auto custom-scrollbar">
+                class="absolute left-0 mt-1.5 w-64 rounded-xl bg-white border border-slate-200 shadow-xl py-1 z-30 overflow-hidden text-xs max-h-60 overflow-y-auto custom-scrollbar">
                 
                 <button type="button" 
                     @click="$refs.templateInput.value = ''; templateOpen = false; $el.closest('form').submit()"
@@ -66,12 +84,23 @@
                     <button type="button" 
                         @click="$refs.templateInput.value = '{{ $tpl->id }}'; templateOpen = false; $el.closest('form').submit()"
                         class="w-full flex items-center justify-between px-3.5 py-2 text-left transition {{ (string) request('template_id') === (string) $tpl->id ? 'bg-[#0F4C3A]/5 text-[#0F4C3A] font-bold' : 'text-slate-700 hover:bg-slate-50' }}">
-                        <span class="truncate">{{ $tpl->title ?? $tpl->name }} ({{ $tpl->code }})</span>
+                        <span class="truncate">{{ $tpl->name }}{{ $tpl->code ? ' (' . $tpl->code . ')' : '' }}</span>
                         @if((string) request('template_id') === (string) $tpl->id)
                             <svg class="w-3.5 h-3.5 text-[#0F4C3A] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                         @endif
                     </button>
                 @endforeach
+
+                @if(!$templates->contains('name', 'Lainnya'))
+                    <button type="button" 
+                        @click="$refs.templateInput.value = 'lainnya'; templateOpen = false; $el.closest('form').submit()"
+                        class="w-full flex items-center justify-between px-3.5 py-2 text-left transition {{ request('template_id') === 'lainnya' ? 'bg-[#0F4C3A]/5 text-[#0F4C3A] font-bold' : 'text-slate-700 hover:bg-slate-50' }}">
+                        <span class="truncate">Lainnya</span>
+                        @if(request('template_id') === 'lainnya')
+                            <svg class="w-3.5 h-3.5 text-[#0F4C3A] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        @endif
+                    </button>
+                @endif
             </div>
         </div>
 
@@ -187,7 +216,12 @@
                             </td>
                             <td class="px-4 py-3.5 align-middle">
                                 <span class="font-medium text-slate-800 text-xs">
-                                    {{ $req->template ? ($req->template->title ?? $req->template->name) : '-' }}
+                                    @if(data_get($req->form_data, 'jenis_surat_lainnya'))
+                                        {{ data_get($req->form_data, 'jenis_surat_lainnya') }}
+                                        <span class="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200/60 font-semibold ml-1">Lainnya</span>
+                                    @else
+                                        {{ $req->template ? ($req->template->title ?? $req->template->name) : '-' }}
+                                    @endif
                                 </span>
                             </td>
                             <td class="px-4 py-3.5 align-middle whitespace-nowrap text-xs text-slate-600 tabular-nums">
@@ -262,5 +296,123 @@
             </div>
         @endif
     </div>
+
+    {{-- Modal Tambah Jenis Surat Cepat --}}
+    <template x-teleport="body">
+        <div x-show="createTypeModalOpen" 
+             x-cloak 
+             class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-xs overflow-y-auto"
+             x-transition:enter="transition ease-out duration-150"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-100"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            
+            <div @click.away="createTypeModalOpen = false"
+                 class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full p-5 sm:p-6 my-auto text-left relative"
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 scale-95 translate-y-2">
+                
+                {{-- Modal Header --}}
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-50 text-[#0F4C3A] flex items-center justify-center border border-emerald-200/60 shadow-2xs shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900 font-jakarta leading-snug">Tambah Jenis Surat Baru</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5">Langsung aktif di formulir pengajuan online warga</p>
+                        </div>
+                    </div>
+                    <button type="button" @click="createTypeModalOpen = false" 
+                            class="text-slate-400 hover:text-slate-600 rounded-lg p-1.5 hover:bg-slate-100 transition cursor-pointer"
+                            aria-label="Tutup Modal">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                {{-- Modal Form --}}
+                <form action="{{ route('admin.letter-requests.store-type') }}" method="POST" class="mt-4 space-y-3.5 text-xs">
+                    @csrf
+                    
+                    {{-- Nama Jenis Surat --}}
+                    <div>
+                        <label for="type_name" class="block font-semibold text-slate-800 mb-1.5">
+                            Nama Jenis Surat <span class="text-rose-500">*</span>
+                        </label>
+                        <input type="text" 
+                               name="name" 
+                               id="type_name" 
+                               required 
+                               placeholder="Contoh: Surat Keterangan Belum Menikah"
+                               class="w-full h-10 px-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-xs text-slate-900 placeholder-slate-400 bg-white">
+                    </div>
+
+                    {{-- Kode / Singkatan (Opsional) --}}
+                    <div>
+                        <label for="type_code" class="block font-semibold text-slate-800 mb-1.5">
+                            Kode / Singkatan <span class="text-slate-400 font-normal text-[11px]">(Opsional)</span>
+                        </label>
+                        <input type="text" 
+                               name="code" 
+                               id="type_code" 
+                               placeholder="Contoh: SKBM"
+                               class="w-full h-10 px-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-xs text-slate-900 placeholder-slate-400 bg-white uppercase">
+                        <p class="text-[10px] text-slate-400 mt-1">Digunakan sebagai singkatan atau kode pengenal surat di sistem.</p>
+                    </div>
+
+                    {{-- Persyaratan Berkas (Opsional) --}}
+                    <div>
+                        <label for="type_requirements" class="block font-semibold text-slate-800 mb-1.5">
+                            Persyaratan Berkas <span class="text-slate-400 font-normal text-[11px]">(Opsional)</span>
+                        </label>
+                        <textarea name="requirements" 
+                                  id="type_requirements" 
+                                  rows="3" 
+                                  placeholder="Contoh: Surat Pengantar RT/RW, Fotokopi KTP Pemohon, Fotokopi Kartu Keluarga (KK)"
+                                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-xs text-slate-900 placeholder-slate-400 bg-white resize-y"></textarea>
+                        <p class="text-[10px] text-slate-400 mt-1">Daftar berkas yang harus disiapkan oleh warga saat mengajukan jenis surat ini.</p>
+                    </div>
+
+                    {{-- Deskripsi Singkat (Opsional) --}}
+                    <div>
+                        <label for="type_description" class="block font-semibold text-slate-800 mb-1.5">
+                            Keterangan / Keperluan <span class="text-slate-400 font-normal text-[11px]">(Opsional)</span>
+                        </label>
+                        <textarea name="description" 
+                                  id="type_description" 
+                                  rows="2" 
+                                  placeholder="Penjelasan singkat mengenai peruntukan surat ini (opsional)"
+                                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#0F4C3A]/20 focus:border-[#0F4C3A] text-xs text-slate-900 placeholder-slate-400 bg-white resize-y"></textarea>
+                    </div>
+
+                    {{-- Modal Footer --}}
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                        <button type="button" @click="createTypeModalOpen = false" 
+                                class="px-4 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                                class="inline-flex items-center gap-1.5 px-4.5 py-2 rounded-lg bg-[#0F4C3A] hover:bg-[#072C21] text-xs font-semibold text-white shadow-xs hover:shadow-sm transition active:scale-95 cursor-pointer">
+                            <svg class="w-3.5 h-3.5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span>Simpan Jenis Surat</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
 </div>
 @endsection

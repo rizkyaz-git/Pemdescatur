@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Template Surat Siap Cetak')
+@section('title', 'Edit Template Surat')
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">

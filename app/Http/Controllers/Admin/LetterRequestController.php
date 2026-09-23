@@ -25,7 +25,17 @@ class LetterRequestController extends Controller
 
         // Filter by template
         if ($request->filled('template_id')) {
-            $query->where('template_id', $request->input('template_id'));
+            $tplId = $request->input('template_id');
+            if ($tplId === 'lainnya') {
+                $otherTpl = LetterTemplate::where('name', 'Lainnya')->first();
+                $otherId = $otherTpl ? $otherTpl->id : 0;
+                $query->where(function ($q) use ($otherId) {
+                    $q->where('template_id', $otherId)
+                      ->orWhereNotNull('form_data->jenis_surat_lainnya');
+                });
+            } else {
+                $query->where('template_id', $tplId);
+            }
         }
 
         // Search by ticket number, user name, or form_data fields (for guest submissions)
@@ -37,14 +47,49 @@ class LetterRequestController extends Controller
                       $uq->where('name', 'like', "%{$search}%");
                   })
                   ->orWhere('form_data->nama', 'like', "%{$search}%")
-                  ->orWhere('form_data->telepon', 'like', "%{$search}%");
+                  ->orWhere('form_data->telepon', 'like', "%{$search}%")
+                  ->orWhere('form_data->nik', 'like', "%{$search}%")
+                  ->orWhere('form_data->jenis_surat_lainnya', 'like', "%{$search}%")
+                  ->orWhereHas('template', function ($tq) use ($search) {
+                      $tq->where('name', 'like', "%{$search}%");
+                  });
             });
         }
 
-        $requests = $query->latest()->paginate(15);
-        $templates = LetterTemplate::all();
+        $requests = $query->latest()->paginate(15)->withQueryString();
+        $templates = LetterTemplate::orderBy('name')->get();
 
         return view('admin.letter-requests.index', compact('requests', 'templates'));
+    }
+
+    /**
+     * Store a newly created letter type directly from the letter requests page
+     * without requiring an uploaded template file.
+     */
+    public function storeType(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:letter_templates,name',
+            'code' => 'nullable|string|max:50',
+            'requirements' => 'nullable|string',
+            'description' => 'nullable|string',
+        ], [
+            'name.required' => 'Nama jenis surat wajib diisi.',
+            'name.unique' => 'Jenis surat dengan nama ini sudah terdaftar.',
+            'name.max' => 'Nama jenis surat maksimal 255 karakter.',
+            'code.max' => 'Kode singkatan maksimal 50 karakter.',
+        ]);
+
+        $letterType = LetterTemplate::create([
+            'name' => trim($validated['name']),
+            'code' => !empty($validated['code']) ? strtoupper(trim($validated['code'])) : null,
+            'requirements' => !empty($validated['requirements']) ? trim($validated['requirements']) : null,
+            'description' => !empty($validated['description']) ? trim($validated['description']) : null,
+            'file_path' => null,
+        ]);
+
+        return redirect()->route('admin.letter-requests.index')
+            ->with('success', "Jenis surat '{$letterType->name}' berhasil ditambahkan dan langsung aktif di formulir pengajuan warga.");
     }
 
     /**

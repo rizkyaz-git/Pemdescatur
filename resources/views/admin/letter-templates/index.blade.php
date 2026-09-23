@@ -7,8 +7,8 @@
     {{-- 1. Page Header & Primary Action --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-            <h1 class="font-jakarta font-extrabold text-2xl text-slate-900 tracking-tight">File Template Surat Siap Cetak</h1>
-            <p class="text-xs text-[#64748B] mt-1 font-medium">Kelola dokumen template surat resmi desa yang dapat diunduh dan dicetak mandiri oleh warga.</p>
+            <h1 class="font-jakarta font-extrabold text-2xl text-slate-900 tracking-tight">Kelola Template Surat</h1>
+            <p class="text-xs text-[#64748B] mt-1 font-medium">Kelola file dokumen template surat siap cetak desa untuk diunduh warga.</p>
         </div>
         <div class="shrink-0 self-start sm:self-auto">
             <a href="{{ route('admin.letter-templates.create') }}" 
@@ -16,7 +16,7 @@
                 <svg class="w-4 h-4 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
-                <span>Tambah Template Baru</span>
+                <span>Tambah Template</span>
             </a>
         </div>
     </div>

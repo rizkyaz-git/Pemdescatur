@@ -25,7 +25,14 @@
                 <div class="grid grid-cols-2 gap-4 text-sm">
                     <div>
                         <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Jenis Surat</p>
-                        <p class="font-semibold text-[#0F172A] mt-1">{{ $request->template ? ($request->template->title ?? $request->template->name) : '-' }}</p>
+                        <p class="font-semibold text-[#0F172A] mt-1">
+                            @if(data_get($request->form_data, 'jenis_surat_lainnya'))
+                                {{ data_get($request->form_data, 'jenis_surat_lainnya') }}
+                                <span class="text-xs font-normal text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded ml-1">Lainnya</span>
+                            @else
+                                {{ $request->template ? ($request->template->title ?? $request->template->name) : '-' }}
+                            @endif
+                        </p>
                     </div>
                     <div>
                         <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Tanggal Pengajuan</p>

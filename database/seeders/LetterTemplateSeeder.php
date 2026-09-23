@@ -14,6 +14,30 @@ class LetterTemplateSeeder extends Seeder
     {
         $templates = [
             [
+                'name' => 'Surat Keterangan',
+                'code' => 'SK',
+                'description' => 'Surat keterangan resmi dari Pemerintah Desa Catur untuk berbagai keperluan administrasi warga.',
+                'file_path' => null,
+                'requirements' => "- Fotokopi KTP Pemohon\n- Fotokopi Kartu Keluarga (KK)\n- Surat Pengantar RT/RW",
+                'template_text' => null,
+            ],
+            [
+                'name' => 'Surat Pengantar',
+                'code' => 'SP',
+                'description' => 'Surat pengantar resmi dari Pemerintah Desa Catur untuk pengurusan dokumen di instansi luar/kecamatan/KUA.',
+                'file_path' => null,
+                'requirements' => "- Fotokopi KTP Pemohon\n- Fotokopi Kartu Keluarga (KK)\n- Surat Pengantar RT/RW",
+                'template_text' => null,
+            ],
+            [
+                'name' => 'Lainnya',
+                'code' => 'LAINNYA',
+                'description' => 'Jenis surat permohonan lainnya yang diisi secara spesifik oleh pemohon.',
+                'file_path' => null,
+                'requirements' => "- Dokumen pendukung sesuai kebutuhan permohonan surat",
+                'template_text' => null,
+            ],
+            [
                 'name' => 'Surat Keterangan Usaha',
                 'code' => 'SKU',
                 'description' => 'Surat keterangan resmi dari Pemerintah Desa Catur untuk keperluan legalitas usaha, pengajuan pinjaman bank/KUR, perizinan dagang, dan kemitraan bisnis warga.',

@@ -105,7 +105,14 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                     <div>
                         <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Jenis Surat</p>
-                        <p class="font-semibold text-slate-900 mt-1">{{ $letterRequest->template ? ($letterRequest->template->title ?? $letterRequest->template->name) : '-' }}</p>
+                        <p class="font-semibold text-slate-900 mt-1">
+                            @if(data_get($letterRequest->form_data, 'jenis_surat_lainnya'))
+                                {{ data_get($letterRequest->form_data, 'jenis_surat_lainnya') }}
+                                <span class="text-xs font-normal text-slate-500">(Lainnya)</span>
+                            @else
+                                {{ $letterRequest->template ? ($letterRequest->template->title ?? $letterRequest->template->name) : '-' }}
+                            @endif
+                        </p>
                     </div>
 
                     <div>

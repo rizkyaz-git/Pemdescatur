@@ -89,17 +89,52 @@ class PublicServicesTest extends TestCase
         $this->actingAs($user)->get('/pengaduan')->assertStatus(200);
     }
 
+    public function test_guest_can_submit_letter_with_lainnya_option(): void
+    {
+        $response = $this->post(route('warga.letter.store'), [
+            'template_id' => 'lainnya',
+            'form_data' => [
+                'nama' => 'Siti Aminah',
+                'nik' => '3309123456789012',
+                'telepon' => '081298765432',
+                'jenis_surat_lainnya' => 'Surat Rekomendasi Beasiswa',
+                'keperluan' => 'Permohonan rekomendasi beasiswa pendidikan tingkat perguruan tinggi.',
+            ]
+        ]);
+
+        $response->assertSessionHasNoErrors();
+
+        $req = LetterRequest::latest('id')->first();
+        $this->assertNotNull($req);
+        $this->assertEquals('Siti Aminah', data_get($req->form_data, 'nama'));
+        $this->assertEquals('Surat Rekomendasi Beasiswa', data_get($req->form_data, 'jenis_surat_lainnya'));
+        $response->assertRedirect(route('warga.letter.show', $req->id));
+    }
+
     public function test_admin_can_manage_letter_templates_requests_and_complaints(): void
     {
         $admin = User::first();
 
         // Admin view letter templates
-        $this->actingAs($admin)->get('/admin/letter-templates')->assertStatus(200);
+        $this->actingAs($admin)->get(route('admin.letter-templates.index'))->assertStatus(200);
 
         // Admin view letter requests
-        $this->actingAs($admin)->get('/admin/letter-requests')->assertStatus(200);
+        $this->actingAs($admin)->get(route('admin.letter-requests.index'))->assertStatus(200);
+
+        // Admin can store quick letter type directly from requests page
+        $res = $this->actingAs($admin)->post(route('admin.letter-requests.store-type'), [
+            'name' => 'Surat Keterangan Belum Menikah',
+            'code' => 'SKBM',
+            'requirements' => 'KTP, KK',
+        ]);
+        $res->assertRedirect(route('admin.letter-requests.index'));
+        $this->assertDatabaseHas('letter_templates', [
+            'name' => 'Surat Keterangan Belum Menikah',
+            'code' => 'SKBM',
+            'file_path' => null,
+        ]);
 
         // Admin view complaints (laporans)
-        $this->actingAs($admin)->get('/admin/complaints')->assertStatus(200);
+        $this->actingAs($admin)->get(route('admin.complaints.index'))->assertStatus(200);
     }
 }
