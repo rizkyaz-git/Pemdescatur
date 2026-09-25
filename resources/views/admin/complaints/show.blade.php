@@ -27,13 +27,17 @@
             <div>
                 <dt class="text-[11px] text-slate-400 font-semibold uppercase tracking-wide">No. WhatsApp</dt>
                 <dd class="font-mono font-semibold text-[#0F172A] mt-0.5">
-                    <a href="https://wa.me/{{ $complaint->no_whatsapp }}" target="_blank"
-                       class="text-green-700 hover:underline inline-flex items-center gap-1">
-                        {{ $complaint->no_whatsapp }}
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                        </svg>
-                    </a>
+                    @if($complaint->no_whatsapp)
+                        <a href="https://wa.me/{{ $complaint->no_whatsapp }}" target="_blank" rel="noopener noreferrer"
+                           class="text-green-700 hover:underline inline-flex items-center gap-1">
+                            {{ $complaint->no_whatsapp }}
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                            </svg>
+                        </a>
+                    @else
+                        <span class="text-slate-400">-</span>
+                    @endif
                 </dd>
             </div>
             <div>
@@ -54,7 +58,10 @@
             </div>
             <div class="sm:col-span-2">
                 <dt class="text-[11px] text-slate-400 font-semibold uppercase tracking-wide">Tanggal Masuk</dt>
-                <dd class="text-slate-700 mt-0.5 tabular-nums">{{ $complaint->created_at->format('d F Y, H:i') }} WIB</dd>
+                <dd class="text-slate-700 mt-0.5 tabular-nums">
+                    {{ optional($complaint->created_at)->format('d F Y, H:i') ?? '-' }}
+                    @if($complaint->created_at) WIB @endif
+                </dd>
             </div>
         </dl>
     </div>

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -7,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Laporan extends Model
 {
     use HasFactory;
+
+    /**
+     * Pengaduan uses the canonical table introduced by the public-service
+     * refactor; keep the mapping explicit for the admin and public flows.
+     */
+    protected $table = 'laporans';
 
     protected $fillable = [
         'nama',
@@ -28,11 +35,11 @@ class Laporan extends Model
     public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
-            'baru'     => 'Baru',
+            'baru' => 'Baru',
             'diproses' => 'Sedang Diproses',
-            'selesai'  => 'Selesai',
-            'ditolak'  => 'Ditolak',
-            default    => 'Tidak Diketahui',
+            'selesai' => 'Selesai',
+            'ditolak' => 'Ditolak',
+            default => 'Tidak Diketahui',
         };
     }
 
@@ -42,11 +49,11 @@ class Laporan extends Model
     public function getStatusBadgeClassAttribute(): string
     {
         return match ($this->status) {
-            'baru'     => 'bg-rose-50 text-rose-700 border-rose-200/60',
+            'baru' => 'bg-rose-50 text-rose-700 border-rose-200/60',
             'diproses' => 'bg-amber-50 text-amber-800 border-amber-200/60',
-            'selesai'  => 'bg-green-50 text-green-700 border-green-200/60',
-            'ditolak'  => 'bg-slate-100 text-slate-600 border-slate-200/60',
-            default    => 'bg-slate-100 text-slate-600',
+            'selesai' => 'bg-green-50 text-green-700 border-green-200/60',
+            'ditolak' => 'bg-slate-100 text-slate-600 border-slate-200/60',
+            default => 'bg-slate-100 text-slate-600',
         };
     }
 }

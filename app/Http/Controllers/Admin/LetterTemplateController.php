@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\LetterTemplate;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class LetterTemplateController extends Controller
 {
@@ -17,6 +17,7 @@ class LetterTemplateController extends Controller
     public function index(): View
     {
         $templates = LetterTemplate::whereNotNull('file_path')->latest()->paginate(15);
+
         return view('admin.letter-templates.index', compact('templates'));
     }
 
@@ -56,7 +57,7 @@ class LetterTemplateController extends Controller
         ]);
 
         return redirect()->route('admin.letter-templates.index')
-                        ->with('success', 'Template surat siap cetak berhasil ditambahkan.');
+            ->with('success', 'Template surat siap cetak berhasil ditambahkan.');
     }
 
     /**
@@ -99,7 +100,7 @@ class LetterTemplateController extends Controller
         $letterTemplate->update($data);
 
         return redirect()->route('admin.letter-templates.index')
-                        ->with('success', 'Template surat siap cetak berhasil diperbarui.');
+            ->with('success', 'Template surat siap cetak berhasil diperbarui.');
     }
 
     /**
@@ -107,6 +108,12 @@ class LetterTemplateController extends Controller
      */
     public function destroy(LetterTemplate $letterTemplate): RedirectResponse
     {
+        // Template yang sudah dipakai harus tetap ada agar riwayat
+        // pengajuan dan relasi admin tidak ikut terhapus oleh cascade FK.
+        if ($letterTemplate->requests()->exists()) {
+            return back()->with('error', 'Template tidak dapat dihapus karena sudah digunakan oleh pengajuan surat.');
+        }
+
         if ($letterTemplate->file_path && Storage::disk('public')->exists($letterTemplate->file_path)) {
             Storage::disk('public')->delete($letterTemplate->file_path);
         }
@@ -114,6 +121,6 @@ class LetterTemplateController extends Controller
         $letterTemplate->delete();
 
         return redirect()->route('admin.letter-templates.index')
-                        ->with('success', 'Template surat berhasil dihapus.');
+            ->with('success', 'Template surat berhasil dihapus.');
     }
 }

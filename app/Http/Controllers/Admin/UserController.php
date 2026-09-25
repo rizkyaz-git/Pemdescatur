@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\LetterRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ class UserController extends Controller
     public function index(): View
     {
         $users = User::latest()->paginate(15);
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -85,7 +87,7 @@ class UserController extends Controller
     {
         $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'role' => ['required', 'in:super_admin,admin_pemdes,ppk_ormawa'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ];
@@ -105,7 +107,7 @@ class UserController extends Controller
 
         $user->name = $validated['name'];
         $user->email = $validated['email'];
-        
+
         // Cegah super admin mencabut role super admin dari akunnya sendiri jika hanya ada 1 super admin
         if ($user->id === auth()->id() && $user->role === 'super_admin' && $validated['role'] !== 'super_admin') {
             return back()->withErrors(['role' => 'Anda tidak dapat mengubah peran akun Anda sendiri dari Super Admin.']);
@@ -143,12 +145,17 @@ class UserController extends Controller
             return back()->withErrors(['error' => 'Tidak dapat menghapus super admin ini karena setidaknya harus ada satu Super Admin di sistem.']);
         }
 
+        // Jangan sampai cascade FK menghapus riwayat pengajuan warga.
+        if (LetterRequest::where('user_id', $user->id)->exists()) {
+            return back()->withErrors(['error' => 'Pengguna tidak dapat dihapus karena masih memiliki riwayat pengajuan surat.']);
+        }
+
         if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
             Storage::disk('public')->delete($user->avatar);
         }
 
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'Pengguna ' . $user->name . ' berhasil dihapus.');
+        return redirect()->route('admin.users.index')->with('success', 'Pengguna '.$user->name.' berhasil dihapus.');
     }
 }

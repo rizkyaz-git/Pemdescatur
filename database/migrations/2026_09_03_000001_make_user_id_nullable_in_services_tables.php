@@ -11,13 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('letter_requests', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable()->change();
-        });
+        if (Schema::hasTable('letter_requests') && Schema::hasColumn('letter_requests', 'user_id')) {
+            Schema::table('letter_requests', function (Blueprint $table) {
+                $table->foreignId('user_id')->nullable()->change();
+            });
+        }
 
-        Schema::table('complaints', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable()->change();
-        });
+        if (Schema::hasTable('complaints') && Schema::hasColumn('complaints', 'user_id')) {
+            Schema::table('complaints', function (Blueprint $table) {
+                $table->foreignId('user_id')->nullable()->change();
+            });
+        }
     }
 
     /**
@@ -25,13 +29,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (Schema::hasTable('letter_requests')) {
+        if (Schema::hasTable('letter_requests') && Schema::hasColumn('letter_requests', 'user_id')) {
             Schema::table('letter_requests', function (Blueprint $table) {
                 $table->foreignId('user_id')->nullable(false)->change();
             });
         }
 
-        if (Schema::hasTable('complaints')) {
+        if (Schema::hasTable('complaints') && Schema::hasColumn('complaints', 'user_id')) {
             Schema::table('complaints', function (Blueprint $table) {
                 $table->foreignId('user_id')->nullable(false)->change();
             });

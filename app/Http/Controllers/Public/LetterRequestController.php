@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
-use App\Models\LetterTemplate;
+use App\Http\Requests\StoreLetterRequestRequest;
 use App\Models\LetterRequest;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
+use App\Models\LetterTemplate;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class LetterRequestController extends Controller
 {
@@ -21,12 +26,12 @@ class LetterRequestController extends Controller
 
         $query = LetterTemplate::whereNotNull('file_path');
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('code', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhere('requirements', 'like', "%{$search}%");
+                    ->orWhere('code', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('requirements', 'like', "%{$search}%");
             });
         }
 
@@ -40,13 +45,13 @@ class LetterRequestController extends Controller
      */
     public function downloadTemplate(LetterTemplate $letterTemplate)
     {
-        if (!$letterTemplate->file_path || !\Illuminate\Support\Facades\Storage::disk('public')->exists($letterTemplate->file_path)) {
+        if (! $letterTemplate->file_path || ! Storage::disk('public')->exists($letterTemplate->file_path)) {
             return back()->with('error', 'File template surat belum tersedia untuk diunduh. Silakan hubungi perangkat Desa Catur.');
         }
 
         $ext = pathinfo($letterTemplate->file_path, PATHINFO_EXTENSION);
-        $filename = 'Template_' . \Illuminate\Support\Str::slug($letterTemplate->name, '_') . ($ext ? '.' . $ext : '.doc');
-        $fullPath = \Illuminate\Support\Facades\Storage::disk('public')->path($letterTemplate->file_path);
+        $filename = 'Template_'.Str::slug($letterTemplate->name, '_').($ext ? '.'.$ext : '.doc');
+        $fullPath = Storage::disk('public')->path($letterTemplate->file_path);
 
         return response()->download($fullPath, $filename);
     }
@@ -79,44 +84,69 @@ class LetterRequestController extends Controller
 
         // Urutkan: Surat Keterangan paling atas, lalu Surat Pengantar, kemudian jenis surat lainnya
         $templates = LetterTemplate::where('name', '!=', 'Lainnya')->get()->sortBy(function ($item) {
-            if ($item->name === 'Surat Keterangan') return 1;
-            if ($item->name === 'Surat Pengantar') return 2;
+            if ($item->name === 'Surat Keterangan') {
+                return 1;
+            }
+            if ($item->name === 'Surat Pengantar') {
+                return 2;
+            }
+
             return 3;
         })->values();
 
         $isEmpty = false;
+
         return view('public.layanan.surat.create', compact('templates', 'isEmpty'));
     }
 
     /**
      * Store new letter request (guest & logged-in user)
      */
-    public function store(\App\Http\Requests\StoreLetterRequestRequest $request): RedirectResponse
+    public function store(StoreLetterRequestRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-
         $templateId = $validated['template_id'];
-        if ($templateId === 'lainnya') {
-            $otherTpl = LetterTemplate::firstOrCreate(
-                ['name' => 'Lainnya'],
-                [
-                    'code' => 'LAINNYA',
-                    'description' => 'Jenis surat permohonan lainnya yang diisi secara spesifik oleh warga.'
-                ]
-            );
-            $templateId = $otherTpl->id;
+
+        try {
+            if ($templateId === 'lainnya') {
+                $otherTpl = LetterTemplate::firstOrCreate(
+                    ['name' => 'Lainnya'],
+                    [
+                        'code' => 'LAINNYA',
+                        'description' => 'Jenis surat permohonan lainnya yang diisi secara spesifik oleh warga.',
+                    ]
+                );
+                $templateId = $otherTpl->id;
+            }
+
+            $letterRequest = DB::transaction(function () use ($templateId, $validated) {
+                return LetterRequest::create([
+                    'user_id' => auth()->id(), // null if guest
+                    'template_id' => $templateId,
+                    'form_data' => $validated['form_data'],
+                    'status' => 'pending',
+                ]);
+            });
+        } catch (\Throwable $e) {
+            Log::error('Gagal menyimpan pengajuan surat warga.', [
+                'template_id' => $templateId,
+                'user_id' => auth()->id(),
+                'exception' => $e,
+            ]);
+
+            return back()->withInput()->with('error', 'Pengajuan surat gagal disimpan. Silakan coba lagi atau hubungi admin Desa Catur.');
         }
 
-        $letterRequest = LetterRequest::create([
-            'user_id'     => auth()->id(), // null if guest
-            'template_id' => $templateId,
-            'form_data'   => $validated['form_data'],
+        Log::info('Pengajuan surat warga berhasil disimpan.', [
+            'letter_request_id' => $letterRequest->id,
+            'ticket_number' => $letterRequest->ticket_number,
+            'user_id' => $letterRequest->user_id,
         ]);
 
         $noWa = data_get($validated, 'form_data.telepon', '');
 
         return redirect()->route('warga.letter.show', $letterRequest->id)
-                        ->with('success', "Permohonan surat berhasil dikirim! Nomor Tiket Anda: {$letterRequest->ticket_number}. Admin Desa Catur akan menghubungi Anda melalui WhatsApp ke nomor {$noWa} untuk menindaklanjuti.");
+            ->with('success', "Permohonan surat berhasil dikirim! Nomor Tiket Anda: {$letterRequest->ticket_number}. Admin Desa Catur akan menghubungi Anda melalui WhatsApp ke nomor {$noWa} untuk menindaklanjuti.");
     }
 
     /**
@@ -126,13 +156,14 @@ class LetterRequestController extends Controller
     public function show(LetterRequest $letterRequest): View
     {
         // Jika user sedang login dan bukan admin, pastikan surat ini miliknya
-        if (auth()->check() && !auth()->user()->isAdmin()) {
+        if (auth()->check() && ! auth()->user()->isAdmin()) {
             if ($letterRequest->user_id && $letterRequest->user_id !== auth()->id()) {
                 abort(403, 'Anda tidak memiliki izin untuk mengakses permohonan surat ini.');
             }
         }
 
         $letterRequest->load('template');
+
         return view('public.layanan.surat.show', compact('letterRequest'));
     }
 }

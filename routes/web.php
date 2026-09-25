@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Public as PublicControllers;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 // --- HALAMAN PUBLIK ---
@@ -12,7 +13,7 @@ Route::get('/berita', [PublicControllers\NewsController::class, 'index'])->name(
 Route::get('/berita/{slug}', [PublicControllers\NewsController::class, 'show'])->name('public.news.show');
 Route::post('/berita/{slug}/like', [PublicControllers\NewsController::class, 'like'])->middleware('throttle:10,1')->name('public.news.like');
 Route::get('/galeri', [PublicControllers\GalleryController::class, 'index'])->name('public.gallery');
-Route::redirect('/layanan', '/layanan/cetak-surat-mandiri');
+Route::get('/layanan', fn () => redirect('/layanan/cetak-surat-mandiri'));
 Route::get('/pencarian', [PublicControllers\SearchController::class, 'index'])->name('public.search');
 Route::get('/api/search', [PublicControllers\SearchController::class, 'api'])->name('api.search');
 Route::get('/ppko-catur-cerdas', [PublicControllers\PpkoController::class, 'index'])->name('public.ppko');
@@ -34,14 +35,15 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
     // Menggunakan POST untuk mencegah CSRF via link GET
     Route::post('/clear-cache', function () {
         try {
-            \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+            Artisan::call('optimize:clear');
             $routeCache = app()->bootstrapPath('cache/routes-v7.php');
             if (file_exists($routeCache)) {
                 @unlink($routeCache);
             }
+
             return redirect()->back()->with('success', 'Semua cache (route, view, config) berhasil dibersihkan!');
-        } catch (\Throwable $e) {
-            return redirect()->back()->with('error', 'Gagal membersihkan cache: ' . $e->getMessage());
+        } catch (Throwable $e) {
+            return redirect()->back()->with('error', 'Gagal membersihkan cache: '.$e->getMessage());
         }
     })->name('clear-cache');
 
@@ -110,23 +112,26 @@ Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->middlewar
 
 // ===== PORTAL LAYANAN PUBLIK WARGA & GUEST =====
 // Pengajuan Surat (halaman utama) & Template/Katalog Surat (halaman sekunder)
-Route::redirect('/layanan/surat', '/layanan/cetak-surat-mandiri');
+// Redirect hanya GET; Route::redirect() mendaftarkan ANY dan dapat menutup
+// route POST /layanan/surat ketika route cache diaktifkan.
+Route::get('/layanan/surat', fn () => redirect('/layanan/cetak-surat-mandiri'));
 // Halaman utama: form pengajuan surat (dipromosikan dari create() lama)
 Route::get('/layanan/cetak-surat-mandiri', [PublicControllers\LetterRequestController::class, 'create'])->name('warga.letter.index');
 // Halaman sekunder: katalog & unduh template surat (dipindah dari index() lama)
 Route::get('/layanan/surat/template', [PublicControllers\LetterRequestController::class, 'index'])->name('warga.letter.templates');
 Route::get('/layanan/surat/template/{letterTemplate}/download', [PublicControllers\LetterRequestController::class, 'downloadTemplate'])->name('warga.letter.download');
 // /layanan/surat/buat → redirect permanen ke halaman form utama (keduanya sekarang identik)
-Route::permanentRedirect('/layanan/surat/buat', '/layanan/cetak-surat-mandiri');
+Route::get('/layanan/surat/buat', fn () => redirect('/layanan/cetak-surat-mandiri', 301));
 Route::post('/layanan/surat', [PublicControllers\LetterRequestController::class, 'store'])->middleware('throttle:5,1')->name('warga.letter.store');
 Route::get('/layanan/surat/{letterRequest}', [PublicControllers\LetterRequestController::class, 'show'])->name('warga.letter.show');
 
 // Pengaduan Warga (tanpa akun — identifikasi via nama & nomor WhatsApp)
+// Gunakan satu route GET agar nama route tidak saling menimpa ketika route di-cache.
 Route::get('/pengaduan', [PublicControllers\ComplaintController::class, 'create'])->name('warga.complaint.create');
 Route::post('/pengaduan', [PublicControllers\ComplaintController::class, 'store'])->middleware('throttle:5,1')->name('warga.complaint.store');
 
 // Redirect lama ke URL baru (backward compatibility)
-Route::redirect('/layanan/pengaduan', '/pengaduan');
-Route::redirect('/layanan/pengaduan/buat', '/pengaduan');
+Route::get('/layanan/pengaduan', fn () => redirect('/pengaduan'))->name('warga.complaint.index');
+Route::get('/layanan/pengaduan/buat', fn () => redirect('/pengaduan'));
 
 require __DIR__.'/auth.php';

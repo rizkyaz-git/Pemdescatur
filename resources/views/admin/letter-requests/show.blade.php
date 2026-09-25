@@ -40,11 +40,17 @@
                     </div>
                     <div>
                         <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Nama Pemohon</p>
-                        <p class="font-semibold text-[#0F172A] mt-1">{{ $request->user ? $request->user->name : '-' }}</p>
+                        <p class="font-semibold text-[#0F172A] mt-1">
+                            {{ $request->user?->name ?? data_get($request->form_data, 'nama', data_get($request->form_data, 'nama_pemohon', '-')) }}
+                        </p>
                     </div>
                     <div>
                         <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Email Pemohon</p>
-                        <p class="font-mono text-xs text-slate-700 mt-1">{{ $request->user ? $request->user->email : '-' }}</p>
+                        <p class="font-mono text-xs text-slate-700 mt-1">{{ $request->user?->email ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Nomor WhatsApp</p>
+                        <p class="font-mono text-xs text-slate-700 mt-1">{{ data_get($request->form_data, 'telepon', '-') }}</p>
                     </div>
                 </div>
 

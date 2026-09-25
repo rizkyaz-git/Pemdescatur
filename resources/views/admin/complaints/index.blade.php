@@ -192,7 +192,7 @@
                         <tr class="hover:bg-slate-50/70 transition-colors">
                             <td class="px-4 py-3.5 align-middle">
                                 <p class="font-semibold text-slate-900 text-xs sm:text-sm">{{ $lap->nama }}</p>
-                                <p class="text-[11px] text-slate-400 tabular-nums mt-0.5">{{ $lap->created_at->format('d/m/Y H:i') }}</p>
+                                <p class="text-[11px] text-slate-400 tabular-nums mt-0.5">{{ optional($lap->created_at)->format('d/m/Y H:i') ?? '-' }}</p>
                             </td>
                             <td class="px-4 py-3.5 align-middle whitespace-nowrap font-mono text-xs text-slate-600">
                                 {{ $lap->no_whatsapp }}

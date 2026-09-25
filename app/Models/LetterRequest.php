@@ -10,6 +10,12 @@ class LetterRequest extends Model
 {
     use HasFactory;
 
+    /**
+     * The public services schema uses this explicit table name so a future
+     * naming-convention change cannot silently point the model elsewhere.
+     */
+    protected $table = 'letter_requests';
+
     protected $fillable = [
         'user_id',
         'template_id',
@@ -50,7 +56,7 @@ class LetterRequest extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($model) {
             // Generate ticket number: TKT-202609-00001
             $year = date('Y');
@@ -58,8 +64,8 @@ class LetterRequest extends Model
             $countThisMonth = self::whereYear('submitted_at', $year)
                 ->whereMonth('submitted_at', $month)
                 ->count();
-            
-            $model->ticket_number = 'TKT-' . $year . $month . '-' . str_pad($countThisMonth + 1, 5, '0', STR_PAD_LEFT);
+
+            $model->ticket_number = 'TKT-'.$year.$month.'-'.str_pad($countThisMonth + 1, 5, '0', STR_PAD_LEFT);
             $model->submitted_at = now();
         });
     }
@@ -69,7 +75,7 @@ class LetterRequest extends Model
      */
     public function getStatusLabelAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => 'Menunggu Verifikasi',
             'approved' => 'Disetujui',
             'rejected' => 'Ditolak',
