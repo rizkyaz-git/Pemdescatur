@@ -27,10 +27,11 @@ class SamplePublicServicesSeeder extends Seeder
 
         if ($skuTemplate) {
             LetterRequest::firstOrCreate(
-                ['ticket_number' => 'TKT-202609-00001'],
                 [
-                    'user_id'     => $wargaUser->id,
+                    'user_id' => $wargaUser->id,
                     'template_id' => $skuTemplate->id,
+                ],
+                [
                     'form_data'   => [
                         'nama_pemohon' => 'Budi Santoso',
                         'nik'          => '3309121508850001',

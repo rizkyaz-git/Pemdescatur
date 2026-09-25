@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLetterRequestRequest;
 use App\Models\LetterRequest;
 use App\Models\LetterTemplate;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -106,8 +108,11 @@ class LetterRequestController extends Controller
     {
         $validated = $request->validated();
         $templateId = $validated['template_id'];
+        $userId = null;
 
         try {
+            $userId = $this->resolveUserId($request);
+
             if ($templateId === 'lainnya') {
                 $otherTpl = LetterTemplate::firstOrCreate(
                     ['name' => 'Lainnya'],
@@ -119,9 +124,9 @@ class LetterRequestController extends Controller
                 $templateId = $otherTpl->id;
             }
 
-            $letterRequest = DB::transaction(function () use ($templateId, $validated) {
+            $letterRequest = DB::transaction(function () use ($templateId, $validated, $userId) {
                 return LetterRequest::create([
-                    'user_id' => auth()->id(), // null if guest
+                    'user_id' => $userId, // null for guests and stale sessions
                     'template_id' => $templateId,
                     'form_data' => $validated['form_data'],
                     'status' => 'pending',
@@ -130,7 +135,7 @@ class LetterRequestController extends Controller
         } catch (\Throwable $e) {
             Log::error('Gagal menyimpan pengajuan surat warga.', [
                 'template_id' => $templateId,
-                'user_id' => auth()->id(),
+                'user_id' => $userId,
                 'exception' => $e,
             ]);
 
@@ -139,18 +144,50 @@ class LetterRequestController extends Controller
 
         Log::info('Pengajuan surat warga berhasil disimpan.', [
             'letter_request_id' => $letterRequest->id,
-            'ticket_number' => $letterRequest->ticket_number,
+            'template_id' => $letterRequest->template_id,
             'user_id' => $letterRequest->user_id,
         ]);
 
         $noWa = data_get($validated, 'form_data.telepon', '');
 
         return redirect()->route('warga.letter.show', $letterRequest->id)
-            ->with('success', "Permohonan surat berhasil dikirim! Nomor Tiket Anda: {$letterRequest->ticket_number}. Admin Desa Catur akan menghubungi Anda melalui WhatsApp ke nomor {$noWa} untuk menindaklanjuti.");
+            ->with('success', "Permohonan surat berhasil dikirim! Admin Desa Catur akan menghubungi Anda melalui WhatsApp ke nomor {$noWa} untuk menindaklanjuti.");
     }
 
     /**
-     * Show letter request detail with ticket number.
+     * Resolve the authenticated user only when the account still exists.
+     *
+     * A stale session must not be written to the user_id foreign key. The
+     * public form supports guests, so an invalid session is safely cleared
+     * and the submission continues without an account association.
+     */
+    private function resolveUserId(Request $request): ?int
+    {
+        $userId = auth()->id();
+
+        if ($userId === null) {
+            return null;
+        }
+
+        $userId = (int) $userId;
+
+        if (User::query()->whereKey($userId)->exists()) {
+            return $userId;
+        }
+
+        Log::warning('Sesi pengguna tidak valid saat menyimpan pengajuan surat; pengajuan diteruskan sebagai tamu.', [
+            'user_id' => $userId,
+        ]);
+
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return null;
+    }
+
+    /**
+     * Show the submitted letter request details.
      * Hanya pemilik permohonan yang dapat mengakses (mencegah IDOR).
      */
     public function show(LetterRequest $letterRequest): View

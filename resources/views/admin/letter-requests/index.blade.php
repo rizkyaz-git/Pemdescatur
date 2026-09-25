@@ -31,7 +31,7 @@
             <input type="text" 
                    name="search" 
                    value="{{ request('search') }}" 
-                   placeholder="Cari Tiket / Pemohon..." 
+                   placeholder="Cari Pemohon / Jenis Surat..."
                    class="w-full h-9 pl-9 pr-3 text-xs sm:text-sm rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-hidden focus:ring-1 focus:ring-[#0F4C3A] focus:border-[#0F4C3A] transition">
         </div>
 
@@ -190,7 +190,6 @@
             <table class="w-full text-left border-collapse text-xs">
                 <thead>
                     <tr class="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200/80">
-                        <th scope="col" class="w-32 px-4 py-3 align-middle whitespace-nowrap">No. Tiket</th>
                         <th scope="col" class="px-4 py-3 align-middle min-w-[200px]">Pemohon</th>
                         <th scope="col" class="w-36 px-4 py-3 align-middle whitespace-nowrap">No. WhatsApp</th>
                         <th scope="col" class="px-4 py-3 align-middle min-w-[200px]">Jenis Surat</th>
@@ -202,9 +201,6 @@
                 <tbody class="divide-y divide-slate-100 bg-white">
                     @forelse($requests as $req)
                         <tr class="hover:bg-slate-50/70 transition-colors">
-                            <td class="px-4 py-3.5 align-middle font-mono font-bold text-xs text-slate-900 tabular-nums">
-                                {{ $req->ticket_number }}
-                            </td>
                             <td class="px-4 py-3.5 align-middle">
                                 <p class="font-semibold text-slate-900 text-xs sm:text-sm leading-snug">{{ $req->user ? $req->user->name : data_get($req->form_data, 'nama', '-') }}</p>
                                 @if($req->user && $req->user->email)
@@ -269,7 +265,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-slate-400">
+                            <td colspan="6" class="px-6 py-12 text-center text-slate-400">
                                 <svg class="w-10 h-10 mx-auto mb-2 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                 </svg>

@@ -190,6 +190,101 @@ class PublicServicesTest extends TestCase
         $response->assertRedirect(route('warga.letter.show', $req->id));
     }
 
+    public function test_letter_status_page_uses_minimal_layout_without_retired_ticket_ui(): void
+    {
+        $response = $this->post(route('warga.letter.store'), [
+            'template_id' => 'lainnya',
+            'form_data' => [
+                'nama' => 'Pengguna Status Surat',
+                'nik' => '3309123456789012',
+                'telepon' => '081234567890',
+                'jenis_surat_lainnya' => 'Surat Keterangan Domisili',
+                'keperluan' => 'Memastikan halaman status hanya menampilkan informasi pengajuan yang relevan.',
+            ],
+        ]);
+
+        $letterRequest = LetterRequest::whereJsonContains('form_data->nama', 'Pengguna Status Surat')->firstOrFail();
+
+        $response->assertSessionHasNoErrors();
+        $response->assertSessionHas('success');
+        $response->assertRedirect(route('warga.letter.show', $letterRequest->id));
+        $this->assertNull($letterRequest->ticket_number);
+        $this->assertNotNull($letterRequest->submitted_at);
+
+        $ticketColumn = collect(Schema::getColumns('letter_requests'))
+            ->firstWhere('name', 'ticket_number');
+        $this->assertTrue((bool) ($ticketColumn['nullable'] ?? false));
+
+        $statusResponse = $this->get(route('warga.letter.show', $letterRequest->id));
+
+        $statusResponse
+            ->assertOk()
+            ->assertSee('Permohonan surat berhasil dikirim!')
+            ->assertSee('Status Permohonan Surat')
+            ->assertSee('Informasi Pengajuan')
+            ->assertSee('Kembali')
+            ->assertSee('Ajukan Surat Baru')
+            ->assertSee('href="'.route('warga.letter.index').'"', false)
+            ->assertDontSee('Nomor Tiket')
+            ->assertDontSee('No. Tiket')
+            ->assertDontSee('Status Tiket')
+            ->assertDontSee('Progres Verifikasi Surat')
+            ->assertDontSee('Template Cetak Mandiri')
+            ->assertDontSee('Kembali ke Beranda')
+            ->assertDontSee('border-emerald-200 bg-emerald-50 p-4 flex items-start gap-3', false);
+
+        $this->assertSame(1, substr_count($statusResponse->getContent(), 'id="app-toast-notification"'));
+    }
+
+    public function test_letter_submission_falls_back_to_guest_when_authenticated_user_no_longer_exists(): void
+    {
+        $deletedUser = User::factory()->create();
+        $this->actingAs($deletedUser);
+        $deletedUser->delete();
+
+        $response = $this->post(route('warga.letter.store'), [
+            'template_id' => 'lainnya',
+            'form_data' => [
+                'nama' => 'Pengguna dengan Sesi Lama',
+                'nik' => '3309123456789012',
+                'telepon' => '081234567890',
+                'jenis_surat_lainnya' => 'Surat Keterangan Domisili',
+                'keperluan' => 'Memastikan sesi lama tidak menyebabkan kegagalan foreign key.',
+            ],
+        ]);
+
+        $letterRequest = LetterRequest::whereJsonContains('form_data->nama', 'Pengguna dengan Sesi Lama')->firstOrFail();
+
+        $response->assertSessionHasNoErrors();
+        $response->assertSessionHas('success');
+        $response->assertRedirect(route('warga.letter.show', $letterRequest->id));
+        $this->assertNull($letterRequest->user_id);
+        $this->assertGuest();
+    }
+
+    public function test_letter_submission_keeps_an_existing_authenticated_user(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $response = $this->post(route('warga.letter.store'), [
+            'template_id' => 'lainnya',
+            'form_data' => [
+                'nama' => 'Pengguna Terautentikasi',
+                'nik' => '3309123456789012',
+                'telepon' => '081234567890',
+                'jenis_surat_lainnya' => 'Surat Keterangan Domisili',
+                'keperluan' => 'Memastikan user_id tetap disimpan untuk akun yang masih valid.',
+            ],
+        ]);
+
+        $letterRequest = LetterRequest::whereJsonContains('form_data->nama', 'Pengguna Terautentikasi')->firstOrFail();
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect(route('warga.letter.show', $letterRequest->id));
+        $this->assertSame($user->id, $letterRequest->user_id);
+    }
+
     public function test_hardening_migration_copies_each_legacy_complaint_when_target_empty(): void
     {
         // The seeder normally populates canonical rows. Clear only the test

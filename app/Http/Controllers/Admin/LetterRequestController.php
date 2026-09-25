@@ -38,21 +38,20 @@ class LetterRequestController extends Controller
             }
         }
 
-        // Search by ticket number, user name, or form_data fields (for guest submissions)
+        // Search by user name or form_data fields (for guest submissions)
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
-                $q->where('ticket_number', 'like', "%{$search}%")
-                  ->orWhereHas('user', function ($uq) use ($search) {
-                      $uq->where('name', 'like', "%{$search}%");
-                  })
-                  ->orWhere('form_data->nama', 'like', "%{$search}%")
-                  ->orWhere('form_data->telepon', 'like', "%{$search}%")
-                  ->orWhere('form_data->nik', 'like', "%{$search}%")
-                  ->orWhere('form_data->jenis_surat_lainnya', 'like', "%{$search}%")
-                  ->orWhereHas('template', function ($tq) use ($search) {
-                      $tq->where('name', 'like', "%{$search}%");
-                  });
+                $q->whereHas('user', function ($uq) use ($search) {
+                    $uq->where('name', 'like', "%{$search}%");
+                })
+                ->orWhere('form_data->nama', 'like', "%{$search}%")
+                ->orWhere('form_data->telepon', 'like', "%{$search}%")
+                ->orWhere('form_data->nik', 'like', "%{$search}%")
+                ->orWhere('form_data->jenis_surat_lainnya', 'like', "%{$search}%")
+                ->orWhereHas('template', function ($tq) use ($search) {
+                    $tq->where('name', 'like', "%{$search}%");
+                });
             });
         }
 
@@ -115,9 +114,7 @@ class LetterRequestController extends Controller
         // Handle file upload jika ada
         if ($request->hasFile('result_file_path')) {
             $file = $request->file('result_file_path');
-            $filename = $letterRequest->ticket_number . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('letters', $filename, 'public');
-            $validated['result_file_path'] = $path;
+            $validated['result_file_path'] = $file->store('letters', 'public');
         }
 
         $validated['processed_at'] = now();

@@ -19,7 +19,6 @@ class LetterRequest extends Model
     protected $fillable = [
         'user_id',
         'template_id',
-        'ticket_number',
         'form_data',
         'status',
         'result_file_path',
@@ -51,22 +50,16 @@ class LetterRequest extends Model
     }
 
     /**
-     * Boot method untuk generate ticket number otomatis
+     * Ensure every request records when it was submitted.
+     *
+     * The legacy identifier column is intentionally not populated by the
+     * application. The database migration keeps that column for historical
+     * records.
      */
-    protected static function boot()
+    protected static function booted(): void
     {
-        parent::boot();
-
-        static::creating(function ($model) {
-            // Generate ticket number: TKT-202609-00001
-            $year = date('Y');
-            $month = date('m');
-            $countThisMonth = self::whereYear('submitted_at', $year)
-                ->whereMonth('submitted_at', $month)
-                ->count();
-
-            $model->ticket_number = 'TKT-'.$year.$month.'-'.str_pad($countThisMonth + 1, 5, '0', STR_PAD_LEFT);
-            $model->submitted_at = now();
+        static::creating(function (self $letterRequest): void {
+            $letterRequest->submitted_at ??= now();
         });
     }
 

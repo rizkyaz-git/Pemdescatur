@@ -95,7 +95,7 @@
 </head>
 
 <body
-    class="bg-white text-[#191c1e] font-['Public_Sans',sans-serif] antialiased min-h-screen flex flex-col justify-between"
+    class="bg-white text-[#191c1e] font-['Public_Sans',sans-serif] antialiased min-h-screen flex flex-col justify-between {{ request()->routeIs('warga.letter.show') && session()->has('success') ? 'has-success-toast' : '' }}"
     x-data="navSearchApp('{{ request('q', '') }}')">
 
     @php

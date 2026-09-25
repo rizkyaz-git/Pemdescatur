@@ -3,10 +3,10 @@
     $initialType = session()->has('error') ? 'error' : 'success';
 @endphp
 
-<!-- 1. Floating Solid Notification Toast (Pojok Kanan Bawah) -->
+<!-- 1. Floating Solid Notification Toast (Atas di mobile, kanan bawah di desktop) -->
 <div
     id="app-toast-notification"
-    class="app-toast-container"
+    class="app-toast-container app-toast-notification"
     x-data="{
         show: {{ $initialMessage ? 'true' : 'false' }},
         type: '{{ $initialType }}',
@@ -96,7 +96,7 @@
 <!-- 2. Interactive Solid Action Confirmation Dialog (Pojok Kanan Bawah) -->
 <div
     id="app-confirm-dialog"
-    class="app-toast-container"
+    class="app-toast-container app-confirm-container"
     x-data="{
         show: false,
         message: '',
@@ -248,22 +248,43 @@
 </script>
 
 <style>
-/* Toast Container: Pojok kanan bawah terjamin secara absolut */
+/* Toast placement: top on mobile, bottom-right on larger screens. */
 .app-toast-container {
     position: fixed !important;
-    bottom: 24px !important;
+    top: auto !important;
     right: 24px !important;
+    bottom: 24px !important;
+    left: auto !important;
     z-index: 9999999 !important;
-    width: calc(100vw - 48px) !important;
-    max-width: 440px !important;
+    width: auto !important;
+    min-width: 320px !important;
+    max-width: 480px !important;
     pointer-events: none !important;
 }
 
-@media (min-width: 640px) {
+.app-confirm-container {
+    top: auto !important;
+    bottom: 24px !important;
+}
+
+@media (max-width: 639px) {
     .app-toast-container {
+        right: 16px !important;
+        bottom: 16px !important;
+        left: 16px !important;
         width: auto !important;
-        min-width: 320px !important;
-        max-width: 480px !important;
+        min-width: 0 !important;
+        max-width: none !important;
+    }
+
+    .app-toast-notification {
+        top: calc(5rem + 0.75rem) !important;
+        bottom: auto !important;
+    }
+
+    .app-confirm-container {
+        top: auto !important;
+        bottom: 16px !important;
     }
 }
 

@@ -38,7 +38,7 @@ class LetterGeneratorService
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>Surat - {$letterRequest->ticket_number}</title>
+            <title>Surat</title>
             <style>
                 body {
                     font-family: 'Courier New', monospace;
@@ -65,7 +65,6 @@ class LetterGeneratorService
                 {$letterText}
             </div>
             <div class="footer">
-                <p><small>Nomor Tiket: {$letterRequest->ticket_number}</small></p>
                 <p><small>Tanggal Diproses: {$processedAt}</small></p>
             </div>
         </body>

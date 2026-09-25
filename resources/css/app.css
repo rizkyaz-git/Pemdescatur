@@ -8,6 +8,13 @@ body {
   color: #191c1e;
 }
 
+/* Keep a successful submission toast below the sticky public header on mobile. */
+@media (max-width: 639px) {
+  body.has-success-toast main {
+    padding-top: 9rem;
+  }
+}
+
 .font-serif {
   font-family: 'Public Sans', sans-serif;
 }

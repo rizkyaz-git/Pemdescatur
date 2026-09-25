@@ -90,7 +90,9 @@
                 <h4 class="text-xs font-bold text-[#D9B85C] uppercase tracking-wider">LAYANAN SURAT ONLINE</h4>
                 <ul class="space-y-2 text-xs sm:text-sm text-slate-300 font-light">
                     <li><a href="{{ route('warga.letter.index') }}" class="hover:text-white transition">Pengajuan Surat</a></li>
-                    <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Template Cetak Mandiri</a></li>
+                    @if(!request()->routeIs('warga.letter.show'))
+                        <li><a href="{{ route('warga.letter.templates') }}" class="hover:text-white transition">Template Cetak Mandiri</a></li>
+                    @endif
                 </ul>
             </div>
 
