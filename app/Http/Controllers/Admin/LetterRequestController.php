@@ -5,64 +5,74 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\LetterRequest;
 use App\Models\LetterTemplate;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class LetterRequestController extends Controller
 {
     /**
-     * Display a listing of the letter requests.
+     * Display letter requests in the unfinished or completed tab.
      */
     public function index(Request $request): View
     {
+        $activeTab = $request->input('tab') === 'riwayat' ? 'riwayat' : 'baru';
         $query = LetterRequest::with('user', 'template');
 
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
+        if ($activeTab === 'riwayat') {
+            $query->completed();
+        } else {
+            $query->unfinished();
         }
 
-        // Filter by template
         if ($request->filled('template_id')) {
-            $tplId = $request->input('template_id');
-            if ($tplId === 'lainnya') {
-                $otherTpl = LetterTemplate::where('name', 'Lainnya')->first();
-                $otherId = $otherTpl ? $otherTpl->id : 0;
+            $templateId = $request->input('template_id');
+
+            if ($templateId === 'lainnya') {
+                $otherTemplate = LetterTemplate::where('name', 'Lainnya')->first();
+                $otherId = $otherTemplate?->id ?? 0;
+
                 $query->where(function ($q) use ($otherId) {
                     $q->where('template_id', $otherId)
-                      ->orWhereNotNull('form_data->jenis_surat_lainnya');
+                        ->orWhereNotNull('form_data->jenis_surat_lainnya');
                 });
             } else {
-                $query->where('template_id', $tplId);
+                $query->where('template_id', $templateId);
             }
         }
 
-        // Search by user name or form_data fields (for guest submissions)
         if ($request->filled('search')) {
             $search = $request->input('search');
+
             $query->where(function ($q) use ($search) {
-                $q->whereHas('user', function ($uq) use ($search) {
-                    $uq->where('name', 'like', "%{$search}%");
+                $q->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->where('name', 'like', "%{$search}%");
                 })
-                ->orWhere('form_data->nama', 'like', "%{$search}%")
-                ->orWhere('form_data->telepon', 'like', "%{$search}%")
-                ->orWhere('form_data->nik', 'like', "%{$search}%")
-                ->orWhere('form_data->jenis_surat_lainnya', 'like', "%{$search}%")
-                ->orWhereHas('template', function ($tq) use ($search) {
-                    $tq->where('name', 'like', "%{$search}%");
-                });
+                    ->orWhere('form_data->nama', 'like', "%{$search}%")
+                    ->orWhere('form_data->nama_pemohon', 'like', "%{$search}%")
+                    ->orWhere('form_data->telepon', 'like', "%{$search}%")
+                    ->orWhere('form_data->nik', 'like', "%{$search}%")
+                    ->orWhere('form_data->jenis_surat_lainnya', 'like', "%{$search}%")
+                    ->orWhereHas('template', function ($templateQuery) use ($search) {
+                        $templateQuery->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
-        $requests = $query->latest()->paginate(15)->withQueryString();
+        $paginationParams = array_filter([
+            'tab' => $activeTab,
+            'search' => $request->input('search'),
+            'template_id' => $request->input('template_id'),
+        ], static fn (mixed $value): bool => $value !== null && $value !== '');
+
+        $requests = $query->latest()->paginate(15)->appends($paginationParams);
         $templates = LetterTemplate::orderBy('name')->get();
 
-        return view('admin.letter-requests.index', compact('requests', 'templates'));
+        return view('admin.letter-requests.index', compact('requests', 'templates', 'activeTab'));
     }
 
     /**
-     * Store a newly created letter type directly from the letter requests page
+     * Store a newly created letter type directly from the requests page
      * without requiring an uploaded template file.
      */
     public function storeType(Request $request): RedirectResponse
@@ -92,46 +102,44 @@ class LetterRequestController extends Controller
     }
 
     /**
-     * Show the form for editing the specified request (process).
+     * Mark a letter request as completed using the shared admin workflow.
      */
-    public function edit(LetterRequest $letterRequest): View
+    public function complete(LetterRequest $letterRequest): RedirectResponse
     {
-        $letterRequest->load('user', 'template');
-        return view('admin.letter-requests.edit', ['request' => $letterRequest]);
-    }
-
-    /**
-     * Update (approve/reject) the specified request.
-     */
-    public function update(Request $request, LetterRequest $letterRequest): RedirectResponse
-    {
-        $validated = $request->validate([
-            'status' => 'required|in:approved,rejected',
-            'admin_notes' => 'nullable|string',
-            'result_file_path' => 'nullable|file|mimes:pdf|max:5120',
-        ]);
-
-        // Handle file upload jika ada
-        if ($request->hasFile('result_file_path')) {
-            $file = $request->file('result_file_path');
-            $validated['result_file_path'] = $file->store('letters', 'public');
+        if ($letterRequest->isCompleted()) {
+            return redirect()->route('admin.letter-requests.index', ['tab' => 'riwayat'])
+                ->with('success', 'Permohonan ini sudah berada di Riwayat.');
         }
 
-        $validated['processed_at'] = now();
-        $letterRequest->update($validated);
+        $letterRequest->markCompleted();
 
-        $status_label = $validated['status'] === 'approved' ? 'disetujui' : 'ditolak';
-
-        return redirect()->route('admin.letter-requests.index')
-                        ->with('success', "Permohonan surat berhasil {$status_label}.");
+        return redirect()->route('admin.letter-requests.index', ['tab' => 'riwayat'])
+            ->with('success', 'Permohonan surat berhasil ditandai selesai.');
     }
 
     /**
-     * Show the specified request.
+     * Delete a completed letter request.
+     */
+    public function destroy(LetterRequest $letterRequest): RedirectResponse
+    {
+        if (! $letterRequest->isCompleted()) {
+            return redirect()->route('admin.letter-requests.index', ['tab' => 'baru'])
+                ->with('error', 'Hanya permohonan yang sudah selesai yang dapat dihapus.');
+        }
+
+        $letterRequest->delete();
+
+        return redirect()->route('admin.letter-requests.index', ['tab' => 'riwayat'])
+            ->with('success', 'Permohonan selesai berhasil dihapus.');
+    }
+
+    /**
+     * Show the submitted letter request details.
      */
     public function show(LetterRequest $letterRequest): View
     {
-        $letterRequest->load('user', 'template');
+        $letterRequest->load('template');
+
         return view('admin.letter-requests.show', ['request' => $letterRequest]);
     }
 }
