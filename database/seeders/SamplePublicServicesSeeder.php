@@ -47,6 +47,7 @@ class SamplePublicServicesSeeder extends Seeder
         }
 
         // Sample Laporans (Pengaduan Warga — tanpa akun)
+        // Alur admin saat ini hanya dua tab: Baru (belum selesai) & Riwayat (sudah selesai).
         Laporan::firstOrCreate(
             ['nama' => 'Budi Santoso', 'isi_laporan' => 'Mohon bantuan perbaikan lampu penerangan jalan umum (PJU) di dekat batas pertigaan RT 02 Dukuh Catur yang padam sejak 2 hari lalu.'],
             [
@@ -61,8 +62,7 @@ class SamplePublicServicesSeeder extends Seeder
             [
                 'no_whatsapp' => '6285678901234',
                 'kategori'    => 'lingkungan',
-                'status'      => 'diproses',
-                'catatan_admin' => 'Sudah dikoordinasikan dengan Pokdarwis dan Tim Kebersihan Desa untuk rencana pengadaan.',
+                'status'      => 'selesai',
             ]
         );
     }

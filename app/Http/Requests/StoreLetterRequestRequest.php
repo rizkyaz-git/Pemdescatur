@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Helpers\WhatsappHelper;
+use App\Models\LetterTemplate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreLetterRequestRequest extends FormRequest
@@ -20,7 +22,7 @@ class StoreLetterRequestRequest extends FormRequest
                     if ($value === 'lainnya') {
                         return;
                     }
-                    if (!\App\Models\LetterTemplate::where('id', $value)->exists()) {
+                    if (!LetterTemplate::where('id', $value)->exists()) {
                         $fail('Jenis surat yang dipilih tidak valid.');
                     }
                 }
@@ -53,24 +55,14 @@ class StoreLetterRequestRequest extends FormRequest
 
     /**
      * Normalisasi nomor WhatsApp ke format 62xxxxxxxxxx sebelum validasi.
-     * Mengikuti pola identik StoreLaporanRequest.
+     * Memakai WhatsappHelper yang sama dengan pengaduan warga.
      */
     protected function prepareForValidation(): void
     {
         $formData = $this->input('form_data', []);
 
         if (!empty($formData['telepon'])) {
-            $no = preg_replace('/\s+/', '', $formData['telepon']);
-
-            if (str_starts_with($no, '+62')) {
-                $no = '62' . substr($no, 3);
-            } elseif (str_starts_with($no, '62')) {
-                // sudah benar
-            } elseif (str_starts_with($no, '0')) {
-                $no = '62' . substr($no, 1);
-            }
-
-            $formData['telepon'] = $no;
+            $formData['telepon'] = WhatsappHelper::normalize($formData['telepon']) ?? $formData['telepon'];
             $this->merge(['form_data' => $formData]);
         }
     }

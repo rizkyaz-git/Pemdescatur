@@ -21,7 +21,7 @@ class DashboardController extends Controller
             'officials_count' => Official::count(),
             'galleries_count' => Gallery::count(),
             'letter_templates_count' => LetterTemplate::count(),
-            'new_complaints_count' => Laporan::where('status', 'baru')->count(),
+            'new_complaints_count' => Laporan::unfinished()->count(),
             'users_count' => User::count(),
             'pojoks_count' => class_exists(Pojok::class) ? Pojok::count() : 4,
         ];

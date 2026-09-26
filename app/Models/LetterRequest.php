@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\WhatsappHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -104,5 +105,24 @@ class LetterRequest extends Model
             'status' => 'approved',
             'processed_at' => now(),
         ])->save();
+    }
+
+    /**
+     * Nomor WhatsApp pemohon dalam format internasional (62xxxxxxxxxx).
+     */
+    public function getWhatsappNumberAttribute(): ?string
+    {
+        return WhatsappHelper::normalize(data_get($this->form_data, 'telepon'));
+    }
+
+    /**
+     * Tautan wa.me untuk menghubungi pemohon.
+     *
+     * Memakai WhatsappHelper yang sama dengan pengaduan agar normalisasi nomor
+     * hanya punya satu implementasi.
+     */
+    public function getWhatsappUrlAttribute(): ?string
+    {
+        return WhatsappHelper::link(data_get($this->form_data, 'telepon'));
     }
 }

@@ -73,7 +73,11 @@ Route::middleware(['auth', 'role:super_admin,admin_pemdes,ppk_ormawa'])->prefix(
         Route::patch('letter-requests/{letterRequest}/complete', [Admin\LetterRequestController::class, 'complete'])->name('letter-requests.complete');
         Route::resource('letter-templates', Admin\LetterTemplateController::class)->except(['show']);
         Route::resource('letter-requests', Admin\LetterRequestController::class)->only(['index', 'show', 'destroy']);
-        Route::resource('complaints', Admin\ComplaintController::class)->except(['create', 'store']);
+        // Pengaduan: alur "Baru" (belum selesai) & "Riwayat" (sudah selesai).
+        // Alur lama "Tanggapi / Ubah Status" sudah dihapus; satu-satunya aksi
+        // perubahan status adalah menandai pengaduan selesai.
+        Route::patch('complaints/{complaint}/complete', [Admin\ComplaintController::class, 'complete'])->name('complaints.complete');
+        Route::resource('complaints', Admin\ComplaintController::class)->only(['index', 'show', 'destroy']);
     });
 
     // 5. Modul PPK Ormawa: Hanya dapat diakses oleh Super Admin dan PPK Ormawa

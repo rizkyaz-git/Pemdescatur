@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\MediaHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Laporan;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class ComplaintController extends Controller
 {
     /**
-     * Tampilkan daftar laporan pengaduan dengan filter status.
+     * Tampilkan daftar pengaduan pada tab "Baru" (belum selesai) atau "Riwayat" (sudah selesai).
      */
     public function index(Request $request): View
     {
+        $activeTab = $request->input('tab') === 'riwayat' ? 'riwayat' : 'baru';
         $query = Laporan::query();
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
+        if ($activeTab === 'riwayat') {
+            $query->completed();
+        } else {
+            $query->unfinished();
         }
 
         if ($request->filled('kategori')) {
@@ -29,18 +33,25 @@ class ComplaintController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('isi_laporan', 'like', "%{$search}%");
+                    ->orWhere('no_whatsapp', 'like', "%{$search}%")
+                    ->orWhere('isi_laporan', 'like', "%{$search}%");
             });
         }
 
-        $laporans   = $query->latest()->paginate(15)->withQueryString();
-        $kategoris  = ['infrastruktur', 'kependudukan', 'keamanan', 'lingkungan', 'layanan_publik', 'lainnya'];
+        $paginationParams = array_filter([
+            'tab' => $activeTab,
+            'kategori' => $request->input('kategori'),
+            'search' => $request->input('search'),
+        ], static fn (mixed $value): bool => $value !== null && $value !== '');
 
-        return view('admin.complaints.index', compact('laporans', 'kategoris'));
+        $laporans = $query->latest()->paginate(15)->appends($paginationParams);
+        $kategoriLabels = Laporan::KATEGORI_LABELS;
+
+        return view('admin.complaints.index', compact('laporans', 'kategoriLabels', 'activeTab'));
     }
 
     /**
-     * Tampilkan detail satu laporan.
+     * Tampilkan detail satu laporan (read-only).
      */
     public function show(Laporan $complaint): View
     {
@@ -48,43 +59,36 @@ class ComplaintController extends Controller
     }
 
     /**
-     * Tampilkan form edit status & catatan admin.
+     * Tandai pengaduan selesai sehingga berpindah dari tab "Baru" ke "Riwayat".
+     * Satu-satunya backend aksi "Selesai" untuk list maupun detail.
      */
-    public function edit(Laporan $complaint): View
+    public function complete(Laporan $complaint): RedirectResponse
     {
-        return view('admin.complaints.edit', compact('complaint'));
+        if ($complaint->isCompleted()) {
+            return redirect()->route('admin.complaints.index', ['tab' => 'riwayat'])
+                ->with('success', 'Pengaduan ini sudah berada di Riwayat.');
+        }
+
+        $complaint->markCompleted();
+
+        return redirect()->route('admin.complaints.index', ['tab' => 'riwayat'])
+            ->with('success', 'Pengaduan berhasil ditandai selesai.');
     }
 
     /**
-     * Update status dan catatan admin untuk laporan.
-     */
-    public function update(Request $request, Laporan $complaint): RedirectResponse
-    {
-        $validated = $request->validate([
-            'status'         => ['required', 'in:baru,diproses,selesai,ditolak'],
-            'catatan_admin'  => ['nullable', 'string', 'max:2000'],
-        ]);
-
-        $complaint->update($validated);
-
-        return redirect()
-            ->route('admin.complaints.index')
-            ->with('success', 'Laporan pengaduan berhasil diperbarui.');
-    }
-
-    /**
-     * Hapus laporan pengaduan beserta lampirannya.
+     * Hapus pengaduan yang sudah selesai beserta lampirannya.
      */
     public function destroy(Laporan $complaint): RedirectResponse
     {
-        if ($complaint->lampiran) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($complaint->lampiran);
+        if (! $complaint->isCompleted()) {
+            return redirect()->route('admin.complaints.index', ['tab' => 'baru'])
+                ->with('error', 'Hanya pengaduan yang sudah selesai yang dapat dihapus.');
         }
 
+        MediaHelper::delete($complaint->lampiran);
         $complaint->delete();
 
-        return redirect()
-            ->route('admin.complaints.index')
-            ->with('success', 'Laporan pengaduan berhasil dihapus.');
+        return redirect()->route('admin.complaints.index', ['tab' => 'riwayat'])
+            ->with('success', 'Pengaduan selesai berhasil dihapus.');
     }
 }

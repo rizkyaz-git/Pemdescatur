@@ -365,4 +365,153 @@ class PublicServicesTest extends TestCase
         // Admin view complaints (laporans)
         $this->actingAs($admin)->get(route('admin.complaints.index'))->assertStatus(200);
     }
+
+    public function test_complaint_list_uses_baru_and_riwayat_tabs_without_status_ui(): void
+    {
+        $admin = User::where('role', 'super_admin')->firstOrFail();
+        $complaint = $this->storeComplaint('Pelapor Tab Baru', '081298765432', 'Jalan berlubang di depan rumah warga.');
+
+        $list = $this->actingAs($admin)->get(route('admin.complaints.index'));
+
+        $list->assertOk()
+            ->assertSee('Pelapor Tab Baru')
+            // Nomor WhatsApp dinormalisasi ke format internasional pada tautan wa.me
+            ->assertSee('https://wa.me/6281298765432', false)
+            ->assertDontSee('Semua Status')
+            ->assertDontSee('Tanggapi')
+            ->assertDontSee('>Status<', false);
+
+        // Tab Baru & Riwayat ada, dan tab aktif memakai state active yang jelas
+        $this->assertMatchesRegularExpression(
+            '/href="'.preg_quote(route('admin.complaints.index', ['tab' => 'baru']), '/').'" role="tab" aria-current="page"/',
+            $list->getContent()
+        );
+        $this->assertStringContainsString(
+            'href="'.route('admin.complaints.index', ['tab' => 'riwayat']).'" role="tab" aria-current="false"',
+            $list->getContent()
+        );
+
+        // Pengaduan yang sudah selesai tidak boleh muncul di tab Baru
+        $complaint->markCompleted();
+
+        $this->actingAs($admin)->get(route('admin.complaints.index'))
+            ->assertOk()
+            ->assertDontSee('Pelapor Tab Baru');
+
+        $this->actingAs($admin)->get(route('admin.complaints.index', ['tab' => 'riwayat']))
+            ->assertOk()
+            ->assertSee('Pelapor Tab Baru');
+    }
+
+    public function test_admin_can_complete_complaint_from_list_and_from_detail(): void
+    {
+        $admin = User::where('role', 'super_admin')->firstOrFail();
+        $fromList = $this->storeComplaint('Pelapor Aksi List', '081211112222', 'Lampu jalan mati selama tiga malam.');
+        $fromDetail = $this->storeComplaint('Pelapor Aksi Detail', '081233334444', 'Sampah menumpuk di dekat balai desa.');
+
+        // Aksi "Selesai" pada list
+        $this->actingAs($admin)
+            ->patch(route('admin.complaints.complete', $fromList->id))
+            ->assertRedirect(route('admin.complaints.index', ['tab' => 'riwayat']))
+            ->assertSessionHas('success');
+
+        $this->assertSame('selesai', $fromList->fresh()->status);
+        $this->assertTrue($fromList->fresh()->isCompleted());
+
+        // Aksi "Tandai sebagai Selesai" pada halaman detail
+        $this->actingAs($admin)->get(route('admin.complaints.show', $fromDetail->id))
+            ->assertOk()
+            ->assertSee('Tandai sebagai Selesai')
+            ->assertSee('https://wa.me/6281233334444', false);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.complaints.complete', $fromDetail->id))
+            ->assertRedirect(route('admin.complaints.index', ['tab' => 'riwayat']));
+
+        $this->assertSame('selesai', $fromDetail->fresh()->status);
+
+        // Setelah selesai, tombol workflow lama tidak muncul lagi di detail
+        $this->actingAs($admin)->get(route('admin.complaints.show', $fromDetail->id))
+            ->assertOk()
+            ->assertDontSee('Tandai sebagai Selesai')
+            ->assertSee('Pengaduan ini sudah selesai');
+    }
+
+    public function test_only_completed_complaints_can_be_deleted_from_riwayat(): void
+    {
+        $admin = User::where('role', 'super_admin')->firstOrFail();
+        $pending = $this->storeComplaint('Pelapor Belum Selesai', '081255556666', 'Jalan penghubung rusak parah.');
+        $done = $this->storeComplaint('Pelapor Sudah Selesai', '081277778888', 'Lampu jalan sudah diperbaiki.');
+        $done->markCompleted();
+
+        // Pengaduan yang belum selesai dilindungi dari hapus
+        $this->actingAs($admin)
+            ->delete(route('admin.complaints.destroy', $pending->id))
+            ->assertRedirect(route('admin.complaints.index', ['tab' => 'baru']))
+            ->assertSessionHas('error');
+
+        $this->assertDatabaseHas('laporans', ['id' => $pending->id]);
+
+        // Pengaduan selesai dapat dihapus dari tab Riwayat
+        $this->actingAs($admin)
+            ->delete(route('admin.complaints.destroy', $done->id))
+            ->assertRedirect(route('admin.complaints.index', ['tab' => 'riwayat']))
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseMissing('laporans', ['id' => $done->id]);
+    }
+
+    public function test_retired_complaint_status_routes_are_gone(): void
+    {
+        $complaint = $this->storeComplaint('Pelapor Alur Lama', '081299998888', 'Laporan lama tanpa tindak lanjut.');
+        $admin = User::where('role', 'super_admin')->firstOrFail();
+
+        // Alur "Tanggapi / Ubah Status" tidak lagi terdaftar sama sekali
+        $this->actingAs($admin)->get('/kelola/complaints/'.$complaint->id.'/edit')->assertNotFound();
+        $this->actingAs($admin)
+            ->put('/kelola/complaints/'.$complaint->id, ['status' => 'selesai'])
+            ->assertStatus(405);
+        $this->assertSame('baru', $complaint->fresh()->status);
+    }
+
+    public function test_letter_request_detail_and_list_link_whatsapp(): void
+    {
+        $admin = User::where('role', 'super_admin')->firstOrFail();
+
+        $this->post(route('warga.letter.store'), [
+            'template_id' => 'lainnya',
+            'form_data' => [
+                'nama' => 'Pemohon Tautan WhatsApp',
+                'nik' => '3309123456789012',
+                'telepon' => '0812-3456-7890',
+                'jenis_surat_lainnya' => 'Surat Keterangan Domisili',
+                'keperluan' => 'Memastikan tautan WhatsApp memakai normalisasi yang sama.',
+            ],
+        ])->assertSessionHasNoErrors();
+
+        $letterRequest = LetterRequest::whereJsonContains('form_data->nama', 'Pemohon Tautan WhatsApp')->firstOrFail();
+
+        $this->actingAs($admin)->get(route('admin.letter-requests.index'))
+            ->assertOk()
+            ->assertSee('https://wa.me/6281234567890', false);
+
+        $this->actingAs($admin)->get(route('admin.letter-requests.show', $letterRequest->id))
+            ->assertOk()
+            ->assertSee('Nomor WhatsApp Aktif')
+            ->assertSee('https://wa.me/6281234567890', false)
+            ->assertSee('Tandai sebagai Selesai')
+            ->assertDontSee('Status Pengerjaan');
+    }
+
+    private function storeComplaint(string $nama, string $noWhatsapp, string $isiLaporan): Laporan
+    {
+        $this->post(route('warga.complaint.store'), [
+            'nama' => $nama,
+            'no_whatsapp' => $noWhatsapp,
+            'kategori' => 'infrastruktur',
+            'isi_laporan' => $isiLaporan,
+        ])->assertSessionHasNoErrors();
+
+        return Laporan::where('nama', $nama)->latest('id')->firstOrFail();
+    }
 }

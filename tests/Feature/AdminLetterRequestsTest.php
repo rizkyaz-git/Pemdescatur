@@ -76,10 +76,9 @@ class AdminLetterRequestsTest extends TestCase
             ->assertSee('Nomor WhatsApp Aktif')
             ->assertSee('Jenis Surat')
             ->assertSee('Keperluan / Keterangan Permohonan')
-            ->assertSee('Status Pengerjaan')
-            ->assertSee('Belum Selesai')
             ->assertSee('Tandai sebagai Selesai')
             ->assertSee(route('admin.letter-requests.complete', $request->id), false)
+            ->assertDontSee('Status Pengerjaan')
             ->assertDontSee('Email Pemohon')
             ->assertDontSee('Tanggal Pengajuan')
             ->assertDontSee('Data Form Yang Diisi Pemohon')
@@ -96,8 +95,8 @@ class AdminLetterRequestsTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.letter-requests.show', $request->id))
             ->assertOk()
-            ->assertSee('Status Pengerjaan')
-            ->assertSee('Selesai')
+            ->assertSee('Permohonan ini sudah selesai')
+            ->assertDontSee('Status Pengerjaan')
             ->assertDontSee('Tandai sebagai Selesai')
             ->assertDontSee(route('admin.letter-requests.complete', $request->id), false);
     }

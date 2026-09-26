@@ -153,8 +153,19 @@
                                     <p class="mt-0.5 font-mono text-[11px] text-slate-400">{{ $req->user->email }}</p>
                                 @endif
                             </td>
-                            <td class="px-4 py-3.5 align-middle whitespace-nowrap font-mono text-slate-600 text-xs">
-                                {{ data_get($req->form_data, 'telepon', '-') }}
+                            <td class="px-4 py-3.5 align-middle whitespace-nowrap">
+                                @if($req->whatsapp_url)
+                                    <a href="{{ $req->whatsapp_url }}" target="_blank" rel="noopener noreferrer"
+                                       class="inline-flex items-center gap-1 font-mono text-xs font-semibold text-[#0F4C3A] hover:underline"
+                                       title="Hubungi pemohon melalui WhatsApp">
+                                        {{ data_get($req->form_data, 'telepon', '-') }}
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                        </svg>
+                                    </a>
+                                @else
+                                    <span class="font-mono text-xs text-slate-400">-</span>
+                                @endif
                             </td>
                             <td class="px-4 py-3.5 align-middle">
                                 <span class="font-medium text-slate-800 text-xs">

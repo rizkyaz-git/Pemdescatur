@@ -1,7 +1,10 @@
 <?php
 namespace App\Http\Requests;
 
+use App\Helpers\WhatsappHelper;
+use App\Models\Laporan;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreLaporanRequest extends FormRequest
 {
@@ -15,7 +18,7 @@ class StoreLaporanRequest extends FormRequest
         return [
             'nama'        => ['required', 'string', 'max:255'],
             'no_whatsapp' => ['required', 'string', 'regex:/^(?:\+62|62|0)8[1-9][0-9]{6,10}$/'],
-            'kategori'    => ['required', 'string', 'in:infrastruktur,kependudukan,keamanan,lingkungan,layanan_publik,lainnya'],
+            'kategori'    => ['required', 'string', Rule::in(Laporan::kategoriList())],
             'isi_laporan' => ['required', 'string', 'min:10', 'max:2000'],
             'lampiran'    => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
         ];
@@ -43,17 +46,9 @@ class StoreLaporanRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         if ($this->filled('no_whatsapp')) {
-            $no = preg_replace('/\s+/', '', $this->input('no_whatsapp'));
-
-            if (str_starts_with($no, '+62')) {
-                $no = '62' . substr($no, 3);
-            } elseif (str_starts_with($no, '62')) {
-                // sudah benar
-            } elseif (str_starts_with($no, '0')) {
-                $no = '62' . substr($no, 1);
-            }
-
-            $this->merge(['no_whatsapp' => $no]);
+            $this->merge([
+                'no_whatsapp' => WhatsappHelper::normalize($this->input('no_whatsapp')) ?? $this->input('no_whatsapp'),
+            ]);
         }
     }
 }

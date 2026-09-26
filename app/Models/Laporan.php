@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Helpers\WhatsappHelper;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +17,38 @@ class Laporan extends Model
      */
     protected $table = 'laporans';
 
+    /**
+     * Kategori pengaduan yang sah beserta label Bahasa Indonesia.
+     * Dipakai bersama oleh filter dan tampilan panel admin.
+     *
+     * @var array<string, string>
+     */
+    public const KATEGORI_LABELS = [
+        'infrastruktur' => 'Infrastruktur & Fasilitas',
+        'kependudukan' => 'Administrasi & Kependudukan',
+        'keamanan' => 'Keamanan & Ketertiban',
+        'lingkungan' => 'Lingkungan & Kebersihan',
+        'layanan_publik' => 'Layanan Publik',
+        'lainnya' => 'Lainnya',
+    ];
+
+    /**
+     * Nilai status lama yang sudah menutup pengaduan.
+     *
+     * Alur admin saat ini hanya "Baru" dan "Riwayat", sehingga hanya dua nilai
+     * lama ini yang diperlakukan sebagai selesai. Nilai lain ('baru', 'diproses')
+     * tetap dibaca sebagai pengaduan yang belum diselesaikan supaya data lama tidak
+     * hilang dari tab Baru.
+     *
+     * @var list<string>
+     */
+    public const COMPLETED_STATUSES = ['selesai', 'ditolak'];
+
+    /**
+     * Nilai status yang dipakai ketika pengaduan ditandai selesai.
+     */
+    public const COMPLETED_STATUS = 'selesai';
+
     protected $fillable = [
         'nama',
         'no_whatsapp',
@@ -22,7 +56,6 @@ class Laporan extends Model
         'isi_laporan',
         'lampiran',
         'status',
-        'catatan_admin',
     ];
 
     protected $casts = [
@@ -30,30 +63,66 @@ class Laporan extends Model
     ];
 
     /**
-     * Get status label dalam bahasa Indonesia
+     * Daftar key kategori yang valid.
+     *
+     * @return list<string>
      */
-    public function getStatusLabelAttribute(): string
+    public static function kategoriList(): array
     {
-        return match ($this->status) {
-            'baru' => 'Baru',
-            'diproses' => 'Sedang Diproses',
-            'selesai' => 'Selesai',
-            'ditolak' => 'Ditolak',
-            default => 'Tidak Diketahui',
-        };
+        return array_keys(self::KATEGORI_LABELS);
     }
 
     /**
-     * Get CSS class for status badge
+     * Pengaduan pada tab "Baru": belum ditandai selesai oleh admin.
      */
-    public function getStatusBadgeClassAttribute(): string
+    public function scopeUnfinished(Builder $query): Builder
     {
-        return match ($this->status) {
-            'baru' => 'bg-rose-50 text-rose-700 border-rose-200/60',
-            'diproses' => 'bg-amber-50 text-amber-800 border-amber-200/60',
-            'selesai' => 'bg-green-50 text-green-700 border-green-200/60',
-            'ditolak' => 'bg-slate-100 text-slate-600 border-slate-200/60',
-            default => 'bg-slate-100 text-slate-600',
-        };
+        return $query->whereNotIn('status', self::COMPLETED_STATUSES);
+    }
+
+    /**
+     * Pengaduan pada tab "Riwayat": sudah ditandai selesai oleh admin.
+     */
+    public function scopeCompleted(Builder $query): Builder
+    {
+        return $query->whereIn('status', self::COMPLETED_STATUSES);
+    }
+
+    public function isCompleted(): bool
+    {
+        return in_array($this->status, self::COMPLETED_STATUSES, true);
+    }
+
+    /**
+     * Tandai pengaduan selesai sehingga berpindah dari tab "Baru" ke "Riwayat".
+     */
+    public function markCompleted(): void
+    {
+        $this->forceFill(['status' => self::COMPLETED_STATUS])->save();
+    }
+
+    /**
+     * Label kategori dalam Bahasa Indonesia.
+     */
+    public function getKategoriLabelAttribute(): string
+    {
+        return self::KATEGORI_LABELS[$this->kategori]
+            ?? ucfirst(str_replace('_', ' ', (string) $this->kategori));
+    }
+
+    /**
+     * Nomor WhatsApp pelapor dalam format internasional (62xxxxxxxxxx).
+     */
+    public function getWhatsappNumberAttribute(): ?string
+    {
+        return WhatsappHelper::normalize($this->no_whatsapp);
+    }
+
+    /**
+     * Tautan wa.me untuk menghubungi pelapor.
+     */
+    public function getWhatsappUrlAttribute(): ?string
+    {
+        return WhatsappHelper::link($this->no_whatsapp);
     }
 }
