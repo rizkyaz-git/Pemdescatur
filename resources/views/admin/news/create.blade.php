@@ -392,6 +392,59 @@
                 placeholder: 'Tuliskan isi berita lengkap di sini...'
             });
 
+            // Custom image handler: upload ke server instead of base64
+            const toolbar = quill.getModule('toolbar');
+            toolbar.addHandler('image', function() {
+                const input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+                input.click();
+
+                input.onchange = function() {
+                    const file = input.files[0];
+                    if (!file) return;
+
+                    if (!file.type.startsWith('image/')) {
+                        alert('File harus berupa gambar (JPEG, PNG, GIF, atau WebP).');
+                        return;
+                    }
+
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('Ukuran gambar maksimal 5MB.');
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    formData.append('_token', '{{ csrf_token() }}');
+
+                    // Show loading indicator
+                    const range = quill.getSelection(true);
+                    quill.insertText(range, ' Mengunggah gambar...', 'italic', '#94a3b8');
+
+                    fetch('{{ route('admin.news.upload-image') }}', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        // Remove loading text
+                        quill.deleteText(range.index, ' Mengunggah gambar...'.length);
+
+                        if (result.success) {
+                            quill.insertEmbed(range.index, 'image', result.url, 'user');
+                        } else {
+                            alert(result.message || 'Gagal mengunggah gambar. Silakan coba lagi.');
+                        }
+                    })
+                    .catch(error => {
+                        quill.deleteText(range.index, ' Mengunggah gambar...'.length);
+                        console.error('Image upload error:', error);
+                        alert('Gagal mengunggah gambar. Silakan coba lagi.');
+                    });
+                };
+            });
+
             const form = document.getElementById('news-form');
             form.addEventListener('submit', function () {
                 const text = quill.getText().trim();

@@ -129,4 +129,34 @@ class NewsController extends Controller
         return redirect()->route('admin.news.index')
             ->with('success', 'Berita berhasil dihapus!');
     }
+
+    /**
+     * Upload gambar dari Quill Rich Text Editor.
+     * 
+     * Menangani upload gambar yang dikirim oleh Quill imageHandler,
+     * menyimpan file ke storage publik, dan mengembalikan URL yang
+     * dapat diakses browser untuk disisipkan ke konten editor.
+     */
+    public function uploadImage(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // Max 5MB
+        ]);
+
+        try {
+            $path = $request->file('image')->store('news/content', 'public');
+            $url = Storage::disk('public')->url($path);
+
+            return response()->json([
+                'success' => true,
+                'url' => $url,
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengunggah gambar. Silakan coba lagi.',
+            ], 500);
+        }
+    }
 }
