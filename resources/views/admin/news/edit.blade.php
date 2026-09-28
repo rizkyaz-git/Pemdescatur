@@ -409,9 +409,12 @@
                     formData.append('image', file);
                     formData.append('_token', '{{ csrf_token() }}');
 
+                    // Get current cursor position
+                    const range = quill.getSelection();
+                    const insertIndex = range ? range.index : quill.getLength();
+
                     // Show loading indicator
-                    const range = quill.getSelection(true);
-                    quill.insertText(range, ' Mengunggah gambar...', 'italic', '#94a3b8');
+                    quill.insertText(insertIndex, ' Mengunggah gambar...', { italic: true, color: '#94a3b8' });
 
                     fetch('{{ route('admin.news.upload-image') }}', {
                         method: 'POST',
@@ -419,17 +422,17 @@
                     })
                     .then(response => response.json())
                     .then(result => {
-                        // Remove loading indicator
-                        quill.deleteText(range.index, ' Mengunggah gambar...'.length);
+                        // Remove loading text
+                        quill.deleteText(insertIndex, ' Mengunggah gambar...'.length);
 
                         if (result.success) {
-                            quill.insertEmbed(range.index, 'image', result.url, 'user');
+                            quill.insertEmbed(insertIndex, 'image', result.url, 'user');
                         } else {
                             alert(result.message || 'Gagal mengunggah gambar. Silakan coba lagi.');
                         }
                     })
                     .catch(error => {
-                        quill.deleteText(range.index, ' Mengunggah gambar...'.length);
+                        quill.deleteText(insertIndex, ' Mengunggah gambar...'.length);
                         console.error('Image upload error:', error);
                         alert('Gagal mengunggah gambar. Silakan coba lagi.');
                     });
