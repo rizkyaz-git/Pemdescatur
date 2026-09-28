@@ -404,35 +404,24 @@
                     </div>
 
                     @if(isset($recentNews) && $recentNews->count() > 0)
-                        <div class="space-y-3 pt-1">
+                        <!-- Mobile: 2 kartu grid + 2 list compact -->
+                        <div class="lg:hidden pt-1">
+                            <div class="grid grid-cols-2 gap-3">
+                                @foreach($recentNews->take(2) as $item)
+                                    @include('public.news.partials.news-card-grid', ['item' => $item, 'defaultImages' => $defaultImages])
+                                @endforeach
+                            </div>
+                            <div class="mt-1">
+                                @foreach($recentNews->slice(2, 2) as $item)
+                                    @include('public.news.partials.news-card-list', ['item' => $item, 'defaultImages' => $defaultImages])
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Desktop: list horizontal compact -->
+                        <div class="hidden lg:block space-y-1 pt-1">
                             @foreach($recentNews as $item)
-                                @php
-                                    $itemImageSrc = $item->image_path 
-                                        ? asset('storage/' . $item->image_path) 
-                                        : asset($defaultImages[$item->id % count($defaultImages)]);
-                                @endphp
-                                <a href="{{ route('public.news.show', $item->slug) }}" class="group flex gap-3 items-start p-2 -mx-2 rounded-lg hover:bg-slate-50 transition-colors">
-                                    
-                                    <!-- Image Thumbnail -->
-                                    <div class="w-20 h-16 rounded-lg overflow-hidden bg-slate-100 border border-slate-200/70 shrink-0 relative">
-                                        <img src="{{ $itemImageSrc }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                    </div>
-
-                                    <!-- Content Info -->
-                                    <div class="space-y-1 min-w-0 flex-1">
-                                        <h4 class="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-[#0A3D29] transition-colors line-clamp-2 leading-snug">
-                                            {{ $item->title }}
-                                        </h4>
-                                        <div class="flex items-center gap-2 text-[11px] text-slate-400 font-medium pt-0.5">
-                                            <span class="font-medium text-[11px] text-slate-500">
-                                                {{ $item->category }}
-                                            </span>
-                                            <span>•</span>
-                                            <span>{{ number_format($item->views_count ?? 0) }} dilihat</span>
-                                        </div>
-                                    </div>
-
-                                </a>
+                                @include('public.news.partials.news-card-list', ['item' => $item, 'defaultImages' => $defaultImages])
                             @endforeach
                         </div>
                     @else
@@ -467,80 +456,24 @@
                     </a>
                 </div>
 
-                <!-- 1. Tampilan Mode Mobile: Daftar Berita (List) -->
-                <div class="sm:hidden space-y-2.5">
-                    @foreach($displayRelated as $item)
-                        @php
-                            $itemImageSrc = $item->image_path 
-                                ? asset('storage/' . $item->image_path) 
-                                : asset($defaultImages[$item->id % count($defaultImages)]);
-                        @endphp
-                        <a href="{{ route('public.news.show', $item->slug) }}" 
-                           class="group flex gap-3 items-start p-2.5 rounded-lg border border-slate-200/80 bg-white hover:bg-slate-50 transition-colors shadow-2xs">
-                            <!-- Image Thumbnail -->
-                            <div class="w-20 h-16 rounded-md overflow-hidden bg-slate-100 border border-slate-200/70 shrink-0 relative">
-                                <img src="{{ $itemImageSrc }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                            </div>
-
-                            <!-- Content Info -->
-                            <div class="space-y-1 min-w-0 flex-1">
-                                <span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold text-[#0A3D29] bg-emerald-50 border border-emerald-200/60 uppercase tracking-wider">
-                                    {{ $item->category ?: 'Berita' }}
-                                </span>
-                                <h3 class="font-bold text-xs text-slate-900 group-hover:text-[#0A3D29] transition-colors line-clamp-2 leading-snug">
-                                    {{ $item->title }}
-                                </h3>
-                                <div class="flex items-center gap-2 text-[10.5px] text-slate-400 font-medium pt-0.5">
-                                    <span>{{ $item->published_at ? $item->published_at->translatedFormat('d M Y') : $item->created_at->translatedFormat('d M Y') }}</span>
-                                    <span>•</span>
-                                    <span>{{ number_format($item->views_count ?? 0) }} dilihat</span>
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
+                <!-- Mobile: 2 kartu grid + 2 list compact -->
+                <div class="lg:hidden">
+                    <div class="grid grid-cols-2 gap-3">
+                        @foreach($displayRelated->take(2) as $item)
+                            @include('public.news.partials.news-card-grid', ['item' => $item, 'defaultImages' => $defaultImages])
+                        @endforeach
+                    </div>
+                    <div class="mt-1">
+                        @foreach($displayRelated->slice(2, 2) as $item)
+                            @include('public.news.partials.news-card-list', ['item' => $item, 'defaultImages' => $defaultImages])
+                        @endforeach
+                    </div>
                 </div>
 
-                <!-- 2. Tampilan Mode Desktop & Tablet: 4 Kartu Padat Berjajar -->
-                <div class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Desktop & Tablet: 4 kartu compact berjajar -->
+                <div class="hidden lg:grid lg:grid-cols-4 gap-5">
                     @foreach($displayRelated as $item)
-                        @php
-                            $itemImageSrc = $item->image_path 
-                                ? asset('storage/' . $item->image_path) 
-                                : asset($defaultImages[$item->id % count($defaultImages)]);
-                        @endphp
-                        <article class="group flex flex-col bg-white rounded-lg border border-slate-200/80 hover:border-slate-300 hover:shadow-xs transition-all duration-200 overflow-hidden">
-                            <!-- Image Thumbnail -->
-                            <a href="{{ route('public.news.show', $item->slug) }}" class="block aspect-16/10 w-full overflow-hidden bg-slate-100 relative">
-                                <img src="{{ $itemImageSrc }}" 
-                                     alt="{{ $item->title }}" 
-                                     loading="lazy"
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-white/95 text-[#0A3D29] backdrop-blur-xs shadow-2xs">
-                                    {{ $item->category ?: 'Berita' }}
-                                </span>
-                            </a>
-
-                            <!-- Card Body -->
-                            <div class="p-3 flex-1 flex flex-col justify-between space-y-2">
-                                <h3 class="font-bold text-xs sm:text-[13px] text-slate-900 group-hover:text-[#0A3D29] transition-colors line-clamp-2 leading-snug">
-                                    <a href="{{ route('public.news.show', $item->slug) }}">
-                                        {{ $item->title }}
-                                    </a>
-                                </h3>
-
-                                <!-- Card Footer: Date & Views -->
-                                <div class="flex items-center justify-between text-[10.5px] text-slate-400 font-medium pt-2 border-t border-slate-100">
-                                    <span>{{ $item->published_at ? $item->published_at->translatedFormat('d M Y') : $item->created_at->translatedFormat('d M Y') }}</span>
-                                    <span class="flex items-center gap-1">
-                                        <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                        </svg>
-                                        <span>{{ number_format($item->views_count ?? 0) }}</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </article>
+                        @include('public.news.partials.news-card-related', ['item' => $item, 'defaultImages' => $defaultImages])
                     @endforeach
                 </div>
             </section>

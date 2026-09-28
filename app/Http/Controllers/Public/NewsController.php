@@ -124,11 +124,11 @@ class NewsController extends Controller
             $relatedNews = $relatedNews->concat($fallback);
         }
 
-        // Fetch 5 recent news for sidebar
+        // Fetch 4 recent news for sidebar
         $recentNews = News::where('status', 'published')
             ->where('id', '!=', $news->id)
             ->orderBy('published_at', 'desc')
-            ->take(5)
+            ->take(4)
             ->get();
 
         $categories = News::where('status', 'published')
