@@ -416,9 +416,9 @@
                             </div>
                         </div>
 
-                        <!-- Desktop: maksimal tiga berita dalam list horizontal compact -->
+                        <!-- Desktop: tampilkan lebih banyak berita dalam list horizontal compact -->
                         <div class="hidden lg:block space-y-1 pt-1">
-                            @foreach($recentNews->take(3) as $item)
+                            @foreach($recentNews->take(6) as $item)
                                 @include('public.news.partials.news-card-list', ['item' => $item, 'defaultImages' => $defaultImages])
                             @endforeach
                         </div>
@@ -433,7 +433,7 @@
 
         <!-- ================= BAGIAN BAWAH: BERITA TERKAIT ================= -->
         @php
-            $displayRelated = isset($relatedNews) && $relatedNews->count() > 0 ? $relatedNews->take(3) : (isset($recentNews) ? $recentNews->take(3) : collect());
+            $displayRelated = isset($relatedNews) && $relatedNews->count() > 0 ? $relatedNews->take(4) : (isset($recentNews) ? $recentNews->take(4) : collect());
         @endphp
 
         @if($displayRelated->count() > 0)
@@ -451,7 +451,7 @@
 
                 <!-- Mobile: Bergaya list saja secara konsisten -->
                 <div class="lg:hidden divide-y divide-slate-100">
-                    @foreach($displayRelated as $item)
+                    @foreach($displayRelated->take(3) as $item)
                         @include('public.news.partials.news-card-list', ['item' => $item, 'defaultImages' => $defaultImages])
                     @endforeach
                 </div>
