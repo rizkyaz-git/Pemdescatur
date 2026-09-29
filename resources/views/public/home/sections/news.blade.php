@@ -15,7 +15,7 @@
 
             <!-- Desktop Action Button (Right Aligned) -->
             <x-see-all-link href="{{ route('public.news.index') }}" label="Tampilkan Semua"
-                class="hidden sm:inline-flex text-sm shrink-0" />
+                class="hidden sm:inline-flex shrink-0" />
         </div>
 
         {{-- 1. MOBILE ONLY AUTO-SLIDING CAROUSEL (lg:hidden) --}}
@@ -412,7 +412,7 @@
         <!-- Mobile Bottom Action Button: Lihat Semua Berita (block sm:hidden) -->
         <div class="block sm:hidden text-center pt-2">
             <x-see-all-link href="{{ route('public.news.index') }}" label="Tampilkan Semua"
-                class="min-h-[44px] px-6 py-3" />
+                class="min-h-[44px]" />
         </div>
     </div>
 </section>

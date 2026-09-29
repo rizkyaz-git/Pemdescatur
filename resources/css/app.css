@@ -9,7 +9,7 @@
 
 @layer components {
   .see-all-link {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-[#0A3D29] px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all duration-300 ease-out;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-[#0A3D29] px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all duration-300 ease-out;
   }
 
   .see-all-link:hover {

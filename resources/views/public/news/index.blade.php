@@ -228,8 +228,7 @@
                                         </p>
                                     </div>
 
-                                    <x-see-all-link href="{{ route('public.news.index') }}" label="Tampilkan Semua Berita"
-                                        class="text-xs px-4 py-2" />
+                                    <x-see-all-link href="{{ route('public.news.index') }}" label="Tampilkan Semua Berita" />
                                 </div>
 
                                 <!-- Grid Katalog Berita Paginated -->
@@ -279,7 +278,7 @@
                                             </h2>
                                             @if($categoryName)
                                                 <x-see-all-link href="{{ route('public.news.index', ['category' => $categoryName]) }}"
-                                                    label="Lihat Semua" class="text-xs px-4 py-2" />
+                                                    label="Lihat Semua" />
                                             @endif
                                         </div>
 

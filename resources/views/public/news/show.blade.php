@@ -398,28 +398,27 @@
                         <h3 class="font-bold text-base text-slate-900 tracking-tight">
                             Berita Terbaru
                         </h3>
-                        <x-see-all-link href="{{ route('public.news.index') }}" label="Lihat Semua"
-                            class="text-xs px-4 py-2" />
+                        <x-see-all-link href="{{ route('public.news.index') }}" label="Lihat Semua" />
                     </div>
 
                     @if(isset($recentNews) && $recentNews->count() > 0)
-                        <!-- Mobile: 2 kartu grid + 2 list compact -->
+                        <!-- Mobile: satu berita utama penuh + maksimal tiga berita dalam list -->
                         <div class="lg:hidden pt-1">
-                            <div class="grid grid-cols-2 gap-3">
-                                @foreach($recentNews->take(2) as $item)
+                            <div class="w-full">
+                                @foreach($recentNews->take(1) as $item)
                                     @include('public.news.partials.news-card-grid', ['item' => $item, 'defaultImages' => $defaultImages])
                                 @endforeach
                             </div>
                             <div class="mt-1">
-                                @foreach($recentNews->slice(2, 2) as $item)
+                                @foreach($recentNews->slice(1, 3) as $item)
                                     @include('public.news.partials.news-card-list', ['item' => $item, 'defaultImages' => $defaultImages])
                                 @endforeach
                             </div>
                         </div>
 
-                        <!-- Desktop: list horizontal compact -->
+                        <!-- Desktop: maksimal tiga berita dalam list horizontal compact -->
                         <div class="hidden lg:block space-y-1 pt-1">
-                            @foreach($recentNews as $item)
+                            @foreach($recentNews->take(3) as $item)
                                 @include('public.news.partials.news-card-list', ['item' => $item, 'defaultImages' => $defaultImages])
                             @endforeach
                         </div>
@@ -434,7 +433,7 @@
 
         <!-- ================= BAGIAN BAWAH: BERITA TERKAIT ================= -->
         @php
-            $displayRelated = isset($relatedNews) && $relatedNews->count() > 0 ? $relatedNews->take(4) : (isset($recentNews) ? $recentNews->take(4) : collect());
+            $displayRelated = isset($relatedNews) && $relatedNews->count() > 0 ? $relatedNews->take(3) : (isset($recentNews) ? $recentNews->take(3) : collect());
         @endphp
 
         @if($displayRelated->count() > 0)
@@ -447,7 +446,7 @@
                         </h2>
                     </div>
                     <x-see-all-link href="{{ route('public.news.index') }}" label="Lihat Semua"
-                        class="text-sm px-4 sm:px-5 py-2 sm:py-2.5 shrink-0" />
+                        class="shrink-0" />
                 </div>
 
                 <!-- Mobile: Bergaya list saja secara konsisten -->

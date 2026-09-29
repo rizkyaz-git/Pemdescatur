@@ -156,7 +156,7 @@
 
                 <!-- Desktop Action Button (Right Aligned) -->
                 <x-see-all-link href="{{ route('public.officials') }}" label="Lihat Semua Aparatur"
-                    class="hidden sm:inline-flex text-sm shrink-0" />
+                    class="hidden sm:inline-flex shrink-0" />
             </div>
 
             <!-- Carousel Stage Container with Floating Glassmorphism Navigation Buttons -->
@@ -258,7 +258,7 @@
             <!-- Mobile Bottom Action Button: Lihat Semua Aparatur (block sm:hidden) -->
             <div class="block sm:hidden text-center pt-2">
                 <x-see-all-link href="{{ route('public.officials') }}" label="Lihat Semua Perangkat"
-                    class="min-h-[44px] px-6 py-3" />
+                    class="min-h-[44px]" />
             </div>
         </section>
     </div>
