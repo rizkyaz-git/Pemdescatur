@@ -9,22 +9,27 @@ const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
 function createQuillImageHandler({ endpoint, csrfToken, overlaySelector = null }) {
     return function openImagePicker() {
+        // Quill invokes custom toolbar handlers with the toolbar module as `this`.
+        const quill = this.quill;
+        if (!quill) {
+            console.error('Quill image handler could not resolve the editor instance.');
+            return;
+        }
+
+        // Save the cursor before opening the native file dialog, which can remove focus.
+        const selection = quill.getSelection();
+        const insertIndex = Number.isInteger(selection?.index)
+            ? selection.index
+            : quill.getLength();
+        console.log('[Quill] image upload cursor saved', { selection, insertIndex });
+
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = '.jpg,.jpeg,.png,.gif,.webp,image/jpeg,image/png,image/gif,image/webp';
         input.hidden = true;
         document.body.appendChild(input);
 
-        // Quill invokes custom toolbar handlers with the toolbar module as `this`.
-        const quill = this.quill;
-        if (!quill) {
-            console.error('Quill image handler could not resolve the editor instance.');
-            input.remove();
-            return;
-        }
         const overlay = overlaySelector ? document.querySelector(overlaySelector) : null;
-        const selection = quill.getSelection(true);
-        const insertIndex = selection?.index ?? Math.max(quill.getLength() - 1, 0);
 
         const setLoading = (loading) => {
             if (loading) {
@@ -70,15 +75,43 @@ function createQuillImageHandler({ endpoint, csrfToken, overlaySelector = null }
                     },
                 });
 
-                const result = await response.json().catch(() => null);
-                if (!response.ok || !result?.success || !result?.url) {
-                    throw new Error(result?.message || 'Gambar gagal diunggah.');
+                const responseText = await response.text();
+                let result = null;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('[Quill] upload response is not valid JSON', {
+                        status: response.status,
+                        responseText,
+                        parseError,
+                    });
+                    throw new Error('Respons server upload bukan JSON yang valid.');
                 }
 
-                quill.insertEmbed(insertIndex, 'image', result.url, Quill.sources.USER);
+                console.log('[Quill] upload response received', {
+                    status: response.status,
+                    ok: response.ok,
+                    result,
+                });
+
+                const hasUrlKey = Boolean(result && Object.prototype.hasOwnProperty.call(result, 'url'));
+                const imageUrl = typeof result?.url === 'string' ? result.url.trim() : '';
+                if (!response.ok || !result?.success || !hasUrlKey || !imageUrl) {
+                    console.error('[Quill] upload response rejected before insertEmbed', {
+                        status: response.status,
+                        hasUrlKey,
+                        imageUrl,
+                        result,
+                    });
+                    throw new Error(result?.message || 'Respons upload tidak berisi URL gambar yang valid.');
+                }
+
+                console.log('[Quill] inserting image embed', { insertIndex, imageUrl });
+                quill.insertEmbed(insertIndex, 'image', imageUrl, Quill.sources.USER);
                 quill.setSelection(insertIndex + 1, Quill.sources.SILENT);
+                console.log('[Quill] image embed inserted successfully', { insertIndex, imageUrl });
             } catch (error) {
-                console.error('Quill image upload error:', error);
+                console.error('[Quill] image upload/insert error', error);
                 showError(error instanceof Error ? error.message : 'Gambar gagal diunggah. Silakan coba lagi.');
             } finally {
                 setLoading(false);
