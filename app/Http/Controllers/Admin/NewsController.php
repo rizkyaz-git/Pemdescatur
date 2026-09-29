@@ -147,9 +147,10 @@ class NewsController extends Controller
                 throw new \RuntimeException('Upload path was not returned by the filesystem.');
             }
 
-            $url = Storage::disk('public')->url($path);
+            // The public disk is exposed by `public/storage` -> `storage/app/public`.
+            $url = asset('storage/'.ltrim($path, '/'));
             if (! filter_var($url, FILTER_VALIDATE_URL)) {
-                $url = url($url);
+                throw new \RuntimeException('The generated image URL is invalid.');
             }
 
             return response()->json([

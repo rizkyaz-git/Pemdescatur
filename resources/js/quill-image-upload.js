@@ -15,8 +15,13 @@ function createQuillImageHandler({ endpoint, csrfToken, overlaySelector = null }
         input.hidden = true;
         document.body.appendChild(input);
 
-        // Quill invokes custom toolbar handlers with the editor as `this`.
-        const quill = this;
+        // Quill invokes custom toolbar handlers with the toolbar module as `this`.
+        const quill = this.quill;
+        if (!quill) {
+            console.error('Quill image handler could not resolve the editor instance.');
+            input.remove();
+            return;
+        }
         const overlay = overlaySelector ? document.querySelector(overlaySelector) : null;
         const selection = quill.getSelection(true);
         const insertIndex = selection?.index ?? Math.max(quill.getLength() - 1, 0);
