@@ -1,4 +1,5 @@
 import './bootstrap';
+import './quill-image-upload';
 
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';

@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\HtmlPurifierHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreNewsRequest;
+use App\Http\Requests\UploadNewsContentImageRequest;
 use App\Http\Requests\UpdateNewsRequest;
 use App\Models\News;
 use App\Models\NewsCategory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -137,15 +139,18 @@ class NewsController extends Controller
      * menyimpan file ke storage publik, dan mengembalikan URL yang
      * dapat diakses browser untuk disisipkan ke konten editor.
      */
-    public function uploadImage(Request $request): \Illuminate\Http\JsonResponse
+    public function uploadImage(UploadNewsContentImageRequest $request): JsonResponse
     {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // Max 5MB
-        ]);
-
         try {
             $path = $request->file('image')->store('news/content', 'public');
+            if (! is_string($path) || $path === '') {
+                throw new \RuntimeException('Upload path was not returned by the filesystem.');
+            }
+
             $url = Storage::disk('public')->url($path);
+            if (! filter_var($url, FILTER_VALIDATE_URL)) {
+                $url = url($url);
+            }
 
             return response()->json([
                 'success' => true,

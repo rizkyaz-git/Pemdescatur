@@ -411,68 +411,13 @@
                 placeholder: 'Tuliskan isi berita lengkap di sini...'
             });
 
-            // Custom image handler: upload ke server instead of base64
+            // Intercept Quill's default Base64 image flow with a physical file upload.
             const toolbar = quill.getModule('toolbar');
-            toolbar.addHandler('image', function() {
-                const input = document.createElement('input');
-                input.setAttribute('type', 'file');
-                input.setAttribute('accept', 'image/*');
-                input.click();
-
-                input.onchange = function() {
-                    const file = input.files[0];
-                    if (!file) return;
-
-                    if (!file.type.startsWith('image/')) {
-                        alert('File harus berupa gambar (JPEG, PNG, GIF, atau WebP).');
-                        return;
-                    }
-
-                    if (file.size > 5 * 1024 * 1024) {
-                        alert('Ukuran gambar maksimal 5MB.');
-                        return;
-                    }
-
-                    const formData = new FormData();
-                    formData.append('image', file);
-                    formData.append('_token', '{{ csrf_token() }}');
-
-                    // Simpan posisi cursor sebelum upload
-                    const range = quill.getSelection(true);
-                    const insertIndex = range ? range.index : quill.getLength();
-
-                    // Disable editor & tampilkan loading overlay saat upload berlangsung
-                    quill.disable();
-                    document.getElementById('quill-upload-overlay').classList.remove('hidden');
-
-                    fetch('{{ route('admin.news.upload-image') }}', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Server error: ' + response.status);
-                        return response.json();
-                    })
-                    .then(result => {
-                        quill.enable();
-                        document.getElementById('quill-upload-overlay').classList.add('hidden');
-                        if (result.success && result.url) {
-                            // Sisipkan gambar pada posisi cursor yang tersimpan
-                            quill.insertEmbed(insertIndex, 'image', result.url, Quill.sources.USER);
-                            // Pindahkan kursor ke setelah gambar
-                            quill.setSelection(insertIndex + 1, Quill.sources.SILENT);
-                        } else {
-                            alert(result.message || 'Gagal mengunggah gambar. Silakan coba lagi.');
-                        }
-                    })
-                    .catch(error => {
-                        quill.enable();
-                        document.getElementById('quill-upload-overlay').classList.add('hidden');
-                        console.error('Image upload error:', error);
-                        alert('Gagal mengunggah gambar. Periksa koneksi internet dan coba lagi.');
-                    });
-                };
-            });
+            toolbar.addHandler('image', window.QuillImageUpload.createHandler({
+                endpoint: '{{ route('admin.news.upload-image') }}',
+                csrfToken: '{{ csrf_token() }}',
+                overlaySelector: '#quill-upload-overlay'
+            }));
 
             const form = document.getElementById('news-form');
             form.addEventListener('submit', function (e) {
