@@ -155,13 +155,8 @@
                 </div>
 
                 <!-- Desktop Action Button (Right Aligned) -->
-                <a href="{{ route('public.officials') }}"
-                    class="hidden sm:inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#062c1d] text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 shrink-0">
-                    <span>Lihat Semua Aparatur</span>
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </a>
+                <x-see-all-link href="{{ route('public.officials') }}" label="Lihat Semua Aparatur"
+                    class="hidden sm:inline-flex text-sm shrink-0" />
             </div>
 
             <!-- Carousel Stage Container with Floating Glassmorphism Navigation Buttons -->
@@ -262,14 +257,8 @@
 
             <!-- Mobile Bottom Action Button: Lihat Semua Aparatur (block sm:hidden) -->
             <div class="block sm:hidden text-center pt-2">
-                <a href="{{ route('public.officials') }}"
-                    class="inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#062c1d] text-white font-bold text-xs px-6 py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 min-h-[44px]">
-                    <span>Lihat Semua Perangkat</span>
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </a>
+                <x-see-all-link href="{{ route('public.officials') }}" label="Lihat Semua Perangkat"
+                    class="min-h-[44px] px-6 py-3" />
             </div>
         </section>
     </div>

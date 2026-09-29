@@ -398,9 +398,8 @@
                         <h3 class="font-bold text-base text-slate-900 tracking-tight">
                             Berita Terbaru
                         </h3>
-                        <a href="{{ route('public.news.index') }}" class="text-xs font-semibold text-[#0A3D29] hover:underline">
-                            Lihat semua →
-                        </a>
+                        <x-see-all-link href="{{ route('public.news.index') }}" label="Lihat Semua"
+                            class="text-xs px-4 py-2" />
                     </div>
 
                     @if(isset($recentNews) && $recentNews->count() > 0)
@@ -447,13 +446,8 @@
                             Berita Terkait
                         </h2>
                     </div>
-                    <a href="{{ route('public.news.index') }}" 
-                       class="inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#062c1d] text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 shrink-0 group">
-                        <span>Lihat Semua</span>
-                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                        </svg>
-                    </a>
+                    <x-see-all-link href="{{ route('public.news.index') }}" label="Lihat Semua"
+                        class="text-sm px-4 sm:px-5 py-2 sm:py-2.5 shrink-0" />
                 </div>
 
                 <!-- Mobile: Bergaya list saja secara konsisten -->

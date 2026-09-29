@@ -491,10 +491,7 @@
                             Foto dokumentasi visual akan otomatis muncul saat berita dengan lampiran gambar dipublikasikan.
                         </p>
                         <div class="pt-2">
-                            <a href="{{ route('public.gallery') }}" 
-                               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0A3D29] text-white text-xs font-bold shadow-xs hover:bg-[#072B1D] transition">
-                                <span>Tampilkan Semua Foto</span>
-                            </a>
+                            <x-see-all-link href="{{ route('public.gallery') }}" label="Tampilkan Semua Foto" />
                         </div>
                     </div>
                 @endif

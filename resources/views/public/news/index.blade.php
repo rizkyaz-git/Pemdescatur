@@ -228,14 +228,8 @@
                                         </p>
                                     </div>
 
-                                    <a href="{{ route('public.news.index') }}"
-                                        class="inline-flex items-center gap-1 text-xs font-semibold text-[#0A3D29] hover:text-[#062c1d] transition-colors">
-                                        <span>Tampilkan Semua Berita</span>
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                        </svg>
-                                    </a>
+                                    <x-see-all-link href="{{ route('public.news.index') }}" label="Tampilkan Semua Berita"
+                                        class="text-xs px-4 py-2" />
                                 </div>
 
                                 <!-- Grid Katalog Berita Paginated -->
@@ -284,15 +278,8 @@
                                                 {{ $categoryName ?: 'Berita Terkini' }}
                                             </h2>
                                             @if($categoryName)
-                                                <a href="{{ route('public.news.index', ['category' => $categoryName]) }}"
-                                                    class="text-xs font-semibold text-[#0A3D29] hover:text-[#062c1d] flex items-center gap-1 group">
-                                                    <span>Lihat semua</span>
-                                                    <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none"
-                                                        stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                            d="M9 5l7 7-7 7" />
-                                                    </svg>
-                                                </a>
+                                                <x-see-all-link href="{{ route('public.news.index', ['category' => $categoryName]) }}"
+                                                    label="Lihat Semua" class="text-xs px-4 py-2" />
                                             @endif
                                         </div>
 
