@@ -403,13 +403,74 @@
                 placeholder: 'Tuliskan isi berita lengkap di sini...'
             });
 
-            // Intercept Quill's default Base64 image flow with a physical file upload.
+            // Inline image handler: upload the physical file instead of embedding Base64 data.
             const toolbar = quill.getModule('toolbar');
-            toolbar.addHandler('image', window.QuillImageUpload.createHandler({
-                endpoint: '{{ route('admin.news.upload-image') }}',
-                csrfToken: '{{ csrf_token() }}',
-                overlaySelector: '#quill-upload-overlay'
-            }));
+            toolbar.addHandler('image', function handleImageUpload() {
+                const editor = this.quill;
+                if (!editor) {
+                    console.error('[Quill] Editor instance is unavailable.');
+                    return;
+                }
+
+                const selection = editor.getSelection();
+                const insertIndex = Number.isInteger(selection?.index)
+                    ? selection.index
+                    : editor.getLength();
+                const input = document.createElement('input');
+                const overlay = document.querySelector('#quill-upload-overlay');
+
+                input.type = 'file';
+                input.accept = '.jpg,.jpeg,.png,.gif,.webp,image/jpeg,image/png,image/gif,image/webp';
+                input.hidden = true;
+                document.body.appendChild(input);
+
+                input.addEventListener('change', async () => {
+                    const file = input.files?.[0];
+                    if (!file) {
+                        input.remove();
+                        return;
+                    }
+
+                    try {
+                        editor.disable();
+                        overlay?.classList.remove('hidden');
+
+                        const formData = new FormData();
+                        formData.append('image', file, file.name);
+
+                        const response = await fetch('{{ route('admin.news.upload-image') }}', {
+                            method: 'POST',
+                            body: formData,
+                            credentials: 'same-origin',
+                            headers: {
+                                Accept: 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'X-Requested-With': 'XMLHttpRequest',
+                            },
+                        });
+                        const result = await response.json();
+                        const imageUrl = typeof result?.url === 'string' ? result.url.trim() : '';
+
+                        if (!response.ok || result?.success !== true || !imageUrl) {
+                            throw new Error(result?.message || 'Respons upload gambar tidak valid.');
+                        }
+
+                        editor.insertEmbed(insertIndex, 'image', imageUrl, Quill.sources.USER);
+                        editor.setSelection(insertIndex + 1, Quill.sources.SILENT);
+                    } catch (error) {
+                        console.error('[Quill] Image upload failed:', error);
+                        window.alert(error instanceof Error
+                            ? error.message
+                            : 'Gambar gagal diunggah. Silakan coba lagi.');
+                    } finally {
+                        editor.enable();
+                        overlay?.classList.add('hidden');
+                        input.remove();
+                    }
+                }, { once: true });
+
+                input.click();
+            });
 
             const form = document.getElementById('news-form');
             form.addEventListener('submit', function (e) {
