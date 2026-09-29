@@ -282,7 +282,7 @@
                     </button>
 
                     <!-- Filter Category Dropdown Menu -->
-                    <div x-show="filterOpen" 
+                    <div x-show="filterOpen" x-cloak
                          @click.away="filterOpen = false" 
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
@@ -358,8 +358,7 @@
             </div>
 
             <!-- Mobile Category Dropdown Popup (Muncul di Atas / Drop-Up) -->
-            <div x-show="mobileFilterOpen" 
-                 x-cloak
+            <div x-show="mobileFilterOpen" x-cloak
                  x-transition:enter="transition ease-out duration-200 transform"
                  x-transition:enter-start="opacity-0 scale-95 translate-y-3"
                  x-transition:enter-end="opacity-100 scale-100 translate-y-0"
@@ -400,8 +399,7 @@
             </div>
 
             <!-- Real Content (Fades in smoothly) -->
-            <div x-show="isReady" 
-                 x-cloak
+            <div x-show="isReady" x-cloak
                  x-transition:enter="transition-opacity duration-300 ease-out"
                  x-transition:enter-start="opacity-0"
                  x-transition:enter-end="opacity-100">
@@ -508,8 +506,7 @@
     <!-- ========================================================================= -->
     <!-- DARK EDITORIAL PHOTO VIEWER                                               -->
     <!-- ========================================================================= -->
-    <div x-show="activeModal" 
-         x-cloak 
+    <div x-show="activeModal" x-cloak
          class="fixed inset-0 z-[100000] overflow-hidden select-none bg-[#0D0F0E] transition-opacity duration-200 ease-out"
          :class="backdropVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'"
          @click="closeLightbox()"
@@ -634,12 +631,12 @@
 
                         <!-- Description: Secondary Information (Level 2 Hierarchy) -->
                         <p class="text-sm sm:text-[15px] text-neutral-400 leading-relaxed font-normal max-w-2xl lg:max-w-3xl line-clamp-2 sm:line-clamp-3" 
-                           x-show="activeCaption && activeCaption.trim() !== '' && activeCaption !== activeTitle" 
+                           x-show="activeCaption && activeCaption.trim() !== '' && activeCaption !== activeTitle" x-cloak
                            x-text="activeCaption"></p>
                     </div>
 
                     <!-- Right / Bottom: Editorial Text CTA (Level 4 Hierarchy) -->
-                    <div class="shrink-0 flex items-center self-start sm:self-end pt-1 sm:pt-0" x-show="activeUrl">
+                    <div class="shrink-0 flex items-center self-start sm:self-end pt-1 sm:pt-0" x-show="activeUrl" x-cloak>
                         <a :href="activeUrl" 
                            title="Buka artikel berita terkait"
                            class="group inline-flex items-center gap-1.5 text-sm sm:text-[15px] font-medium text-neutral-300 hover:text-emerald-400 transition-colors duration-200 py-0.5">

@@ -4,10 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#072C21">
     <title>@yield('title', 'Admin Panel') - Desa Catur</title>
     <link rel="icon" type="image/png" href="{{ $siteFavicon }}">
     <link rel="shortcut icon" href="{{ $siteFavicon }}">
     <link rel="apple-touch-icon" href="{{ $siteFavicon }}">
+
+    {{-- Critical inline CSS: mencegah FOUC pada elemen Alpine.js sebelum JavaScript dimuat --}}
+    <style>[x-cloak]{display:none!important}</style>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -17,10 +21,11 @@
 <body class="bg-[#F4F6F5] font-sans antialiased text-[#111C2D] min-h-screen flex" x-data="{ sidebarOpen: false }">
 
     <!-- Mobile Sidebar Backdrop with Blur -->
-    <div x-show="sidebarOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
-        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="sidebarOpen = false"
-        class="fixed inset-0 bg-[#072C21]/60 backdrop-blur-xs z-40 lg:hidden"></div>
+    <div x-show="sidebarOpen" x-cloak
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="sidebarOpen = false"
+         class="fixed inset-0 bg-[#072C21]/60 backdrop-blur-xs z-40 lg:hidden"></div>
 
     <!-- Sidebar Navigation -->
     <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
@@ -352,7 +357,7 @@
 
             @if($errors->any())
                 <div class="mb-6 bg-[#FEF2F2] border border-[#FECACA] p-4 rounded-2xl shadow-xs transition-all"
-                    x-data="{ show: true }" x-show="show">
+                    x-data="{ show: true }" x-show="show" x-cloak>
                     <div class="flex items-start gap-3">
                         <div
                             class="w-8 h-8 rounded-xl bg-[#FEE2E2] text-[#DC2626] flex items-center justify-center shrink-0 mt-0.5">

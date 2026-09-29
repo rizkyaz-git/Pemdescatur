@@ -84,7 +84,7 @@
                     </button>
 
                     <!-- Dropdown Menu Box Profil -->
-                    <div x-show="profileDropdown" x-transition:enter="transition ease-out duration-200"
+                    <div x-show="profileDropdown" x-cloak x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
                         x-transition:leave="transition ease-in duration-150"
@@ -137,7 +137,7 @@
                     </button>
 
                     <!-- Dropdown Menu Box Informasi -->
-                    <div x-show="infoDropdown" x-transition:enter="transition ease-out duration-200"
+                    <div x-show="infoDropdown" x-cloak x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
                         x-transition:leave="transition ease-in duration-150"
@@ -190,7 +190,7 @@
                     </button>
 
                     <!-- Dropdown Menu Box Layanan Publik -->
-                    <div x-show="layananDropdown" x-transition:enter="transition ease-out duration-200"
+                    <div x-show="layananDropdown" x-cloak x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
                         x-transition:leave="transition ease-in duration-150"
@@ -282,7 +282,7 @@
                             </svg>
 
                             <!-- Clear Button (Right) -->
-                            <button type="button" x-show="searchQuery.length > 0"
+                            <button type="button" x-show="searchQuery.length > 0" x-cloak
                                 @click="searchQuery = ''; searchResults = []; searchOpen = false"
                                 class="absolute right-2 transition-colors duration-700 ease-in-out p-0.5 rounded-full"
                                 :class="({{ $isHomePage ? 'isScrolled' : 'true' }}) ? 'text-[#6C7B72] hover:text-[#20332A]' : 'text-white/80 hover:text-white'">
@@ -295,7 +295,7 @@
                     </form>
 
                     <!-- Live Suggestion Dropdown Panel -->
-                    <div x-show="searchOpen && searchQuery.length >= 2"
+                    <div x-show="searchOpen && searchQuery.length >= 2" x-cloak
                         x-transition:enter="transition ease-out duration-150"
                         x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
@@ -467,7 +467,7 @@
 
                 <div class="absolute right-1 flex items-center gap-1">
                     <!-- Clear Button -->
-                    <button type="button" x-show="searchQuery.length > 0"
+                    <button type="button" x-show="searchQuery.length > 0" x-cloak
                         @click="searchQuery = ''; searchResults = []; $refs.mobileHeaderSearchInput.focus()"
                         class="p-1 rounded-lg text-slate-400 hover:text-slate-600 transition-colors"
                         aria-label="Hapus kata kunci">
@@ -595,7 +595,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
-            <div x-show="activeSection === 'profil'" x-transition:enter="transition ease-out duration-150"
+            <div x-show="activeSection === 'profil'" x-cloak x-transition:enter="transition ease-out duration-150"
                 x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
                 class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                 <a href="{{ route('public.profile') }}" @click="mobileMenuOpen = false"
@@ -627,7 +627,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
-            <div x-show="activeSection === 'informasi'" x-transition:enter="transition ease-out duration-150"
+            <div x-show="activeSection === 'informasi'" x-cloak x-transition:enter="transition ease-out duration-150"
                 x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
                 class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                 <a href="{{ route('public.news.index') }}" @click="mobileMenuOpen = false"
@@ -659,7 +659,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
-            <div x-show="activeSection === 'layanan'" x-transition:enter="transition ease-out duration-150"
+            <div x-show="activeSection === 'layanan'" x-cloak x-transition:enter="transition ease-out duration-150"
                 x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
                 class="bg-slate-900/[0.03] divide-y divide-slate-200/40 border-t border-slate-200/50">
                 <a href="{{ route('warga.letter.index') }}" @click="mobileMenuOpen = false"

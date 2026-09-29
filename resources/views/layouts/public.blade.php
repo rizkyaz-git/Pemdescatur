@@ -11,6 +11,9 @@
     <meta name="description"
         content="@yield('meta_description', 'Portal Resmi Pemerintah Desa Catur, Sambi, Boyolali, Jawa Tengah. Pusat informasi publik, Desa Wisata, Desa Cerdas Kemendes, pertanian padi organik, dan pelayanan desa.')">
 
+    {{-- Critical cloaking rule must be available before any bundled asset. --}}
+    <style>[x-cloak]{display:none!important}</style>
+
     <!-- DNS Prefetch & Preconnect for critical external resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,10 +51,6 @@
                     rgba(241, 245, 249, 0.4) 100%);
             background-size: 200% 100%;
             animation: shimmerGlow 1.6s infinite linear;
-        }
-
-        [x-cloak] {
-            display: none !important;
         }
 
         /* Staggered Cascade Down Animation for Mobile Menu */

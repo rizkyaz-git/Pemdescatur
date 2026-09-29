@@ -340,7 +340,7 @@
                         </button>
 
                         <!-- Empty State: Ketika belum ada template yang dipilih -->
-                        <div x-show="!selectedTemplate"
+                        <div x-show="!selectedTemplate" x-cloak
                             class="bg-white rounded-xl border border-dashed border-slate-300/80 p-12 text-center flex flex-col items-center justify-center min-h-[380px] shadow-xs space-y-3">
                             <div
                                 class="w-12 h-12 rounded-full bg-slate-50 border border-slate-200/60 flex items-center justify-center text-slate-400">

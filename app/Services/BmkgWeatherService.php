@@ -189,8 +189,8 @@ class BmkgWeatherService
         // Hitung Feels-Like Temperature (Apparent Temperature formula standar meteorologi)
         $feelsLike = $this->calculateFeelsLike($temperature, $humidity, $windSpeed);
 
-        // Tentukan tema visual gradien berdasarkan kondisi cuaca & waktu (siang/malam)
-        $theme = $this->resolveWeatherTheme($condition, $currentEntry['local_datetime'] ?? null);
+        // Tentukan tema visual gradien berdasarkan kondisi cuaca & waktu (pagi/siang, siang panas, senja, hujan, malam)
+        $theme = $this->resolveWeatherTheme($condition, $currentEntry['local_datetime'] ?? null, $temperature);
 
         return [
             'available' => true,
@@ -243,9 +243,10 @@ class BmkgWeatherService
     }
 
     /**
-     * Resolusi tema warna latar belakang kartu berdasarkan kondisi cuaca dan waktu siang/malam.
+     * Resolusi tema warna latar belakang kartu berdasarkan kondisi cuaca dan waktu (pagi/siang, siang panas, senja, hujan, malam).
+     * Terintegrasi dengan warna dasar website (#0A3D29 / #0F4C3A) dan gradasi interaktif dinamis.
      */
-    protected function resolveWeatherTheme(string $condition, ?string $timeStr = null): array
+    protected function resolveWeatherTheme(string $condition, ?string $timeStr = null, ?float $temp = null): array
     {
         $hour = (int) Carbon::now('Asia/Jakarta')->format('H');
         if ($timeStr) {
@@ -256,59 +257,62 @@ class BmkgWeatherService
             }
         }
 
-        $isDay = ($hour >= 6 && $hour < 18);
+        $isNight = ($hour >= 18 || $hour < 6);
+        $isSunset = ($hour >= 16 && $hour < 18);
+        $isHotDay = (!$isNight && !$isSunset && (($temp !== null && $temp >= 32) || ($hour >= 11 && $hour <= 14)));
         $lower = strtolower($condition);
 
-        // 1. Kondisi Petir (Siang / Malam)
-        if (str_contains($lower, 'petir')) {
-            return [
-                'type' => 'petir',
-                'is_day' => $isDay,
-                'gradient' => 'from-[#1E1B4B] via-[#141233] to-[#0A091A]',
-                'accent' => 'text-purple-300',
-                'border' => 'border-purple-400/20',
-                'glow' => 'bg-purple-400/25',
-            ];
-        }
-
-        // 2. Kondisi Hujan / Badai / Gerimis
-        if (str_contains($lower, 'hujan') || str_contains($lower, 'gerimis') || str_contains($lower, 'badai')) {
+        // 1. Kondisi Hujan / Badai / Gerimis / Petir (Efek abu-abu kebiruan dengan visual basah)
+        if (str_contains($lower, 'hujan') || str_contains($lower, 'gerimis') || str_contains($lower, 'badai') || str_contains($lower, 'petir')) {
             return [
                 'type' => 'hujan',
-                'is_day' => $isDay,
-                'gradient' => $isDay 
-                    ? 'from-[#1E3A5F] via-[#142943] to-[#0A1624]' 
-                    : 'from-[#0A1118] via-[#060B10] to-[#020406]',
-                'accent' => 'text-cyan-300',
-                'border' => 'border-cyan-400/20',
-                'glow' => 'bg-cyan-400/20',
+                'is_dark' => true,
+                'gradient' => 'from-[#1A2E35] via-[#2A434E] to-[#122227]',
+                'ambient_glow' => 'bg-cyan-500/20',
+                'effect' => 'rain',
             ];
         }
 
-        // 3. Kondisi Berawan / Kabut / Mendung
-        if (str_contains($lower, 'berawan') || str_contains($lower, 'kabut') || str_contains($lower, 'mendung')) {
+        // 2. Malam Hari (Biru gelap berhiaskan efek bintang)
+        if ($isNight) {
             return [
-                'type' => 'berawan',
-                'is_day' => $isDay,
-                'gradient' => $isDay 
-                    ? 'from-[#334E68] via-[#243B53] to-[#102A43]' 
-                    : 'from-[#0B1320] via-[#080E17] to-[#03060B]',
-                'accent' => $isDay ? 'text-sky-200' : 'text-slate-300',
-                'border' => 'border-sky-300/20',
-                'glow' => $isDay ? 'bg-sky-300/20' : 'bg-slate-300/15',
+                'type' => 'malam',
+                'is_dark' => true,
+                'gradient' => 'from-[#0A192F] via-[#0E2838] to-[#06121E]',
+                'ambient_glow' => 'bg-indigo-400/20',
+                'effect' => 'stars',
             ];
         }
 
-        // 4. Default: Cerah / Cerah Berawan (Siang vs Malam)
+        // 3. Senja (Gradasi oranye hangat memikat)
+        if ($isSunset) {
+            return [
+                'type' => 'senja',
+                'is_dark' => false,
+                'gradient' => 'from-[#E05326] via-[#E87A38] to-[#993414]',
+                'ambient_glow' => 'bg-amber-400/30',
+                'effect' => 'sunset',
+            ];
+        }
+
+        // 4. Siang Panas (Gradasi kuning dengan efek kilauan matahari)
+        if ($isHotDay) {
+            return [
+                'type' => 'panas',
+                'is_dark' => false,
+                'gradient' => 'from-[#EAB308] via-[#F59E0B] to-[#CA8A04]',
+                'ambient_glow' => 'bg-amber-200/50',
+                'effect' => 'sun_sparkle',
+            ];
+        }
+
+        // 5. Pagi / Siang Biasa / Berawan (Gradasi biru cerah segar dipadukan dasar website)
         return [
             'type' => 'cerah',
-            'is_day' => $isDay,
-            'gradient' => $isDay 
-                ? 'from-[#2563EB] via-[#1E40AF] to-[#172554]'  // Biru cerah dinamis khas langit siang
-                : 'from-[#0F172A] via-[#0B1120] to-[#020617]', // Midnight slate premium malam bertabur bintang
-            'accent' => $isDay ? 'text-amber-300' : 'text-indigo-200',
-            'border' => $isDay ? 'border-amber-300/20' : 'border-indigo-300/20',
-            'glow' => $isDay ? 'bg-sky-400/25' : 'bg-indigo-400/20',
+            'is_dark' => true,
+            'gradient' => 'from-[#0284C7] via-[#0369A1] to-[#0A3D29]',
+            'ambient_glow' => 'bg-sky-300/30',
+            'effect' => 'daylight',
         ];
     }
 }

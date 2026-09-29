@@ -60,6 +60,14 @@
             color: #374151 !important;
             float: left !important;
         }
+
+        .ql-editor img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            margin: 1rem auto !important;
+            border-radius: 0.5rem;
+        }
     </style>
 @endpush
 
@@ -160,7 +168,7 @@
                         <input type="hidden" name="category" :value="selectedCategory" required>
 
                         <!-- Dropdown Menu Box -->
-                        <div x-show="categoryDropdownOpen" x-transition:enter="transition ease-out duration-150"
+                        <div x-show="categoryDropdownOpen" x-cloak x-transition:enter="transition ease-out duration-150"
                             x-transition:enter-start="opacity-0 scale-98 -translate-y-1"
                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
                             x-transition:leave="transition ease-in duration-100"
@@ -262,7 +270,19 @@
                     <label class="block text-[13px] font-semibold text-[#1E293B] mb-1.5">
                         Isi Berita Lengkap <span class="text-rose-500">*</span>
                     </label>
-                    <div id="quill-editor" class="bg-white">{!! old('content', $news->content) !!}</div>
+                    <div class="relative" id="quill-editor-wrapper">
+                        <div id="quill-editor" class="bg-white">{!! old('content', $news->content) !!}</div>
+                        {{-- Loading overlay saat upload gambar berlangsung --}}
+                        <div id="quill-upload-overlay" class="hidden absolute inset-0 bg-white/80 backdrop-blur-xs flex items-center justify-center rounded-b-lg z-10">
+                            <div class="flex items-center gap-2.5 bg-white border border-[#E2E8F0] rounded-xl px-4 py-2.5 shadow-md">
+                                <svg class="animate-spin w-4 h-4 text-[#0F4C3A]" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span class="text-xs font-semibold text-[#0F4C3A]">Mengunggah gambar...</span>
+                            </div>
+                        </div>
+                    </div>
                     <input type="hidden" name="content" id="content_input">
                     @error('content')
                         <p class="text-xs text-rose-600 font-medium mt-1">{{ $message }}</p>
@@ -409,40 +429,49 @@
                     formData.append('image', file);
                     formData.append('_token', '{{ csrf_token() }}');
 
-                    // Get current cursor position
-                    const range = quill.getSelection();
+                    // Simpan posisi cursor sebelum upload
+                    const range = quill.getSelection(true);
                     const insertIndex = range ? range.index : quill.getLength();
 
-                    // Show loading indicator
-                    quill.insertText(insertIndex, ' Mengunggah gambar...', { italic: true, color: '#94a3b8' });
+                    // Disable editor & tampilkan loading overlay saat upload berlangsung
+                    quill.disable();
+                    document.getElementById('quill-upload-overlay').classList.remove('hidden');
 
                     fetch('{{ route('admin.news.upload-image') }}', {
                         method: 'POST',
                         body: formData
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) throw new Error('Server error: ' + response.status);
+                        return response.json();
+                    })
                     .then(result => {
-                        // Remove loading text
-                        quill.deleteText(insertIndex, ' Mengunggah gambar...'.length);
-
-                        if (result.success) {
-                            quill.insertEmbed(insertIndex, 'image', result.url, 'user');
+                        quill.enable();
+                        document.getElementById('quill-upload-overlay').classList.add('hidden');
+                        if (result.success && result.url) {
+                            // Sisipkan gambar pada posisi cursor yang tersimpan
+                            quill.insertEmbed(insertIndex, 'image', result.url, Quill.sources.USER);
+                            // Pindahkan kursor ke setelah gambar
+                            quill.setSelection(insertIndex + 1, Quill.sources.SILENT);
                         } else {
                             alert(result.message || 'Gagal mengunggah gambar. Silakan coba lagi.');
                         }
                     })
                     .catch(error => {
-                        quill.deleteText(insertIndex, ' Mengunggah gambar...'.length);
+                        quill.enable();
+                        document.getElementById('quill-upload-overlay').classList.add('hidden');
                         console.error('Image upload error:', error);
-                        alert('Gagal mengunggah gambar. Silakan coba lagi.');
+                        alert('Gagal mengunggah gambar. Periksa koneksi internet dan coba lagi.');
                     });
                 };
             });
 
             const form = document.getElementById('news-form');
-            form.addEventListener('submit', function () {
-                const text = quill.getText().trim();
-                document.getElementById('content_input').value = text.length === 0 ? '' : quill.root.innerHTML;
+            form.addEventListener('submit', function (e) {
+                // Cek apakah editor benar-benar kosong (tidak ada teks maupun gambar)
+                const editorHTML = quill.root.innerHTML.trim();
+                const isEmpty = editorHTML === '' || editorHTML === '<p><br></p>';
+                document.getElementById('content_input').value = isEmpty ? '' : editorHTML;
             });
 
             if (window.flatpickr) {

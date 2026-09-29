@@ -258,8 +258,7 @@
 
     {{-- Modal Tambah Jenis Surat Cepat --}}
     <template x-teleport="body">
-        <div x-show="createTypeModalOpen" 
-             x-cloak 
+        <div x-show="createTypeModalOpen" x-cloak
              class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-xs overflow-y-auto"
              x-transition:enter="transition ease-out duration-150"
              x-transition:enter-start="opacity-0"

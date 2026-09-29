@@ -448,26 +448,19 @@
                         </h2>
                     </div>
                     <a href="{{ route('public.news.index') }}" 
-                       class="text-xs font-semibold text-[#0A3D29] hover:underline inline-flex items-center gap-1 group shrink-0">
+                       class="inline-flex items-center gap-2 bg-[#0A3D29] hover:bg-[#062c1d] text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 shrink-0 group">
                         <span>Lihat Semua</span>
-                        <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                         </svg>
                     </a>
                 </div>
 
-                <!-- Mobile: 2 kartu grid + 2 list compact -->
-                <div class="lg:hidden">
-                    <div class="grid grid-cols-2 gap-3">
-                        @foreach($displayRelated->take(2) as $item)
-                            @include('public.news.partials.news-card-grid', ['item' => $item, 'defaultImages' => $defaultImages])
-                        @endforeach
-                    </div>
-                    <div class="mt-1">
-                        @foreach($displayRelated->slice(2, 2) as $item)
-                            @include('public.news.partials.news-card-list', ['item' => $item, 'defaultImages' => $defaultImages])
-                        @endforeach
-                    </div>
+                <!-- Mobile: Bergaya list saja secara konsisten -->
+                <div class="lg:hidden divide-y divide-slate-100">
+                    @foreach($displayRelated as $item)
+                        @include('public.news.partials.news-card-list', ['item' => $item, 'defaultImages' => $defaultImages])
+                    @endforeach
                 </div>
 
                 <!-- Desktop & Tablet: 4 kartu compact berjajar -->

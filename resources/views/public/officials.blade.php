@@ -34,8 +34,7 @@
                 </div>
 
                 <!-- 2. REAL CONTENT (Progressively Revealed with Zero Layout Shift) -->
-                <div x-show="isReady" 
-                     x-cloak
+                <div x-show="isReady" x-cloak
                      x-transition:enter="transition ease-out duration-300"
                      x-transition:enter-start="opacity-0"
                      x-transition:enter-end="opacity-100">
