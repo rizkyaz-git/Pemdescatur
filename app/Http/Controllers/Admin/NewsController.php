@@ -156,7 +156,7 @@ class NewsController extends Controller
             return response()->json([
                 'success' => true,
                 'url' => $url,
-            ]);
+            ], 200);
         } catch (\Throwable $e) {
             report($e);
             return response()->json([

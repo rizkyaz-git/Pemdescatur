@@ -74,6 +74,7 @@ function createQuillImageHandler({ endpoint, csrfToken, overlaySelector = null }
                         'X-Requested-With': 'XMLHttpRequest',
                     },
                 });
+                console.log('[Quill] raw fetch response', response);
 
                 const responseText = await response.text();
                 let result = null;
@@ -96,11 +97,21 @@ function createQuillImageHandler({ endpoint, csrfToken, overlaySelector = null }
 
                 const hasUrlKey = Boolean(result && Object.prototype.hasOwnProperty.call(result, 'url'));
                 const imageUrl = typeof result?.url === 'string' ? result.url.trim() : '';
-                if (!response.ok || !result?.success || !hasUrlKey || !imageUrl) {
+                let isAbsoluteHttpUrl = false;
+                try {
+                    const parsedUrl = new URL(imageUrl);
+                    isAbsoluteHttpUrl = ['http:', 'https:'].includes(parsedUrl.protocol)
+                        && parsedUrl.hostname.length > 0;
+                } catch (urlError) {
+                    console.error('[Quill] response URL failed strict validation', { imageUrl, urlError });
+                }
+
+                if (!response.ok || !result?.success || !hasUrlKey || !isAbsoluteHttpUrl) {
                     console.error('[Quill] upload response rejected before insertEmbed', {
                         status: response.status,
                         hasUrlKey,
                         imageUrl,
+                        isAbsoluteHttpUrl,
                         result,
                     });
                     throw new Error(result?.message || 'Respons upload tidak berisi URL gambar yang valid.');
