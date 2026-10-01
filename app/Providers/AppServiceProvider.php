@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Carbon::setLocale('id');
+
+        // Force HTTPS in production to prevent Mixed Content errors behind reverse proxies (seperti VPS)
+        if (env('APP_ENV') !== 'local') {
+            URL::forceScheme('https');
+        }
 
         // Explicit binding: parameter {complaint} di route admin → model Laporan
         // (route admin sudah pakai nama 'complaints' tapi model diganti menjadi Laporan)
