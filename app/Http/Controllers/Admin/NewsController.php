@@ -148,10 +148,15 @@ class NewsController extends Controller
             }
 
             // The public disk is exposed by `public/storage` -> `storage/app/public`.
-            $url = asset('storage/'.ltrim($path, '/'));
-            if (! filter_var($url, FILTER_VALIDATE_URL)) {
+            $fullUrl = asset('storage/'.ltrim($path, '/'));
+            if (! filter_var($fullUrl, FILTER_VALIDATE_URL)) {
                 throw new \RuntimeException('The generated image URL is invalid.');
             }
+            
+            // Konversi menjadi root-relative URL agar tidak hardcode domain di database
+            // Mencegah masalah broken image karena Mixed Content (HTTP ke HTTPS) atau perubahan domain
+            $parsedUrl = parse_url($fullUrl);
+            $url = ($parsedUrl['path'] ?? '') . (isset($parsedUrl['query']) ? '?' . $parsedUrl['query'] : '');
 
             return response()->json([
                 'success' => true,
